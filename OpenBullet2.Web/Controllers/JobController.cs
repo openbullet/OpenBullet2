@@ -505,7 +505,7 @@ public class JobController : ApiController
     public async Task<ActionResult<AffectedEntriesDto>> DeleteAll()
     {
         var apiUser = HttpContext.GetApiUser();
-        var deletedCount = 0;
+        int deletedCount;
 
         // If any job not idle, throw!
         var notIdleJobs = _jobManager.Jobs

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -10,6 +11,8 @@ using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.Common;
+using OpenBullet2.Web.Dtos.Hit;
 using OpenBullet2.Web.Dtos.Job;
 using OpenBullet2.Web.Dtos.Job.MultiRun;
 using OpenBullet2.Web.Dtos.Job.ProxyCheck;
@@ -17,7 +20,9 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Logging;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data.DataPools;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Services;
@@ -1126,88 +1131,1150 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     // Admin can update a multi run job
+    [Fact]
+    public async Task UpdateMultiRunJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        jobManager.AddJob(mrJob);
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync();
+        
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+        
+        // Act
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+            {
+                GroupId = -1,
+                PolyTypeName = "groupProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(dto.Name, response.Value.Name);
+        
+        mrJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
+        Assert.Equal(dto.Name, mrJob.Name);
+    }
     
     // Admin cannot update a multi run job that is not idle
+    [Fact]
+    public async Task UpdateMultiRunJob_Admin_NotIdle_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.GetType().GetProperty("Status")!.SetValue(mrJob, JobStatus.Running);
+        jobManager.AddJob(mrJob);
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync();
+        
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+        
+        // Act
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+            {
+                GroupId = -1,
+                PolyTypeName = "groupProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
+    }
     
     // Guest cannot update a multi run job not owned by them
-    
+    [Fact]
+    public async Task UpdateMultiRunJob_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+
+        // Act
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs =
+            [
+                JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+                {
+                    PolyTypeName = "databaseHitOutput"
+                }, JsonSerializerOptions)
+            ],
+            ProxySources =
+            [
+                JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+                {
+                    GroupId = -1,
+                    PolyTypeName = "groupProxySource"
+                }, JsonSerializerOptions)
+            ],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, response.Error.Content.ErrorCode);
+    }
+
     // Guest can update their multi run job
-    
+    [Fact]
+    public async Task UpdateMultiRunJob_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+
+        // Act
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs =
+            [
+                JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+                {
+                    PolyTypeName = "databaseHitOutput"
+                }, JsonSerializerOptions)
+            ],
+            ProxySources =
+            [
+                JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+                {
+                    GroupId = -1,
+                    PolyTypeName = "groupProxySource"
+                }, JsonSerializerOptions)
+            ],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(dto.Name, response.Value.Name);
+        
+        mrJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
+        Assert.Equal(dto.Name, mrJob.Name);
+    }
+
     // Admin can update a proxy check job
+    [Fact]
+    public async Task UpdateProxyCheckJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        var jobManager = GetRequiredService<JobManagerService>();
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var dto = new UpdateProxyCheckJobDto
+        {
+            Id = pcJob.Id,
+            Name = "Test PCJ2",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(dto.Name, response.Value.Name);
+        
+        pcJob = jobManager.Jobs.OfType<ProxyCheckJob>().Single();
+        Assert.Equal(dto.Name, pcJob.Name);
+    }
     
     // Admin cannot update a proxy check job that is not idle
+    [Fact]
+    public async Task UpdateProxyCheckJob_Admin_NotIdle_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        pcJob.GetType().GetProperty("Status")!.SetValue(pcJob, JobStatus.Running);
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        var jobManager = GetRequiredService<JobManagerService>();
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var dto = new UpdateProxyCheckJobDto
+        {
+            Id = pcJob.Id,
+            Name = "Test PCJ2",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
+    }
     
     // Guest cannot update a proxy check job not owned by them
+    [Fact]
+    public async Task UpdateProxyCheckJob_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        var jobManager = GetRequiredService<JobManagerService>();
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new UpdateProxyCheckJobDto
+        {
+            Id = pcJob.Id,
+            Name = "Test PCJ2",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, response.Error.Content.ErrorCode);
+    }
     
     // Guest can update their proxy check job
+    [Fact]
+    public async Task UpdateProxyCheckJob_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        pcJob.OwnerId = guest.Id;
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        var jobManager = GetRequiredService<JobManagerService>();
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new UpdateProxyCheckJobDto
+        {
+            Id = pcJob.Id,
+            Name = "Test PCJ2",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(dto.Name, response.Value.Name);
+        
+        pcJob = jobManager.Jobs.OfType<ProxyCheckJob>().Single();
+        Assert.Equal(dto.Name, pcJob.Name);
+    }
     
     // Admin can get the custom inputs for a multi run job
+    [Fact]
+    public async Task GetMultiRunJobCustomInputs_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        var customInputs = new List<CustomInput>()
+        {
+            new()
+            {
+                Description = "Test input",
+                VariableName = "TEST",
+                DefaultAnswer = "test"
+            },
+
+            new()
+            {
+                Description = "Test input 2",
+                VariableName = "TEST2",
+                DefaultAnswer = "test2"
+            }
+        };
+        
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" },
+            Settings = new ConfigSettings
+            {
+                InputSettings = new InputSettings
+                {
+                    CustomInputs = customInputs
+                }
+            }
+        };
+        var configRepository = GetRequiredService<IConfigRepository>();
+        await configRepository.SaveAsync(config);
+        mrJob.Config = config;
+        mrJob.CustomInputsAnswers = new Dictionary<string, string>
+        {
+            { "TEST", "modified" }
+        };
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var response = await GetJsonAsync<IEnumerable<CustomInputQuestionDto>>(
+            client, "/api/v1/job/multi-run/custom-inputs".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        var result = response.Value.ToList();
+        Assert.Equal(2, result.Count);
+        Assert.Equal(customInputs[0].Description, result[0].Description);
+        Assert.Equal(customInputs[0].VariableName, result[0].VariableName);
+        Assert.Equal(customInputs[0].DefaultAnswer, result[0].DefaultAnswer);
+        Assert.Equal(mrJob.CustomInputsAnswers[customInputs[0].VariableName], result[0].CurrentAnswer);
+        Assert.Equal(customInputs[1].Description, result[1].Description);
+        Assert.Equal(customInputs[1].VariableName, result[1].VariableName);
+        Assert.Equal(customInputs[1].DefaultAnswer, result[1].DefaultAnswer);
+        Assert.Null(result[1].CurrentAnswer);
+    }
     
     // Guest cannot get the custom inputs for a multi run job not owned by them
+    [Fact]
+    public async Task GetMultiRunJobCustomInputs_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var response = await GetJsonAsync<IEnumerable<CustomInputQuestionDto>>(
+            client, "/api/v1/job/multi-run/custom-inputs".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, response.Error.Content.ErrorCode);
+    }
     
     // Guest can get the custom inputs for their multi run job
-    
+    [Fact]
+    public async Task GetMultiRunJobCustomInputs_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        var customInputs = new List<CustomInput>()
+        {
+            new()
+            {
+                Description = "Test input",
+                VariableName = "TEST",
+                DefaultAnswer = "test"
+            },
+
+            new()
+            {
+                Description = "Test input 2",
+                VariableName = "TEST2",
+                DefaultAnswer = "test2"
+            }
+        };
+
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" },
+            Settings = new ConfigSettings
+            {
+                InputSettings = new InputSettings
+                {
+                    CustomInputs = customInputs
+                }
+            }
+        };
+        var configRepository = GetRequiredService<IConfigRepository>();
+        await configRepository.SaveAsync(config);
+        mrJob.Config = config;
+        mrJob.CustomInputsAnswers = new Dictionary<string, string>
+        {
+            { "TEST", "modified" }
+        };
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var response = await GetJsonAsync<IEnumerable<CustomInputQuestionDto>>(
+            client, "/api/v1/job/multi-run/custom-inputs".ToUri(queryParams));
+
+        // Assert
+        Assert.True(response.IsSuccess);
+        var result = response.Value.ToList();
+        Assert.Equal(2, result.Count);
+        Assert.Equal(customInputs[0].Description, result[0].Description);
+        Assert.Equal(customInputs[0].VariableName, result[0].VariableName);
+        Assert.Equal(customInputs[0].DefaultAnswer, result[0].DefaultAnswer);
+        Assert.Equal(mrJob.CustomInputsAnswers[customInputs[0].VariableName], result[0].CurrentAnswer);
+        Assert.Equal(customInputs[1].Description, result[1].Description);
+        Assert.Equal(customInputs[1].VariableName, result[1].VariableName);
+        Assert.Equal(customInputs[1].DefaultAnswer, result[1].DefaultAnswer);
+        Assert.Null(result[1].CurrentAnswer);
+    }
+
     // Admin can set the custom inputs for a multi run job
+    [Fact]
+    public async Task SetMultiRunJobCustomInputs_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        // Act
+        var dto = new CustomInputsDto
+        {
+            JobId = mrJob.Id,
+            Answers = [
+                new CustomInputAnswerDto
+                {
+                    VariableName = "TEST",
+                    Answer = "modified"
+                }
+            ]
+        };
+        var error = await PatchAsync(
+            client, "/api/v1/job/multi-run/custom-inputs", dto);
+
+        // Assert
+        Assert.Null(error);
+        Assert.Equal(dto.Answers.First().Answer, mrJob.CustomInputsAnswers["TEST"]);
+    }
     
     // Guest cannot set the custom inputs for a multi run job not owned by them
+    [Fact]
+    public async Task SetMultiRunJobCustomInputs_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var dto = new CustomInputsDto
+        {
+            JobId = mrJob.Id,
+            Answers = [
+                new CustomInputAnswerDto
+                {
+                    VariableName = "TEST",
+                    Answer = "modified"
+                }
+            ]
+        };
+        var error = await PatchAsync(
+            client, "/api/v1/job/multi-run/custom-inputs", dto);
+
+        // Assert
+        Assert.NotNull(error);
+        Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
+    }
     
     // Guest can set the custom inputs for their multi run job
+    [Fact]
+    public async Task SetMultiRunJobCustomInputs_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var dto = new CustomInputsDto
+        {
+            JobId = mrJob.Id,
+            Answers = [
+                new CustomInputAnswerDto
+                {
+                    VariableName = "TEST",
+                    Answer = "modified"
+                }
+            ]
+        };
+        var error = await PatchAsync(
+            client, "/api/v1/job/multi-run/custom-inputs", dto);
+
+        // Assert
+        Assert.Null(error);
+        Assert.Equal(dto.Answers.First().Answer, mrJob.CustomInputsAnswers["TEST"]);
+    }
     
     // Admin can delete a job
+    [Fact]
+    public async Task DeleteJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        jobManager.AddJob(mrJob);
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var error = await DeleteAsync(
+            client, "/api/v1/job".ToUri(queryParams));
+        
+        // Assert
+        Assert.Null(error);
+        Assert.Empty(jobManager.Jobs);
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Empty(jobEntities);
+    }
     
     // Guest cannot delete a job not owned by them
+    [Fact]
+    public async Task DeleteJob_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var error = await DeleteAsync(
+            client, "/api/v1/job".ToUri(queryParams));
+        
+        // Assert
+        Assert.NotNull(error);
+        Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
+        
+        Assert.Single(jobManager.Jobs);
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Single(jobEntities);
+    }
     
     // Guest can delete their job
+    [Fact]
+    public async Task DeleteJob_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var error = await DeleteAsync(
+            client, "/api/v1/job".ToUri(queryParams));
+        
+        // Assert
+        Assert.Null(error);
+        Assert.Empty(jobManager.Jobs);
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Empty(jobEntities);
+    }
     
     // Admin can delete all jobs
+    [Fact]
+    public async Task DeleteAllJobs_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        
+        var mrJob1 = CreateMultiRunJob();
+        mrJob1.Name = "Test MRJ";
+        mrJob1.Id = 1;
+        jobManager.AddJob(mrJob1);
+        var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
+        jobEntity1.Id = mrJob1.Id;
+        
+        var mrJob2 = CreateMultiRunJob();
+        mrJob2.Name = "Test MRJ2";
+        mrJob2.Id = 2;
+        jobManager.AddJob(mrJob2);
+        var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
+        jobEntity2.Id = mrJob2.Id;
+        
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var response = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/job/all");
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(2, response.Value.Count);
+        Assert.Empty(jobManager.Jobs);
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Empty(jobEntities);
+    }
     
     // Admin cannot delete all jobs if there are running jobs
+    [Fact]
+    public async Task DeleteAllJobs_Admin_NotIdle_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        
+        var mrJob1 = CreateMultiRunJob();
+        mrJob1.Name = "Test MRJ";
+        mrJob1.Id = 1;
+        mrJob1.GetType().GetProperty("Status")!.SetValue(mrJob1, JobStatus.Running);
+        jobManager.AddJob(mrJob1);
+        var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
+        jobEntity1.Id = mrJob1.Id;
+        
+        var mrJob2 = CreateMultiRunJob();
+        mrJob2.Name = "Test MRJ2";
+        mrJob2.Id = 2;
+        jobManager.AddJob(mrJob2);
+        var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
+        jobEntity2.Id = mrJob2.Id;
+        
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var response = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/job/all");
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
+        
+        Assert.Equal(2, jobManager.Jobs.Count());
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Equal(2, jobEntities.Count);
+    }
     
-    // Guest can delete all their jobs
+    // Guest can delete all their jobs (but not others)
+    [Fact]
+    public async Task DeleteAllJobs_Guest_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        
+        var mrJob1 = CreateMultiRunJob();
+        mrJob1.Name = "Test MRJ";
+        mrJob1.Id = 1;
+        mrJob1.OwnerId = guest.Id;
+        jobManager.AddJob(mrJob1);
+        var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
+        jobEntity1.Id = mrJob1.Id;
+        jobEntity1.Owner = guest;
+        
+        var mrJob2 = CreateMultiRunJob();
+        mrJob2.Name = "Test MRJ2";
+        mrJob2.Id = 2;
+        jobManager.AddJob(mrJob2);
+        var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
+        jobEntity2.Id = mrJob2.Id;
+        
+        dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var response = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/job/all");
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(1, response.Value.Count);
+        Assert.Single(jobManager.Jobs);
+        
+        var jobEntities = await dbContext.Jobs.ToListAsync();
+        Assert.Single(jobEntities);
+    }
     
     // Admin can get the hit log for a hit in a multi run job
+    [Fact]
+    public async Task GetHitLog_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        jobManager.AddJob(mrJob);
+        var botLogger = new BotLogger();
+        botLogger.Log("Test message");
+        botLogger.Log("Test message 2");
+        var hit = new Hit
+        {
+            BotLogger = botLogger,
+        };
+        mrJob.Hits.Add(hit);
+        
+        // Act
+        var queryParams = new
+        {
+            jobId = mrJob.Id,
+            hitId = hit.Id
+        };
+        var response = await GetJsonAsync<MrjHitLogDto>(
+            client, "/api/v1/job/multi-run/hit-log".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(response.IsSuccess);
+        Assert.Equal(2, response.Value.Log!.Count);
+        Assert.Equal("Test message", response.Value.Log[0].Message);
+        Assert.Equal("Test message 2", response.Value.Log[1].Message);
+    }
     
-    // Guest cannot get the hit log for a hit in a multi run job not owned by them
-    
-    // Guest can get the hit log for a hit in their multi run job
-    
-    // Admin can start a job
+    // Guest cannot get the hit log for a hit (admin only)
+    [Fact]
+    public async Task GetHitLog_Guest_NotAllowed_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        jobManager.AddJob(mrJob);
+        var botLogger = new BotLogger();
+        botLogger.Log("Test message");
+        botLogger.Log("Test message 2");
+        var hit = new Hit
+        {
+            BotLogger = botLogger,
+        };
+        mrJob.Hits.Add(hit);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            jobId = mrJob.Id,
+            hitId = hit.Id
+        };
+        var response = await GetJsonAsync<MrjHitLogDto>(
+            client, "/api/v1/job/multi-run/hit-log".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, response.Error.Content.ErrorCode);
+    }
     
     // TODO: Test all actions for various job states
-    
-    // Guest cannot start a job not owned by them
-    
-    // Guest can start their job
-    
-    // Admin can stop a job
-    
-    // Guest cannot stop a job not owned by them
-    
-    // Guest can stop their job
-    
-    // Admin can pause a job
-    
-    // Guest cannot pause a job not owned by them
-    
-    // Guest can pause their job
-    
-    // Admin can resume a job
-    
-    // Guest cannot resume a job not owned by them
-    
-    // Guest can resume their job
-    
-    // Admin can abort a job
-    
-    // Guest cannot abort a job not owned by them
-    
-    // Guest can abort their job
-    
-    // Admin can skip a job's waiting time
-    
-    // Guest cannot skip a job's waiting time not owned by them
-    
-    // Guest can skip their job's waiting time
     
     // Admin can change the number of bots in a job
     [Fact]
