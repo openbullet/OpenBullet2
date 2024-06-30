@@ -30,7 +30,7 @@ Refer to [this guide](https://discourse.openbullet.dev/t/wip-how-to-download-and
 ## 🐛 Report Issues
 Found a bug or have a feature request? Please help us improve by submitting an issue.
 
-[![Open an issue](https://img.shields.io/badge/Issues-Create_a_new_issue-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=bug-report.yaml&title=%5BBug%5D%3A+) [![Request a feature](https://img.shields.io/badge/Issues-Create_a_new_issue-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=feature_request.md&title=%5BREQUEST%5D)
+[![Open an issue](https://img.shields.io/badge/Bug-Report_a_bug-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=bug-report.yaml&title=%5BBug%5D%3A+) [![Request a feature](https://img.shields.io/badge/Feature-Request_a_feature-1abc9c.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=feature_request.md&title=%5BREQUEST%5D)
 
 ## License
 This software is licensed under the MIT License.
