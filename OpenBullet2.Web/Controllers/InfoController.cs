@@ -101,8 +101,8 @@ public class InfoController : ApiController
 
         try
         {
-            // The changelog is only present for stable builds in the master branch
-            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
+            // The changelog is only present for stable builds in the main branch
+            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/main/Changelog/{v}.md";
             using var response = await _httpClient.GetAsync(url);
 
             if (response.StatusCode == HttpStatusCode.NotFound)

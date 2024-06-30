@@ -1,5 +1,5 @@
 # RuriLib.Http
-This is a library that provides a custom HTTP client, in addition to an `HttpMessageHandler` to be used with the default `HttpClient` of `System.Net`. It sits on top of [RuriLib.Proxies](https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Proxies) which provides a layer 4 proxied connection.
+This is a library that provides a custom HTTP client, in addition to an `HttpMessageHandler` to be used with the default `HttpClient` of `System.Net`. It sits on top of [RuriLib.Proxies](https://github.com/openbullet/OpenBullet2/tree/main/RuriLib.Proxies) which provides a layer 4 proxied connection.
 
 # Installation
 [NuGet](https://nuget.org/packages/RuriLib.Http): `dotnet add package RuriLib.Http`

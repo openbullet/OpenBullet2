@@ -8,7 +8,7 @@ This is a library that can proxy a `TcpClient` via a proxy server. Supported pro
 
 All proxy clients derive from the same `ProxyClient` class, so it's really easy to implement different kinds of proxies (and even proxiless connections) with a simple switch statement in your application.
 
-If you are planning to use this library to send HTTP requests via proxy servers, you should look into the [RuriLib.Http](https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Http) library, which depends on this. Only use this library if you are okay with working with raw TCP connections or if you are able to feed the `TcpClient` into another library that provides support for higher layer protocols.
+If you are planning to use this library to send HTTP requests via proxy servers, you should look into the [RuriLib.Http](https://github.com/openbullet/OpenBullet2/tree/main/RuriLib.Http) library, which depends on this. Only use this library if you are okay with working with raw TCP connections or if you are able to feed the `TcpClient` into another library that provides support for higher layer protocols.
 
 # Installation
 [NuGet](https://nuget.org/packages/RuriLib.Proxies): `dotnet add package RuriLib.Proxies`
