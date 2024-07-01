@@ -41,6 +41,7 @@
                 itemClass="input-small" optionClass="input-small"
                 (validityChange)="localSave()"
                 ngDefaultControl
+                [displayFunction]="invariantDisplayFunction"
                 [options]="wordlistTypes"
                 [(ngModel)]="settings.wordlistType"
                 (ngModelChange)="currentWordlistTypeChanged.emit($event)" />

@@ -233,4 +233,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         return '[UNKNOWN TYPE]';
     }
   }
+
+  invariantDisplayFunction(x: string) {
+    return x;
+  }
 }
