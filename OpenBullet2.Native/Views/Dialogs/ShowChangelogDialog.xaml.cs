@@ -46,7 +46,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
                 try
                 {
-                    var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/main/Changelog/{updateService.CurrentVersion}.md");
+                    var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{updateService.CurrentVersion}.md");
                     Text = await response.Content.ReadAsStringAsync();
                 }
                 catch

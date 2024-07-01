@@ -29,7 +29,7 @@ namespace OpenBullet2.Native.Services
                 {
                     try
                     {
-                        var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/main/Announcements/native.md";
+                        var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/native.md";
                         using HttpClient client = new();
                         client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
                         var response = await client.GetAsync(url);
