@@ -1,0 +1,30 @@
+.blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 5px;
+    width: 100%;
+
+    .block-item {
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 5px;
+
+        /* Prevents colors from being too bright */
+        opacity: 0.9;
+        
+        * {
+            cursor: pointer;
+        }
+
+        .category-description {
+            font-size: 12px;
+            opacity: 0.5;
+            display: block;
+        }
+    }
+}

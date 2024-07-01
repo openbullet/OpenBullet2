@@ -1,0 +1,374 @@
+/*
+Overrides for component libraries such as PrimeNG
+*/
+
+.p-card-body {
+    background-color: var(--bg-secondary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 1rem !important;
+}
+
+.p-card-content {
+    padding: 0px !important;
+}
+
+.p-chip {
+    background-color: var(--bg-secondary) !important;
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+p-chip.mt-2 > .p-chip {
+    margin-top: 0.5rem !important;
+}
+
+.p-accordion-header-link,
+.p-accordion-content,
+.p-dialog-header,
+.p-dialog-content,
+.p-dialog-footer,
+.p-fileupload-buttonbar,
+.p-fileupload-content,
+.p-picklist-header,
+.p-picklist-filter-container,
+.p-picklist-list
+{
+    background-color: var(--bg-secondary) !important;
+}
+
+.p-picklist-buttons > .p-button {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+    color: var(--fg-inactive) !important;
+}
+
+.p-picklist-item.p-highlight {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--fg-light) !important;
+}
+
+.p-inputtext {
+    background-color: var(--bg-primary) !important;
+}
+
+.p-fileupload-buttonbar,
+.p-fileupload-content {
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-fileupload-content {
+    border-top: 0px !important;
+    padding: .5rem 1rem !important;
+}
+
+.p-fileupload-content > p-progressbar {
+    display: none;
+}
+
+.p-fileupload-content:not(:has(p-progressbar)) {
+    display: none;
+}
+
+.p-confirm-dialog-reject {
+    background-color: var(--fg-bad) !important;
+    color: var(--fg-light) !important;
+    border: 0px !important;
+}
+
+.p-confirm-dialog-accept {
+    background-color: var(--fg-accent) !important;
+    color: var(--fg-light) !important;
+    border: 0px !important;
+}
+
+.p-fileupload-choose {
+    background-color: var(--fg-accent) !important;
+    color: var(--fg-light) !important;
+    border: 0px !important;
+}
+
+.p-fileupload-row > div > .p-button-icon-only {
+    background-color: var(--fg-bad) !important;
+    color: var(--fg-light) !important;
+    border: 0px !important;
+}
+
+.p-datatable-header {
+    border: 0px !important;
+    background-color: transparent !important;
+    padding: 1rem 0 !important;
+}
+
+.p-datatable-thead > tr {
+    border: 0px !important;
+}
+
+.p-datatable-thead > tr > th {
+    background-color: var(--bg-secondary) !important;
+}
+
+.p-datatable-thead > tr > th {
+    border: 0px !important;
+    padding: 0.4rem 1rem !important;
+}
+
+.p-datatable-wrapper {
+    border: 1px solid var(--fg-inactive);
+    border-radius: 10px;
+}
+
+.p-datatable-tbody > tr:last-child {
+    border: 0px !important;
+}
+
+.p-datatable-tbody > tr > td {
+    border-top: 0px solid var(--fg-inactive) !important;
+    padding: 0.4rem 1rem !important;
+}
+
+.p-datatable-tbody > tr:not(:first-child) > td {
+    border-top: 1px solid var(--fg-inactive) !important;
+}
+
+.p-datatable-tbody > tr:nth-child(odd) {
+    background-color: var(--bg-primary) !important;
+}
+
+.p-datatable-tbody > tr:nth-child(even) {
+    background-color: var(--bg-secondary) !important;
+}
+
+.p-paginator {
+    background-color: transparent !important;
+}
+
+.p-paginator-current {
+    color: var(--fg-primary) !important;
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-paginator-element {
+    color: var(--fg-primary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-paginator-last {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.p-paginator-element.p-highlight {
+    background-color: var(--bg-tertiary) !important;
+}
+
+.p-multiselect {
+    background: unset !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-multiselect-panel {
+    background-color: var(--bg-secondary) !important;
+    color: var(--fg-primary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-multiselect-header {
+    background-color: var(--bg-secondary) !important;
+    color: var(--fg-primary) !important;
+    border-bottom: 1px solid var(--fg-inactive) !important;
+    padding: 0.3rem 0.5rem !important;
+}
+
+.p-multiselect-panel .p-multiselect-items {
+    padding: 0 !important;
+
+    .p-multiselect-item {
+        padding: 0.3rem 0.5rem !important;
+    }
+}
+
+.p-dropdown {
+    background: unset !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.w-100 > .p-dropdown {
+    width: 100% !important;
+}
+
+.p-dropdown:not(:has(.input-small)) {
+    border-radius: 5px !important;
+    height: 41px !important;
+}
+
+.p-dropdown-items-wrapper {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+    border-radius: 5px !important;
+}
+
+.p-dropdown-item.p-highlight {
+    background-color: var(--fg-accent) !important;
+    color: var(--fg-light) !important;
+}
+
+.p-dropdown-trigger {
+    background-color: var(--bg-primary) !important;
+}
+
+.p-inputtext, .p-link {
+    font-family: Poppins !important;
+}
+
+.p-datatable .p-paginator-bottom {
+    border-width: 0px !important;
+}
+
+.p-dropdown-panel .p-dropdown-items {
+    padding: 0px !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font-size: 14px !important;
+    padding: 0.3rem 0.5rem !important;
+}
+
+.p-toast  {
+    .p-toast-message {
+        border: 1px solid var(--fg-inactive) !important;
+    }
+
+    .p-toast-message.p-toast-message-success {
+        background-color: var(--bg-secondary) !important;
+        color: var(--fg-primary) !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: var(--fg-good) !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-info {
+        background-color: var(--bg-secondary) !important;
+        color: var(--fg-primary) !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: var(--fg-accent-light) !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-warn {
+        background-color: var(--bg-secondary) !important;
+        color: var(--fg-primary) !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: var(--fg-custom) !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-error {
+        background-color: var(--bg-secondary) !important;
+        color: var(--fg-primary) !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: var(--fg-bad) !important;
+        }
+    }
+}
+
+.p-toast-icon-close {
+    color: var(--fg-inactive) !important;
+}
+
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+    border-radius: 0px !important;
+    transition: none !important;
+    padding: 0.3rem !important;
+}
+
+.p-menubar {
+    background-color: var(--bg-secondary) !important;
+    padding: .5rem .3rem !important;
+}
+
+p-menubarsub > .p-submenu-list {
+    padding: 0px !important;
+    border: 1px solid var(--fg-inactive) !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link {
+    background-color: var(--bg-tertiary) !important;
+}
+
+.p-menubar .p-menuitem-link {
+    padding: .5rem .3rem !important;
+    font-size: 14px !important;
+}
+
+.p-inputtext.p-component {
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+p-accordiontab {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                border: 1px solid var(--fg-inactive) !important;
+            }
+        }
+    }
+}
+
+.p-accordion .p-accordion-content {
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-column-resizer {
+    content: url("../assets/icons/common/resize-small-horizontal.svg") !important;
+    width: 25px !important;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(93%) saturate(0%) hue-rotate(201deg) brightness(106%) contrast(106%);
+}
+
+.p-progressbar {
+    background-color: var(--bg-tertiary) !important;
+
+    .p-progressbar-value {
+        background-color: var(--fg-accent) !important;
+    }
+
+    .p-progressbar-label {
+        color: var(--fg-primary) !important;
+    }
+}
+
+.p-progressbar-determinate .p-progressbar-value-animate {
+    transition: width .1s ease-in-out !important;
+}
+
+.p-dialog {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-dialog .p-dialog-header {
+    background-color: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--fg-inactive) !important;
+}
+
+.p-radiobutton .p-radiobutton-box {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+    background-color: var(--fg-accent) !important;
+    border: 1px solid var(--fg-accent) !important;
+}
+
+.p-checkbox .p-checkbox-box {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+    background-color: var(--fg-accent) !important;
+    border: 1px solid var(--fg-accent) !important;
+}

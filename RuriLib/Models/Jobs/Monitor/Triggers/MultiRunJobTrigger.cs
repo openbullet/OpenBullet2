@@ -12,12 +12,6 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
             => throw new NotImplementedException();
     }
 
-    public class JobFinishedTrigger : MultiRunJobTrigger
-    {
-        public override bool CheckStatus(MultiRunJob job)
-            => job.Status == JobStatus.Idle && job.Progress == 1f;
-    }
-
     #region Data Numeric Triggers
     public class TestedCountTrigger : MultiRunJobTrigger
     {
@@ -129,39 +123,6 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
 
         public override bool CheckStatus(MultiRunJob job)
             => Functions.Conditions.Conditions.Check(Convert.ToSingle(job.CaptchaCredit), Comparison, Amount);
-    }
-
-    public class ProgressTrigger : MultiRunJobTrigger
-    {
-        public NumComparison Comparison { get; set; }
-        public float Amount { get; set; }
-
-        public override bool CheckStatus(MultiRunJob job)
-            => Functions.Conditions.Conditions.Check(job.Progress * 100, Comparison, Amount);
-    }
-
-    public class TimeElapsedTrigger : MultiRunJobTrigger
-    {
-        public NumComparison Comparison { get; set; }
-        public int Seconds { get; set; } = 0;
-        public int Minutes { get; set; } = 0;
-        public int Hours { get; set; } = 0;
-        public int Days { get; set; } = 0;
-
-        public override bool CheckStatus(MultiRunJob job)
-            => Functions.Conditions.Conditions.Check(job.Elapsed, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
-    }
-
-    public class TimeRemainingTrigger : MultiRunJobTrigger
-    {
-        public NumComparison Comparison { get; set; }
-        public int Seconds { get; set; } = 0;
-        public int Minutes { get; set; } = 0;
-        public int Hours { get; set; } = 0;
-        public int Days { get; set; } = 0;
-
-        public override bool CheckStatus(MultiRunJob job)
-            => Functions.Conditions.Conditions.Check(job.Remaining, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
     }
     #endregion
 }

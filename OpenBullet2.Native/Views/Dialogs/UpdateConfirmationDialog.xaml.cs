@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Native.ViewModels;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,7 +24,15 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            Process.Start("Updater.Native.exe");
+            var updaterFileName = RuntimeInformation.OSArchitecture switch
+            {
+                Architecture.Arm64 => "ob2-native-updater-win-arm64.exe",
+                Architecture.X64 => "ob2-native-updater-win-x64.exe",
+                Architecture.X86 => "ob2-native-updater-win-x86.exe",
+                _ => throw new NotImplementedException()
+            };
+
+            Process.Start(updaterFileName);
             Environment.Exit(0);
         }
 

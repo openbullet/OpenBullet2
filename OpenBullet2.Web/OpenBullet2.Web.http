@@ -1,0 +1,47 @@
+@OpenBullet2.Web_ApiRoot = http://localhost:5000/api/v1
+@OpenBullet2.ApiKey = 0123456789abcdef
+
+### Health check
+GET {{OpenBullet2.Web_ApiRoot}}/health
+
+### Login
+POST {{OpenBullet2.Web_ApiRoot}}/user/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+### Server info
+GET {{OpenBullet2.Web_ApiRoot}}/info/server
+X-Api-Key: {{OpenBullet2.ApiKey}}
+
+### Debug config
+POST {{OpenBullet2.Web_ApiRoot}}/config/debug
+X-Api-Key: {{OpenBullet2.ApiKey}}
+Content-Type: application/json
+
+{
+    "configId": "df12067a-00f6-4a97-b09e-10e1e2f76409",
+    "testData": "123",
+    "wordlistType": "Default",
+    "testProxy": null,
+    "proxyType": "http"
+}
+
+### Create Guest
+POST {{OpenBullet2.Web_ApiRoot}}/guest
+X-Api-Key: {{OpenBullet2.ApiKey}}
+Content-Type: application/json
+
+{
+    "username": "guest7",
+    "password": "",
+    "accessExpiration": "2022-12-31T23:59:59",
+    "allowedAddresses": []
+}
+
+### Get bot details
+GET {{OpenBullet2.Web_ApiRoot}}/job/multi-run/bot-details?jobId=7
+X-Api-Key: {{OpenBullet2.ApiKey}}

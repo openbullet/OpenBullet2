@@ -1,0 +1,432 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8 pl-0">
+            <h1>
+                <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
+                {{mode | titlecase}} Triggered Action
+            </h1>
+            <h6 class="color-inactive">
+                A triggered action is executed when a job meets certain conditions.
+            </h6>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="!loaded || jobs === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-4" *ngIf="loaded && jobs !== null">
+    <!-- TODO: Not all actions are valid for all job types -->
+    <div class="row mb-3">
+        <div class="col-12 px-0">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <app-input-text key="name"
+                [style]="{ 'min-width': '400px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="name" regex="^.+$"
+                placeholder="My triggered action" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 px-0">
+            <div class="mb-1">
+                <span class="text-small">Monitor the following job</span>
+            </div>
+            <app-input-dropdown key="monitoredJob"
+                (touched)="touched = true" ngDefaultControl
+                [displayFunction]="getJobString"
+                [options]="jobs"
+                [ngModel]="getJob(jobId)"
+                (ngModelChange)="setMonitoredJob($event)" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="isRepeatable"
+                [binary]="true" inputId="isRepeatable"
+                label="Can be repeated multiple times" />
+        </div>
+    </div>
+    <div class="row mt-5 mb-3">
+        <div class="col-12 px-0">
+            <h5>
+                When all the following conditions are met
+                <button class="button button-accent ml-2"
+                    pTooltip="Add trigger" tooltipPosition="bottom"
+                    (click)="openAddTriggerModal()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+            </h5>
+        </div>
+    </div>
+    <div *ngFor="let trigger of triggers; let i=index" class="row my-3 justify-content-between trigger">
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.JobStatus">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>The status of the job is</span>
+                <app-input-dropdown [key]="'jobStatus' + i"
+                    class="ml-2"
+                    (touched)="touched = true"
+                    ngDefaultControl
+                    [displayFunction]="displayEnumValue"
+                    [options]="jobStatuses"
+                    [(ngModel)]="trigger.status" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.JobFinished">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <div class="d-flex">
+                    <span class="my-auto">The job has finished</span>
+                </div>
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.TestedCount
+            || trigger._polyTypeName === TriggerType.HitCount
+            || trigger._polyTypeName === TriggerType.CustomCount
+            || trigger._polyTypeName === TriggerType.ToCheckCount
+            || trigger._polyTypeName === TriggerType.FailCount
+            || trigger._polyTypeName === TriggerType.RetryCount
+            || trigger._polyTypeName === TriggerType.BanCount
+            || trigger._polyTypeName === TriggerType.ErrorCount
+            || trigger._polyTypeName === TriggerType.AliveProxiesCount
+            || trigger._polyTypeName === TriggerType.BannedProxiesCount
+            || trigger._polyTypeName === TriggerType.CpmCount
+            ">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>The {{getComparisonSubject(trigger._polyTypeName)}} is</span>
+                <app-input-dropdown [key]="'comparison' + i"
+                    class="ml-2"
+                    (touched)="touched = true"
+                    ngDefaultControl
+                    [displayFunction]="displayEnumValue"
+                    [options]="numComparisons"
+                    [(ngModel)]="trigger.comparison" />
+                <app-input-number class="ml-2" [key]="'amount' + i"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [integer]="true"
+                    [(ngModel)]="trigger.amount" [min]="0" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.CaptchaCredit
+            || trigger._polyTypeName === TriggerType.Progress
+            ">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>The {{getComparisonSubject(trigger._polyTypeName)}} is</span>
+                <app-input-dropdown [key]="'comparison' + i"
+                    class="ml-2"
+                    (touched)="touched = true"
+                    ngDefaultControl
+                    [displayFunction]="displayEnumValue"
+                    [options]="numComparisons"
+                    [(ngModel)]="trigger.comparison" />
+                <app-input-number class="ml-2" [key]="'amount' + i"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [integer]="false"
+                    [(ngModel)]="trigger.amount" [min]="0" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.TimeElapsed
+            || trigger._polyTypeName === TriggerType.TimeRemaining
+            ">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>The {{getComparisonSubject(trigger._polyTypeName)}} is</span>
+                <app-input-dropdown [key]="'comparison' + i"
+                    class="ml-2"
+                    (touched)="touched = true"
+                    ngDefaultControl
+                    [displayFunction]="displayEnumValue"
+                    [options]="numComparisons"
+                    [(ngModel)]="trigger.comparison" />
+                    <app-input-time-span
+                        class="ml-2"
+                        [key]="'timeSpan' + i"
+                        (touched)="touched = true" ngDefaultControl
+                        (validityChange)="onValidityChange($event)"
+                        [timeSpan]="parseTimeSpan(trigger.timeSpan)"
+                        (timeSpanChange)="trigger.timeSpan = $event.toString()"
+                    />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row mt-5 mb-3">
+        <div class="col-12 px-0">
+            <h5>
+                Execute these actions in sequence
+                <button class="button button-accent ml-2"
+                    pTooltip="Add action" tooltipPosition="bottom"
+                    (click)="openAddActionModal()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+            </h5>
+        </div>
+    </div>
+    <div *ngFor="let action of actions; let i=index" class="row my-3 justify-content-between action">
+        <ng-container *ngIf="action._polyTypeName === ActionType.Wait">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Wait</span>
+                <app-input-time-span
+                    class="ml-2"
+                    [key]="'timeSpan' + i"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="parseTimeSpan(action.timeSpan)"
+                    (timeSpanChange)="action.timeSpan = $event.toString()"
+                />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.SetRelativeStartCondition">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Set the relative time start condition to</span>
+                <app-input-time-span
+                    class="ml-2"
+                    [key]="'timeSpan' + i"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="parseTimeSpan(action.timeSpan)"
+                    (timeSpanChange)="action.timeSpan = $event.toString()"
+                />
+                <span class="ml-2">on job</span>
+                <app-input-dropdown [key]="'job' + i"
+                    class="ml-2"
+                    (touched)="touched = true" ngDefaultControl
+                    [displayFunction]="getJobString"
+                    [options]="jobs"
+                    [ngModel]="getJob(action.jobId)"
+                    (ngModelChange)="action.jobId = $event.id" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.StopJob">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Stop job</span>
+                <app-input-dropdown [key]="'job' + i"
+                    class="ml-2"
+                    (touched)="touched = true" ngDefaultControl
+                    [displayFunction]="getJobString"
+                    [options]="jobs"
+                    [ngModel]="getJob(action.jobId)"
+                    (ngModelChange)="action.jobId = $event.id" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.AbortJob">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Abort job</span>
+                <app-input-dropdown [key]="'job' + i"
+                    class="ml-2"
+                    (touched)="touched = true" ngDefaultControl
+                    [displayFunction]="getJobString"
+                    [options]="jobs"
+                    [ngModel]="getJob(action.jobId)"
+                    (ngModelChange)="action.jobId = $event.id" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.StartJob">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Start job</span>
+                <app-input-dropdown [key]="'job' + i"
+                    class="ml-2"
+                    (touched)="touched = true" ngDefaultControl
+                    [displayFunction]="getJobString"
+                    [options]="jobs"
+                    [ngModel]="getJob(action.jobId)"
+                    (ngModelChange)="action.jobId = $event.id" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.DiscordWebhook">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Send this message</span>
+                <app-input-text [key]="'message' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.message"
+                    placeholder="Type your message here" />
+                <span class="ml-2">to Discord via webhook</span>
+                <app-input-text [key]="'webhook' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.webhook"
+                    placeholder="Webhook" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.TelegramBot">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Send this message</span>
+                <app-input-text [key]="'message' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.message"
+                    placeholder="Type your message here" />
+                <span class="ml-2">to Telegram chat</span>
+                <app-input-number [key]="'chatId' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.chatId"
+                    placeholder="1234" />
+                <span class="ml-2">with token</span>
+                <app-input-text [key]="'token' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.token" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.SetBots">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Set bots to</span>
+                <app-input-number [key]="'bots' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.amount" [min]="1"
+                    placeholder="20" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.ReloadProxies">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Reload the proxies</span>
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<p-dialog 
+    header="Add Trigger" 
+    [(visible)]="addTriggerModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-add-trigger
+        [jobType]="getJobType()"
+        (selected)="createTrigger($event)" />
+</p-dialog>
+
+<p-dialog 
+    header="Add Action" 
+    [(visible)]="addActionModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-add-action
+        [jobType]="getJobType()"
+        (selected)="createAction($event)" />
+</p-dialog>

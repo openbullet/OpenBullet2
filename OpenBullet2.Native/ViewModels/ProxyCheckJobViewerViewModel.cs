@@ -136,7 +136,7 @@ namespace OpenBullet2.Native.ViewModels
         public Task Resume() => ProxyCheckJob.Resume();
         public void SkipWait() => ProxyCheckJob.SkipWait();
 
-        public async Task ChangeBots(int newValue)
+        public async Task ChangeBotsAsync(int newValue)
         {
             // TODO: Also edit the job options! So the number of bots is persisted
 

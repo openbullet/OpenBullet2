@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <input id="name" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="name"
+                placeholder="My Wordlist" />
+        </div>
+        <div class="col-auto">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="wordlistType"
+                [options]="wordlistTypes">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Purpose</span>
+            </div>
+            <input id="purpose" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="purpose"
+                placeholder="" />
+            <br />
+            <span class="text-small color-inactive">
+                What is this wordlist going to be used for?
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

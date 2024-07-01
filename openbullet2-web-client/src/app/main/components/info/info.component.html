@@ -1,0 +1,257 @@
+<p-card>
+    <h5 class="disclaimer">
+        <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+        Disclaimer
+    </h5>
+    <span>
+        Performing attacks on sites you do not own (or you do not have permission to test) is <b>illegal</b>! The developer will not be held responsible for improper use of this software.
+    </span>
+</p-card>
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-4 px-0">
+            <a href="https://github.com/openbullet/OpenBullet2" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="white-icon mr-2"
+                        src="../../../../assets/icons/github.svg" 
+                        alt="GitHub" />
+                    <span>GitHub</span>
+                </button>
+            </a>
+            <a href="https://discourse.openbullet.dev" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="mr-2"
+                        src="../../../../assets/icons/discourse.svg" 
+                        alt="GitHub" />
+                    <span>Forum</span>
+                </button>
+            </a>
+            <a [href]="getSwaggerUrl()" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="mr-2"
+                        src="../../../../assets/icons/swagger.svg" 
+                        alt="Swagger" />
+                    <span>API Docs</span>
+                </button>
+            </a>
+        </div>
+        <div class="col-4 px-0 text-right">
+            <span>Donate with</span>
+            <button class="button button-secondary ml-2" 
+                (click)="openBtcDonationModal()">
+                <img 
+                    src="../../../../assets/icons/btc.svg" 
+                    alt="BTC" />
+            </button>
+            <button class="button button-secondary ml-2" 
+                (click)="openEthDonationModal()">
+                <img 
+                    src="../../../../assets/icons/eth.svg" 
+                    alt="ETH" />
+            </button>
+            <button class="button button-secondary ml-2" 
+                (click)="openBchDonationModal()">
+                <img 
+                    src="../../../../assets/icons/bch.svg" 
+                    alt="BCH" />
+            </button>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-4">Contributors</h4>
+
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/ruri.jpg"
+                name="Ruri"
+                role="Developer"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/demiurgo.webp"
+                name="demiurgo"
+                role="Collaborator"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/meinname.jpg"
+                name="meinname"
+                role="Collaborator"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/cider.png"
+                name="CideR™"
+                role="Alpha Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/kuro.webp"
+                name="kurosaki ichigo"
+                role="Alpha Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/b1rdy.png"
+                name="B1rdY"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/br4un.jpg"
+                name="Br4un"
+                role="Beta Tester"/>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/fairy.jpg"
+                name="Fairy"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                name="Itamai"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/laiteux.jpg"
+                name="Laiteux"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/mastercho.webp"
+                name="mastercho"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                name="Mozart"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/pure.jpg"
+                name="Pure"
+                role="Beta Tester"/>
+        </div>
+        <div class="col mt-3 px-0">
+            <app-contributor 
+                image="../../../../assets/images/avatars/qmp.webp"
+                name="qMp"
+                role="Beta Tester"/>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-4 mb-3">Supporters</h4>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 px-0 supporters-wrapper">
+            <div>
+                <!-- GOLD supporters -->
+                <span class="supporter gold">James | Lisse</span>
+                <span class="supporter gold">Mozart</span>
+                <span class="supporter gold">The anti SJW</span>
+            </div>
+            
+            <!-- SILVER supporters -->
+            <div>
+                <span class="supporter silver">Ikamai</span>
+                <span class="supporter silver">TheFiendQQ</span>
+                <span class="supporter silver">Patch2201</span>
+                <span class="supporter silver">Spic</span>
+                <span class="supporter silver">B1rdY</span>
+                <span class="supporter silver">mastercho</span>
+                <span class="supporter silver">alexparkin</span>
+            </div>
+            
+            <!-- BRONZE supporters -->
+            <div>
+                <span class="supporter bronze">k4k4r0to</span>
+                <span class="supporter bronze">donx</span>
+                <span class="supporter bronze">Crackdealer</span>
+                <span class="supporter bronze">moon.Man</span>
+                <span class="supporter bronze">Laiteux</span>
+                <span class="supporter bronze">HarveyS</span>
+                <span class="supporter bronze">ＥｄｗａｒｄＮ</span>
+                <span class="supporter bronze">mimic</span>
+                <span class="supporter bronze">Matthew</span>
+                <span class="supporter bronze">MadmanDev</span>
+                <span class="supporter bronze">Rael</span>
+                <span class="supporter bronze">boggy94</span>
+                <span class="supporter bronze">Pegasus</span>
+                <span class="supporter bronze">Phantøm</span>
+                <span class="supporter bronze">Joey</span>
+                <span class="supporter bronze">dew88</span>
+                <span class="supporter bronze">ManoPlayBRL</span>
+                <span class="supporter bronze">Plog</span>
+                <span class="supporter bronze">Barmoley</span>
+                <span class="supporter bronze">Itamai</span>
+                <span class="supporter bronze">Kurosaki Ichigo</span>
+                <span class="supporter bronze">Pool</span>
+                <span class="supporter bronze">Finlay1010</span>
+                <span class="supporter bronze">n00biE</span>
+                <span class="supporter bronze">kaatil</span>
+                <span class="supporter bronze">Speeedyyyy</span>
+                <span class="supporter bronze">AccountMast3r</span>
+                <span class="supporter bronze">Ruzzlzz</span>
+                <span class="supporter bronze">Cal</span>
+                <span class="supporter bronze">Sparky (Rare)</span>
+                <span class="supporter bronze">Fr00tl00ps | Lisse</span>
+                <span class="supporter bronze">dankmemes43</span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <p-accordion>
+        <p-accordionTab header="MIT License">
+            <p>Copyright © {{currentYear}} OpenBullet</p>
+            <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+            <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+            <p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+        </p-accordionTab>
+    </p-accordion>    
+</div>
+
+<p-dialog 
+    [header]="'Donate with ' + modalCurrency" 
+    [(visible)]="modalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <div class="m-0 donate-with">
+        <div class="d-flex">
+            <div class="mr-3" style="flex: 0 1 80px;">
+                <img 
+                    class="w-100" 
+                    [src]="'../../../../assets/icons/' + modalIcon" 
+                    [alt]="modalCurrency" />
+            </div>
+            <div style="flex: 1 1 auto; min-width: 0px;">
+                <span>If you would like to make a donation to support the development of the software, feel free to send {{modalCurrency}} to the address below. Thank you so much for your support!</span>
+            </div>
+        </div>
+        <div>
+            <input class="w-100 mt-3 monospace text-center"
+                [value]="modalAddress" readonly />
+        </div>
+    </div>
+</p-dialog>

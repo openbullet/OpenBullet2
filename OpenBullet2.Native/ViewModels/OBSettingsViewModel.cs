@@ -412,7 +412,7 @@ namespace OpenBullet2.Native.ViewModels
             General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
             General.CustomSnippets = CustomSnippetsCollection.ToList();
             Remote.ConfigsEndpoints = RemoteConfigsEndpointsCollection.ToList();
-            return service.Save();
+            return service.SaveAsync();
         }
 
         public void Reset()

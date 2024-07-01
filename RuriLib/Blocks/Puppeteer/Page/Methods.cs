@@ -312,8 +312,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }
 
-        private static PuppeteerSharp.Page GetPage(BotData data)
-            => data.TryGetObject<PuppeteerSharp.Page>("puppeteerPage") ?? throw new Exception("No pages open!");
+        private static IPage GetPage(BotData data)
+            => data.TryGetObject<IPage>("puppeteerPage") ?? throw new Exception("No pages open!");
 
         private static void SwitchToMainFramePrivate(BotData data)
             => data.SetObject("puppeteerFrame", GetPage(data).MainFrame);

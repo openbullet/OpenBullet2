@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <span class="mr-2">The maximum allowed ping is</span>
+            <input id="maxPing" type="number"
+                spellcheck="false"
+                [(ngModel)]="maxPing"
+                placeholder="10000" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-bad float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<h1>
+    <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
+    Readme
+</h1>
+<h6 class="color-inactive">
+    This is the documentation for your config. Write anything useful to know about
+    the config, like some preferred settings to use in the job or maybe images and links!
+</h6>
+
+<div class="mt-3" *ngIf="config === null">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            No config selected
+        </h5>
+        <span class="text-small">
+            No config was selected, please select a config first.
+        </span>
+    </p-card>
+</div>
+
+<div *ngIf="config !== null" class="container-fluid">
+    <div class="row my-3">
+        <div class="col-6 pl-0">
+            <textarea 
+                type="text"
+                class="readme-input monospace"
+                [value]="config.readme"
+                (change)="valueChanged($event)"
+                placeholder="You can use **markdown** here!"
+                spellcheck="false"
+            ></textarea>
+        </div>
+        <div class="col-6 pr-0">
+            <p class="readme" 
+                [innerHTML]="config.readme | markdown | async"></p>
+        </div>
+    </div>
+</div>

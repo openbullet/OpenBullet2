@@ -1,0 +1,16 @@
+<button
+    class="button button-small button-secondary py-0 setting-input-mode-button"
+    [pTooltip]="'Change to ' + getNextMode() + ' mode'"
+    tooltipPosition="bottom"
+    (click)="loopMode()">
+    <fa-icon *ngIf="mode === SettingInputMode.Fixed"
+        [icon]="faFont" [fixedWidth]="true"></fa-icon>
+
+    <fa-icon *ngIf="mode === SettingInputMode.Interpolated"
+        [icon]="faCode" [fixedWidth]="true"></fa-icon>
+
+    <span class="var-mode-text"
+        *ngIf="mode === SettingInputMode.Variable">
+        VAR
+    </span>
+</button>

@@ -4,6 +4,6 @@ namespace RuriLib.Models.Proxies
 {
     public interface IProxyCheckOutput
     {
-        Task Store(Proxy proxy);
+        Task StoreAsync(Proxy proxy);
     }
 }

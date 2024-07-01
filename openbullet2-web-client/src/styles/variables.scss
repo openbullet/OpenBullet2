@@ -1,0 +1,59 @@
+$small: 576px;
+$medium: 768px;
+$large: 992px;
+$xlarge: 1200px;
+
+/*
+    These are CSS and not SCSS variables so they can be
+    easily replaced by themes.
+*/
+
+:root {
+    --fg-primary: #C2C4C6;
+    --fg-light: #ffffff;
+    --fg-inactive: #6e6e6e;
+    --fg-inactive-light: #a0a0a0;
+    --bg-primary: #161819;
+    --bg-variable: #202a5e;
+    --bg-interpolated: #1f4d2f;
+    --fg-accent: #325AF5;
+    --fg-accent-light: #5a76e9;
+    --bg-secondary: #1F2123;
+    --bg-tertiary: #33373a;
+    --bg-accent: #090e25;
+    --fg-good: yellowgreen;
+    --fg-bad: tomato;
+    --fg-custom: darkorange;
+    --fg-tocheck: #7fe5ff;
+    --fg-banned: #DDA0DD;
+    --fg-retry: #FFFF00;
+    --fg-error: rgb(240, 23, 60);
+    --bg-bad: rgb(131, 36, 19);
+    --fg-gold: gold;
+    --fg-silver: silver;
+    --fg-bronze: rgb(228, 151, 63);
+    --fg-variable: #2a3a8b;
+    --fg-interpolated: #287443;
+    
+    --chart-series-1: #52489C;
+    --chart-series-2: #00798C;
+    --chart-series-3: #3376BD;
+    --chart-series-4: #EDAE49;
+    --chart-series-5: #E63946;
+
+    /* 
+    Other cool colors for charts:
+    --chart-series-1: #003f5c;
+    --chart-series-2: #58508d;
+    --chart-series-3: #bc5090;
+    --chart-series-4: #ff6361;
+    --chart-series-5: #ffa600;
+
+    --chart-series-1: #325af5;
+    --chart-series-2: #ee5e6e;
+    --chart-series-3: #3ab75f;
+    --chart-series-4: #f5a132;
+    --chart-series-5: #fccc5b;
+    */
+
+}

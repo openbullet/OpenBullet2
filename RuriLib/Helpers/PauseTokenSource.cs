@@ -17,7 +17,7 @@ namespace RuriLib.Helpers
 
         public PauseToken Token => new(this);
 
-        public async Task<bool> IsPaused(CancellationToken token = default)
+        public async Task<bool> IsPausedAsync(CancellationToken token = default)
         {
             await stateAsyncLock.WaitAsync(token);
 
@@ -151,7 +151,7 @@ namespace RuriLib.Helpers
             this.source = source;
         }
 
-        public Task<bool> IsPaused() => source.IsPaused();
+        public Task<bool> IsPaused() => source.IsPausedAsync();
 
         public Task PauseIfRequestedAsync(CancellationToken token = default)
             => source.PauseIfRequestedAsync(token);

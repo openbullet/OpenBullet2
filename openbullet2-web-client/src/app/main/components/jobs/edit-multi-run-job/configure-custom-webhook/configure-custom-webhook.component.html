@@ -1,0 +1,41 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Webhook URL</span>
+            </div>
+            <input id="url" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="url"
+                placeholder="http://mycustomwebhook.com" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Username</span>
+            </div>
+            <input id="user" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="user"
+                placeholder="Anonymous" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                [(ngModel)]="onlyHits"
+                [binary]="true" inputId="onlyHits"
+                label="Only send hits" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

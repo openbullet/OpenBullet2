@@ -127,7 +127,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.ChangeBots(newValue);
+                await vm.ChangeBotsAsync(newValue);
             }
             catch (Exception ex)
             {

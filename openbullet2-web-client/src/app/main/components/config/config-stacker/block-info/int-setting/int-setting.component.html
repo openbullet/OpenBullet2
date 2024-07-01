@@ -1,0 +1,25 @@
+<div class="d-flex justify-content-between w-100">
+    <app-input-number [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        class="input-small w-100 monospace"
+        ngDefaultControl
+        (ngModelChange)="setValue($event)"
+        [ngModel]="setting.value"
+        [integer]="true"
+        [min]="-2147483648"
+        [max]="2147483647"
+        pTooltip="{{parameter?.description}}"
+        placeholder="0" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        [stacker]="stacker"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[SettingInputMode.Fixed, SettingInputMode.Variable]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>

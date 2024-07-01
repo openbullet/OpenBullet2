@@ -9,7 +9,7 @@ namespace RuriLib.Tests.Functions.Networking
         [Fact]
         public async Task FromGoogle_MailDotCom_MXRecords()
         {
-            var entries = await DnsLookup.FromGoogle("mail.com", "MX");
+            var entries = await DnsLookup.FromGoogleAsync("mail.com", "MX");
             Assert.Contains("mx00.mail.com", entries);
             Assert.Contains("mx01.mail.com", entries);
         }

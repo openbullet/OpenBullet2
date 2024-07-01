@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ApplicationIcon>logo.ico</ApplicationIcon>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <!--
+        We cannot use this because of CSharpScript API https://github.com/dotnet/roslyn/issues/50719
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>false</SelfContained>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        -->
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.*</AssemblyVersion>
+        <Deterministic>false</Deterministic>
+        <UserSecretsId>84096099-9bc0-494f-80a0-d9a7d9e7ecbb</UserSecretsId>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DisableBeauty>False</DisableBeauty>
+        <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
+        <BeautyOnPublishOnly>True</BeautyOnPublishOnly>
+        <BeautyNoRuntimeInfo>False</BeautyNoRuntimeInfo>
+        <BeautyUsePatch>True</BeautyUsePatch>
+        <BeautyLogLevel>Info</BeautyLogLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="Configs\**"/>
+        <Content Remove="Configs\**"/>
+        <EmbeddedResource Remove="Configs\**"/>
+        <None Remove="Configs\**"/>
+        <None Remove="dbip-country-lite.mmdb"/>
+        <Content Include="dbip-country-lite.mmdb">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="FluentValidation" Version="11.9.2" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6"/>
+        <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.11" />
+        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.5"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="version.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

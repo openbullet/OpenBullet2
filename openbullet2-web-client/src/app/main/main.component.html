@@ -1,0 +1,47 @@
+<div class="wrapper">
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img class="logo" src="../../assets/images/logohq.png"
+                alt="OpenBullet 2" />
+        </div>
+        <div class="sidebar-version" *ngIf="updateInfo !== null">
+            <a href="javascript:void(0);" (click)="showChangelog()"
+                [pTooltip]="updateInfo.isUpdateAvailable ? 'Update available! Click here to learn more' : ''">
+                <fa-icon
+                    *ngIf="updateInfo.isUpdateAvailable"
+                    class="color-custom mr-1"
+                    [icon]="faExclamationTriangle"
+                    [fixedWidth]="true"></fa-icon>
+                <span class="version">v{{updateInfo.currentVersion}} [{{updateInfo.currentVersionType}}]</span>
+            </a>
+        </div>
+        <div class="sidebar-menu">
+            <app-menu></app-menu>
+        </div>
+        <div *ngIf="canLogout()" class="sidebar-logout">
+            <button class="button button-transparent" 
+                (click)="logout()">
+                <fa-icon [icon]="faRightFromBracket" [fixedWidth]="true"></fa-icon>
+                Log out
+            </button>
+        </div>
+    </div>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<p-dialog 
+    #changelogModal
+    header="Changelog"
+    [(visible)]="changelogModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-changelog
+        #changelogComponent
+        [updateInfo]="updateInfo" />
+</p-dialog>

@@ -1,0 +1,242 @@
+<h1>
+    <fa-icon [icon]="faGears" [fixedWidth]="true"></fa-icon>
+    Configs
+</h1>
+<h6 class="color-inactive">
+    Import, export and manage your configs, which contain the instructions needed to test a target website
+</h6>
+
+<div class="mt-3">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            Warning
+        </h5>
+        <span class="text-small">
+            Configs can contain C# code that is executed without any automatic checks for malicious behaviors.
+            If you use configs made by third parties, it is <b class="color-bad">your responsibility</b> 
+            to make sure that configs do exactly what they are supposed to do and that nothing shady is going on.
+            <b class="color-bad">Always check</b> the LoliCode / C# code yourself before running them if you don't completely trust the origin.
+        </span>
+    </p-card>
+</div>
+
+<app-spinner *ngIf="configs === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="configs !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-menubar [model]="configMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+                <ng-template pTemplate="end">
+                    <button class="button button-secondary" *ngIf="displayMode === 'table'"
+                        pTooltip="Clear filters" tooltipPosition="bottom"
+                        (click)="configDt.clear()">
+                        Clear
+                        <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <span class="p-input-icon-left ml-auto" *ngIf="displayMode === 'table'">
+                        <input pInputText type="text"
+                            spellcheck="false"
+                            class="ml-2"
+                            [style]="{ height: '33px' }"
+                            (input)="configDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    </span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div [class]="displayMode === 'table' ? 'row my-3' : 'row my-3 d-none'">
+        <div class="col-12 px-0">
+            <p-table
+                #configDt
+                [value]="configs"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="true"
+                [rows]="10"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [globalFilterFields]="['name', 'author', 'category', 'isRemote', 'proxies', 'wordlists', 'creationDate', 'lastModified']"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>
+                            {{ configs.length === 0 
+                                ? 'No configs found' 
+                                : 'No configs match the filter' }}
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="configs.length > 0">
+                        <th></th>
+                        <th style="min-width:12rem" pResizableColumn pSortableColumn="name">
+                            <div class="d-flex align-items-center">
+                                Name <p-sortIcon field="name" />
+                                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="author">
+                            <div class="d-flex align-items-center">
+                                Author <p-sortIcon field="author" />
+                                <p-columnFilter type="text" field="author" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="category">
+                            <div class="d-flex align-items-center">
+                                Category <p-sortIcon field="category" />
+                                <p-columnFilter type="text" field="category" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:3rem">
+                            <div class="d-flex align-items-center">
+                                Remote
+                                <p-columnFilter type="boolean" field="isRemote" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:3rem">
+                            <div class="d-flex align-items-center">
+                                Proxies
+                                <p-columnFilter type="boolean" field="needsProxies" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:8rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Wordlists
+                                <p-columnFilter type="text" field="allowedWordlistTypes" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:8rem" pSortableColumn="creationDate">
+                            <div class="d-flex align-items-center">
+                                Creation date <p-sortIcon field="creationDate" />
+                                <p-columnFilter type="date" field="creationDate" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:8rem" pSortableColumn="lastModified">
+                            <div class="d-flex align-items-center">
+                                Last modified <p-sortIcon field="lastModified" />
+                                <p-columnFilter type="date" field="lastModified" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-config>
+                    <tr>
+                        <td>
+                            <img class="config-table-icon" 
+                                [src]="'data:image/png;base64,' + config.base64Image" />
+                        </td>
+                        <td>
+                            <a class="color-accent-light"
+                                role="button"
+                                (click)="safeEditConfig(config)" >
+                                {{ config.name }}
+                            </a>
+                        </td>
+                        <td>{{ config.author }}</td>
+                        <td>{{ config.category }}</td>
+                        <td>
+                            <app-boolean-icon
+                                [useColors]="false"
+                                [value]="config.isRemote" />
+                        </td>
+                        <td>
+                            <app-boolean-icon 
+                                [useColors]="false"
+                                [value]="config.needsProxies" />
+                        </td>
+                        <td>
+                            <p-chip ngClass="mr-2" *ngFor="let wordlistType of config.allowedWordlistTypes">
+                                {{ wordlistType }}
+                            </p-chip>
+                        </td>
+                        <td>
+                            <span
+                                tooltipPosition="bottom"
+                                [pTooltip]="(config.creationDate | date : 'medium') ?? ''">
+                                {{ moment(config.creationDate).fromNow() }}
+                            </span>
+                        </td>
+                        <td>
+                            <span tooltipPosition="bottom"
+                                [pTooltip]="(config.lastModified | date : 'medium') ?? ''">
+                                {{ moment(config.lastModified).fromNow() }}
+                            </span>
+                        </td>
+                        <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
+                            <ng-container *ngIf="!config.isRemote">
+                                <button class="button button-transparent"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="safeCloneConfig(config, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent"
+                                    pTooltip="Download" tooltipPosition="bottom"
+                                    (click)="downloadConfig(config, $event)">
+                                    <fa-icon [icon]="faDownload" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent"
+                                    pTooltip="Delete" tooltipPosition="bottom"
+                                    (click)="confirmDeleteConfig(config, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div [class]="displayMode === 'grid' ? 'row my-3' : 'row my-3 d-none' ">
+        <div class="configs-grid">
+            <div *ngFor="let config of configs"
+                class="config-item" role="button" (click)="safeEditConfig(config)">
+                <img class="config-grid-icon mb-2" 
+                    [src]="'data:image/png;base64,' + config.base64Image" />
+                <span class="color-accent-light d-block">{{config.name}}</span>
+                <span class="d-block">by {{config.author}}</span>
+                <span class="d-block">{{config.lastModified | date}}</span>
+                <div class="config-grid-buttons mt-2">
+                    <button class="button button-transparent"
+                        pTooltip="Clone" tooltipPosition="bottom"
+                        (click)="safeCloneConfig(config, $event)">
+                        <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <button class="button button-transparent"
+                        pTooltip="Download" tooltipPosition="bottom"
+                        (click)="downloadConfig(config, $event)">
+                        <fa-icon [icon]="faDownload" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <button class="button button-transparent"
+                        pTooltip="Delete" tooltipPosition="bottom"
+                        (click)="confirmDeleteConfig(config, $event)">
+                        <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #uploadConfigsModal
+    header="Upload configs"
+    [(visible)]="uploadConfigsModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-upload-configs
+        #uploadConfigsComponent
+        (confirm)="uploadConfigs($event)" />
+</p-dialog>

@@ -13,8 +13,8 @@ namespace OpenBullet2.Native.Services
         private readonly string versionFile = "version.txt";
         private readonly Timer timer;
 
-        public Version CurrentVersion { get; private set; } = new(0, 2, 5);
-        public Version RemoteVersion { get; private set; } = new(0, 2, 5);
+        public Version CurrentVersion { get; private set; } = new(0, 3, 0);
+        public Version RemoteVersion { get; private set; } = new(0, 3, 0);
         public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
         public string CurrentVersionType => CurrentVersion.Major == 0
             ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
@@ -43,11 +43,11 @@ namespace OpenBullet2.Native.Services
             }
 
             // Check for updates once a day
-            timer = new Timer(new TimerCallback(async _ => await FetchRemoteVersion()),
+            timer = new Timer(new TimerCallback(async _ => await FetchRemoteVersionAsync()),
                     null, 0, (int)TimeSpan.FromDays(1).TotalMilliseconds);
         }
 
-        private async Task FetchRemoteVersion()
+        private async Task FetchRemoteVersionAsync()
         {
             var isDebug = false;
 

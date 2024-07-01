@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <input id="username" type="text"
+                spellcheck="false"
+                [(ngModel)]="name"
+                placeholder="My proxy group" />
+            <br />
+            <span class="text-small color-inactive">
+                Between 3 and 32 characters.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

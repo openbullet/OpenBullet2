@@ -1,0 +1,628 @@
+<div class="back-to-jobs-container">
+    <div class="back-to-jobs" (click)="backToJobs()">
+        <fa-icon [icon]="faAngleLeft" [fixedWidth]="true"></fa-icon>
+        <span class="ml-2">Back to Jobs</span>
+    </div>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job === null">
+    <div class="ball"></div>
+    <h2 class="job-name">
+        <span>Multi Run Job</span>
+    </h2>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job !== null">
+    <div [class]="'job-chip bg-' + statusColor[status]">
+        {{ status | uppercase }}
+    </div>
+    <h2 class="job-name">
+        <span>{{job.name}}</span>
+        <span class="text-small ml-2 color-inactive">MULTI RUN JOB</span>
+    </h2>
+    <div class="edit-button-container">
+        <app-docs-button path="jobs/multi-run-job/running" class="mr-1" />
+        <button class="button button-secondary"
+            [disabled]="!canEdit()"
+            (click)="editSettings()">
+            <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+            Edit Settings
+        </button>
+    </div>
+</div>
+
+<app-spinner *ngIf="job === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-3" *ngIf="job !== null">
+    <div class="row">
+        <div class="col-4 pl-0 pr-3">
+            <p-card class="job-stats">
+                <h4 class="mb-2">Data stats</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="job-stat"
+                            pTooltip="Tested data lines + skipped data lines"
+                            tooltipPosition="bottom">
+                            <span>
+                                Tested:
+                            </span>
+                            <span class="ml-1">
+                                {{dataStats.tested}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-good">
+                                Hits:
+                            </span>
+                            <span class="ml-1 color-good">
+                                {{dataStats.hits}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-custom">
+                                Custom:
+                            </span>
+                            <span class="ml-1 color-custom">
+                                {{dataStats.custom}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-bad">
+                                Fails:
+                            </span>
+                            <span class="ml-1 color-bad">
+                                {{dataStats.fails}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-bad">
+                                Invalid:
+                            </span>
+                            <span class="ml-1 color-bad">
+                                {{dataStats.invalid}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="job-stat">
+                            <span class="color-retry">
+                                Retried:
+                            </span>
+                            <span class="ml-1 color-retry">
+                                {{dataStats.retried}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-banned">
+                                Banned:
+                            </span>
+                            <span class="ml-1 color-banned">
+                                {{dataStats.banned}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-tocheck">
+                                To check:
+                            </span>
+                            <span class="ml-1 color-tocheck">
+                                {{dataStats.toCheck}}
+                            </span>
+                        </div>
+                        <div class="job-stat">
+                            <span class="color-error">
+                                Errors:
+                            </span>
+                            <span class="ml-1 color-error">
+                                {{dataStats.errors}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4 pl-0 pr-3">
+            <p-card class="job-stats">
+                <h4 class="mb-2">Proxy stats</h4>
+                <div class="job-stat">
+                    <span>
+                        Total:
+                    </span>
+                    <span class="ml-1">
+                        {{proxyStats.total}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-good">
+                        Alive:
+                    </span>
+                    <span class="ml-1 color-good">
+                        {{proxyStats.alive}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-banned">
+                        Banned:
+                    </span>
+                    <span class="ml-1 color-banned">
+                        {{proxyStats.banned}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-bad">
+                        Bad:
+                    </span>
+                    <span class="ml-1 color-bad">
+                        {{proxyStats.bad}}
+                    </span>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4 pl-3 pr-0">
+            <p-card class="job-stats">
+                <h4 class="mb-2">Other stats</h4>
+                <div class="job-stat">
+                    <span class="color-inactive">
+                        CPM:
+                    </span>
+                    <span class="ml-1">
+                        {{cpm}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-inactive">
+                        Captcha credit:
+                    </span>
+                    <span class="ml-1">
+                        {{captchaCredit}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-inactive">
+                        Elapsed:
+                    </span>
+                    <span class="ml-1">
+                        {{elapsed | timespan}}
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-inactive">
+                        Remaining:
+                    </span>
+                    <span *ngIf="status === JobStatus.RUNNING" class="ml-1">
+                        {{remaining | timespan}}
+                    </span>
+                    <span *ngIf="status !== JobStatus.RUNNING" class="ml-1">
+                        -
+                    </span>
+                </div>
+                <div class="job-stat">
+                    <span class="color-inactive">
+                        Progress:
+                    </span>
+                    <span class="ml-1">
+                        {{getTestedCount()}} / {{dataStats.total}} ({{progress | percent : '1.2-2'}})
+                    </span>
+                </div>
+            </p-card>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job options</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 pl-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Config
+                </div>
+                <div *ngIf="job.config !== null"
+                    class="named-card-value config-info">
+                    <img class="config-icon mr-2"
+                        [src]="'data:image/png;base64,' + job.config.base64Image" />
+                    <div class="config-info-text-wrapper">
+                        <span class="config-info-name">
+                            {{ job.config.name }}
+                        </span>
+                        <span class="config-info-author">
+                            by {{ job.config.author }}
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="job.config === null"
+                    class="named-card-value config-info">
+                    <span class="config-info-name">
+                        No config
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Data pool
+                </div>
+                <div class="named-card-value">
+                    <div>
+                        <span style="word-wrap: break-word;">
+                            {{job.dataPoolInfo}}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-small color-inactive">
+                            Skip {{job.skip}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key d-flex">
+                    <span>
+                        Bots
+                    </span>
+                    <button class="button button-transparent ml-auto change-bots-button"
+                        *ngIf="!isChangingBots"
+                        pTooltip="Change the number of bots"
+                        (click)="showEditBotsInput()">
+                        <fa-icon class="color-inactive" [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+                <div class="named-card-value">
+                    <span *ngIf="!isChangingBots">
+                        {{bots}}
+                    </span>
+                    <div *ngIf="isChangingBots" class="change-bots-input-wrapper">
+                        <app-input-number key="bots" class="input-small"
+                            ngDefaultControl placeholder="1"
+                            [(ngModel)]="desiredBots" [min]="1"
+                            [max]="botLimit"
+                        />
+                        <button class="button button-transparent ml-auto"
+                            (click)="changeBots(desiredBots)">
+                            <fa-icon class="color-good" [icon]="faCheck" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [className]="shouldUseProxies() ? 'col-4' : 'col-2'">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Use proxies
+                </div>
+                <div class="named-card-value">
+                    <div class="d-flex align-items-center">
+                        <app-boolean-icon 
+                        [useColors]="false"
+                        [value]="shouldUseProxies()" />
+                        <span class="text-small ml-auto color-inactive">
+                            {{job.proxyMode === JobProxyMode.Default ? "config's default" : "overrides config's default"}}
+                        </span>
+                    </div>
+                    <!-- We need text-small and color-inactive on the parent 
+                    as well since we want to style the ellipsis dots -->
+                    <ul class="value-list text-small color-inactive mt-2" *ngIf="shouldUseProxies()">
+                        <li *ngFor="let source of job.proxySources">
+                            <span class="text-small color-inactive monospace">
+                                {{source}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div [className]="shouldUseProxies() ? 'col-2 pr-0' : 'col-4 pr-0'">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Hit outputs
+                </div>
+                <div class="named-card-value">
+                    <!-- We need text-small and color-inactive on the parent 
+                    as well since we want to style the ellipsis dots -->
+                    <ul class="value-list text-small color-inactive">
+                        <li *ngFor="let output of job.hitOutputs">
+                            <span class="text-small color-inactive monospace">
+                                {{output}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="customInputs !== null && customInputs.length > 0">
+        <div class="col-12 px-0">
+            <div class="named-card">
+                <div class="named-card-key d-flex">
+                    Custom inputs
+                    <button class="button button-transparent ml-auto change-bots-button"
+                        *ngIf="job.status === JobStatus.IDLE"
+                        pTooltip="Configure the custom inputs"
+                        tooltipPosition="left"
+                        (click)="customInputsModalVisible = true">
+                        <fa-icon class="color-inactive" [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+                <div class="named-card-value">
+                    <ul class="custom-inputs-list">
+                        <li class="text-small" *ngFor="let input of customInputs">
+                            {{ input.variableName }} = {{ input.currentAnswer ?? 'NOT SET' }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="botDetails.length > 0">
+        <div class="col-12 px-0">
+            <div class="bot-details-table-wrapper">
+                <p-table
+                    #botDetailsDt
+                    [value]="botDetails"
+                    [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                    [paginator]="false"
+                    [resizableColumns]="true"
+                    [scrollable]="true"
+                    scrollDirection="horizontal"
+                    columnResizeMode="expand"
+                    >
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width:2rem">
+                                <div class="d-flex align-items-center">
+                                    BOTNUM
+                                </div>
+                            </th>
+                            <th style="width:14rem" pResizableColumn>
+                                <div class="d-flex align-items-center">
+                                    Data
+                                </div>
+                            </th>
+                            <th style="width:14rem" pResizableColumn>
+                                <div class="d-flex align-items-center">
+                                    Proxy
+                                </div>
+                            </th>
+                            <th style="min-width:7rem" pResizableColumn>
+                                <div class="d-flex align-items-center">
+                                    Info
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-botData>
+                        <tr>
+                            <td>{{ botData.id }}</td>
+                            <td>{{ botData.data }}</td>
+                            <td>{{ botData.proxy ?? '-' }}</td>
+                            <td>{{ botData.info }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job controls</h5>
+        </div>
+    </div>
+    <div class="row job-controls">
+        <div class="col align-self-stretch">
+            <div class="job-progress">
+                <p-progressBar 
+                    [mode]="status === JobStatus.WAITING ? 'indeterminate' : 'determinate'"
+                    [value]="Math.round(progress * 100 * 100) / 100"
+                    [showValue]="false"></p-progressBar>
+                <div class="progress-label">
+                    <div class="progress-label-text">
+                        <span *ngIf="status === JobStatus.WAITING">
+                            Waiting... {{waitLeft | timespan}} left
+                        </span>
+                        <span *ngIf="status !== JobStatus.WAITING">
+                            {{progress | percent : '1.2-2'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-auto" *ngIf="canSkipWait()">
+            <button class="button button-secondary color-bad"
+                (click)="skipWait()">
+                <fa-icon [icon]="faX" [fixedWidth]="true"></fa-icon>
+                Skip Wait
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canStart()">
+            <button class="button button-secondary color-good"
+                (click)="start()">
+                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                Start
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canResume()">
+            <button class="button button-secondary color-good"
+                (click)="resume()">
+                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                Resume
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canPause()">
+            <button class="button button-secondary color-custom"
+                tooltipPosition="bottom"
+                pTooltip="Waits for all jobs to finish processing the current data, and then pauses the job"
+                (click)="pause()">
+                <fa-icon [icon]="faPause" [fixedWidth]="true"></fa-icon>
+                Pause
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canStop()">
+            <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Gracefully stops the job, waiting for all bots to finish"
+                (click)="stop()">
+                <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                Stop
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canAbort()">
+            <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Aggressively stops the job, killing all bots"
+                (click)="abort()">
+                <fa-icon [icon]="faX" [fixedWidth]="true"></fa-icon>
+                Abort
+            </button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6 pl-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Log
+                </div>
+                <div class="named-card-value logs">
+                    <!-- TODO: For now, the logBufferSize is set to 200 to avoid
+                    performance issues. To do this properly, we need to work on
+                    DOM manipulation without redrawing the whole list every time,
+                    and we also want to add virtualization that only displays
+                    the items that should be visible on the screen at a given time -->
+                    <div class="log-line" *ngFor="let log of logs">
+                        <span class="log-line-time monospace">
+                            {{log.timestamp | date : 'HH:mm:ss'}}
+                        </span>
+                        <span class="log-line-message monospace"
+                            [style]="{ color: log.color }">
+                            {{log.message}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 pr-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Hits
+                </div>
+                <div class="named-card-value hits">
+                    <ul class="hits-list">
+                        <li *ngFor="let hit of filteredHits" class="hit"
+                            [class.selected]="isHitSelected(hit)"
+                            (click)="onHitClicked(hit, $event)">
+                            <span class="monospace color-inactive">
+                                [{{hit.date | date : 'medium'}}]
+                            </span>
+                            <span class="monospace" [ngClass]="getHitColorClass(hit.type)">
+                                [{{hit.type}}]
+                            </span>
+                            <span class="monospace">
+                                {{hit.data}}
+                            </span>
+                            <span class="monospace color-inactive">
+                                | 
+                            </span>
+                            <span class="monospace">
+                                {{hit.proxy === null ? '-' : hit.proxy.host + ':' + hit.proxy.port}}
+                            </span>
+                            <span class="monospace color-inactive">
+                                | 
+                            </span>
+                            <span class="monospace">
+                                {{hit.capturedData}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex align-items-center" style="margin-top: 10px;">
+                <div class="mr-auto">
+                    <span class="text-small color-inactive">
+                        {{selectedHits.length}} / {{filteredHits.length}} hits selected
+                    </span>
+                </div>
+                <app-input-dropdown key="hitType"
+                    [itemClass]="'input-small ' + getHitColorClass(selectedHitType)"
+                    optionClass="input-small"
+                    ngDefaultControl
+                    [displayFunction]="hitTypeDisplayFunction"
+                    [options]="hitTypes"
+                    [ngModel]="selectedHitType"
+                    (ngModelChange)="chooseHitType($event)" />
+                <button class="button button-secondary ml-2"
+                    pTooltip="Copy data of selected hits to clipboard"
+                    tooltipPosition="bottom"
+                    (click)="copyHitData(false)">
+                    <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    pTooltip="Copy data and capture of selected hits to clipboard"
+                    tooltipPosition="bottom"
+                    (click)="copyHitData(true)">
+                    <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+                    <fa-icon [icon]="faCircleDot" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    *ngIf="userRole === 'admin'"
+                    pTooltip="Send selected hit to debugger"
+                    tooltipPosition="bottom"
+                    (click)="sendToDebugger()">
+                    <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    *ngIf="userRole === 'admin'"
+                    pTooltip="Show full log of selected hit"
+                    tooltipPosition="bottom"
+                    (click)="showFullLog()">
+                    <fa-icon [icon]="faAlignLeft" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-8 ml-auto mt-3 text-right">
+                    <span class="text-small color-inactive">
+                        To select multiple hits, hold CTRL and click on the hits, or
+                        hold SHIFT and click on the first and last hit you want to select.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #hitLogModal
+    header="Hit Log" 
+    [(visible)]="hitLogModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-hit-log *ngIf="jobId !== null"
+        #hitLogComponent
+        [jobId]="jobId" />
+</p-dialog>
+
+<p-dialog 
+    #customInputsModal
+    header="Custom Inputs" 
+    [(visible)]="customInputsModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-custom-inputs *ngIf="jobId !== null && customInputs !== null"
+        #customInputsComponent
+        [jobId]="jobId"
+        [questions]="customInputs"
+        (confirm)="setCustomInputs($event)" />
+</p-dialog>
+
+<audio #hitSoundPlayer>
+    <source src="../../../../../assets/sounds/hit.wav" type="audio/wav">
+</audio>

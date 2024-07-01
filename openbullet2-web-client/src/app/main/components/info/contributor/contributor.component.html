@@ -1,0 +1,25 @@
+<div class="wrapper">
+    <!-- No image -->
+    <p-avatar 
+        *ngIf="image === null" 
+        [label]="name[0]"
+        size="xlarge"
+        shape="circle">
+    </p-avatar>
+    
+    <!-- With image -->
+    <p-avatar 
+        *ngIf="image !== null" 
+        [image]="image"
+        size="xlarge"
+        shape="circle">
+    </p-avatar>
+
+    <!-- I don't even know why but without this, the
+    avatar without an image is off by a few pixels -->
+    <div style="height: 8px;" *ngIf="image === null">
+    </div>
+
+    <div class="name">{{name}}</div>
+    <div class="role">{{role}}</div>
+</div>

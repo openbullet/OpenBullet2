@@ -1,0 +1,198 @@
+<div *ngIf="options === null || proxyGroups === null">
+    <h1>
+        <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+        {{ mode | titlecase }} Proxy Check Job
+    </h1>
+    <h6 class="color-inactive">
+        A <b>Proxy Check Job</b> will let you test your proxies against
+        a given target site to check their latency, country etc.
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="options !== null && proxyGroups !== null"
+    class="container-fluid no-paddings">
+    <div class="row">
+        <div class="col-8 pl-0">
+            <h1>
+                <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Proxy Check Job
+            </h1>
+            <h6 class="color-inactive">
+                A <b>Proxy Check Job</b> will let you test your proxies against
+                a given target site to check their latency, country etc.
+            </h6>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Job
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <app-input-text key="jobName" class="input-small"
+                [style]="{ 'min-width': '300px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.name"
+                placeholder="My proxy check job" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <div class="mb-2">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Relative"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="relative"></p-radioButton>
+                        <label for="relative" class="ml-2 text-small">Start in...</label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Absolute"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="absolute"></p-radioButton>
+                        <label for="absolute" class="ml-2 text-small">Start at...</label>
+                    </div>
+                </div>
+            </div>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Relative">
+                <app-input-time-span [small]="true"
+                    key="startAfter"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="startAfter"
+                    (timeSpanChange)="onStartAfterChange($event)"
+                 />
+            </span>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Absolute">
+                <p-calendar
+                    [ngModel]="startAt"
+                    (ngModelChange)="onStartAtChange($event)"
+                    [showTime]="true"
+                    appendTo="body"
+                    [showSeconds]="true">
+                </p-calendar>
+            </span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Bots</span>
+            </div>
+            <app-input-number key="bots" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.bots" [min]="1"
+                [max]="botLimit"
+                placeholder="10" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Max proxy latency timeout (ms)</span>
+            </div>
+            <app-input-number key="timeout" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.timeoutMilliseconds" [min]="0"
+                placeholder="10000" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Proxy group</span>
+            </div>
+            <p-dropdown
+                optionLabel="name"
+                optionValue="id"
+                (onChange)="touched = true"
+                [options]="proxyGroups"
+                [(ngModel)]="options.groupId">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="options.checkOnlyUntested"
+                [binary]="true" inputId="checkOnlyUntested"
+                label="Check only untested proxies" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <h5>Target Website</h5>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <p-dropdown
+                *ngIf="settings !== null"
+                (onChange)="targetSiteSelected($event.value)"
+                [ngModel]="options.target"
+                [options]="proxyCheckTargets">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="input-small">
+                        {{item.url === 'Custom' ? 'Custom' : item.url + ' | ' + item.successKey}}
+                    </span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span class="input-small">
+                        {{item.url === 'Custom' ? 'Custom' : item.url + ' | ' + item.successKey}}
+                    </span>
+                </ng-template>
+            </p-dropdown>
+            <div class="my-1">
+                <span class="text-small">URL</span>
+            </div>
+            <app-input-text key="targetSiteUrl" class="input-small"
+                [style]="{ 'min-width': '300px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="targetSiteUrl" regex="^https?://.+$"
+                placeholder="https://example.com" />
+            <div class="my-1">
+                <span class="text-small">Success Key</span>
+            </div>
+            <app-input-text key="targetSiteSuccessKey" class="input-small"
+                [style]="{ 'min-width': '300px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="targetSiteSuccessKey"
+                placeholder="Example Domain" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <!-- Only supported output for the checks as of now -->
+            <span class="input-small font-italic">
+                The results will be saved to the database, you will be able to
+                check them from the <b>Proxies</b> page.
+            </span>
+        </div>
+    </div>
+</div>

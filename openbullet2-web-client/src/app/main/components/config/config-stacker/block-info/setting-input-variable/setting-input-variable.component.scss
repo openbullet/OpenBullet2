@@ -1,0 +1,15 @@
+div.p-inputwrapper {
+    width: 100% !important;
+}
+
+input.input-variable {
+    background-color: var(--bg-variable) !important;
+    border: 1px solid var(--fg-variable) !important;
+    font-family: Chivo Mono !important;
+    font-variant-ligatures: none !important;
+}
+
+.p-autocomplete-item > span {
+    font-family: Chivo Mono !important;
+    font-variant-ligatures: none !important;
+}

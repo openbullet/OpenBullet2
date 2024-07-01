@@ -28,5 +28,13 @@ namespace RuriLib.Models.Data.DataPools
             Size = sizeDouble < long.MaxValue ? (long)sizeDouble : long.MaxValue;
             WordlistType = wordlistType;
         }
+        
+        /// <inheritdoc/>
+        public override void Reload()
+        {
+            DataList = CharSet.Select(x => x.ToString());
+            for (var i = 0; i < Length - 1; i++)
+                DataList = DataList.SelectMany(x => CharSet, (x, y) => x + y);
+        }
     }
 }

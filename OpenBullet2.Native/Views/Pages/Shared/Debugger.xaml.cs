@@ -48,7 +48,7 @@ namespace OpenBullet2.Native.Views.Pages.Shared
 
             try
             {
-                await vm.Run();
+                await vm.RunAsync();
             }
             catch (Exception ex)
             {

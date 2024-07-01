@@ -7,6 +7,13 @@ namespace RuriLib.Tests.Functions.Files
     public class FileUtilsTests
     {
         [Fact]
+        public void GetFirstAvailableFileName_ValidFileName_ReturnSame()
+        {
+            var file = Path.GetRandomFileName();
+            Assert.Equal(file, FileUtils.GetFirstAvailableFileName(file));
+        }
+
+        [Fact]
         public void GetFirstAvailableFileName_OneFileWithSameName_Add1()
         {
             var file = Path.GetTempFileName();

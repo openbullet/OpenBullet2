@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    URL
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The URL that will be called to download the remote configs."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="url" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="url" ngDefaultControl 
+                placeholder="http://x.x.x.x:5000/api/v1/shared/configs/ENDPOINT_NAME" />
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    API Key
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The API key used to authenticate to the remote endpoint."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="apiKey" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="apiKey" ngDefaultControl 
+                placeholder="MY_API_KEY" />
+            <br />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Create
+            </button>
+        </div>
+    </div>
+</div>

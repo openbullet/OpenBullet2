@@ -1,4 +1,6 @@
-﻿namespace RuriLib.Logging
+﻿using System;
+
+namespace RuriLib.Logging
 {
     /// <summary>
     /// An entry of a <see cref="BotLogger"/>.
@@ -19,5 +21,10 @@
         /// Whether the message contains HTML code and can be rendered as HTML.
         /// </summary>
         public bool CanViewAsHtml { get; set; } = false;
+
+        /// <summary>
+        /// The date and time when the entry was added.
+        /// </summary>
+        public DateTime Timestamp { get; set; } = DateTime.Now;
     }
 }

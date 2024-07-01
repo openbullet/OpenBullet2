@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-between w-100">
+    <p-checkbox [inputId]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        class="text-small"
+        (onChange)="valueChanged()"
+        ngDefaultControl 
+        [(ngModel)]="setting.value"
+        [binary]="true"
+        pTooltip="{{parameter?.description}}"
+        [label]="parameter?.prettyName ?? ''" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        [stacker]="stacker"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[SettingInputMode.Fixed, SettingInputMode.Variable]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>

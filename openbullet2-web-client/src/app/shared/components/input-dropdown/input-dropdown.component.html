@@ -1,0 +1,26 @@
+<p-dropdown
+    (onChange)="valueChanged()"
+    placeholder="Select an option..."
+    appendTo="body"
+    [options]="options" [(ngModel)]="ngModel">
+    <ng-template let-item pTemplate="selectedItem">
+        <span [class]="computeItemClass()"
+            *ngIf="displayFunction === null">
+            {{item | pascalcase : true}}
+        </span>
+        <span [class]="computeItemClass()"
+            *ngIf="displayFunction !== null">
+            {{displayFunction(item)}}
+        </span>
+    </ng-template>
+    <ng-template let-item pTemplate="item">
+        <span [class]="optionClass"
+            *ngIf="displayFunction === null">
+            {{item | pascalcase : true}}
+        </span>
+        <span [class]="optionClass"
+            *ngIf="displayFunction !== null">
+            {{displayFunction(item)}}
+        </span>
+    </ng-template>
+</p-dropdown>

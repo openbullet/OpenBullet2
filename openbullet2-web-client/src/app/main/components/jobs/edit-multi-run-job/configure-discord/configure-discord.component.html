@@ -1,0 +1,52 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Webhook URL</span>
+            </div>
+            <input id="webhook" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="webhook"
+                placeholder="https://discord.com/api/webhooks/..." />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Username</span>
+            </div>
+            <input id="username" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="username"
+                placeholder="OpenBullet 2" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Avatar URL</span>
+            </div>
+            <input id="avatarUrl" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="avatarUrl"
+                placeholder="https://example.com/avatar.png" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                [(ngModel)]="onlyHits"
+                [binary]="true" inputId="onlyHits"
+                label="Only send hits" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

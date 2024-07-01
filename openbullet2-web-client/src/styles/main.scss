@@ -1,0 +1,408 @@
+@import "variables";
+@import "fonts";
+@import "overrides";
+
+html {
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
+}
+
+body {
+    margin: 0;
+    font-family: Poppins;
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
+}
+
+ul {
+    margin-bottom: 0;
+}
+
+a:hover {
+    text-decoration: none;
+    color: var(--fg-accent-light);
+}
+
+/* We cannot use * here because it will also apply to the spans that
+are created by monaco-editor when calculating the width of the
+glyphs for the applied font (Chivo Mono). */
+app-root * {
+    font-family: Poppins;
+}
+
+.monospace {
+    font-family: Chivo Mono;
+    font-variant-ligatures: none;
+}
+
+code {
+    color: var(--fg-accent-light) !important;
+    margin: 0rem;
+    font-family: Chivo Mono !important;
+    font-variant-ligatures: none !important;
+    font-size: 14px !important;
+}
+
+code * {
+    font-family: Chivo Mono !important;
+    font-size: 14px !important;
+    font-variant-ligatures: none !important;
+}
+
+.button {
+    border-radius: 5px;
+    border: 1px solid var(--fg-inactive);
+    color: var(--fg-light);
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.button-small {
+    height: 25px;
+}
+
+.button[disabled] {
+    background-color: var(--fg-inactive);
+    color: var(--bg-primary);
+}
+
+.button[disabled]:hover {
+    background-color: var(--fg-inactive);
+    color: var(--bg-primary);
+}
+
+.button-transparent {
+    background-color: transparent;
+    border: 0px solid black;
+}
+
+.button-transparent:hover {
+    background-color: transparent;
+    border: 0px solid black;
+}
+
+.button-accent {
+    background-color: var(--fg-accent);
+    border: 1px solid var(--bg-accent);
+}
+
+.button-accent:hover {
+    background-color: var(--fg-accent-light);
+    transition: .5s;
+}
+
+.button-accent-outline {
+    background-color: transparent;
+    border: 1px solid var(--fg-accent);
+}
+
+.button-accent-outline:hover {
+    background-color: var(--fg-accent);
+    transition: .5s;
+}
+
+.button-secondary {
+    background-color: var(--bg-secondary);
+}
+
+.button-secondary:hover {
+    background-color: var(--bg-primary);
+    transition: .5s;
+    /* box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.2); */
+}
+
+.button-bad {
+    background-color: var(--fg-bad);
+    color: var(--fg-light);
+    border: 1px solid var(--bg-bad);
+}
+
+.button-bad {
+    background-color: var(--bg-bad);
+}
+
+input {
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid var(--fg-inactive);
+    box-shadow: none;
+    outline: none;
+    height: 41px; // This is to match the primeng components
+}
+
+/*
+input:not([pinputtext]) {
+    
+}
+*/
+
+textarea {
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid var(--fg-inactive);
+    box-shadow: none;
+    outline: none;
+}
+
+.color-primary {
+    color: var(--fg-primary) !important;
+}
+
+.color-good {
+    color: var(--fg-good) !important;
+}
+
+.color-custom {
+    color: var(--fg-custom) !important;
+}
+
+.color-tocheck {
+    color: var(--fg-tocheck) !important;
+}
+
+.color-bad {
+    color: var(--fg-bad) !important;
+}
+
+.color-banned {
+    color: var(--fg-banned) !important;
+}
+
+.color-retry {
+    color: var(--fg-retry) !important;
+}
+
+.color-error {
+    color: var(--fg-error) !important;
+}
+
+.color-inactive {
+    color: var(--fg-inactive) !important;
+}
+
+.color-inactive {
+    color: var(--fg-inactive) !important;
+}
+
+.color-accent  {
+    color: var(--fg-accent) !important;
+}
+
+.color-accent-light {
+    color: var(--fg-accent-light) !important;
+}
+
+.bg-primary {
+    background-color: var(--fg-primary) !important;
+}
+
+.bg-good {
+    background-color: var(--fg-good) !important;
+}
+
+.bg-custom {
+    background-color: var(--fg-custom) !important;
+}
+
+.bg-tocheck {
+    background-color: var(--fg-tocheck) !important;
+}
+
+.bg-bad {
+    background-color: var(--fg-bad) !important;
+}
+
+.bg-inactive {
+    background-color: var(--fg-inactive) !important;
+}
+
+.bg-inactive {
+    background-color: var(--fg-inactive) !important;
+}
+
+.bg-accent  {
+    background-color: var(--fg-accent) !important;
+}
+
+.bg-accent-light {
+    background-color: var(--fg-accent-light) !important;
+}
+
+.text-small {
+    font-size: 12px;
+    color: var(--fg-primary);
+}
+
+p-pickList.configs-picker > div > div.p-picklist-source-controls,
+p-pickList.configs-picker > div > div.p-picklist-target-controls {
+    display: none !important;
+}
+
+.no-paddings {
+    .row {
+        .col, .col-1, .col-2, .col-3, .col-4, .col-6, .col-12 {
+            padding: 0px;
+        }
+    }
+}
+
+label {
+    margin-bottom: 0px !important;
+}
+
+.input-small:not(textarea, app-input-dictionary, app-input-list) {
+    font-size: 14px;
+    height: 27px;
+    line-height: 10px;
+    color: var(--fg-primary);
+}
+
+textarea.input-small {
+    font-size: 14px;
+    height: 80px;
+    line-height: 20px;
+}
+
+.p-inputtext:has(.input-small) {
+    font-size: 14px !important;
+    height: 25px !important;
+    line-height: 10px !important;
+
+    &.p-dropdown-label {
+        border-top-right-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+    }
+}
+
+.input-valid {
+    border-color: var(--fg-accent-light);
+}
+
+.input-invalid {
+    border-color: var(--fg-bad);
+}
+
+.p-dropdown:has(span > span.input-valid) {
+    border-color: var(--fg-accent-light) !important;
+}
+
+p-table.no-header {
+    .p-datatable {
+        .p-datatable-header {
+            display: none !important;
+        }
+
+        .p-datatable-wrapper > table > tbody > tr > td {
+            padding: 0.2rem 0.6rem !important;
+        }
+    }
+}
+
+.p-autocomplete-panel {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+
+    .p-autocomplete-items {
+        padding: 0 !important;
+
+        .p-autocomplete-item {
+            padding: 0.3rem !important;
+            color: var(--fg-primary) !important;
+            font-size: 14px !important;
+        }
+    }
+
+}
+
+.code-editor * {
+    font-family: 'Chivo Mono' !important;
+    font-variant-ligatures: none !important;
+}
+
+p-accordiontab.accordion-tab-header-small {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                padding: .4rem 1rem !important;
+                font-size: 12px !important;
+            }
+        }
+    }
+}
+
+p-accordiontab {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                span {
+                    color: var(--fg-primary) !important;
+                }
+            }
+        }
+    }
+}
+
+ul.p-submenu-list:has(> .long-menu-item) {
+    min-width: 500px !important;
+}
+
+.p-inputtext,
+.p-dropdown .p-dropdown-label.p-placeholder, .p-dropdown-trigger, .p-dropdown-item,
+.p-multiselect, .p-multiselect-trigger, .p-multiselect-label, .p-multiselect-item,
+input,
+.p-card,
+.p-chip,
+.p-datatable-tbody td,
+.pi-chevron-down:before,
+.p-datatable .p-sortable-column .p-sortable-column-icon,
+.p-datatable .p-datatable-thead > tr > th,
+.p-dialog-title,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-icon,
+.p-menubar .p-menuitem-link .p-menuitem-text, .p-menuitem-icon,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-submenu-icon,
+.p-column-filter-menu-button {
+    color: var(--fg-primary);
+}
+
+.p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--fg-light);
+}
+
+input::placeholder {
+    color: var(--fg-inactive);
+}
+
+p-menubarsub > .p-submenu-list {
+    z-index: 3;
+}
+
+.p-menubar .p-menuitem.p-highlight > .p-menuitem-content {
+    background-color: unset;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--fg-inactive);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--fg-inactive);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--fg-inactive) var(--bg-secondary);
+}

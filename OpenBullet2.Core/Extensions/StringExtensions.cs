@@ -1,29 +1,28 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace OpenBullet2.Core.Extensions
+namespace OpenBullet2.Core.Extensions;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
+    public static string BeautifyName(this string name)
     {
-        public static string BeautifyName(this string name)
+        StringBuilder sb = new();
+
+        foreach (var c in name)
         {
-            StringBuilder sb = new();
-
-            foreach (var c in name)
+            // Replace anything, but letters and digits, with space
+            if (!char.IsLetterOrDigit(c))
             {
-                // Replace anything, but letters and digits, with space
-                if (!char.IsLetterOrDigit(c))
-                {
-                    sb.Append(' ');
-                }
-                else
-                {
-                    sb.Append(c);
-                }
+                sb.Append(' ');
             }
-
-            return CultureInfo.CurrentCulture.TextInfo
-                .ToTitleCase(sb.ToString().ToLower());
+            else
+            {
+                sb.Append(c);
+            }
         }
+
+        return CultureInfo.CurrentCulture.TextInfo
+            .ToTitleCase(sb.ToString().ToLower());
     }
 }

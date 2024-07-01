@@ -1,21 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace OpenBullet2.Core
+namespace OpenBullet2.Core;
+
+public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    public ApplicationDbContext CreateDbContext(string[] args)
     {
-        public ApplicationDbContext CreateDbContext(string[] args)
-        {
-            var dbContextBuilder = new DbContextOptionsBuilder();
+        var dbContextBuilder = new DbContextOptionsBuilder();
 
-            var sensitiveLogging = false;
-            var connectionString = "Data Source=UserData/OpenBullet.db;";
+        var sensitiveLogging = false;
+        var connectionString = "Data Source=UserData/OpenBullet.db;";
 
-            dbContextBuilder.EnableSensitiveDataLogging(sensitiveLogging);
-            dbContextBuilder.UseSqlite(connectionString);
+        dbContextBuilder.EnableSensitiveDataLogging(sensitiveLogging);
+        dbContextBuilder.UseSqlite(connectionString);
 
-            return new ApplicationDbContext(dbContextBuilder.Options);
-        }
+        return new ApplicationDbContext(dbContextBuilder.Options);
     }
 }

@@ -321,7 +321,7 @@ namespace OpenBullet2.Native
         private async void ConfigSubmenuMouseLeave(object sender, MouseEventArgs e)
         {
             hoveringConfigSubmenu = false;
-            await CheckCloseSubmenu();
+            await CheckCloseSubmenuAsync();
         }
 
         private void ConfigsMenuOptionMouseEnter(object sender, MouseEventArgs e)
@@ -336,10 +336,10 @@ namespace OpenBullet2.Native
         private async void ConfigsMenuOptionMouseLeave(object sender, MouseEventArgs e)
         {
             hoveringConfigsMenuOption = false;
-            await CheckCloseSubmenu();
+            await CheckCloseSubmenuAsync();
         }
 
-        private async Task CheckCloseSubmenu()
+        private async Task CheckCloseSubmenuAsync()
         {
             await Task.Delay(50);
 

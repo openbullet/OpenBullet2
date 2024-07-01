@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="mb-1">
+                <span class="text-small">Data</span>
+            </div>
+            <input id="data" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="data"
+                placeholder="1234" />
+            <br />
+            <span class="text-small color-inactive">
+                The data used to obtain the hit.
+            </span>
+        </div>
+        <div class="col-auto">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="hitType"
+                [options]="hitTypes">
+            </p-dropdown>
+        </div>
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Captured data</span>
+            </div>
+            <input id="capturedData" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="capturedData"
+                placeholder="test = abc" />
+            <br />
+            <span class="text-small color-inactive">
+                The data captured during the execution of the config for the input data.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

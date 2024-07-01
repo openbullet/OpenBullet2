@@ -1,0 +1,29 @@
+@import "../../../../styles/variables.scss";
+
+.announcement-label {
+    font-size: 12px;
+    color: var(--fg-inactive);
+}
+
+.announcement {
+    font-size: 14px;
+}
+
+.info-label {
+    font-size: 16px;
+    color: var(--fg-inactive);
+}
+
+.info {
+    font-size: 20px;
+}
+
+.collection-item-value {
+    font-size: 24px;
+    font-weight: 200;
+}
+
+.collection-item-label {
+    font-size: 16px;
+    color: var(--fg-inactive);
+}

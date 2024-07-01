@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-9">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="mb-1">
+                        <div class="mb-1">
+                            <span class="text-small">Upload your image directly</span>
+                        </div>
+                        <p-fileUpload 
+                            #fileUpload
+                            name="Upload plugin"
+                            [customUpload]="true"
+                            [auto]="true"
+                            (uploadHandler)="setImageFromBlob($event.files[0])"
+                            (onRemove)="selectedFile = null"
+                            [multiple]="false"
+                            accept="image/*"
+                            [maxFileSize]="10 * 1000 * 1000">
+        
+                        </p-fileUpload>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col mx-auto">
+                    <span>OR...</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-1">
+                        <span class="text-small">Download it from a remote URL</span>
+                    </div>
+                    <input id="remoteUrl" type="text" class="w-100"
+                        spellcheck="false"
+                        [(ngModel)]="remoteUrl" />
+                    <button class="button button-secondary mt-2" 
+                        (click)="downloadImage()">
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 d-flex">
+            <img class="config-icon d-block align-self-center mx-auto" 
+                [src]="'data:image/png;base64,' + base64Image" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Accept
+            </button>
+        </div>
+    </div>
+</div>

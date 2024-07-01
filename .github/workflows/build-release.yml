@@ -1,0 +1,88 @@
+name: Build + Release
+
+on:
+  push:
+    branches:
+    - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Only run if the commit message contains the string [build]
+    if: contains(github.event.head_commit.message, '[build]')
+    steps:
+
+    # Checkout the repository
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        
+    # Read the version
+    - name: Read version
+      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
+
+    # Build using docker
+    - name: Build using docker
+      run: docker build -t openbullet2-build -f Dockerfile.build .
+
+    # Extract files from the /app folder of the image into a zip
+    - name: Extract files from the image
+      run: |
+        docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
+        docker cp openbullet2-extract:/app/web .web
+        docker cp openbullet2-extract:/app/native .native
+        docker cp openbullet2-extract:/app/updater .updater
+        docker rm openbullet2-extract
+        mkdir .release
+        cd .web
+        zip -r ../.release/OpenBullet2.Web.zip ./*
+        cd ../.native
+        zip -r ../.release/OpenBullet2.Native.zip ./*
+        cd ..
+        mv .updater/web/win-x64/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-x64.exe
+        mv .updater/web/win-x86/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-x86.exe
+        mv .updater/web/win-arm64/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-arm64.exe
+        mv .updater/web/linux-x64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-x64
+        mv .updater/web/linux-arm64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-arm64
+        mv .updater/native/win-x64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x64.exe
+        mv .updater/native/win-x86/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x86.exe
+        mv .updater/native/win-arm64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-arm64.exe
+
+    # Upload the files to the release
+    - name: Upload OpenBullet2 release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: '.release/*'
+        file_glob: true
+        tag: ${{ env.VERSION }}
+        overwrite: true
+        prerelease: false
+        make_latest: true
+        # Show ONLY the commit description in the release (without)
+        body: |
+          This is a **RELEASE** build.
+
+          Please refer to [this guide](https://discourse.openbullet.dev/t/how-to-download-and-start-openbullet-2/29) for the download instructions.
+
+    - name: Notify new build on discord
+      if: success()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        DISCORD_EMBEDS: |
+          [
+            {
+              "title": "New release build",
+              "description": "Release **${{ env.VERSION }}** available",
+              "color": 5763719
+            }
+          ]
+      uses: Ilshidur/action-discord@master
+
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+      if: ${{ failure() }}
+      with:
+        ## If no one connects after 5 minutes, shut down server.
+        wait-timeout-minutes: 5

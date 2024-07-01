@@ -1,0 +1,360 @@
+<div *ngIf="multiRunJobs === null || proxyCheckJobs == null">
+    <h1>
+        <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+        Jobs
+    </h1>
+    <h6 class="color-inactive">
+        Create and manage jobs that run configs or check proxies
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="multiRunJobs !== null && proxyCheckJobs !== null"
+    class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>
+                <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+                Jobs
+            </h1>
+            <h6 class="color-inactive">
+                Create and manage jobs that run configs or check proxies
+            </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent ml-2" 
+                (click)="openCreateJobModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-secondary ml-2"
+                (click)="confirmRemoveAllJobs()">
+                Remove all
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="multiRunJobs !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <h3>
+                Multi Run Jobs
+                <p-chip class="ml-2">
+                    <span>{{multiRunJobs.length}}</span>
+                </p-chip>
+            </h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #multiRunJobsDt
+                [value]="multiRunJobs"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="false"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>
+                            {{ multiRunJobs.length === 0 
+                                ? 'No multi run jobs created yet' 
+                                : 'No multi run jobs match the filter' }}
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="multiRunJobs.length > 0">
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                #
+                            </div>
+                        </th>
+                        <th style="min-width:4rem" *ngIf="usernames.size >= 2">
+                            <div class="d-flex align-items-center">
+                                Owner
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Name
+                            </div>
+                        </th>
+                        <th style="min-width:3rem">
+                            <div class="d-flex align-items-center">
+                                Status
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Config
+                            </div>
+                        </th>
+                        <th style="min-width:5rem">
+                            <div class="d-flex align-items-center">
+                                Proxies
+                            </div>
+                        </th>
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                Bots
+                            </div>
+                        </th>
+                        <th style="width:3rem">
+                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
+                                CPM
+                            </div>
+                        </th>
+                        <th style="width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Progress
+                            </div>
+                        </th>
+                        <th style="width:2rem">
+                            <div class="d-flex align-items-center">
+                                Hits
+                            </div>
+                        </th>
+                        <th style="width:2rem">
+                            <div class="d-flex align-items-center">
+                                Custom
+                            </div>
+                        </th>
+                        <th style="width:2rem">
+                            <div class="d-flex align-items-center">
+                                To check
+                            </div>
+                        </th>
+                        <th style="min-width:5rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Data Pool
+                            </div>
+                        </th>
+                        <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-mrj>
+                    <tr class="job-row" (click)="viewMultiRunJob(mrj)">
+                        <td>{{ mrj.id }}</td>
+                        <td *ngIf="usernames.size >= 2">
+                            {{ usernames.get(mrj.ownerId) }}
+                        </td>
+                        <td>{{ mrj.name }}</td>
+                        <td>
+                            <div [class]="'job-chip bg-' + statusColor[mrj.status]">
+                                {{ mrj.status | uppercase }}
+                            </div>
+                        </td>
+                        <td>{{ mrj.configName }}</td>
+                        <td>
+                            <div [class]="'job-chip ' + getUseProxyChipClass(mrj)">
+                                {{ (mrj.useProxies ? 'on' : 'off') | uppercase }}
+                            </div>
+                        </td>
+                        <td>{{ mrj.bots }}</td>
+                        <td>{{ mrj.cpm }}</td>
+                        <td>{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
+                        <td class="color-good">{{ mrj.dataHits }}</td>
+                        <td class="color-custom">{{ mrj.dataCustom }}</td>
+                        <td class="color-tocheck">{{ mrj.dataToCheck }}</td>
+                        <td [pTooltip]="mrj.dataPoolInfo" [tooltipDisabled]="mrj.dataPoolInfo.length <= 20"
+                            tooltipPosition="bottom">{{ mrj.dataPoolInfo | truncate : 20 }}
+                        </td>
+                        <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
+                            <button class="button button-transparent d-inline"
+                                pTooltip="Actions..." tooltipPosition="bottom"
+                                (click)="toggleJobActions($event)">
+                                <fa-icon [icon]="showJobActions ? faAngleRight : faAngleLeft" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Start" tooltipPosition="bottom"
+                                    (click)="startJob(mrj, $event)">
+                                    <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Abort" tooltipPosition="bottom"
+                                    (click)="abortJob(mrj, $event)">
+                                    <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Edit" tooltipPosition="bottom"
+                                    (click)="editMultiRunJob(mrj, $event)">
+                                    <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="cloneMultiRunJob(mrj, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Remove" tooltipPosition="bottom"
+                                    (click)="confirmRemoveJob(mrj, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-5" *ngIf="proxyCheckJobs !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <h3>
+                Proxy Check Jobs
+                <p-chip class="ml-2">
+                    <span>{{proxyCheckJobs.length}}</span>
+                </p-chip>
+            </h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #proxyCheckJobsDt
+                [value]="proxyCheckJobs"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="false"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>
+                            {{ proxyCheckJobs.length === 0 
+                                ? 'No proxy check jobs created yet' 
+                                : 'No proxy check jobs match the filter' }}
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="proxyCheckJobs.length > 0">
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                #
+                            </div>
+                        </th>
+                        <th style="min-width:4rem" *ngIf="usernames.size >= 2">
+                            <div class="d-flex align-items-center">
+                                Owner
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Name
+                            </div>
+                        </th>
+                        <th style="min-width:3rem">
+                            <div class="d-flex align-items-center">
+                                Status
+                            </div>
+                        </th>
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                Bots
+                            </div>
+                        </th>
+                        <th style="min-width:3rem">
+                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
+                                CPM
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Progress
+                            </div>
+                        </th>
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                Working
+                            </div>
+                        </th>
+                        <th style="min-width:2rem">
+                            <div class="d-flex align-items-center">
+                                Not working
+                            </div>
+                        </th>
+                        <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pcj>
+                    <tr class="job-row" (click)="viewProxyCheckJob(pcj)">
+                        <td>{{ pcj.id }}</td>
+                        <td *ngIf="usernames.size >= 2">
+                            {{ usernames.get(pcj.ownerId) }}
+                        </td>
+                        <td>{{ pcj.name }}</td>
+                        <td>
+                            <div [class]="'job-chip bg-' + statusColor[pcj.status]">
+                                <span class="px-auto">
+                                    {{ pcj.status | uppercase }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ pcj.bots }}</td>
+                        <td>{{ pcj.cpm }}</td>
+                        <td>{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
+                        <td class="color-good">{{ pcj.working }}</td>
+                        <td class="color-bad">{{ pcj.notWorking }}</td>
+                        <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
+                            <button class="button button-transparent d-inline"
+                                pTooltip="Actions..." tooltipPosition="bottom"
+                                (click)="toggleJobActions($event)">
+                                <fa-icon [icon]="showJobActions ? faAngleRight : faAngleLeft" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Start" tooltipPosition="bottom"
+                                    (click)="startJob(pcj, $event)">
+                                    <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Abort" tooltipPosition="bottom"
+                                    (click)="abortJob(pcj, $event)">
+                                    <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Edit" tooltipPosition="bottom"
+                                    (click)="editMultiRunJob(pcj, $event)">
+                                    <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="cloneMultiRunJob(pcj, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Remove" tooltipPosition="bottom"
+                                    (click)="confirmRemoveJob(pcj, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    header="Create a job"
+    [(visible)]="createJobModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-job />
+</p-dialog>

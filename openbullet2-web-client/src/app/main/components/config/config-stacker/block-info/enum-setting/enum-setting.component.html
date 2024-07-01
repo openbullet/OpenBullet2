@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between w-100">
+    <app-input-dropdown [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        itemClass="input-small" optionClass="input-small"
+        (ngModelChange)="valueChanged($event)"
+        [displayFunction]="displayFunction"
+        ngDefaultControl
+        [options]="getOptions()"
+        [ngModel]="setting.value" />
+</div>

@@ -34,7 +34,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             vm = SP.GetService<ViewModelsService>().Proxies;
             DataContext = vm;
-            _ = vm.Initialize();
+            _ = vm.InitializeAsync();
 
             InitializeComponent();
         }
@@ -63,7 +63,7 @@ namespace OpenBullet2.Native.Views.Pages
 
             try
             {
-                await vm.DeleteSelectedGroup();
+                await vm.DeleteSelectedGroupAsync();
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.DeleteNotWorking();
+                await vm.DeleteNotWorkingAsync();
                 Alert.Success("Done", "Successfully deleted the not working proxies from the group");
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.DeleteUntested();
+                await vm.DeleteUntestedAsync();
                 Alert.Success("Done", "Successfully deleted the untested proxies from the group");
             }
             catch (Exception ex)
@@ -112,7 +112,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.AddGroup(entity);
+                await vm.AddGroupAsync(entity);
             }
             catch (Exception ex)
             {
@@ -123,7 +123,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.EditGroup(entity);
+                await vm.EditGroupAsync(entity);
             }
             catch (Exception ex)
             {
@@ -165,7 +165,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.AddProxies(dto);
+                await vm.AddProxiesAsync(dto);
             }
             catch (Exception ex)
             {
@@ -177,7 +177,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.Delete(SelectedProxies);
+                await vm.DeleteAsync(SelectedProxies);
                 Alert.Success("Done", "Successfully deleted the selected proxies from the group");
             }
             catch (Exception ex)

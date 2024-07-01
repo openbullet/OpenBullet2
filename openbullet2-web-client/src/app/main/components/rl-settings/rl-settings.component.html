@@ -1,0 +1,511 @@
+<div *ngIf="settings === null">
+    <h1>
+        <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+        RuriLib Settings
+    </h1>
+    <h6 class="color-inactive">
+        Settings for the core RuriLib library that powers OpenBullet
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>
+                <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+                RuriLib Settings
+            </h1>
+            <h6 class="color-inactive">
+                Settings for the core RuriLib library that powers OpenBullet
+            </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-secondary ml-2" 
+                (click)="confirmRestoreDefaults()">Restore Defaults</button>
+            <button class="button button-accent ml-2"
+                [disabled]="!canSave()"
+                (click)="saveSettings()">Save</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h3>General</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Parallelizer type</span>
+            <app-input-dropdown key="parallelizerType"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="parallelizerTypes"
+                [(ngModel)]="settings.generalSettings.parallelizerType" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.logJobActivityToFile"
+                [binary]="true" inputId="logJobActivityToFile"
+                label="Log job activity to file" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.enableBotLogging"
+                [binary]="true" inputId="enableBotLogging"
+                label="Enable bot logging" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.verboseMode"
+                [binary]="true" inputId="verboseMode"
+                label="Verbose mode" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.restrictBlocksToCWD"
+                [binary]="true" inputId="restrictBlocksToCWD"
+                label="Restrict blocks I/O capabilities to the Current Working Directory only" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.useCustomUserAgentsList"
+                [binary]="true" inputId="useCustomUserAgentsList"
+                label="Use custom User Agents list" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>User Agents</span>
+            <app-input-list key="userAgents"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [disabled]="!settings.generalSettings.useCustomUserAgentsList"
+                [(list)]="settings.generalSettings.userAgents"
+                placeholder="Mozilla/5.0 ..." />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Proxies</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Connect timeout</span>
+            <app-input-number key="proxyConnectTimeoutMilliseconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.proxySettings.proxyConnectTimeoutMilliseconds"
+                [placeholder]="5000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Read/Write timeout</span>
+            <app-input-number key="proxyReadWriteTimeoutMilliseconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.proxySettings.proxyReadWriteTimeoutMilliseconds"
+                [placeholder]="10000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Global ban keys</span>
+            <app-input-list key="globalBanKeys"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(list)]="settings.proxySettings.globalBanKeys" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Global retry keys</span>
+            <app-input-list key="globalRetryKeys"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(list)]="settings.proxySettings.globalRetryKeys" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Captchas</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Timeout</span>
+            <app-input-number key="captchaTimeoutSeconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.captchaSettings.timeoutSeconds"
+                [placeholder]="120" [min]="0" [integer]="true" />
+            <span class="ml-2">seconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Polling interval</span>
+            <app-input-number key="captchaPollingIntervalMilliseconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.captchaSettings.pollingIntervalMilliseconds"
+                [placeholder]="5000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.captchaSettings.checkBalanceBeforeSolving"
+                [binary]="true" inputId="checkBalanceBeforeSolving"
+                label="Check the account balance before solving the captcha" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Current service</span>
+            <app-input-dropdown key="currentService"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="captchaServiceTypes"
+                [(ngModel)]="settings.captchaSettings.currentService" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.TwoCaptcha">
+        <div class="col-12">
+            <span class="mr-2">2Captcha API Key</span>
+            <app-input-text key="twoCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.twoCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AntiCaptcha">
+        <div class="col-12">
+            <span class="mr-2">Anti-Captcha API Key</span>
+            <app-input-text key="antiCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.antiCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CustomTwoCaptcha">
+        <div class="col-12">
+            <span class="mr-2">Custom 2Captcha API Key</span>
+            <app-input-text key="customTwoCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customTwoCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+        <div class="col-12 mt-3">
+            <span class="mr-2">Domain</span>
+            <app-input-text key="customTwoCaptchaDomain"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customTwoCaptchaDomain"
+                placeholder="2captcha.com" />
+            <span class="mx-2">Port</span>
+            <app-input-number key="customTwoCaptchaPort"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customTwoCaptchaPort"
+                placeholder="8080" />
+        </div>
+        <div class="col-12 mt-3">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.captchaSettings.customTwoCaptchaOverrideHostHeader"
+                [binary]="true" inputId="customTwoCaptchaOverrideHostHeader"
+                label="Override host header" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.DeathByCaptcha">
+        <div class="col-12">
+            <span class="mr-2">Death By Captcha Username</span>
+            <app-input-text key="deathByCaptchaUsername"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.deathByCaptchaUsername"
+                placeholder="USERNAME" />
+            <span class="mx-2">Password</span>
+            <app-input-text key="deathByCaptchaPassword"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.deathByCaptchaPassword"
+                placeholder="PASSWORD" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.DeCaptcher">
+        <div class="col-12">
+            <span class="mr-2">DeCaptcher Username</span>
+            <app-input-text key="deCaptcherUsername"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.deCaptcherUsername"
+                placeholder="USERNAME" />
+            <span class="mx-2">Password</span>
+            <app-input-text key="deCaptcherPassword"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.deCaptcherPassword"
+                placeholder="PASSWORD" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.ImageTyperz">
+        <div class="col-12">
+            <span class="mr-2">ImageTyperz API Key</span>
+            <app-input-text key="imageTyperzApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.imageTyperzApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapMonster">
+        <div class="col-12">
+            <span class="mr-2">CapMonster Host</span>
+            <app-input-text key="capMonsterHost"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.capMonsterHost"
+                placeholder="127.0.0.1" />
+            <span class="mx-2">Port</span>
+            <app-input-number key="capMonsterPort"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.capMonsterPort"
+                placeholder="8080" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AzCaptcha">
+        <div class="col-12">
+            <span class="mr-2">AZ Captcha API Key</span>
+            <app-input-text key="azCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.azCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CaptchasIO">
+        <div class="col-12">
+            <span class="mr-2">Captchas.IO API Key</span>
+            <app-input-text key="captchasDotIoApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.captchasDotIoApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.RuCaptcha">
+        <div class="col-12">
+            <span class="mr-2">RuCaptcha API Key</span>
+            <app-input-text key="ruCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.ruCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.SolveCaptcha">
+        <div class="col-12">
+            <span class="mr-2">SolveCaptcha API Key</span>
+            <app-input-text key="solveCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.solveCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.SolveRecaptcha">
+        <div class="col-12">
+            <span class="mr-2">SolveRecaptcha API Key</span>
+            <app-input-text key="solveRecaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.solveRecaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.TrueCaptcha">
+        <div class="col-12">
+            <span class="mr-2">TrueCaptcha API Key</span>
+            <app-input-text key="trueCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.trueCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+        <div class="col-12 mt-3">
+            <span class="mr-2">Username</span>
+            <app-input-text key="trueCaptchaUsername"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.trueCaptchaUsername"
+                placeholder="USERNAME" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.NineKW">
+        <div class="col-12">
+            <span class="mr-2">9kw API Key</span>
+            <app-input-text key="nineKWApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.nineKWApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CustomAntiCaptcha">
+        <div class="col-12">
+            <span class="mr-2">Custom Anti-Captcha API Key</span>
+            <app-input-text key="customAntiCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customAntiCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+        <div class="col-12 mt-3">
+            <span class="mr-2">Domain</span>
+            <app-input-text key="customAntiCaptchaDomain"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customAntiCaptchaDomain"
+                placeholder="2captcha.com" />
+            <span class="mx-2">Port</span>
+            <app-input-number key="customAntiCaptchaPort"
+                class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.customAntiCaptchaPort"
+                placeholder="8080" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AnyCaptcha">
+        <div class="col-12">
+            <span class="mr-2">AnyCaptcha API Key</span>
+            <app-input-text key="anyCaptchaApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.anyCaptchaApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapSolver">
+        <div class="col-12">
+            <span class="mr-2">CapSolver API Key</span>
+            <app-input-text key="capSolverApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.capSolverApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <button class="button button-secondary"
+                (click)="checkCaptchaBalance()">Check Balance</button>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Puppeteer</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Chrome binary location</span>
+            <app-input-text key="puppeteerChromeBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.puppeteerSettings.chromeBinaryLocation"
+                placeholder="/path/to/chrome" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Selenium</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Browser type</span>
+            <app-input-dropdown key="browserType"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="browserTypes"
+                [(ngModel)]="settings.seleniumSettings.browserType" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Chrome binary location</span>
+            <app-input-text key="seleniumChromeBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.seleniumSettings.chromeBinaryLocation"
+                placeholder="/path/to/chrome" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Firefox binary location</span>
+            <app-input-text key="seleniumFirefoxBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.seleniumSettings.firefoxBinaryLocation"
+                placeholder="/path/to/firefox" regex="^.+$" />
+        </div>
+    </div>
+</div>

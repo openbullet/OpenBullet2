@@ -1,0 +1,13 @@
+@import "../../../../styles/variables.scss";
+
+.menu-section {
+    .menu-section-header {
+        font-size: 12px;
+        color: var(--fg-inactive);
+        margin-left: 45px;
+    }
+
+    &:not(:first-child) {
+        margin-top: 30px;
+    }
+}

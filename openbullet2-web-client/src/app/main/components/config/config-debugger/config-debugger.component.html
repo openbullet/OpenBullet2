@@ -1,0 +1,153 @@
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row mb-3">
+        <div class="col align-self-stretch">
+            <h5>Debugger</h5>
+        </div>
+        <div class="col-auto text-right pr-0">
+            <button class="button button-accent ml-2"
+                *ngIf="status === 'idle'"
+                pTooltip="Start the debugger" tooltipPosition="bottom"
+                (click)="start()">
+                <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
+                Debug
+            </button>
+            <button class="button button-accent ml-2"
+                *ngIf="status === 'waitingForStep'"
+                pTooltip="Step to next block" tooltipPosition="bottom"
+                (click)="takeStep()">
+                <fa-icon [icon]="faCaretRight" [fixedWidth]="true"></fa-icon>
+                Take Step
+            </button>
+            <button class="button button-bad ml-2"
+                *ngIf="status === 'running' || status === 'waitingForStep'"
+                pTooltip="Stop the debugger" tooltipPosition="bottom"
+                (click)="stop()">
+                <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                Stop
+            </button>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="testData"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="settings.testData" />
+            <span class="d-block mt-1 text-small color-inactive">Test data</span>
+        </div>
+        <div class="col-auto pr-0">
+            <app-input-dropdown key="wordlistType"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="wordlistTypes"
+                [(ngModel)]="settings.wordlistType"
+                (ngModelChange)="currentWordlistTypeChanged.emit($event)" />
+            <span class="d-block mt-1 text-small color-inactive">Wordlist type</span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="testProxy"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="settings.testProxy" />
+            <span class="d-block mt-1 text-small color-inactive">Test proxy</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.useProxy"
+                [binary]="true" inputId="useProxy"
+                label="Use proxy" />
+        </div>
+        <div class="col-auto pr-0">
+            <app-input-dropdown key="proxyType"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="proxyTypes"
+                [(ngModel)]="settings.proxyType" />
+            <span class="d-block mt-1 text-small color-inactive">Proxy type</span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-auto pl-0">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.stepByStep"
+                [binary]="true" inputId="stepByStep"
+                label="Step by step" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.persistLog"
+                [binary]="true" inputId="persistLog"
+                label="Persist Log" />
+        </div>
+        <div class="col-auto pr-0">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.groupCaptures"
+                [binary]="true" inputId="groupCaptures"
+                label="Group captures" />
+        </div>
+        <div class="col align-self-stretch text-right">
+            <button class="button button-secondary ml-2"
+                *ngIf="!displayVariables"
+                pTooltip="Show the debug variables" tooltipPosition="bottom"
+                (click)="displayVariables = true">
+                <fa-icon [icon]="faSliders" [fixedWidth]="true"></fa-icon>
+                Show Variables
+            </button>
+            <button class="button button-secondary ml-2"
+                *ngIf="displayVariables"
+                pTooltip="Show the debug log" tooltipPosition="bottom"
+                (click)="displayVariables = false">
+                <fa-icon [icon]="faAlignLeft" [fixedWidth]="true"></fa-icon>
+                Show Log
+            </button>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 px-0 w-100">
+            <div class="logs-container" *ngIf="!displayVariables">
+                <div *ngFor="let log of logs"
+                    class="log-message"
+                    [ngStyle]="{ color: log.color }">{{ log.message }}
+                    <button class="button button-secondary mt-2 d-block"
+                        *ngIf="log.canViewAsHtml"
+                        pTooltip="View as HTML" tooltipPosition="bottom"
+                        (click)="viewAsHtml(log)">
+                        <fa-icon [icon]="faWindowMaximize" [fixedWidth]="true"></fa-icon>
+                        View as HTML
+                    </button>
+                </div>
+            </div>
+            <div class="logs-container" *ngIf="displayVariables">
+                <div *ngFor="let variable of variables"
+                    class="log-message"
+                    [ngStyle]="{ color: variable.markedForCapture ? 'tomato' : 'yellow' }"
+                    >{{ variable.name }} ({{ variable.type }}) = {{ formatVariable(variable) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #viewAsHtmlModal
+    header="HTML Viewer" 
+    [(visible)]="viewAsHtmlModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-view-as-html
+        #viewAsHtmlComponent
+        [html]="html" />
+</p-dialog>

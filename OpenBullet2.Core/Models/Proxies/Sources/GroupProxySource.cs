@@ -6,34 +6,33 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Core.Models.Proxies.Sources
+namespace OpenBullet2.Core.Models.Proxies.Sources;
+
+/// <summary>
+/// A proxy source that gets proxies from a group of a <see cref="IProxyGroupRepository"/>.
+/// </summary>
+public class GroupProxySource : ProxySource, IDisposable
 {
+    private readonly ProxyReloadService reloadService;
+
     /// <summary>
-    /// A proxy source that gets proxies from a group of a <see cref="IProxyGroupRepository"/>.
+    /// The ID of the group in the <see cref="IProxyGroupRepository"/>.
     /// </summary>
-    public class GroupProxySource : ProxySource, IDisposable
+    public int GroupId { get; set; }
+
+    public GroupProxySource(int groupId, ProxyReloadService reloadService)
     {
-        private readonly ProxyReloadService reloadService;
+        GroupId = groupId;
+        this.reloadService = reloadService;
+    }
 
-        /// <summary>
-        /// The ID of the group in the <see cref="IProxyGroupRepository"/>.
-        /// </summary>
-        public int GroupId { get; set; }
+    /// <inheritdoc/>
+    public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
+        => await reloadService.ReloadAsync(GroupId, UserId, cancellationToken).ConfigureAwait(false);
 
-        public GroupProxySource(int groupId, ProxyReloadService reloadService)
-        {
-            GroupId = groupId;
-            this.reloadService = reloadService;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
-            => await reloadService.ReloadAsync(GroupId, UserId, cancellationToken).ConfigureAwait(false);
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            GC.SuppressFinalize(this);
-        }
+    public override void Dispose()
+    {
+        base.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

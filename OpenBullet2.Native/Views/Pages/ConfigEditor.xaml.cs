@@ -143,6 +143,6 @@ namespace OpenBullet2.Native.Views.Pages
             configService = SP.GetService<ConfigService>();
         }
 
-        public Task Save() => configRepo.Save(Config);
+        public Task Save() => configRepo.SaveAsync(Config);
     }
 }

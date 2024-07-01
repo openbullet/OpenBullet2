@@ -1,0 +1,135 @@
+<div class="container-fluid">
+    <div class="row">
+        <div [class]="triggeredActions === null ? 'col-12 px-0' : 'col-8 pl-0'">
+            <h1>
+                <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
+                Monitor
+            </h1>
+            <h6 class="color-inactive">
+                Configure the monitor to execute actions when a job meets certain conditions.
+            </h6>
+        </div>
+        <div class="col-4 pr-0" *ngIf="triggeredActions !== null">
+            <div class="d-flex h-100 flex-row justify-content-end">
+                <div class="d-flex flex-column justify-content-end">
+                    <button class="button button-accent align-self-end"
+                        pTooltip="Create a new triggered action"
+                        tooltipPosition="left"
+                        (click)="createAction()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="triggeredActions === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-5" *ngIf="triggeredActions !== null">
+    <div class="row mb-4" *ngFor="let action of triggeredActions">
+        <div class="col-12 px-0"
+            [ngStyle]="{ opacity: action.isActive ? '100%' : '60%'}">
+            <p-card>
+                <div class="row">
+                    <div class="col align-self-stretch">
+                        <div class="action-name">
+                            {{action.name}} {{action.isActive ? '' : '(disabled)'}}
+                        </div>
+                        <div class="mt-2">
+                            <a class="color-accent-light" [href]="getJobUrl(action)">
+                                Job #{{action.jobId}} - {{action.jobName}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex flex-row align-items-center">
+                            <button class="button button-secondary"
+                                pTooltip="Delete this action"
+                                tooltipPosition="left"
+                                (click)="confirmDeleteAction(action)">
+                                <fa-icon [icon]="faTrashCan" [fixedWidth]="true" />
+                            </button>
+                            <button class="button button-secondary ml-2"
+                                [pTooltip]="action.isActive ? 'Disable this action' : 'Enable this action'"
+                                tooltipPosition="left"
+                                (click)="setEnabled(action, !action.isActive)">
+                                <fa-icon [icon]="faPowerOff" [fixedWidth]="true" />
+                            </button>
+                            <button class="button button-accent ml-2"
+                                pTooltip="Clone this action"
+                                tooltipPosition="left"
+                                (click)="cloneAction(action)">
+                                <fa-icon [icon]="faClone" [fixedWidth]="true" />
+                            </button>
+                            <button class="button button-accent ml-2"
+                                pTooltip="Edit this action"
+                                tooltipPosition="left"
+                                (click)="editAction(action)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <div>
+                            <span>Repeatable: </span>
+                            <app-boolean-icon
+                                [useColors]="true"
+                                [value]="action.isRepeatable" />
+                        </div>
+                        <div *ngIf="!action.isRepeatable">
+                            <span>Executed: </span>
+                            <app-boolean-icon
+                                [useColors]="true"
+                                [value]="action.executions > 0" />
+                        </div>
+                        <div *ngIf="action.isRepeatable">
+                            <span>Executions: </span>
+                            <span>{{action.executions}}</span>
+                        </div>
+                        <button class="button button-secondary mt-2"
+                            *ngIf="!action.isRepeatable && action.executions > 0"
+                            pTooltip="Reset the action's execution counter so it can be executed again."
+                            (click)="resetAction(action)">
+                            <fa-icon [icon]="faRotate" [fixedWidth]="true"></fa-icon>
+                            Reset
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <div>
+                            <span class="font-weight-bold">Triggers</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-small color-inactive">
+                                All must be true at the same time
+                            </span>
+                        </div>
+                        <ul class="triggers-list">
+                            <li *ngFor="let trigger of action.triggers">
+                                {{getTriggerText(trigger)}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-4">
+                        <div>
+                            <span class="font-weight-bold">Actions</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-small color-inactive">
+                                Executed in order, one after the other
+                            </span>
+                        </div>
+                        <ul class="actions-list">
+                            <li *ngFor="let action of action.actions">
+                                {{getActionText(action)}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>

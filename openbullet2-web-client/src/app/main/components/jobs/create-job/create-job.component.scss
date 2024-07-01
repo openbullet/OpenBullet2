@@ -1,0 +1,9 @@
+.flex-list {
+    display: flex;
+    flex-direction: column;
+
+    button {
+        max-width: 50%;
+        margin: 0 auto;
+    }
+}

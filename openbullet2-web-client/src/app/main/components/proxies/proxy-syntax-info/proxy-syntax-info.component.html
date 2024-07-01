@@ -1,0 +1,35 @@
+<p-accordion>
+    <p-accordionTab header="Show supported proxy syntax" 
+        class="accordion-tab-header-small">
+        <span class="text-small color-inactive">
+            Proxies that you import should have one of the following formats:
+        </span>
+        <table class="text-small color-inactive w-100">
+            <thead>
+                <th class="w-50">Syntax</th>
+                <th class="w-50">Examples</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="monospace">host:port</td>
+                    <td class="monospace">127.0.0.1:8080, myproxy.com:1234</td>
+                </tr>
+                <tr>
+                    <td class="monospace">host:port:username:password</td>
+                    <td class="monospace">127.0.0.1:8080:myusername:mypassword</td>
+                </tr>
+                <tr>
+                    <td class="monospace">(type)host:port</td>
+                    <td class="monospace">(http)127.0.0.1:8080</td>
+                </tr>
+                <tr>
+                    <td class="monospace">(type)host:port:username:password</td>
+                    <td class="monospace">(socks5)myproxy.com:5134:myusername:mypassword</td>
+                </tr>
+            </tbody>
+        </table>
+        <span class="text-small color-inactive">
+            The proxy type can be either http, socks4, socks4a or socks5.
+        </span>
+    </p-accordionTab>
+</p-accordion>

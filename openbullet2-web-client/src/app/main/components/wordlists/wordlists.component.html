@@ -1,0 +1,175 @@
+<h1>
+    <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
+    Wordlists
+</h1>
+<h6 class="color-inactive">
+    Import and manage lists of data lines that jobs can test against your target in parallel
+    <app-docs-button path="wordlists/general-info" buttonClass="color-inactive" />
+</h6>
+
+<app-spinner *ngIf="wordlists === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="wordlists !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-menubar [model]="wordlistMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+                <ng-template pTemplate="end">
+                    <button class="button button-secondary"
+                        pTooltip="Clear filters" tooltipPosition="bottom"
+                        (click)="wordlistsDt.clear()">
+                        Clear
+                        <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <span class="p-input-icon-left ml-auto">
+                        <input pInputText type="text"
+                            spellcheck="false"
+                            class="ml-2"
+                            [style]="{ height: '33px' }"
+                            (input)="wordlistsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    </span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #wordlistsDt
+                [value]="wordlists"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="true"
+                [rows]="10"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [globalFilterFields]="['name', 'filePath', 'purpose', 'lineCount', 'wordlistType']"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>
+                            {{ wordlists.length === 0 
+                                ? 'No wordlists added yet' 
+                                : 'No wordlists match the filter' }}
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="wordlists.length > 0">
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="name">
+                            <div class="d-flex align-items-center">
+                                Name <p-sortIcon field="name" />
+                                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="wordlistType">
+                            <div class="d-flex align-items-center">
+                                Type <p-sortIcon field="wordlistType" />
+                                <p-columnFilter type="text" field="wordlistType" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="purpose">
+                            <div class="d-flex align-items-center">
+                                Purpose <p-sortIcon field="purpose" />
+                                <p-columnFilter type="text" field="purpose" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:5rem" pSortableColumn="lineCount">
+                            <div class="d-flex align-items-center">
+                                Lines <p-sortIcon field="lineCount" />
+                                <p-columnFilter type="numeric" field="lineCount" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width:15rem" pResizableColumn pSortableColumn="filePath">
+                            <div class="d-flex align-items-center">
+                                File Name <p-sortIcon field="filePath" />
+                                <p-columnFilter type="text" field="filePath" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <!-- Enable this only if admin user -->
+                        <th *ngIf="false" style="min-width:10rem" pResizableColumn>
+                            Owner
+                        </th>
+                        <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-wordlist>
+                    <tr>
+                        <td>{{ wordlist.name }}</td>
+                        <td>{{ wordlist.wordlistType }}</td>
+                        <td>{{ wordlist.purpose }}</td>
+                        <td>{{ wordlist.lineCount }}</td>
+                        <td>{{ wordlist.filePath }}</td>
+                        <td *ngIf="false">{{ wordlist.owner?.username }}</td>
+                        <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateWordlistInfoModal(wordlist)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="confirmDeleteWordlist(wordlist)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #updateWordlistInfoModal
+    [header]="'Information of ' + selectedWordlist?.name" 
+    [(visible)]="updateWordlistInfoModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-wordlist-info
+        [wordlist]="selectedWordlist"
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="updateWordlistInfo($event)" />
+</p-dialog>
+
+<p-dialog 
+    #uploadWordlistModal
+    header="Upload a wordlist"
+    [(visible)]="uploadWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-upload-wordlist
+        #uploadWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>
+
+<p-dialog 
+    #addWordlistModal
+    header="Add a wordlist"
+    [(visible)]="addWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-wordlist
+        #addWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>

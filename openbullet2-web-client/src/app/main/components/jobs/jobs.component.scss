@@ -1,0 +1,28 @@
+@import "../../../../styles/variables.scss";
+
+.job-row {
+    cursor: pointer;
+}
+
+.job-row:hover > td {
+    background-color: var(--bg-tertiary);
+}
+
+.job-chip {
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-weight: bold;
+    font-size: 10px;
+    color: var(--bg-primary);
+    display: inline-block;
+}
+
+.job-actions {
+    display: inline-block;
+    width: 180px;
+    transition: width 0.5s;
+
+    &.hidden {
+        width: 0px;
+    }
+}

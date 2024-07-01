@@ -1,0 +1,316 @@
+<div class="back-to-jobs-container">
+    <div class="back-to-jobs" (click)="backToJobs()">
+        <fa-icon [icon]="faAngleLeft" [fixedWidth]="true"></fa-icon>
+        <span class="ml-2">Back to Jobs</span>
+    </div>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job === null">
+    <div class="ball"></div>
+    <h2 class="job-name">
+        <span>Proxy Check Job</span>
+    </h2>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job !== null">
+    <div [class]="'job-chip bg-' + statusColor[status]">
+        {{ status | uppercase }}
+    </div>
+    <h2 class="job-name">
+        <span>{{job.name}}</span>
+        <span class="text-small ml-2 color-inactive">PROXY CHECK JOB</span>
+    </h2>
+    <button class="button button-secondary edit-button"
+        [disabled]="!canEdit()"
+        (click)="editSettings()">
+        <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+        Edit Settings
+    </button>
+</div>
+
+<app-spinner *ngIf="job === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-3" *ngIf="job !== null">
+    <div class="row">
+        <div class="col-4 pl-0 pr-3">
+            <p-card class="proxy-stats">
+                <h4 class="mb-2">Proxy stats</h4>
+                <div class="proxy-stat">
+                    <span>
+                        Total:
+                    </span>
+                    <span class="ml-1">
+                        {{job.total}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span>
+                        Tested:
+                    </span>
+                    <span class="ml-1">
+                        {{tested}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-good">
+                        Working:
+                    </span>
+                    <span class="ml-1 color-good">
+                        {{working}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-bad">
+                        Not working:
+                    </span>
+                    <span class="ml-1 color-bad">
+                        {{notWorking}}
+                    </span>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4 px-3">
+            <p-card class="proxy-stats">
+                <h4 class="mb-2">Other stats</h4>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        CPM:
+                    </span>
+                    <span class="ml-1">
+                        {{cpm}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Elapsed:
+                    </span>
+                    <span class="ml-1">
+                        {{elapsed | timespan}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Remaining:
+                    </span>
+                    <span *ngIf="status === JobStatus.RUNNING" class="ml-1">
+                        {{remaining | timespan}}
+                    </span>
+                    <span *ngIf="status !== JobStatus.RUNNING" class="ml-1">
+                        -
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Progress:
+                    </span>
+                    <span class="ml-1">
+                        {{tested}} / {{job.total}} ({{progress | percent : '1.2-2'}})
+                    </span>
+                </div>
+            </p-card>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job options</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 pl-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Target
+                </div>
+                <div class="named-card-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.target !== null && job.target.url.length <= 20"
+                    [pTooltip]="job.target?.url ?? 'Unknown'">
+                    {{job.target?.url ?? 'Unknown' | truncate : 20}}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Success key
+                </div>
+                <div class="named-card-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.target !== null && job.target.successKey.length <= 20"
+                    [pTooltip]="job.target?.successKey ?? 'Unknown'">
+                    {{job.target?.successKey ?? 'Unknown' | truncate : 20}}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key d-flex">
+                    <span>
+                        Bots
+                    </span>
+                    <button class="button button-transparent ml-auto change-bots-button"
+                        *ngIf="!isChangingBots"
+                        pTooltip="Change the number of bots"
+                        (click)="showEditBotsInput()">
+                        <fa-icon class="color-inactive" [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+                <div class="named-card-value">
+                    <span *ngIf="!isChangingBots">
+                        {{bots}}
+                    </span>
+                    <div *ngIf="isChangingBots" class="change-bots-input-wrapper">
+                        <app-input-number key="bots" class="input-small"
+                            ngDefaultControl placeholder="1"
+                            [(ngModel)]="desiredBots" [min]="1"
+                            [max]="botLimit"
+                        />
+                        <button class="button button-transparent ml-auto" 
+                            (click)="changeBots(desiredBots)">
+                            <fa-icon class="color-good" [icon]="faCheck" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Timeout (ms)
+                </div>
+                <div class="named-card-value">
+                    {{job.timeoutMilliseconds | number : '1.'}} ms
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Check only untested
+                </div>
+                <div class="named-card-value">
+                    <app-boolean-icon 
+                        [useColors]="false"
+                        [value]="job.checkOnlyUntested" />
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pr-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Proxy group
+                </div>
+                <div class="named-card-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.groupName.length <= 20"
+                    [pTooltip]="job.groupName">
+                    {{job.groupName | truncate : 20}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job controls</h5>
+        </div>
+    </div>
+    <div class="row job-controls">
+        <div class="col align-self-stretch">
+            <div class="job-progress">
+                <p-progressBar 
+                    [mode]="status === JobStatus.WAITING ? 'indeterminate' : 'determinate'"
+                    [value]="Math.round(progress * 100 * 100) / 100"
+                    [showValue]="false"></p-progressBar>
+                <div class="progress-label">
+                    <div class="progress-label-text">
+                        <span *ngIf="status === JobStatus.WAITING">
+                            Waiting... {{waitLeft | timespan}} left
+                        </span>
+                        <span *ngIf="status !== JobStatus.WAITING">
+                            {{progress | percent : '1.2-2'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-auto" *ngIf="canSkipWait()">
+            <button class="button button-secondary color-bad"
+                (click)="skipWait()">
+                <fa-icon [icon]="faX" [fixedWidth]="true"></fa-icon>
+                Skip Wait
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canStart()">
+            <button class="button button-secondary color-good"
+                (click)="start()">
+                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                Start
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canResume()">
+            <button class="button button-secondary color-good"
+                (click)="resume()">
+                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                Resume
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canPause()">
+            <button class="button button-secondary color-custom"
+                tooltipPosition="bottom"
+                pTooltip="Waits for all jobs to finish processing the current data, and then pauses the job"
+                (click)="pause()">
+                <fa-icon [icon]="faPause" [fixedWidth]="true"></fa-icon>
+                Pause
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canStop()">
+            <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Gracefully stops the job, waiting for all bots to finish"
+                (click)="stop()">
+                <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                Stop
+            </button>
+        </div>
+        <div class="col col-auto" *ngIf="canAbort()">
+            <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Aggressively stops the job, killing all bots"
+                (click)="abort()">
+                <fa-icon [icon]="faX" [fixedWidth]="true"></fa-icon>
+                Abort
+            </button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 px-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Log
+                </div>
+                <div class="named-card-value logs">
+                    <!-- TODO: For now, the logBufferSize is set to 200 to avoid
+                    performance issues. To do this properly, we need to work on
+                    DOM manipulation without redrawing the whole list every time,
+                    and we also want to add virtualization that only displays
+                    the items that should be visible on the screen at a given time -->
+                    <div class="log-line" *ngFor="let log of logs">
+                        <span class="log-line-time monospace">
+                            {{log.timestamp | date : 'HH:mm:ss'}}
+                        </span>
+                        <span class="log-line-message monospace"
+                            [style]="{ color: log.color }">
+                            {{log.message}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="my-2 text-right">
+    <a class="color-accent-light" target="_blank" href='https://db-ip.com'>
+        IP Geolocation by DB-IP
+    </a>
+</div>

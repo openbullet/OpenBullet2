@@ -1,0 +1,111 @@
+<app-spinner *ngIf="filteredWordlists === null" [fullWidth]="true" />
+
+<div *ngIf="filteredWordlists != null">
+    <div class="wordlist-search-box">
+        <input id="searchTerm" type="text" pInputText
+            spellcheck="false"
+            class="wordlist-search-input"
+            [(ngModel)]="searchTerm"
+            (keydown)="searchBoxKeyDown($event)"
+            placeholder="Search..." />
+        <button class="button button-accent wordlist-search-button" 
+            pTooltip="Apply the current filters"
+            tooltipPosition="left"
+            (click)="filterWordlists()">
+            Apply
+        </button>
+    </div>
+    <p-table
+        #wordlistDt
+        [value]="filteredWordlists"
+        [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+        [paginator]="true"
+        [rows]="10"
+        [resizableColumns]="true"
+        [scrollable]="true"
+        scrollDirection="horizontal"
+        columnResizeMode="expand"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['name', 'type', 'purpose', 'lines', 'fileName']"
+        >
+        <ng-template pTemplate="emptymessage">
+            <div class="m-3">
+                <span>
+                    {{ filteredWordlists.length === 0 
+                        ? 'No wordlists found' 
+                        : 'No wordlists match the filter' }}
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr *ngIf="filteredWordlists.length > 0">
+                <th style="min-width:12rem" pResizableColumn pSortableColumn="name">
+                    <div class="d-flex align-items-center">
+                        Name <p-sortIcon field="name" />
+                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:10rem" pResizableColumn pSortableColumn="wordlistType">
+                    <div class="d-flex align-items-center">
+                        Type <p-sortIcon field="wordlistType" />
+                        <p-columnFilter type="text" field="wordlistType" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:7rem" pResizableColumn pSortableColumn="purpose">
+                    <div class="d-flex align-items-center">
+                        Purpose <p-sortIcon field="purpose" />
+                        <p-columnFilter type="text" field="purpose" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:3rem" pResizableColumn pSortableColumn="purpose">
+                    <div class="d-flex align-items-center">
+                        Lines <p-sortIcon field="lineCount" />
+                        <p-columnFilter type="boolean" field="lineCount" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:8rem" pResizableColumn pSortableColumn="filePath">
+                    <div class="d-flex align-items-center">
+                        File <p-sortIcon field="filePath" />
+                        <p-columnFilter type="text" field="filePath" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-wordlist>
+            <tr [ngClass]="{ 
+                'selected-wordlist': selectedWordlist === wordlist,
+                'wordlist-table-row': true,
+             }" 
+             (click)="selectWordlist(wordlist)"
+             (dblclick)="chooseWordlist(wordlist)">
+                <td class="font-weight-bold">
+                    {{ wordlist.name }}
+                </td>
+                <td>{{ wordlist.wordlistType }}</td>
+                <td>{{ wordlist.purpose }}</td>
+                <td>{{ wordlist.lineCount }}</td>
+                <td>{{ wordlist.filePath }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div  *ngIf="preview !== null && selectedWordlist !== null">
+        <div>
+            <span class="text-small">
+                Preview of {{ selectedWordlist.name }}, showing the first {{ preview.firstLines.length }} lines
+                (total file size: {{ preview.sizeInBytes | bytes }})
+            </span>
+        </div>
+        <textarea class="preview" readonly>{{ preview.firstLines.join('\n') }}</textarea>
+        <button class="button button-accent ml-auto" 
+            pTooltip="Select this wordlist"
+            tooltipPosition="left"
+            (click)="chooseWordlist(selectedWordlist)">
+            Select
+        </button>
+    </div>
+    <div *ngIf="preview === null || selectedWordlist === null"
+        class="preview-skeleton">
+    </div>
+</div>

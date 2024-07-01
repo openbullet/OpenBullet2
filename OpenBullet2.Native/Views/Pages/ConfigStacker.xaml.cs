@@ -107,7 +107,7 @@ namespace OpenBullet2.Native.Views.Pages
             // Save on CTRL+S
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
             {
-                await configRepo.Save(configService.SelectedConfig);
+                await configRepo.SaveAsync(configService.SelectedConfig);
                 Alert.Success("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
             }
         }

@@ -25,19 +25,20 @@ namespace RuriLib.Models.Jobs
         public string SuccessKey { get; set; } = "title>Google";
         public IEnumerable<Proxy> Proxies { get; set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
-        public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
+        public TimeSpan TickInterval = TimeSpan.FromSeconds(1);
         public IProxyCheckOutput ProxyOutput { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
         // Getters
         public override float Progress => parallelizer?.Progress ?? -1;
-        public TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
-        public TimeSpan Remaining => parallelizer?.Remaining ?? System.Threading.Timeout.InfiniteTimeSpan;
+        public override TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
+        public override TimeSpan Remaining => parallelizer?.Remaining ?? System.Threading.Timeout.InfiniteTimeSpan;
         public int CPM => parallelizer?.CPM ?? 0;
 
         // Private fields
         private Parallelizer<ProxyCheckInput, Proxy> parallelizer;
         private Timer tickTimer;
+        private CancellationTokenSource startCts;
 
         // Stats
         public int Total { get; set; }
@@ -51,6 +52,7 @@ namespace RuriLib.Models.Jobs
         public event EventHandler<Exception> OnError;
         public event EventHandler<float> OnProgress;
         public event EventHandler<JobStatus> OnStatusChanged;
+        public event EventHandler OnBotsChanged;
         public event EventHandler OnCompleted;
         public event EventHandler OnTimerTick;
 
@@ -118,7 +120,7 @@ namespace RuriLib.Models.Jobs
             {
                 try
                 {
-                    input.Proxy.Country = await input.GeoProvider.Geolocate(input.Proxy.Host);
+                    input.Proxy.Country = await input.GeoProvider.GeolocateAsync(input.Proxy.Host);
                 }
                 catch
                 {
@@ -138,6 +140,10 @@ namespace RuriLib.Models.Jobs
 
             try
             {
+                startCts = new CancellationTokenSource();
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                    cancellationToken, startCts.Token);
+                
                 Status = JobStatus.Starting;
                 OnStatusChanged?.Invoke(this, Status);
 
@@ -170,7 +176,7 @@ namespace RuriLib.Models.Jobs
                 OnStatusChanged?.Invoke(this, Status);
 
                 // Wait for the start condition to be verified
-                await base.Start(cancellationToken).ConfigureAwait(false);
+                await base.Start(linkedCts.Token).ConfigureAwait(false);
 
                 Status = JobStatus.Starting;
                 OnStatusChanged?.Invoke(this, Status);
@@ -193,6 +199,15 @@ namespace RuriLib.Models.Jobs
                 logger?.LogInfo(Id, "All set, starting the execution");
                 await parallelizer.Start().ConfigureAwait(false);
             }
+            catch (TaskCanceledException)
+            {
+                // ignored
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
+            }
             finally
             {
                 // Reset the status
@@ -201,6 +216,9 @@ namespace RuriLib.Models.Jobs
                     Status = JobStatus.Idle;
                     OnStatusChanged?.Invoke(this, Status);
                 }
+                
+                startCts?.Dispose();
+                startCts = null;
             }
         }
 
@@ -212,6 +230,11 @@ namespace RuriLib.Models.Jobs
                 {
                     await parallelizer.Stop().ConfigureAwait(false);
                 }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
             }
             finally
             {
@@ -228,6 +251,16 @@ namespace RuriLib.Models.Jobs
                 {
                     await parallelizer.Abort().ConfigureAwait(false);
                 }
+                
+                if (startCts is not null)
+                {
+                    await startCts.CancelAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
             }
             finally
             {
@@ -245,6 +278,11 @@ namespace RuriLib.Models.Jobs
                     await parallelizer.Pause().ConfigureAwait(false);
                 }
             }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
+            }
             finally
             {
                 StopTimer();
@@ -254,9 +292,17 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            if (parallelizer is not null)
+            try
             {
-                await parallelizer.Resume().ConfigureAwait(false);
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Resume().ConfigureAwait(false);
+                }   
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
             }
 
             StartTimer();
@@ -270,8 +316,11 @@ namespace RuriLib.Models.Jobs
             if (parallelizer is not null)
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
-                logger?.LogInfo(Id, $"Changed bots to {amount}");
             }
+
+            Bots = amount;
+            logger?.LogInfo(Id, $"Changed bots to {amount}");
+            OnBotsChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -353,7 +402,7 @@ namespace RuriLib.Models.Jobs
             Tested++;
 
             // This is fire and forget
-            _ = ProxyOutput.Store(proxy);
+            _ = ProxyOutput.StoreAsync(proxy);
         }
         #endregion
     }

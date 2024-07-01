@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-between w-100">
+    <app-input-list [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        [style]="{'height': '150px'}"
+        class="d-block w-100 input-small monospace"
+        ngDefaultControl
+        (listChange)="setValue($event)"
+        [list]="setting.value"
+        pTooltip="{{parameter?.description}}" />
+    <app-input-list [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Interpolated"
+        [style]="{'height': '150px'}"
+        class="d-block w-100 input-small interpolated monospace"
+        ngDefaultControl
+        (listChange)="setValue($event)"
+        [list]="setting.value"
+        pTooltip="{{parameter?.description}}" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        [stacker]="stacker"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[
+            SettingInputMode.Fixed,
+            SettingInputMode.Interpolated,
+            SettingInputMode.Variable
+        ]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>

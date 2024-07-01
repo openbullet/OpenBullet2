@@ -1,0 +1,74 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <p-fileUpload 
+                    #fileUpload
+                    name="Upload plugin"
+                    [customUpload]="true"
+                    [auto]="true"
+                    (uploadHandler)="selectedFile = $event.files[0]"
+                    (onRemove)="selectedFile = null"
+                    [multiple]="false"
+                    accept=".txt"
+                    [maxFileSize]="10 * 1000 * 1000">
+
+                </p-fileUpload>
+            </div>
+            <app-proxy-syntax-info />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="defaultProxyType"
+                [options]="proxyTypes">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+            <br />
+            <span class="text-small color-inactive">
+                If the proxy type is specified by a custom syntax for a given proxy, this value will be ignored.
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Default username</span>
+            </div>
+            <input id="defaultUsername" type="text"
+                spellcheck="false"
+                [(ngModel)]="defaultUsername" />
+        </div>
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Default Password</span>
+            </div>
+            <input id="defaultPassword" type="text"
+                spellcheck="false"
+                [(ngModel)]="defaultPassword" />
+        </div>
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                The username and password to use for all imported proxies when not specified by the syntax (leave blank to disable).
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Import
+            </button>
+        </div>
+    </div>
+</div>

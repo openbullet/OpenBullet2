@@ -1,5 +1,4 @@
-﻿using RuriLib.Helpers.Blocks;
-using RuriLib.Logging;
+﻿using RuriLib.Logging;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
@@ -12,6 +11,7 @@ namespace RuriLib.Models.Hits
 {
     public class Hit
     {
+        public string Id { get; } = Guid.NewGuid().ToString();
         public DataLine Data { get; set; }
         public string DataString => Data.Data;
         public Dictionary<string, object> CapturedData { get; set; }

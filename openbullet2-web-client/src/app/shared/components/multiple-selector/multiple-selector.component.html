@@ -1,0 +1,35 @@
+<div class="multiple-selector">
+    <ul class="selectable-ul selected" style="border-color: yellowgreen;">
+        <li *ngFor="let item of selectedItems"
+            role="button" (click)="deselectItem(item)">
+            <ng-container *ngTemplateOutlet="itemTemplate || defaultItemTemplate; context: { $implicit: item }">
+                
+            </ng-container>
+        </li>
+    </ul>
+    <div class="multiple-selector-buttons">
+        <button 
+            class="button button-secondary"
+            (click)="deselectAll()">
+            <fa-icon [icon]="faArrowRight" [fixedWidth]="true"></fa-icon>
+        </button>
+        <button
+            class="button button-secondary"
+            (click)="selectAll()">
+            <fa-icon [icon]="faArrowLeft" [fixedWidth]="true"></fa-icon>
+        </button>
+    </div>
+    <ul class="selectable-ul deselected" style="border-color: tomato;">
+        <li *ngFor="let item of deselectedItems"
+            role="button" (click)="selectItem(item)">
+            
+            <ng-container *ngTemplateOutlet="itemTemplate || defaultItemTemplate; context: { $implicit: item }">
+
+            </ng-container>
+        </li>
+    </ul>
+</div>
+
+<ng-template #defaultItemTemplate let-item>
+    {{ item }}
+</ng-template>

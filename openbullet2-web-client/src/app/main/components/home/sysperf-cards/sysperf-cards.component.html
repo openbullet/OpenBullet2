@@ -1,0 +1,128 @@
+<h6 class="mt-4 mx-3">System performance</h6>
+<div class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <p-card>
+                <div style="height: 120px">
+                    <div class="row">
+                        <div class="col-6">
+                            <span>CPU</span>
+                            <span class="perf-timespan">Last minute</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p-chip class="ml-auto">
+                                <fa-icon [ngClass]="cpuChipClass"
+                                    [icon]="cpuChipIcon"
+                                    [fixedWidth]="true"></fa-icon>
+                                <span class="ml-2">{{cpuChipValue | number : '1.2-2'}}%</span>
+                            </p-chip>
+                        </div>
+                    </div>
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-6">
+                            <div class="perf-metric">{{cpuValue | number : '1.2-2'}}%</div>
+                        </div>
+                        <div class="col-6">
+                            <canvas baseChart class="chart"
+                                height="100px"
+                                [id]="'cpuChart'"
+                                [data]="cpuLineChartData"
+                                [options]="lineChartOptions"
+                                [type]="'line'"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4">
+            <p-card>
+                <div style="height: 120px">
+                    <div class="row">
+                        <div class="col-6">
+                            <span>Network</span>
+                            <span class="perf-timespan">Last minute</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <span class="perf-timespan">* for the whole system</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-6">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-6 px-0">
+                                        <span class="perf-metric-label">Down</span>
+                                    </div>
+                                    <div class="col-6 px-0">
+                                        <span class="perf-metric-label">Up</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 px-0">
+                                        <span class="perf-metric-small">{{networkDownloadValue | bytes}}/s</span>
+                                        <fa-icon class="perf-network-down"
+                                            [icon]="faCaretDown"
+                                            [fixedWidth]="true" />
+                                    </div>
+                                    <div class="col-6 px-0">
+                                        <span class="perf-metric-small">{{networkUploadValue | bytes}}/s</span>
+                                        <fa-icon class="perf-network-up"
+                                            [icon]="faCaretUp"
+                                            [fixedWidth]="true" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <canvas baseChart class="chart"
+                                height="100px"
+                                [id]="'networkChart'"
+                                [data]="networkLineChartData"
+                                [options]="lineChartOptions"
+                                [type]="'line'"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4">
+            <p-card>
+                <div style="height: 120px">
+                    <div class="row">
+                        <div class="col-6">
+                            <span>Memory</span>
+                            <span class="perf-timespan">Last minute</span>
+                            <button class="button button-transparent ml-2" 
+                                *ngIf="isAdmin"
+                                pTooltip="Trigger aggressive server-side Garbage Collection"
+                                (click)="garbageCollect()">
+                                <fa-icon [icon]="faTrashCan" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p-chip class="ml-auto">
+                                <fa-icon [ngClass]="memoryChipClass"
+                                    [icon]="memoryChipIcon"
+                                    [fixedWidth]="true"></fa-icon>
+                                <span class="ml-2">{{memoryChipValue | number : '1.2-2'}}%</span>
+                            </p-chip>
+                        </div>
+                    </div>
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-6">
+                            <div class="perf-metric">{{memoryValue | bytes}}</div>
+                        </div>
+                        <div class="col-6">
+                            <canvas baseChart class="chart"
+                                height="100px"
+                                [id]="'memoryChart'"
+                                [data]="memoryLineChartData"
+                                [options]="lineChartOptions"
+                                [type]="'line'"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>

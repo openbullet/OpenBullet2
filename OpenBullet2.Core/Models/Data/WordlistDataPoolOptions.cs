@@ -1,15 +1,14 @@
 ﻿using RuriLib.Models.Data.DataPools;
 
-namespace OpenBullet2.Core.Models.Data
+namespace OpenBullet2.Core.Models.Data;
+
+/// <summary>
+/// Options for a <see cref="WordlistDataPool"/>.
+/// </summary>
+public class WordlistDataPoolOptions : DataPoolOptions
 {
     /// <summary>
-    /// Options for a <see cref="WordlistDataPool"/>.
+    /// The ID of the Wordlist in the repository.
     /// </summary>
-    public class WordlistDataPoolOptions : DataPoolOptions
-    {
-        /// <summary>
-        /// The ID of the Wordlist in the repository.
-        /// </summary>
-        public int WordlistId { get; set; } = -1;
-    }
+    public int WordlistId { get; set; } = -1;
 }

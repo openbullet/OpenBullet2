@@ -1,0 +1,10 @@
+<ngx-monaco-editor
+    #editor
+    *ngIf="editorOptions !== null"
+    class="code-editor h-100 w-100"
+    style="font-family: Chivo Mono !important"
+    (onInit)="editorLoaded()"
+    [id]="id"
+    [options]="editorOptions"
+    [ngModel]="model"
+    (ngModelChange)="valueChanged($event)" />

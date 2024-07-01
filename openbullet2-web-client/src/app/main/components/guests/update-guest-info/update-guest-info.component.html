@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Username</span>
+            </div>
+            <input id="username" type="text"
+                spellcheck="false"
+                [(ngModel)]="username"
+                placeholder="Username" />
+            <br />
+            <span class="text-small color-inactive">
+                Between 3 and 32 characters.
+            </span>
+        </div>
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">
+                    Access expiration
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The time after which no more valid authentication token can be provided to the guest user. Note that this DOES NOT invalidate existing authentication tokens."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <p-calendar
+                [(ngModel)]="accessExpiration"
+                [showTime]="true"
+                appendTo="body"
+                [showSeconds]="true">
+            </p-calendar>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Allowed addresses
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The IP addresses from which the guest user will be allowed to log in. No restrictions if empty."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+                <br />
+                <span class="monospace text-small color-inactive">
+                    Examples: 192.168.1.1, 10.0.0.0/24, example.dyndns.org, ::1
+                </span>
+            </div>
+            <textarea class="w-100 monospace"
+                spellcheck="false"
+                [ngStyle]="{ minHeight: '150px' }"
+                [(ngModel)]="allowedAddresses"
+                [placeholder]="'192.168.1.1\n10.0.0.0/24\nexample.dyndns.org\n::1'">
+            </textarea>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

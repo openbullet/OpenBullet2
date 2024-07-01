@@ -1,0 +1,77 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <span class="text-small">
+                Use this window to create a wordlist by referencing a file in the local filesystem. This is helpful if you're accessing OpenBullet 2 locally.
+                Do not use this if you're running OpenBullet 2 remotely. Instead, choose the <i>Add > Upload (remote)</i> option.
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <input id="name" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="name"
+                placeholder="My Wordlist" />
+        </div>
+        <div class="col-auto">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="wordlistType"
+                [options]="wordlistTypes">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Purpose</span>
+            </div>
+            <input id="purpose" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="purpose"
+                placeholder="" />
+            <br />
+            <span class="text-small color-inactive">
+                What is this wordlist going to be used for?
+            </span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">File path</span>
+            </div>
+            <input id="filePath" type="text" class="w-100"
+                spellcheck="false"
+                (blur)="formatFilePath()"
+                [(ngModel)]="filePath"
+                [placeholder]="isAdmin ? '/path/to/wordlist.txt' : 'UserData/Wordlists/example.txt'" />
+            <br />
+            <span class="text-small color-inactive">
+                The absolute (or relative) path to the file on disk.
+                For relative paths, the base folder is the folder of 
+                the OpenBullet2 executable.
+            </span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <p-progressBar *ngIf="isCreating" mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Add
+            </button>
+        </div>
+    </div>
+</div>

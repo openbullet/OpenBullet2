@@ -1,0 +1,775 @@
+<div *ngIf="options === null || proxyGroups === null || wordlistTypes.length == 0">
+    <h1>
+        <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+        {{ mode | titlecase }} Multi Run Job
+    </h1>
+    <h6 class="color-inactive">
+        A <b>Multi Run Job</b> will let you run a config using input data
+        such as wordlists or combinations of letters.
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="options !== null && proxyGroups !== null && wordlistTypes.length > 0"
+    class="container-fluid no-paddings">
+    <div class="row">
+        <div class="col-8 pl-0">
+            <h1>
+                <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Multi Run Job
+            </h1>
+            <h6 class="color-inactive">
+                A <b>Multi Run Job</b> will let you run a config using input data
+                such as wordlists or combinations of letters.
+            </h6>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <app-docs-button path="jobs/multi-run-job/creation" class="mt-2 mr-1" />
+            <button class="button button-accent mt-2"
+                pTooltip="Creating... please wait"
+                tooltipPosition="bottom"
+                [tooltipDisabled]="!isLoading"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="isLoading ? faRotateRight : faSave"
+                    class="d-inline-block mr-1"
+                    [ngClass]="{ 'spin': isLoading }"
+                    [fixedWidth]="true"></fa-icon>
+                <span *ngIf="!isLoading">{{ mode | titlecase }} Job</span>
+            </button>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <app-input-text key="jobName" class="input-small"
+                [style]="{ 'min-width': '300px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.name"
+                placeholder="My multi run job" />
+            <div class="mt-3 mb-2">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Relative"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="relative"></p-radioButton>
+                        <label for="relative" class="ml-2 text-small">Start in...</label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Absolute"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="absolute"></p-radioButton>
+                        <label for="absolute" class="ml-2 text-small">Start at...</label>
+                    </div>
+                </div>
+            </div>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Relative">
+                <app-input-time-span [small]="true"
+                    key="startAfter"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="startAfter"
+                    (timeSpanChange)="onStartAfterChange($event)"
+                 />
+            </span>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Absolute">
+                <p-calendar
+                    [ngModel]="startAt"
+                    (ngModelChange)="onStartAtChange($event)"
+                    [showTime]="true"
+                    appendTo="body"
+                    [showSeconds]="true">
+                </p-calendar>
+            </span>
+            <div class="mt-2 mb-1">
+                <span class="text-small">Bots</span>
+            </div>
+            <app-input-number key="bots" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.bots" [min]="1"
+                [max]="botLimit"
+                placeholder="10" />
+            <div class="mt-3 mb-1">
+                <span class="title-small">CONFIG <sup>*</sup></span>
+            </div>
+            <div class="mb-1">
+                <span class="text-small mr-2"
+                    *ngIf="selectedConfigInfo === null">
+                    No config selected
+                </span>
+                <div class="config-info" *ngIf="selectedConfigInfo !== null">
+                    <img class="config-icon d-block my-2" 
+                        [src]="'data:image/png;base64,' + selectedConfigInfo.base64Image" />
+                    <div class="config-info-text-wrapper">
+                        <span class="config-info-name">
+                            {{ selectedConfigInfo.name }}
+                        </span>
+                        <span class="config-info-author">
+                            by {{ selectedConfigInfo.author }}
+                        </span>
+                    </div>
+                </div>
+                <button class="button button-secondary mt-2"
+                    (click)="openSelectConfigModal()">
+                    <fa-icon [icon]="faGears" [fixedWidth]="true"></fa-icon>
+                    Select Config
+                </button>
+            </div>
+            <div class="mt-3 mb-1">
+                <span class="title-small">PROXY SETTINGS</span>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-6 pr-1">
+                        <div class="mb-1">
+                            <span class="text-small">Proxy mode</span>
+                            <span class="text-small" *ngIf="selectedConfigInfo !== null">
+                                (config's default is {{selectedConfigInfo.needsProxies ? 'On' : 'Off'}})
+                            </span>
+                        </div>
+                        <app-input-dropdown key="proxyMode"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [displayFunction]="jobProxyModeDisplayFunction"
+                            [options]="jobProxyModes"
+                            [(ngModel)]="options.proxyMode" />
+                    </div>
+                    <div class="col-6 pl-1">
+                        <div class="mb-1">
+                            <span class="text-small">When there are no more valid proxies...</span>
+                        </div>
+                        <app-input-dropdown key="noValidProxyBehaviour"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [displayFunction]="noValidProxyBehaviourDisplayFunction"
+                            [options]="noValidProxyBehaviours"
+                            [(ngModel)]="options.noValidProxyBehaviour" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            [(ngModel)]="options.shuffleProxies"
+                            [binary]="true" inputId="shuffleProxies"
+                            label="Shuffle proxies" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            pTooltip="When enabled, proxies are never banned. Use this for rotating proxies"
+                            [(ngModel)]="options.neverBanProxies"
+                            [binary]="true" inputId="neverBanProxies"
+                            label="Never ban proxies" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            pTooltip="When enabled, proxies can be used by multiple bots at the same time. Use this for rotating proxies"
+                            [(ngModel)]="options.concurrentProxyMode"
+                            [binary]="true" inputId="concurrentProxyMode"
+                            label="Concurrent proxy mode" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-6 pr-1">
+                        <div class="mb-1">
+                            <span class="text-small">
+                                Reload proxies from sources every...
+                            </span>
+                        </div>
+                        <app-input-number key="periodicReloadIntervalSeconds" class="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            pTooltip="In seconds, 0 to disable"
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="options.periodicReloadIntervalSeconds" [min]="0"
+                            placeholder="0" />
+                    </div>
+                    <div class="col-6 pl-1">
+                        <div class="mb-1">
+                            <span class="text-small">
+                                Proxies will be banned for...
+                            </span>
+                        </div>
+                        <app-input-number key="proxyBanTimeSeconds" class="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            pTooltip="In seconds, 0 to ban proxies until reloaded"
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="options.proxyBanTimeSeconds" [min]="0"
+                            placeholder="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 mb-1">
+                <span class="title-small">PROXY SOURCES</span>
+            </div>
+            <div class="mt-2 mb-1">
+                <button class="button button-secondary"
+                    (click)="addGroupProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Group
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addFileProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    File
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addRemoteProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Remote
+                </button>
+            </div>
+            <div *ngFor="let proxySource of options.proxySources">
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.Group">
+                    <span class="text-small font-weight-bold">Group</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <p-dropdown
+                            class="w-100"
+                            optionLabel="name"
+                            optionValue="id"
+                            (onChange)="touched = true"
+                            [options]="proxyGroups"
+                            [(ngModel)]="proxySource.groupId">
+                            <ng-template let-item pTemplate="selectedItem">
+                                <span class="input-small">{{item.name}}</span>
+                            </ng-template>
+                            <ng-template let-item pTemplate="item">
+                                <span class="input-small">{{item.name}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.File">
+                    <span class="text-small font-weight-bold">File</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <app-input-text key="proxySourceFileName"
+                            class="input-small w-100 mr-2"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            (blur)="proxySource.fileName = formatFilePath(proxySource.fileName)"
+                            [(ngModel)]="proxySource.fileName" regex="^.+$"
+                            placeholder="proxies.txt" />
+                        <app-input-dropdown key="proxySourceDefaultType"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [options]="proxyTypes"
+                            [(ngModel)]="proxySource.defaultType" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.Remote">
+                    <span class="text-small font-weight-bold">Remote</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <app-input-text key="proxySourceUrl"
+                            class="input-small w-100 mr-2"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="proxySource.url" regex="^.+$"
+                            placeholder="https://example.com/proxies" />
+                        <app-input-dropdown key="proxySourceDefaultType"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [options]="proxyTypes"
+                            [(ngModel)]="proxySource.defaultType" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="mt-3 mb-1">
+                <span class="title-small">DATA POOL</span>
+            </div>
+            <div class="mt-3 mb-1">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="dataPool"
+                            [value]="DataPoolType.Wordlist"
+                            [ngModel]="dataPoolType"
+                            (ngModelChange)="onDataPoolTypeChange($event)"
+                            inputId="wordlist"></p-radioButton>
+                        <label for="wordlist" class="ml-2 text-small">Wordlist</label>
+                    </div>
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="dataPool"
+                            [value]="DataPoolType.File"
+                            [ngModel]="dataPoolType"
+                            (ngModelChange)="onDataPoolTypeChange($event)"
+                            inputId="file"></p-radioButton>
+                        <label for="file" class="ml-2 text-small">File</label>
+                    </div>
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="dataPool"
+                            [value]="DataPoolType.Range"
+                            [ngModel]="dataPoolType"
+                            (ngModelChange)="onDataPoolTypeChange($event)"
+                            inputId="range"></p-radioButton>
+                        <label for="range" class="ml-2 text-small">Range</label>
+                    </div>
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="dataPool"
+                            [value]="DataPoolType.Combinations"
+                            [ngModel]="dataPoolType"
+                            (ngModelChange)="onDataPoolTypeChange($event)"
+                            inputId="combinations"></p-radioButton>
+                        <label for="combinations" class="ml-2 text-small">Combinations</label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p-radioButton name="dataPool"
+                            [value]="DataPoolType.Infinite"
+                            [ngModel]="dataPoolType"
+                            (ngModelChange)="onDataPoolTypeChange($event)"
+                            inputId="infinite"></p-radioButton>
+                        <label for="infinite" class="ml-2 text-small">Infinite</label>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="dataPoolType === DataPoolType.Wordlist">
+                <div class="mb-1">
+                    <div class="d-flex flex-row">
+                        <div class="wordlist-icon">
+                            <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
+                        </div>
+                        <div class="mt-2" *ngIf="selectedWordlist !== null">
+                            <span class="font-weight-bold d-block">
+                                {{ selectedWordlist.name }}
+                            </span>
+                            <span class="text-small d-block">
+                                {{ selectedWordlist.lineCount }} lines
+                            </span>
+                        </div>
+                        <div class="mt-2" *ngIf="selectedWordlist === null">
+                            <span class="font-weight-bold color-inactive d-block">
+                                No wordlist selected
+                            </span>
+                            <span class="text-small color-inactive d-block">
+                                (click the button below to select one)
+                            </span>
+                        </div>
+                    </div>
+                    <button class="button button-secondary mt-2"
+                        (click)="openSelectWordlistModal()">
+                        <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
+                        Select Wordlist
+                    </button>
+                    <button class="button button-secondary mt-2 ml-2"
+                        pTooltip="Add a wordlist from local disk (use this option if the file is on the same machine as OpenBullet)"
+                        tooltipPosition="bottom"
+                        (click)="openAddWordlistModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Add from local file
+                    </button>
+                    <button class="button button-secondary mt-2 ml-2"
+                        pTooltip="Upload a wordlist (use this options if you're hosting OpenBullet on a remote server but your file is on your local machine)"
+                        tooltipPosition="bottom"
+                        (click)="openUploadWordlistModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Upload
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="dataPoolType === DataPoolType.File">
+                <span class="text-small color-inactive mb-2">
+                    The <b>file</b> data pool will read data from a file on the disk
+                    where OpenBullet is running. If your OpenBullet instance
+                    is hosted on a remote server, make sure the file is
+                    on the file system of the server, not your local machine.
+                </span>
+                <div class="mb-1">
+                    <span class="text-small">Path to the file on disk</span>
+                </div>
+                <app-input-text key="filePath"
+                    class="input-small w-100"
+                    [style]="{ 'min-width': '300px' }"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    (blur)="dataPoolFileName = formatFilePath(dataPoolFileName)"
+                    [(ngModel)]="dataPoolFileName"
+                    placeholder="/path/to/my/file.txt" />
+                <div class="mt-2 mb-1">
+                    <span class="text-small">Wordlist Type</span>
+                </div>
+                <app-input-dropdown key="fileWordlistType"
+                    itemClass="input-small" optionClass="input-small"
+                    (touched)="touched = true" ngDefaultControl
+                    [options]="wordlistTypes"
+                    [(ngModel)]="dataPoolWordlistType" />
+            </div>
+            <div *ngIf="dataPoolType === DataPoolType.Range">
+                <span class="text-small color-inactive mb-2">
+                    The <b>range</b> data pool will generate a given amount of numbers
+                    from the provided start number, at the provided step.
+                    For example, if you specify a start number of <code>1</code>,
+                    an amount of <code>4</code>, and a step of <code>3</code>,
+                    it will generate these numbers:
+                    <code>1</code>, <code>4</code>, <code>7</code>, <code>10</code>.
+                </span>
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <div class="col align-self-stretch pl-0">
+                            <div class="mb-1">
+                                <span class="text-small">Start</span>
+                            </div>
+                            <app-input-number key="rangeStart" class="input-small w-100"
+                                (touched)="touched = true" ngDefaultControl
+                                (validityChange)="onValidityChange($event)"
+                                [(ngModel)]="dataPoolRangeStart"
+                                [integer]="true"
+                                placeholder="0" />
+                        </div>
+                        <div class="col align-self-stretch pl-2">
+                            <div class="mb-1">
+                                <span class="text-small">Amount</span>
+                            </div>
+                            <app-input-number key="rangeAmount" class="input-small w-100"
+                                (touched)="touched = true" ngDefaultControl
+                                (validityChange)="onValidityChange($event)"
+                                [(ngModel)]="dataPoolRangeAmount" [min]="1"
+                                [integer]="true"
+                                placeholder="100" />
+                        </div>
+                        <div class="col align-self-stretch pl-2">
+                            <div class="mb-1">
+                                <span class="text-small">Step</span>
+                            </div>
+                            <app-input-number key="rangeStep" class="input-small w-100"
+                                (touched)="touched = true" ngDefaultControl
+                                (validityChange)="onValidityChange($event)"
+                                [(ngModel)]="dataPoolRangeStep" [min]="1"
+                                [integer]="true"
+                                placeholder="1" />
+                        </div>
+                        <div class="col col-auto pl-2">
+                            <div class="mb-1">
+                                <span class="text-small">&nbsp;</span>
+                            </div>
+                            <p-checkbox class="text-small"
+                                (onChange)="touched = true" ngDefaultControl 
+                                [(ngModel)]="dataPoolRangePad"
+                                [binary]="true" inputId="rangePad"
+                                label="Padding" />
+                        </div>
+                    </div>
+                </div>
+                <span class="text-small color-inactive mt-2 d-block">
+                    Output: {{ calcRange() }}
+                </span>
+                <div class="mt-2 mb-1">
+                    <span class="text-small">Wordlist Type</span>
+                </div>
+                <app-input-dropdown key="rangeWordlistType"
+                    itemClass="input-small" optionClass="input-small"
+                    (touched)="touched = true" ngDefaultControl
+                    [options]="wordlistTypes"
+                    [(ngModel)]="dataPoolWordlistType" />
+            </div>
+            <div *ngIf="dataPoolType === DataPoolType.Combinations">
+                <span class="text-small color-inactive mb-2">
+                    The <b>combinations</b> data pool will generate all possible combinations
+                    of the characters you specify, with the length you specify.
+                    For example, if you specify a charset like
+                    <code>012</code> with length <code>2</code>, it will generate
+                    these combinations:
+                    <code>00</code>, <code>01</code>, <code>02</code>,
+                    <code>10</code>, <code>11</code>, <code>12</code>,
+                    <code>20</code>, <code>21</code>, <code>22</code>.
+                </span>
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <div class="col align-self-stretch pl-0">
+                            <div class="mb-1">
+                                <span class="text-small">Allowed characters</span>
+                            </div>
+                            <app-input-text key="combinationsCharSet"
+                                class="input-small w-100"
+                                [style]="{ 'min-width': '300px' }"
+                                (touched)="touched = true" ngDefaultControl
+                                (validityChange)="onValidityChange($event)"
+                                [(ngModel)]="dataPoolCombinationsCharSet" regex="^.+$"
+                                placeholder="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" />
+                        </div>
+                        <div class="col col-auto pl-2">
+                            <div class="mb-1">
+                                <span class="text-small">Length</span>
+                            </div>
+                            <app-input-number key="combinationsLength" class="input-small"
+                                (touched)="touched = true" ngDefaultControl
+                                (validityChange)="onValidityChange($event)"
+                                [(ngModel)]="dataPoolCombinationsLength" [min]="1"
+                                placeholder="4" />
+                        </div>
+                    </div>
+                </div>
+                <span class="text-small color-inactive mt-2 d-block">
+                    Total combinations:
+                    {{ dataPoolCombinationsCharSet.length }}<sup>{{ dataPoolCombinationsLength }}</sup>
+                    = {{ calcCombinations() | number : '1.0-0' }}.
+                    At a speed of 1000 checks/minute (CPM), this will take
+                    {{ calcCombinationsTime(1000) | timespan }}.
+                </span>
+                <div class="mt-2 mb-1">
+                    <span class="text-small">Wordlist Type</span>
+                </div>
+                <app-input-dropdown key="combinationsWordlistType"
+                    itemClass="input-small" optionClass="input-small"
+                    (touched)="touched = true" ngDefaultControl
+                    [options]="wordlistTypes"
+                    [(ngModel)]="dataPoolWordlistType" />
+            </div>
+            <div *ngIf="dataPoolType === DataPoolType.Infinite">
+                <span class="text-small color-inactive">
+                    The <b>infinite</b> data pool provides an endless stream of empty data lines.
+                    Use this if you want to run a config forever, until you manually
+                    stop it, without any input data.
+                </span>
+            </div>
+            <div class="mt-2 mb-1">
+                <span class="text-small">Skip this many lines from the beginning</span>
+            </div>
+            <app-input-number key="skip" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.skip" [min]="0"
+                placeholder="0" />
+            <div class="mt-3 mb-1">
+                <p-checkbox class="text-small"
+                    (onChange)="touched = true" ngDefaultControl 
+                    [(ngModel)]="options.markAsToCheckOnAbort"
+                    [binary]="true" inputId="markAsToCheckOnAbort"
+                    label="Mark data as 'TO CHECK' on job abort" />
+            </div>
+            <div class="mt-3 mb-1">
+                <span class="title-small">HIT OUTPUTS</span>
+            </div>
+            <div class="mt-2 mb-1">
+                <button class="button button-secondary"
+                    (click)="addDatabaseHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Database
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addFileSystemHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    File system
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addDiscordWebhookHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Discord
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addTelegramBotHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Telegram
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addCustomWebhookHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Custom webhook
+                </button>
+            </div>
+            <div *ngFor="let hitOutput of options.hitOutputs">
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.Database">
+                    <span class="text-small font-weight-bold">Database</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <span class="text-small w-100 align-self-center">
+                            Nothing to configure
+                        </span>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.FileSystem">
+                    <span class="text-small font-weight-bold">File system</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <span class="text-small mr-1 align-self-center">
+                            Folder
+                        </span>
+                        <app-input-text key="hitOutputBaseDir"
+                            class="input-small w-100"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="hitOutput.baseDir" regex="^.+$"
+                            placeholder="proxies.txt" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.DiscordWebhook">
+                    <span class="text-small font-weight-bold">Discord</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditDiscordWebhookHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.TelegramBot">
+                    <span class="text-small font-weight-bold">Telegram</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditTelegramBotHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.CustomWebhook">
+                    <span class="text-small font-weight-bold">Custom webhook</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditCustomWebhookHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    header="Select config" 
+    [(visible)]="selectConfigModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-select-config
+        #selectConfigComponent
+        (confirm)="selectConfig($event)" />
+</p-dialog>
+
+<p-dialog
+    header="Select wordlist" 
+    [(visible)]="selectWordlistModalVisible"
+    [modal]="true"
+    [style]="{ width: '80vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-select-wordlist
+        #selectWordlistComponent
+        (confirm)="selectWordlist($event)" />
+</p-dialog>
+
+<p-dialog 
+    #uploadWordlistModal
+    header="Upload a wordlist"
+    [(visible)]="uploadWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-upload-wordlist
+        #uploadWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>
+
+<p-dialog 
+    #addWordlistModal
+    header="Add a wordlist"
+    [(visible)]="addWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-wordlist
+        #addWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>
+
+
+<p-dialog 
+    header="Configure discord hit output" 
+    [(visible)]="configureDiscordWebhookHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-discord
+        #configureDiscordComponent
+        (confirm)="updateDiscordWebhookHitOutput()" />
+</p-dialog>
+
+<p-dialog 
+    header="Configure telegram hit output" 
+    [(visible)]="configureTelegramBotHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-telegram
+        #configureTelegramComponent
+        (confirm)="updateTelegramBotHitOutput()" />
+</p-dialog>
+
+<p-dialog 
+    header="Configure custom hit output" 
+    [(visible)]="configureCustomWebhookHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-custom-webhook
+        #configureCustomWebhookComponent
+        (confirm)="updateCustomWebhookHitOutput()" />
+</p-dialog>

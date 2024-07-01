@@ -1,0 +1,58 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Name
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="When you write this name in the editor, a suggestion will appear to inject the body of the snippet."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="name" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="name" ngDefaultControl 
+                placeholder="MySnippet" />
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Description
+                </span>
+            </div>
+            <textarea class="w-100"
+                spellcheck="false"
+                [ngStyle]="{ minHeight: '150px' }"
+                [(ngModel)]="description" ngDefaultControl 
+                placeholder="This snippet can be used for...">
+            </textarea>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    LoliCode
+                </span>
+            </div>
+            <div style="height: 300px; width: 100%">
+                <app-code-editor
+                    (codeChanged)="body = $event"
+                    language="lolicode" ngDefaultControl />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Create
+            </button>
+        </div>
+    </div>
+</div>

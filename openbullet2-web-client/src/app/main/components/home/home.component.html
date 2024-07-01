@@ -1,0 +1,158 @@
+<!-- Top information -->
+<div class="container-fluid">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>OpenBullet 2</h1>
+            <h5>
+                Welcome back, {{ username | titlecase }}!
+            </h5>
+        </div>
+        <div class="col-4 text-right">
+            <span class="info-label">Server Time</span><br />
+            <span *ngIf="serverTime !== null" class="info">
+                {{serverTime | dateFormat : 'llll'}}
+            </span>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="serverInfo === null || announcement === null" [fullWidth]="true" />
+
+<!-- Announcement -->
+<div class="mt-4 mx-3">
+    <p-card *ngIf="announcement !== null">
+        <p class="announcement-label">Announcement</p>
+        <p class="announcement" 
+            [innerHTML]="announcement.markdownText | markdown : { disableSanitizer: true } | async"></p>
+    </p-card>
+</div>
+
+<!-- System performance information -->
+<app-sysperf-cards />
+
+<!-- Collection -->
+<h6 class="mx-3 mt-4">Your collection</h6>
+<div class="container-fluid mt-4">
+    <div *ngIf="collectionInfo !== null" class="row">
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.jobsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Jobs
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.proxiesCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Proxies
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.wordlistsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Wordlists
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.wordlistsLines | number}}
+            </div>
+            <div class="collection-item-label">
+                Lines
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.hitsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Hits
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.configsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Configs
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.guestsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Guests
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.pluginsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Plugins
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats and performance -->
+<h6 class="mx-3 mt-4">Recent hits</h6>
+<div class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-12">
+            <p-card>
+                <app-recent-hits-chart
+                    *ngIf="recentHits !== null"
+                    [recentHits]="recentHits" />
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<!-- Other server information -->
+<!-- Use the position-relative class and put the spinner inside the 
+div if you want to display it only inside that div-->
+<div *ngIf="serverInfo !== null" class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <span class="info-label">Webserver Uptime</span><br />
+            <span *ngIf="serverUptime !== null" 
+            class="info">{{serverUptime | timespan}}</span>
+            <span *ngIf="serverUptime === null">Unknown</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Client IP Address</span><br />
+            <span class="info monospace">{{serverInfo.clientIpAddress}}</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Build Number</span><br />
+            <span class="info monospace">{{serverInfo.buildNumber}}</span>
+        </div>
+    </div>
+    <div class="row mt-3 justify-content-between">
+        <div class="col-4">
+            <span class="info-label">Operating System</span><br />
+            <span class="info">{{serverInfo.operatingSystem}}</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Current Working Directory</span><br />
+            <span class="info" [pTooltip]="serverInfo.currentWorkingDirectory" tooltipPosition="bottom">{{serverInfo.currentWorkingDirectory | truncate : 30}}</span>
+            <button class="button button-transparent ml-3" 
+                (click)="copyCurrentWorkingDirectory()"
+                pTooltip="Copy to clipboard" >
+                <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Build Date</span><br />
+            <span *ngIf="buildDate !== null" 
+            class="info">{{buildDate | date : 'medium'}}</span>
+        </div>
+    </div>
+</div>

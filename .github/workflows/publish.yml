@@ -1,9 +1,12 @@
-name: .NET
+name: Full Build + Release + Docker
 
-on:
-  push:
-    tags:
-    - '*'
+#on:
+#  push:
+#    tags:
+#    - '*'
+
+on: workflow_dispatch
+
 jobs:
   build:
     runs-on: windows-2019

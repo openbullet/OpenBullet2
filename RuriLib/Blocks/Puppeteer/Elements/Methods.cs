@@ -332,11 +332,9 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.Log($"Waited for element with {findBy} {identifier}", LogColors.DarkSalmon);
         }
 
-        private static async Task<ElementHandle> GetElement(Frame frame, FindElementBy findBy, string identifier, int index)
+        private static async Task<IElementHandle> GetElement(IFrame frame, FindElementBy findBy, string identifier, int index)
         {
-            var elements = findBy == FindElementBy.XPath
-                ? await frame.XPathAsync(identifier)
-                : await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
+            var elements = await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
 
             if (elements.Length < index + 1)
             {
@@ -373,13 +371,13 @@ namespace RuriLib.Blocks.Puppeteer.Elements
                 _ => throw new NotSupportedException()
             };
 
-        private static PuppeteerSharp.Browser GetBrowser(BotData data)
-            => data.TryGetObject<PuppeteerSharp.Browser>("puppeteer") ?? throw new Exception("The browser is not open!");
+        private static IBrowser GetBrowser(BotData data)
+            => data.TryGetObject<IBrowser>("puppeteer") ?? throw new Exception("The browser is not open!");
 
-        private static PuppeteerSharp.Page GetPage(BotData data)
-            => data.TryGetObject<PuppeteerSharp.Page>("puppeteerPage") ?? throw new Exception("No pages open!");
+        private static IPage GetPage(BotData data)
+            => data.TryGetObject<IPage>("puppeteerPage") ?? throw new Exception("No pages open!");
 
-        private static Frame GetFrame(BotData data)
-            => data.TryGetObject<Frame>("puppeteerFrame") ?? GetPage(data).MainFrame;
+        private static IFrame GetFrame(BotData data)
+            => data.TryGetObject<IFrame>("puppeteerFrame") ?? GetPage(data).MainFrame;
     }
 }

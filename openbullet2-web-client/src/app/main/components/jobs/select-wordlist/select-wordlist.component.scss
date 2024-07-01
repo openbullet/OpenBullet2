@@ -1,0 +1,36 @@
+.wordlist-search-box {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .wordlist-search-input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .wordlist-search-button {
+        width: 100px;
+        align-self: center;
+        height: 41px;
+    }
+}
+
+.wordlist-table-row > td {
+    background-color: var(--bg-secondary) !important;
+    cursor: pointer;
+}
+
+.selected-wordlist > td {
+    background-color: var(--bg-primary) !important;
+}
+
+.preview {
+    min-height: 260px;
+    width: 100%;
+    font-family: monospace;
+}
+
+.preview-skeleton {
+    height: 260px;
+}

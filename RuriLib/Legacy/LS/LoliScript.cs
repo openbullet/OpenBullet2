@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jint.Native;
 
 namespace RuriLib.Legacy.LS
 {
@@ -508,7 +509,7 @@ namespace RuriLib.Legacy.LS
                         }
 
                         // Execute JS
-                        jsengine.Execute(script);
+                        var completionValue = jsengine.Evaluate(script);
 
                         // Print results to log
                         data.Logger.Log($"DEBUG LOG: {sw}", LogColors.White);
@@ -542,11 +543,7 @@ namespace RuriLib.Legacy.LS
                         }
 
                         // Print other info
-                        if (jsengine.GetCompletionValue() != null)
-                        {
-                            data.Logger.Log($"Completion value: {jsengine.GetCompletionValue()}", LogColors.White);
-                        }
-
+                        data.Logger.Log($"Completion value: {completionValue}", LogColors.White);
                         break;
 
                     case ScriptingLanguage.IronPython:

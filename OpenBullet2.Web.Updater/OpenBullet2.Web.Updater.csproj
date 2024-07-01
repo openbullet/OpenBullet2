@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ApplicationIcon>logo.ico</ApplicationIcon>
+        <Nullable>enable</Nullable>
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>partial</TrimMode>
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+        <DebugType>none</DebugType>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CliWrap" Version="3.6.6" />
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Spectre.Console" Version="0.49.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <!-- This is required to make the app run on Linux without libicu -->
+        <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <!-- Only trim assemblies that support trimming! -->
+        <TrimmableAssembly Include="System.Runtime.CompilerServices.Unsafe" />
+        <TrimmableAssembly Include="System.Memory" />
+        <TrimmableAssembly Include="System.Buffers" />
+        <TrimmableAssembly Include="System.Numerics.Vectors" />
+        <TrimmableAssembly Include="System.Runtime" />
+        <TrimmableAssembly Include="System.Threading.Tasks.Extensions" />
+        <TrimmableAssembly Include="System.Text.Json" />
+        <TrimmableAssembly Include="System.Text.Encodings.Web" />
+        <TrimmableAssembly Include="System.Text.RegularExpressions" />
+    </ItemGroup>
+
+</Project>

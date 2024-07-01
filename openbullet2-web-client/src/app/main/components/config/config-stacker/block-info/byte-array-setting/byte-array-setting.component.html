@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-between w-100">
+    <app-input-text [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        class="input-small w-100 monospace"
+        ngDefaultControl
+        (ngModelChange)="setValue($event)"
+        [ngModel]="setting.value"
+        [regex]="'^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$'"
+        pTooltip="{{parameter?.description}}" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        [stacker]="stacker"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[SettingInputMode.Fixed, SettingInputMode.Variable]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>

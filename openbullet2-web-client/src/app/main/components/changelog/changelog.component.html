@@ -1,0 +1,19 @@
+<app-spinner *ngIf="changelog === null" [fullWidth]="true" />
+<ng-container *ngIf="updateInfo !== null && updateInfo.isUpdateAvailable && newChangelog !== null">
+    <div class="update-alert">
+        <fa-icon class="color-custom mr-1" [icon]="faExclamationTriangle" [fixedWidth]="true"></fa-icon>
+        <span class="font-weight-bold">v{{updateInfo.currentVersion}} [{{updateInfo.currentVersionType}}]</span>
+        <fa-icon class="color-inactive ml-1 mr-1" [icon]="faArrowRight" [fixedWidth]="true"></fa-icon>
+        <span class="font-weight-bold">v{{updateInfo.remoteVersion}} [{{updateInfo.remoteVersionType}}]</span>
+        <span class="ml-2">Update available! Click 
+            <a target="_blank" [href]="'https://github.com/openbullet/OpenBullet2/releases/tag/' + updateInfo.remoteVersion">
+                here
+            </a>
+            to view the new release on GitHub.</span>
+    </div>
+    <div [innerHTML]="newChangelog.markdownText | markdown | async"></div>
+    <div class="separator"></div>
+</ng-container>
+<ng-container *ngIf="changelog !== null">
+    <div [innerHTML]="changelog.markdownText | markdown | async"></div>
+</ng-container>

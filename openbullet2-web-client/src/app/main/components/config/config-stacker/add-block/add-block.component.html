@@ -1,0 +1,87 @@
+<div class="container-fluid" *ngIf="currentCategory !== null">
+    <div class="row">
+        <div class="col-auto pl-0">
+            <button class="button button-secondary h-100"
+                [disabled]="currentCategory.isRoot()"
+                pTooltip="Previous category"
+                tooltipPosition="bottom"
+                (click)="previousCategory()">
+                <fa-icon [icon]="faArrowUp" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+        <div class="col align-self-stretch px-1">
+            <app-input-text type="text" class="w-100 h-100"
+                [(ngModel)]="searchFilter"
+                placeholder="Search for a block..."
+                (keyup.enter)="applySearchFilter()" />
+        </div>
+        <div class="col-auto pr-0">
+            <button class="button button-accent h-100"
+                (click)="applySearchFilter()">
+                <fa-icon [icon]="faSearch" [fixedWidth]="true"></fa-icon>
+                Search
+            </button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 px-0">
+            <div class="blocks-grid">
+                <div class="block-item"
+                    [ngStyle]="{
+                        backgroundColor: category.getCategory()?.backgroundColor,
+                        color: category.getCategory()?.foregroundColor
+                    }"
+                    (click)="selectCategory(category)"
+                    *ngFor="let category of subCategories">
+                    {{category.name}}
+                    <span class="category-description">
+                        {{category.getCategory()?.description ?? ''}}
+                    </span>
+                </div>
+                <div class="block-item"
+                    [ngStyle]="{
+                        backgroundColor: descriptor.category?.backgroundColor,
+                        color: descriptor.category?.foregroundColor
+                    }"
+                    [pTooltip]="descriptor.description"
+                    [tooltipDisabled]="tooltipDisabled"
+                    (click)="selectBlock(descriptor.id)"
+                    *ngFor="let descriptor of descriptors">
+                    {{descriptor.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="searchFilter === ''">
+        <div class="col-12 px-0">
+            <h5>Recently used</h5>
+        </div>
+    </div>
+    <div class="row mt-1" *ngIf="searchFilter === ''">
+        <div class="col-12 px-0">
+            <div class="blocks-grid">
+                <div class="block-item"
+                    *ngFor="let blockId of recentlyUsedBlockIds"
+                    [ngStyle]="{
+                        backgroundColor: descriptorsRepo![blockId].category?.backgroundColor,
+                        color: descriptorsRepo![blockId].category?.foregroundColor
+                    }"
+                    [pTooltip]="descriptorsRepo![blockId].description"
+                    [tooltipDisabled]="tooltipDisabled"
+                    (click)="selectBlock(blockId)">
+                    {{descriptorsRepo![blockId].name}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3"
+        *ngIf="subCategories.length === 0 && descriptors.length === 0">
+        <div class="col-12 px-0">
+            No blocks found.
+        </div>
+    </div>
+</div>
+
+<div *ngIf="currentCategory === null">
+    Category tree not found, please refresh the page.
+</div>

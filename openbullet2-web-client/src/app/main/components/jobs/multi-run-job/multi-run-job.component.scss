@@ -1,0 +1,218 @@
+.ball {
+    background-color: var(--bg-secondary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    align-self: center;
+}
+
+.job-name {
+    line-height: 30px;
+    align-self: center;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.edit-button-container {
+    align-self: center;
+    margin-left: auto;
+}
+
+.back-to-jobs-container {
+    display: flex;
+
+    .back-to-jobs {
+        align-self: flex-start;
+        /* TODO: Add cute bounce animation to angle bracket on hover */
+        cursor: pointer;
+    }
+}
+
+.job-stats {
+    .job-stat {
+        display: block;
+    }
+}
+
+.named-card {
+    .named-card-key {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+        font-weight: 500;
+        color: var(--fg-inactive);
+    }
+
+    .named-card-value {
+        background-color: var(--bg-secondary);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+
+        .value-list {
+            list-style: none;
+            padding-left: 0px;
+            margin: 0px;
+            
+            li {
+                overflow: hidden; 
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+}
+
+.job-chip {
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--bg-primary);
+    display: inline-block;
+    height: 30px;
+    align-self: center;
+}
+
+.job-controls {
+    .col {
+        padding: 0px 5px;
+    }
+
+    .col:first-child {
+        padding-left: 0px;
+    }
+
+    .col:last-child {
+        padding-right: 0px;
+    }
+}
+
+.progress-label {
+    position: absolute;
+    z-index: 1;
+    width: 400px;
+    top: 5px;
+    left: calc(50% - 200px);
+    display: flex;
+
+    .progress-label-text {
+        margin: auto;
+        
+        span {
+            font-weight: 600;
+            color: var(--fg-light);
+        }
+    }
+}
+
+.job-progress {
+    background-color: var(--bg-primary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.logs {
+    height: 350px;
+    overflow-y: auto;
+
+    .log-line {
+        .log-line-time {
+            color: var(--fg-inactive);
+            font-size: 14px;
+        }
+    
+        .log-line-message {
+            font-size: 14px;
+            margin-left: 5px;
+        }
+    }
+}
+
+.hits {
+    height: 310px;
+    overflow-y: auto;
+
+    .hits-list {
+        width: 100%;
+        list-style-type: none;
+        padding: 0px;
+
+        .hit {
+            font-size: 14px;
+            padding: 5px 10px 5px 0px;
+            cursor: pointer;
+
+            /* Disable text selection */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+            
+            &:hover, &.selected {
+                background-color: var(--bg-primary);
+                padding: 5px 0px 5px 10px;
+            }
+        }
+    }
+}
+
+.change-bots-button {
+    height: 24px;
+    margin-top: -3px;
+}
+
+.change-bots-input-wrapper {
+    display: flex;
+    margin-bottom: -6px;
+}
+
+.config-info {
+    display: flex;
+    flex-direction: row;
+
+    .config-icon {
+        width: 80px;
+        height: 80px;
+        align-self: center;
+    }
+
+    .config-info-text-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        margin-left: 1rem;
+
+        .config-info-name {
+            align-self: flex-start;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .config-info-author {
+            align-self: flex-start;
+            color: var(--fg-inactive);
+            font-size: 12px;
+        }
+    }
+}
+
+.custom-inputs-list {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+
+    li {
+        span {
+            word-wrap: break-word;
+        }
+    }
+}
+
+.bot-details-table-wrapper {
+    max-height: 30rem;
+    overflow-y: auto;
+}

@@ -1,0 +1,161 @@
+<app-spinner *ngIf="filteredConfigs === null" [fullWidth]="true" />
+
+<div *ngIf="filteredConfigs != null">
+    <div class="config-search-box">
+        <input id="searchTerm" type="text" pInputText
+            spellcheck="false"
+            class="config-search-input"
+            [(ngModel)]="searchTerm"
+            (keydown)="searchBoxKeyDown($event)"
+            placeholder="Search..." />
+        <button class="button button-accent config-search-button" 
+            pTooltip="Apply the current filters"
+            tooltipPosition="left"
+            (click)="filterConfigs()">
+            Apply
+        </button>
+    </div>
+    <p-table
+        #configDt
+        [value]="filteredConfigs"
+        [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+        [paginator]="true"
+        [rows]="10"
+        [resizableColumns]="true"
+        [scrollable]="true"
+        scrollDirection="horizontal"
+        columnResizeMode="expand"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['name', 'author', 'category', 'isRemote', 'proxies', 'wordlists', 'creationDate', 'lastModified']"
+        >
+        <ng-template pTemplate="emptymessage">
+            <div class="m-3">
+                <span>
+                    {{ filteredConfigs.length === 0 
+                        ? 'No configs found' 
+                        : 'No configs match the filter' }}
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr *ngIf="filteredConfigs.length > 0">
+                <th></th>
+                <th style="min-width:12rem" pResizableColumn pSortableColumn="name">
+                    <div class="d-flex align-items-center">
+                        Name <p-sortIcon field="name" />
+                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:10rem" pResizableColumn pSortableColumn="author">
+                    <div class="d-flex align-items-center">
+                        Author <p-sortIcon field="author" />
+                        <p-columnFilter type="text" field="author" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:7rem" pResizableColumn pSortableColumn="category">
+                    <div class="d-flex align-items-center">
+                        Category <p-sortIcon field="category" />
+                        <p-columnFilter type="text" field="category" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:3rem">
+                    <div class="d-flex align-items-center">
+                        Remote
+                        <p-columnFilter type="boolean" field="isRemote" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:3rem">
+                    <div class="d-flex align-items-center">
+                        Proxies
+                        <p-columnFilter type="boolean" field="needsProxies" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:8rem" pResizableColumn>
+                    <div class="d-flex align-items-center">
+                        Wordlists
+                        <p-columnFilter type="text" field="allowedWordlistTypes" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:8rem" pSortableColumn="creationDate">
+                    <div class="d-flex align-items-center">
+                        Creation date <p-sortIcon field="creationDate" />
+                        <p-columnFilter type="date" field="creationDate" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:8rem" pSortableColumn="lastModified">
+                    <div class="d-flex align-items-center">
+                        Last modified <p-sortIcon field="lastModified" />
+                        <p-columnFilter type="date" field="lastModified" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-config>
+            <tr [ngClass]="{ 
+                'selected-config': selectedConfig === config,
+                'config-table-row': true,
+             }" 
+             (click)="selectConfig(config)"
+             (dblclick)="chooseConfig(config)">
+                <td>
+                    <img class="config-table-icon" 
+                        [src]="'data:image/png;base64,' + config.base64Image" />
+                </td>
+                <td class="font-weight-bold">
+                    {{ config.name }}
+                </td>
+                <td>{{ config.author }}</td>
+                <td>{{ config.category }}</td>
+                <td>
+                    <app-boolean-icon
+                        [useColors]="false"
+                        [value]="config.isRemote" />
+                </td>
+                <td>
+                    <app-boolean-icon 
+                        [useColors]="false"
+                        [value]="config.needsProxies" />
+                </td>
+                <td>
+                    <p-chip ngClass="mr-2" *ngFor="let wordlistType of config.allowedWordlistTypes">
+                        {{ wordlistType }}
+                    </p-chip>
+                </td>
+                <td>
+                    <span
+                        tooltipPosition="bottom"
+                        [pTooltip]="(config.creationDate | date : 'medium') ?? ''">
+                        {{ moment(config.creationDate).fromNow() }}
+                    </span>
+                </td>
+                <td>
+                    <span tooltipPosition="bottom"
+                        [pTooltip]="(config.lastModified | date : 'medium') ?? ''">
+                        {{ moment(config.lastModified).fromNow() }}
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div *ngIf="readme !== null && selectedConfig !== null">
+        <div class="d-flex">
+            <h5 class="color-accent-light">
+                Readme of {{selectedConfig.name}}
+            </h5>
+            <button class="button button-accent ml-auto" 
+                pTooltip="Select this config"
+                tooltipPosition="left"
+                (click)="chooseConfig(selectedConfig)">
+                Select
+            </button>
+        </div>
+        <p class="readme mt-3" 
+            [innerHTML]="readme | markdown | async"></p>
+    </div>
+    <div *ngIf="readme === null || selectedConfig === null"
+        class="readme-skeleton">
+
+    </div>
+</div>

@@ -9,7 +9,7 @@ namespace OpenBullet2.Native.Services
         private record CachedAnnouncement(string Content, DateTime LastFetch);
         private CachedAnnouncement cached;
 
-        public async Task<string> FetchAnnouncement()
+        public async Task<string> FetchAnnouncementAsync()
         {
             var isDebug = false;
 

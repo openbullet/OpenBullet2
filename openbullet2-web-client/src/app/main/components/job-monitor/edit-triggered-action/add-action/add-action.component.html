@@ -1,0 +1,18 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 px-0">
+            <app-input-dropdown key="actionType"
+                ngDefaultControl
+                [options]="getActionTypes()"
+                [(ngModel)]="type" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12 px-0">
+            <button class="button button-accent" 
+                (click)="submit()">
+                Select
+            </button>
+        </div>
+    </div>
+</div>

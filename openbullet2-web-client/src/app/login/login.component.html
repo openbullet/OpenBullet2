@@ -1,0 +1,72 @@
+<div class="row vh-100 w-100 align-items-center px-0 mx-0">
+    <div class="col-12 col-lg-6 mx-auto p-5 w-50 login-container text-center">
+        <div class="login-logo mb-4">
+            <img class="logo" src="../../assets/images/logohq.png"
+                alt="OpenBullet 2" />
+        </div>
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <span>This instance is protected. Please log in.</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-auto mx-auto">
+                    <div class="mb-1 text-left">
+                        <span class="text-small">Username</span>
+                    </div>
+                    <input id="username" type="text"
+                        spellcheck="false"
+                        (keyup.enter)="submitForm()"
+                        [(ngModel)]="username" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-auto mx-auto">
+                    <div class="mb-1 text-left">
+                        <span class="text-small">Password</span>
+                    </div>
+                    <input id="password" type="password"
+                        [(ngModel)]="password"
+                        (keyup.enter)="submitForm()" />
+                </div>
+            </div>
+            <div class="row mb-3" *ngIf="failedLoginMessage !== null">
+                <div class="col-12 text-center">
+                    <span class="color-bad">{{ failedLoginMessage }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button class="button button-accent login-button"
+                        [disabled]="!isFormValid()"
+                        (click)="submitForm()">
+                        Login
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <a class="forgot-credentials" href="javascript:void(0);"
+                        (click)="forgotCredentialsModalVisible = true">
+                        I forgot my credentials
+                    </a>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+
+<p-dialog 
+    #forgotCredentialsModal
+    header="I forgot my credentials!"
+    [(visible)]="forgotCredentialsModalVisible"
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-forgot-credentials
+        #forgotCredentialsComponent />
+</p-dialog>

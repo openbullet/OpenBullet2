@@ -1,0 +1,14 @@
+<fa-icon
+    *ngIf="value"
+    [class]="useColors ? 'color-good' : ''"
+    [icon]="faCheck"
+    [fixedWidth]="true">
+</fa-icon>
+
+<fa-icon
+    *ngIf="!value"
+    [class]="useColors ? 'color-bad' : ''"
+    [icon]="faXMark"
+    [fixedWidth]="true">
+
+</fa-icon>

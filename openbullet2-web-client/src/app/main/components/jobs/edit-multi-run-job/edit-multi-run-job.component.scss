@@ -1,0 +1,55 @@
+.title-small {
+    color: var(--fg-inactive);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.config-info {
+    display: flex;
+    flex-direction: row;
+
+    .config-icon {
+        width: 48px;
+        height: 48px;
+        align-self: center;
+    }
+
+    .config-info-text-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        margin-left: 1rem;
+
+        .config-info-name {
+            align-self: flex-start;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .config-info-author {
+            align-self: flex-start;
+            color: var(--fg-inactive);
+            font-size: 12px;
+        }
+    }
+}
+
+.wordlist-icon {
+    font-size: 40px;
+    margin-left: -10px;
+    margin-right: 5px;
+}
+
+/* Make a component endlessly spin in 360 degrees */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

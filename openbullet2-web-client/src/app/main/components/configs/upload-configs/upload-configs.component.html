@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <span class="text-small">
+                Use this window to upload configs to the remote server. This is helpful if you're not accessing OpenBullet 2 from the same machine.
+                If you're running OpenBullet 2 locally, you can also copy the configs to the <i>UserData/Configs</i> folder and then select the <i>File > Reload all</i> option
+                to load them.
+            </span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-card>
+                <h5 class="color-accent-light">
+                    <fa-icon [icon]="faInfo" [fixedWidth]="true"></fa-icon>
+                    Info
+                </h5>
+                <span class="text-small">
+                    OpenBullet 1 configs (with .loli format) are supported as well!
+                </span>
+            </p-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- TODO: Add drag and drop area -->
+            <p-fileUpload 
+                #fileUpload
+                name="Upload wordlist file"
+                [customUpload]="true"
+                [auto]="true"
+                (uploadHandler)="selectedFiles = $event.files"
+                [multiple]="true"
+                (onError)="uploadError($event)"
+                accept=".opk,.loli"
+                [maxFileSize]="50 * 1000 * 1000">
+            </p-fileUpload>
+        </div>
+    </div>
+    <div *ngIf="isUploading" class="row my-2">
+        <div class="col-12">
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button
+                class="button button-accent float-right" 
+                [disabled]="!canUpload()"
+                (click)="upload()">
+                Upload
+            </button>
+        </div>
+    </div>
+</div>

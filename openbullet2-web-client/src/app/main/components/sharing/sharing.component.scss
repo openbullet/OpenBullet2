@@ -1,0 +1,47 @@
+@import "../../../../styles/variables.scss";
+
+.endpoints-wrapper {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+
+    li {
+        button {
+            border: 1px solid var(--fg-inactive);
+            background-color: var(--bg-secondary);
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        button:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        button.selected-endpoint {
+            background-color: var(--fg-accent);
+            border: 1px solid var(--fg-accent);
+            color: var(--fg-light);
+        }
+    }
+
+    li:first-child {
+        button {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+    }
+
+    li:last-child {
+        button {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+    }
+}
+
+.config-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+}

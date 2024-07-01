@@ -1,0 +1,43 @@
+.keychain-wrapper {
+    border-radius: 5px;
+
+    .keychain {
+        display: flex;
+        flex-direction: column;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        opacity: 1;
+        backdrop-filter: brightness(15%) saturate(60%);
+    
+        .keychain-settings {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+    
+        .keys-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+
+            .key {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+
+                .key-left {
+                    align-self: stretch;
+                }
+
+                .key-right {
+                    align-self: stretch;
+                }
+            }
+        }
+    }    
+}

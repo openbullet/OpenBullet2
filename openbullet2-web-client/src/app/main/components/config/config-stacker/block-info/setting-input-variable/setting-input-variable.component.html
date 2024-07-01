@@ -1,0 +1,11 @@
+<p-autoComplete [id]="setting.name + '-variable'"
+    inputStyleClass="input-small w-100 input-variable monospace"
+    class="d-block w-100"
+    ngDefaultControl
+    placeholder="myVariable"
+    [completeOnFocus]="true"
+    [suggestions]="suggestions"
+    (completeMethod)="getSuggestions($event)"
+    [showEmptyMessage]="false"
+    (onBlur)="valueChanged()"
+    [(ngModel)]="setting.inputVariableName" />

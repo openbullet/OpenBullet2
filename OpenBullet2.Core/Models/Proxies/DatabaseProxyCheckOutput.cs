@@ -3,63 +3,70 @@ using RuriLib.Models.Proxies;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace OpenBullet2.Core.Models.Proxies
+namespace OpenBullet2.Core.Models.Proxies;
+
+/// <summary>
+/// A proxy check output that writes proxies to an <see cref="IProxyRepository"/>.
+/// </summary>
+public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
 {
-    /// <summary>
-    /// An proxy check output that writes proxies to an <see cref="IProxyRepository"/>.
-    /// </summary>
-    public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
+    private readonly IServiceScope _scope;
+    private readonly IProxyRepository _proxyRepo;
+    private readonly SemaphoreSlim _semaphore;
+
+    public DatabaseProxyCheckOutput(IServiceScopeFactory scopeFactory)
     {
-        private readonly IProxyRepository proxyRepo;
-        private readonly SemaphoreSlim semaphore;
+        _scope = scopeFactory.CreateScope();
+        _proxyRepo = _scope.ServiceProvider.GetRequiredService<IProxyRepository>();
+        _semaphore = new SemaphoreSlim(1, 1);
+    }
 
-        public DatabaseProxyCheckOutput(IProxyRepository proxyRepo)
+    /// <inheritdoc/>
+    public async Task StoreAsync(Proxy proxy)
+    {
+        try
         {
-            this.proxyRepo = proxyRepo;
-            semaphore = new SemaphoreSlim(1, 1);
-        }
+            var entity = await _proxyRepo.GetAsync(proxy.Id);
+            entity.Country = proxy.Country;
+            entity.LastChecked = proxy.LastChecked;
+            entity.Ping = proxy.Ping;
+            entity.Status = proxy.WorkingStatus;
 
-        /// <inheritdoc/>
-        public async Task Store(Proxy proxy)
-        {
+            // Only allow updating one proxy at a time (multiple threads should
+            // not use the same DbContext at the same time).
+            await _semaphore.WaitAsync();
+
             try
             {
-                var entity = await proxyRepo.Get(proxy.Id);
-                entity.Country = proxy.Country;
-                entity.LastChecked = proxy.LastChecked;
-                entity.Ping = proxy.Ping;
-                entity.Status = proxy.WorkingStatus;
-
-                // Only allow updating one proxy at a time (multiple threads should
-                // not use the same DbContext at the same time).
-                await semaphore.WaitAsync();
-
-                try
-                {
-                    await proxyRepo.Update(entity);
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
+                await _proxyRepo.UpdateAsync(entity);
             }
-            catch
+            finally
             {
-                /* 
-                 * If we are here it means a few possible things
-                 * - we deleted the job but the parallelizer was still running
-                 * - the original proxy was deleted (e.g. from the proxy tab)
-                 * 
-                 * In any case we don't want to save anything to the database.
-                 */
+                _semaphore.Release();
             }
         }
-
-        public void Dispose()
+        catch (Exception ex)
         {
-            semaphore?.Dispose();
-            GC.SuppressFinalize(this);
+            /* 
+             * If we are here it means a few possible things
+             * - we deleted the job but the parallelizer was still running
+             * - the original proxy was deleted (e.g. from the proxy tab)
+             * - the scope was disposed for some reason
+             * 
+             * In any case we don't want to save anything to the database.
+             */
+            
+            // TODO: Turn this into a log message using a logger
+            Console.WriteLine($"Error while saving proxy {proxy.Id} to the database: {ex.Message}");
         }
+    }
+
+    public void Dispose()
+    {
+        _semaphore?.Dispose();
+        _scope?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

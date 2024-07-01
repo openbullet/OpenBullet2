@@ -1,0 +1,11 @@
+.action-name {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.triggers-list, .actions-list {
+    list-style: circle;
+    list-style-position: inside;
+    padding-left: 0;
+    margin-bottom: 0;
+}

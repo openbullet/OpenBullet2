@@ -1,0 +1,73 @@
+@import "../../styles/variables.scss";
+
+$sidebarWidth: 230px;
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+
+    .sidebar {
+        background-color: var(--bg-secondary);
+        width: $sidebarWidth;
+        min-width: $sidebarWidth;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 0 1 $sidebarWidth;
+    
+        .sidebar-logo {
+            padding: 40px 50px 0px 50px;
+            margin-bottom: 10px;
+        
+            img {
+                width: 100%;
+            }
+        }
+    
+        .sidebar-version {
+            padding: 10px 0px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+
+            a {
+                color: var(--fg-inactive);
+                text-decoration: none;
+                font-weight: bold;
+            }
+        }
+
+        .sidebar-logout {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0px;
+            margin-top: 10px;
+
+            button {
+                color: var(--fg-primary);
+                border: none;
+                padding: 10px 50px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: background-color 0.2s;
+
+                &:hover {
+                    background-color: var(--bg-primary);
+                }
+            
+            }
+        }
+    }
+
+    .content {
+        background-color: var(--bg-primary);
+        color: var(--fg-primary);
+        flex: 1 1 auto;
+        padding: 30px 50px;
+        width: calc(100vw - $sidebarWidth);
+        overflow-x: hidden;
+    }
+}

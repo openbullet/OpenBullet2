@@ -1,0 +1,46 @@
+@import '../../../../styles/variables.scss';
+
+
+.multiple-selector {
+    display: flex;
+}
+
+.selectable-ul {
+    height: 200px;
+    overflow-y: auto;
+    list-style-type: none;
+    width: 170px;
+    padding: 0;
+    border-radius: 3px;
+    border: 1px solid var(--bg-secondary);
+}
+
+.selectable-ul li {
+    cursor: pointer;
+    border-bottom: 1px solid var(--fg-inactive);
+    padding: 2px 10px;
+    font-size: 14px;
+}
+
+.selectable-ul li:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.selectable-ul.selected {
+    border-color: var(--fg-good);
+}
+
+.selectable-ul.deselected {
+    border-color: var(--fg-bad);
+}
+
+.multiple-selector-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px;
+}
+
+.multiple-selector-buttons button {
+    margin: 5px;
+}

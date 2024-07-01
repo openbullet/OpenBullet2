@@ -1,0 +1,148 @@
+<h1>
+    <fa-icon [icon]="faRetweet" [fixedWidth]="true"></fa-icon>
+    Sharing
+</h1>
+<h6 class="color-inactive">
+    Manage authenticated endpoints that can be used to share configs
+    with other OpenBullet instances, if your OpenBullet instance is
+    exposed to the internet
+</h6>
+
+<div class="mt-3">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            Warning
+        </h5>
+        <span class="text-small">
+            Configs shared through this feature are <b>NOT SECURED</b> 
+            and can easily be downloaded by the clients. The safest way
+            to protect your configs is through the 
+            <a class="color-accent-light" routerLink="/guests">Guests</a> feature
+        </span>
+    </p-card>
+</div>
+
+<h3 class="my-3">Endpoints</h3>
+
+<app-spinner *ngIf="endpoints === null || configs === null" [fullWidth]="true" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 pl-0">
+            <ul class="endpoints-wrapper">
+                <li *ngFor="let endpoint of endpoints">
+                    <button
+                        (click)="selectEndpoint(endpoint)" 
+                        [ngClass]="getButtonClass(endpoint)">
+                        {{ endpoint.route }}
+                    </button>
+                </li>
+                <li>
+                    <button (click)="createEndpointComponent.reset(); openCreateEndpointModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon> New
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-10 pr-0" 
+            *ngIf="selectedEndpoint !== null && availableConfigs !== null && selectedConfigs !== null">
+            <div class="container-fluid">
+                <div class="row justify-content-between">
+                    <div class="col-4 text-bold">
+                        <h4 class="font-weight-bold">/{{ selectedEndpoint.route }}</h4>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-right w-100">
+                            <button class="button button-bad ml-2" 
+                                pTooltip="Delete this endpoint"
+                                tooltipPosition="bottom"
+                                (click)="confirmDeleteEndpoint(selectedEndpoint)">
+                                Delete
+                            </button>
+                            <button class="button button-accent ml-2" 
+                                pTooltip="Update this endpoint"
+                                tooltipPosition="bottom"
+                                (click)="updateEndpoint(selectedEndpoint)">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <h5>
+                            API Keys
+                            <button class="button button-secondary" 
+                                pTooltip="Generate random API key"
+                                (click)="generateApiKey(selectedEndpoint)">
+                                <fa-icon [icon]="faDiceFive" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </h5>
+                        <div class="api-key">
+                            <p-chip class="mr-2 mt-2"
+                                *ngFor="let apiKey of selectedEndpoint.apiKeys" 
+                                [label]="apiKey"
+                                [removable]="true"
+                                pTooltip="Remove this API key"
+                                (onRemove)="removeApiKey(selectedEndpoint, apiKey)">
+                            </p-chip>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <h5 class="mb-3">
+                            Configs
+                            <span class="text-small">
+                                <fa-icon [icon]="faCircleQuestion"
+                                pTooltip="These configs are shared with all people that have access to this endpoint."
+                                [fixedWidth]="true"></fa-icon>
+                            </span>
+                        </h5>
+                        <p-pickList
+                            class="configs-picker"
+                            [source]="availableConfigs" sourceHeader="Available" [sourceStyle]="{ height: '30rem' }"
+                            sourceFilterPlaceholder="Search by name"
+                            [target]="selectedConfigs" targetHeader="Selected" [targetStyle]="{ height: '30rem' }"
+                            targetFilterPlaceholder="Search by name"
+                            [dragdrop]="true" [responsive]="true"
+                            (onMoveToSource)="updateConfigIds(selectedEndpoint)"
+                            (onMoveToTarget)="updateConfigIds(selectedEndpoint)"
+                            (onMoveAllToSource)="updateConfigIds(selectedEndpoint)"
+                            (onMoveAllToTarget)="updateConfigIds(selectedEndpoint)"
+                            filterBy="name" breakpoint="1400px">
+                            <ng-template let-config pTemplate="item">
+                                <div class="row">
+                                    <img class="config-icon" 
+                                        [src]="'data:image/png;base64,' + config.base64Image" />
+                                    <div>
+                                        <span class="font-weight-bold">{{ config.name }}</span>
+                                        <div>
+                                            <span class="font-italic text-small">{{ config.author }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #createEndpointModal
+    header="New endpoint" 
+    [(visible)]="createEndpointModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-endpoint
+        #createEndpointComponent
+        (confirm)="createEndpoint($event)" />
+</p-dialog>

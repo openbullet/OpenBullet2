@@ -1,0 +1,24 @@
+<router-outlet></router-outlet>
+
+<p-toast position="top-right"></p-toast>
+<p-toast position="top-center" key="tc"></p-toast>
+<p-toast position="bottom-right" key="br"></p-toast>
+<p-toast position="bottom-right" key="err500">
+    <ng-template pTemplate="message" let-message>
+        <div class="d-flex err-500-wrapper">
+            <div class="mr-2">
+                <fa-icon [icon]="faExclamationTriangle" [fixedWidth]="true" class="color-bad"></fa-icon>
+            </div>
+            <div>
+                <span class="font-weight-bold">An error occurred! </span>
+                <br />
+                <span>Please <a (click)="openErrorDetails(message)" href="">click here</a> to see the error details and some instructions on how to report it to the developer.</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-confirmDialog 
+    [style]="{width: '25vw'}"
+    [dismissableMask]="true"
+    [closeOnEscape]="true">
+</p-confirmDialog>

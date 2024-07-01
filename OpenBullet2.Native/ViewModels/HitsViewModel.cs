@@ -83,11 +83,11 @@ namespace OpenBullet2.Native.ViewModels
             HitsCollection = new ObservableCollection<HitEntity>();
         }
 
-        public async Task Initialize()
+        public async Task InitializeAsync()
         {
             if (!initialized)
             {
-                await RefreshList();
+                await RefreshListAsync();
                 initialized = true;
             }
         }
@@ -108,7 +108,7 @@ namespace OpenBullet2.Native.ViewModels
             return captureOk && configOk && typeOk;
         }
 
-        public async Task RefreshList()
+        public async Task RefreshListAsync()
         {
             try
             {
@@ -125,23 +125,23 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public Task Update(HitEntity hit) => hitRepo.Update(hit);
+        public Task Update(HitEntity hit) => hitRepo.UpdateAsync(hit);
 
-        public async Task Delete(IEnumerable<HitEntity> hits)
+        public async Task DeleteAsync(IEnumerable<HitEntity> hits)
         {
-            await hitRepo.Delete(hits);
-            await RefreshList();
+            await hitRepo.DeleteAsync(hits);
+            await RefreshListAsync();
             OnPropertyChanged(nameof(Total));
         }
 
-        public void Purge()
+        public async Task PurgeAsync()
         {
             HitsCollection.Clear();
-            hitRepo.Purge();
+            await hitRepo.PurgeAsync();
             OnPropertyChanged(nameof(Total));
         }
 
-        public async Task<int> DeleteDuplicates()
+        public async Task<int> DeleteDuplicatesAsync()
         {
             var duplicates = HitsCollection
                 .GroupBy(h => h.GetHashCode(obSettingsService.Settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
@@ -149,15 +149,15 @@ namespace OpenBullet2.Native.ViewModels
                 .SelectMany(g => g.OrderBy(h => h.Date)
                 .Reverse().Skip(1)).ToList();
 
-            await hitRepo.Delete(duplicates);
-            await RefreshList();
+            await hitRepo.DeleteAsync(duplicates);
+            await RefreshListAsync();
 
             return duplicates.Count;
         }
 
         public override void UpdateViewModel()
         {
-            _ = RefreshList();
+            _ = RefreshListAsync();
             base.UpdateViewModel();
         }
     }

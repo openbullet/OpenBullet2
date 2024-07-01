@@ -1,0 +1,12 @@
+<input 
+    type="text"
+    spellcheck="false"
+    [id]="id"
+    [class]="computeClass()"
+    [style]="style"
+    (input)="valueChanging($event)"
+    [value]="ngModel"
+    (change)="valueChanged($event)"
+    (blur)="blur.emit()"
+    [placeholder]="placeholder"
+/>

@@ -1,0 +1,185 @@
+<h1>
+    <fa-icon [icon]="faDatabase" [fixedWidth]="true"></fa-icon>
+    Hits
+</h1>
+<h6 class="color-inactive">
+    View, export and manage the hits that your jobs found
+    <app-docs-button path="hits/general-info" buttonClass="color-inactive" />
+</h6>
+
+<app-spinner *ngIf="hits === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="hits !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-menubar [model]="hitMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-8 pl-0">
+            <input id="searchTerm" type="text" pInputText
+                spellcheck="false"
+                class="mr-2"
+                [(ngModel)]="searchTerm"
+                (keydown)="searchBoxKeyDown($event)"
+                placeholder="Search..." />
+            <p-multiSelect
+                [options]="hitTypes"
+                placeholder="Any Type"
+                [filter]="false"
+                [maxSelectedLabels]="1"
+                [(ngModel)]="selectedHitTypes"
+                (ngModelChange)="refreshHits()">
+            </p-multiSelect>
+            <p-dropdown
+                class="ml-2"
+                [(ngModel)]="configName"
+                (ngModelChange)="refreshHits()"
+                [options]="configNames">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+            <p-calendar
+                [(ngModel)]="rangeDates"
+                selectionMode="range"
+                [showTime]="true"
+                class="ml-2"
+                [style]="{ width: '400px' }"
+                appendTo="body"
+                (onSelect)="refreshHits()"
+                [showSeconds]="true">
+            </p-calendar>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-secondary mr-2" [style]="{ height: '41px'}"
+                pTooltip="Clear all filters"
+                (click)="clearFilters()">
+                Clear <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent" [style]="{ height: '41px'}" 
+                pTooltip="Apply the current filters"
+                tooltipPosition="left"
+                (click)="refreshHits()">
+                Apply
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #hitsDt
+                [value]="hits.items"
+                [lazy]="true"
+                sortField="date"
+                [sortOrder]="-1"
+                [totalRecords]="hits.totalCount"
+                [first]="(hits.pageNumber - 1) * hits.pageSize"
+                (onLazyLoad)="lazyLoadHits($event)"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="true"
+                [(rows)]="rowCount"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>No hits found yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="hits.items.length > 0">
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="type">
+                            Type <p-sortIcon field="type" />
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="data">
+                            <div class="d-flex align-items-center">
+                                Data <p-sortIcon field="data" />
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="configName">
+                            <div class="d-flex align-items-center">
+                                Config <p-sortIcon field="configName" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pSortableColumn="date">
+                            <div class="d-flex align-items-center">
+                                Date <p-sortIcon field="date" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="wordlistName">
+                            <div class="d-flex align-items-center">
+                                Wordlist <p-sortIcon field="wordlistName" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="proxy">
+                            <div class="d-flex align-items-center">
+                                Proxy <p-sortIcon field="proxy" />
+                            </div>
+                        </th>
+                        <th style="min-width:15rem" pResizableColumn pSortableColumn="capturedData">
+                            <div class="d-flex align-items-center">
+                                Captured Data <p-sortIcon field="capturedData" />
+                            </div>
+                        </th>
+                        <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-hit>
+                    <tr>
+                        <td [style]="{ color: getTypeColor(hit.type) }">{{ hit.type }}</td>
+                        <td>{{ hit.data }}</td>
+                        <td>{{ hit.configName }}</td>
+                        <td>{{ hit.date | date : 'medium' }}</td>
+                        <td>{{ hit.wordlistName }}</td>
+
+                        <!-- TODO: Hide the proxy password! -->
+                        <td>{{ hit.proxy }}</td>
+                        <td>{{ hit.capturedData }}</td>
+
+                        <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateHitModal(hit)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="confirmDeleteHit(hit)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #updateHitModal
+    [header]="'Hit ' + selectedHit?.data" 
+    [(visible)]="updateHitModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-hit
+        [hit]="selectedHit!"
+        [hitTypes]="hitTypes"
+        (confirm)="updateHit($event)" />
+</p-dialog>

@@ -47,11 +47,11 @@ namespace OpenBullet2.Native.ViewModels
             WordlistsCollection = new();
         }
 
-        public async Task Initialize()
+        public async Task InitializeAsync()
         {
             if (!initialized)
             {
-                await RefreshList();
+                await RefreshListAsync();
                 initialized = true;
             }
         }
@@ -66,7 +66,7 @@ namespace OpenBullet2.Native.ViewModels
 
         public WordlistEntity GetWordlistByName(string name) => WordlistsCollection.First(w => w.Name == name);
 
-        public Task Add(WordlistEntity wordlist)
+        public Task AddAsync(WordlistEntity wordlist)
         {
             if (WordlistsCollection.Any(w => w.FileName == wordlist.FileName))
             {
@@ -74,22 +74,22 @@ namespace OpenBullet2.Native.ViewModels
             }
 
             WordlistsCollection.Add(wordlist);
-            return wordlistRepo.Add(wordlist);
+            return wordlistRepo.AddAsync(wordlist);
         }
 
-        public async Task RefreshList()
+        public async Task RefreshListAsync()
         {
             var items = await wordlistRepo.GetAll().ToListAsync();
             WordlistsCollection = new ObservableCollection<WordlistEntity>(items);
             HookFilters();
         }
 
-        public async Task Update(WordlistEntity wordlist) => await wordlistRepo.Update(wordlist);
+        public async Task UpdateAsync(WordlistEntity wordlist) => await wordlistRepo.UpdateAsync(wordlist);
 
-        public async Task Delete(WordlistEntity wordlist)
+        public async Task DeleteAsync(WordlistEntity wordlist)
         {
             WordlistsCollection.Remove(wordlist);
-            await wordlistRepo.Delete(wordlist, false);
+            await wordlistRepo.DeleteAsync(wordlist, false);
             OnPropertyChanged(nameof(Total));
         }
 
@@ -100,7 +100,7 @@ namespace OpenBullet2.Native.ViewModels
             OnPropertyChanged(nameof(Total));
         }
 
-        public async Task<int> DeleteNotFound()
+        public async Task<int> DeleteNotFoundAsync()
         {
             var deleted = 0;
 
@@ -110,7 +110,7 @@ namespace OpenBullet2.Native.ViewModels
 
                 if (!File.Exists(wordlist.FileName))
                 {
-                    await Delete(wordlist);
+                    await DeleteAsync(wordlist);
                     deleted++;
                     i--;
                 }

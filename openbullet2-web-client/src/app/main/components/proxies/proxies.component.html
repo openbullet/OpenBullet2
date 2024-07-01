@@ -1,0 +1,316 @@
+<h1>
+    <fa-icon [icon]="faFileShield" [fixedWidth]="true"></fa-icon>
+    Proxies
+</h1>
+<h6 class="color-inactive">
+    Import and manage proxies that can be used by jobs to circumvent IP-based restrictions
+    <app-docs-button path="proxies/general-info" buttonClass="color-inactive" />
+</h6>
+
+<app-spinner *ngIf="proxyGroups === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="proxyGroups !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <span class="mr-2">Select your proxy group</span>
+            <p-dropdown
+                (onChange)="proxyGroupSelected()"
+                optionLabel="name"
+                [options]="proxyGroups" [(ngModel)]="selectedProxyGroup">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+            </p-dropdown>
+            <button class="button button-transparent ml-2" 
+                pTooltip="Create a proxy group"
+                (click)="openCreateProxyGroupModal()">
+                <fa-icon class="color-good" [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-transparent ml-1" 
+                *ngIf="selectedProxyGroup.name !== 'All'"
+                pTooltip="Edit this proxy group"
+                (click)="openUpdateProxyGroupModal()">
+                <fa-icon class="color-accent-light" [icon]="faPen" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-transparent ml-1" 
+                *ngIf="selectedProxyGroup.name !== 'All'"
+                pTooltip="Delete this proxy group"
+                (click)="confirmDeleteProxyGroup()">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="proxies !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-menubar [model]="proxyMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-8 pl-0">
+            <input id="searchTerm" type="text" pInputText
+                spellcheck="false"
+                class="mr-2"
+                [(ngModel)]="searchTerm"
+                (keydown)="searchBoxKeyDown($event)"
+                placeholder="Search..." />
+            <p-dropdown
+                class="mr-2"
+                [(ngModel)]="proxyWorkingStatus"
+                (ngModelChange)="refreshProxies()"
+                [options]="proxyWorkingStatuses">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+            <p-dropdown
+                [(ngModel)]="proxyType"
+                (ngModelChange)="refreshProxies()"
+                [options]="proxyTypes">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-secondary mr-2" [style]="{ height: '41px'}"
+                pTooltip="Clear all filters"
+                (click)="clearFilters()">
+                Clear <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent" [style]="{ height: '41px'}"
+                pTooltip="Apply the current filters"
+                tooltipPosition="left"
+                (click)="refreshProxies()">
+                Apply
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #proxiesDt
+                [value]="proxies.items"
+                [lazy]="true"
+                [sortField]="sortBy"
+                [sortOrder]="sortDescending ? -1 : 1"
+                [totalRecords]="proxies.totalCount"
+                [first]="(proxies.pageNumber - 1) * proxies.pageSize"
+                (onLazyLoad)="lazyLoadProxies($event)"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="true"
+                [(rows)]="rowCount"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>No proxies added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="proxies.items.length > 0">
+                        <th style="min-width:7rem">
+                            Type
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="host">
+                            <div class="d-flex align-items-center">
+                                Host <p-sortIcon field="name" />
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pSortableColumn="port">
+                            <div class="d-flex align-items-center">
+                                Port <p-sortIcon field="port" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="username">
+                            <div class="d-flex align-items-center">
+                                Username <p-sortIcon field="username" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="password">
+                            <div class="d-flex align-items-center">
+                                Password <p-sortIcon field="password" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="country">
+                            <div class="d-flex align-items-center">
+                                Country <p-sortIcon field="country" />
+                            </div>
+                        </th>
+                        <th style="min-width:10rem">
+                            Status
+                        </th>
+                        <th style="min-width:7rem" pSortableColumn="ping">
+                            <div class="d-flex align-items-center">
+                                Ping <p-sortIcon field="ping" />
+                            </div>
+                        </th>
+                        <th style="min-width:15rem" pSortableColumn="lastChecked">
+                            <div class="d-flex align-items-center">
+                                Last checked <p-sortIcon field="lastChecked" />
+                            </div>  
+                        </th>
+                        <th *ngIf="selectedProxyGroup === defaultProxyGroup" style="min-width:7rem">
+                            Group
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-proxy>
+                    <tr>
+                        <td>{{ proxy.type | pascalcase : true }}</td>
+                        <td>{{ proxy.host }}</td>
+                        <td>{{ proxy.port }}</td>
+                        <td>{{ proxy.username }}</td>
+
+                        <!-- Password -->
+                        <td *ngIf="showPasswords || proxy.password === null || proxy.password === ''">
+                            {{ proxy.password }}
+                            <button *ngIf="proxy.password !== null && proxy.password !== ''"
+                                class="button button-transparent ml-1" 
+                                pTooltip="Hide passwords"
+                                (click)="showPasswords = false">
+                                <fa-icon class="color-inactive"
+                                    [icon]="faEyeSlash"
+                                    [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                        <td *ngIf="!showPasswords && proxy.password !== null && proxy.password !== ''">
+                            {{ '•'.repeat(12) }}
+                            <button class="button button-transparent ml-1" 
+                                pTooltip="Show passwords"
+                                (click)="showPasswords = true">
+                                <fa-icon class="color-inactive"
+                                    [icon]="faEye"
+                                    [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                        
+                        <td [class]="proxy.country === 'Unknown' ? 'color-inactive' : ''">{{ proxy.country }}</td>
+                        <td [class]="getWorkingClass(proxy.status)">{{ proxy.status | pascalcase : true }}</td>
+                        <td [class]="proxy.ping === 0 ? 'color-inactive' : ''">{{ proxy.ping }} ms</td>
+
+                        <!-- Last checked -->
+                        <td *ngIf="proxy.lastChecked === null" class="color-inactive">
+                            Never
+                        </td>
+                        <td *ngIf="proxy.lastChecked !== null">
+                            {{ proxy.lastChecked | date : 'medium' }}
+                        </td>
+                        <td *ngIf="selectedProxyGroup === defaultProxyGroup">{{ proxy.groupName }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #createProxyGroupModal
+    header="New proxy group" 
+    [(visible)]="createProxyGroupModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-proxy-group
+        #createProxyGroupComponent
+        (confirm)="createProxyGroup($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateProxyGroupModal
+    [header]="'Information of ' + selectedProxyGroup.name" 
+    [(visible)]="updateProxyGroupModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-proxy-group
+        [proxyGroup]="selectedProxyGroup"
+        (confirm)="updateProxyGroup($event)" />
+</p-dialog>
+
+<p-dialog 
+    #deleteSlowProxiesModal
+    [header]="'Delete slow proxies in group ' + selectedProxyGroup.name" 
+    [(visible)]="deleteSlowProxiesModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-delete-slow-proxies
+        [proxyGroup]="selectedProxyGroup"
+        (confirm)="deleteSlowProxies($event)" />
+</p-dialog>
+
+<p-dialog 
+    #importProxiesFromTextModal
+    header="Import proxies" 
+    [(visible)]="importProxiesFromTextModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-import-proxies-from-text
+        #importProxiesFromTextComponent
+        (confirm)="importProxiesFromText($event)" />
+</p-dialog>
+
+<p-dialog 
+    #importProxiesFromFileModal
+    header="Import proxies from a file" 
+    [(visible)]="importProxiesFromFileModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-import-proxies-from-file
+        #importProxiesFromFileComponent
+        (confirm)="importProxiesFromText($event)" />
+</p-dialog>
+
+<p-dialog 
+    #importProxiesFromRemoteModal
+    header="Import proxies from a remote source" 
+    [(visible)]="importProxiesFromRemoteModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-import-proxies-from-remote
+        #importProxiesFromRemoteComponent
+        (confirm)="importProxiesFromRemote($event)" />
+</p-dialog>

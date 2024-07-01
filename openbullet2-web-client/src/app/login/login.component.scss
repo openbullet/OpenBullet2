@@ -1,0 +1,28 @@
+@import "../../styles/variables.scss";
+
+.login-container {
+    background-color: var(--bg-secondary);
+    border-radius: 20px;
+
+    .forgot-credentials {
+        color: var(--fg-accent-light);
+        font-size: 12px;
+    }
+}
+
+/* 992 is bootstrap's lg */
+@media (max-width: 992px) {
+    .login-container {
+        width: 100% !important;
+        border-radius: 0px !important;
+    }
+}
+
+.logo {
+    max-width: 200px;
+}
+
+.login-button {
+    width: 214px;
+    height: 41px;
+}

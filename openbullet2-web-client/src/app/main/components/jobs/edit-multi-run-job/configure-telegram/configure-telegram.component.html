@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">API Server</span>
+            </div>
+            <input id="apiServer" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="apiServer"
+                placeholder="https://api.telegram.org/" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Bot Token</span>
+            </div>
+            <input id="token" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="token" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Chat ID</span>
+            </div>
+            <input id="chatId" type="number" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="chatId" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                [(ngModel)]="onlyHits"
+                [binary]="true" inputId="onlyHits"
+                label="Only send hits" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Update
+            </button>
+        </div>
+    </div>
+</div>

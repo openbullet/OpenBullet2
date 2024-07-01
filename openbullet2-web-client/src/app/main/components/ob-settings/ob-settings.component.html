@@ -1,0 +1,576 @@
+<div *ngIf="settings === null">
+    <h1>
+        <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+        Settings
+    </h1>
+    <h6 class="color-inactive">
+        Settings for the OpenBullet application
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>
+                <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+                Settings
+            </h1>
+            <h6 class="color-inactive">
+                Settings for the OpenBullet application
+            </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-secondary ml-2" 
+                (click)="confirmRestoreDefaults()">Restore Defaults</button>
+            <button class="button button-accent ml-2"
+                [disabled]="!canSave()"
+                (click)="saveSettings()">Save</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h3>General</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">When editing a config, navigate to</span>
+            <app-input-dropdown key="configSectionOnLoad"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="configSections"
+                [(ngModel)]="settings.generalSettings.configSectionOnLoad" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.autoSetRecommendedBots"
+                [binary]="true" inputId="autoSetRecommendedBots"
+                label="Automatically set the recommended bots when a config is selected in the job creation page" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.warnConfigNotSaved"
+                [binary]="true" inputId="warnConfigNotSaved"
+                label="Show a warning when the currently loaded config was not saved and another one is loaded" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Default author on newly created configs</span>
+            <app-input-text key="defaultAuthor" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.generalSettings.defaultAuthor"
+                placeholder="Anonymous" regex="^.+$" />
+        </div>
+    </div>
+    <!-- These options are disregarded, logging is always enabled -->
+    <!--
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.enableJobLogging"
+                [binary]="true" inputId="enableJobLogging"
+                label="Enable logging in the job viewer page" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Maximum number of entries in the log</span>
+            <app-input-number key="logBufferSize" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.logBufferSize"
+                [placeholder]="30" [min]="0" [integer]="true" />
+        </div>
+    </div>
+    -->
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Job manager update interval</span>
+            <app-input-number key="jobManagerUpdateInterval" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.jobManagerUpdateInterval"
+                [placeholder]="1000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Job update interval</span>
+            <app-input-number key="jobUpdateInterval" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.jobUpdateInterval"
+                [placeholder]="1000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Default job display mode</span>
+            <app-input-dropdown key="defaultJobDisplayMode"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="jobDisplayModes"
+                [(ngModel)]="settings.generalSettings.defaultJobDisplayMode" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.ignoreWordlistNameOnHitsDedupe"
+                [binary]="true" inputId="ignoreWordlistNameOnHitsDedupe"
+                label="Ignore the wordlist name when removing duplicates from hits" />
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Proxy Check Targets</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New proxy check target" tooltipPosition="bottom"
+                (click)="createProxyCheckTargetComponent.reset(); openCreateProxyCheckTargetModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                The proxy targets available in a Proxy Check Job. The proxies will be checked against the target URL and if the success key is found in the downloaded source, the proxy will be marked as working.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #proxyCheckTargetsDt
+                class="no-header"
+                [value]="settings.generalSettings.proxyCheckTargets"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.generalSettings.proxyCheckTargets.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No proxy check targets added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-target>
+                    <tr>
+                        <td width="40%">
+                            <a class="color-primary" [href]="target.url" target=”_blank”>
+                                {{ target.url }}<fa-icon [icon]="faUpRightFromSquare" class="color-inactive text-small ml-1" [fixedWidth]="true"></fa-icon>
+                            </a>
+                        </td>
+                        <td width="40%">{{ target.successKey }}</td>
+                        <td width="20%" class="text-right">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateProxyCheckTargetModal(target)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteProxyCheckTarget(target)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Custom Snippets</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New custom snippet" tooltipPosition="bottom"
+                (click)="createCustomSnippetComponent.reset(); openCreateCustomSnippetModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                Custom snippets of code that you can configure to get your own autocompletions in the LoliCode editor.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #customSnippetsDt
+                class="no-header"
+                [value]="settings.generalSettings.customSnippets"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.generalSettings.customSnippets.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No custom snippets added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-snippet>
+                    <tr>
+                        <td width="40%">{{ snippet.name }}</td>
+                        <td width="40%">{{ snippet.description }}</td>
+                        <td width="20%" class="text-right">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateCustomSnippetModal(snippet)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteCustomSnippet(snippet)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Security</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.securitySettings.allowSystemWideFileAccess"
+                [binary]="true" inputId="allowSystemWideFileAccess"
+                label="Allow system-wide file access" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.securitySettings.requireAdminLogin"
+                [binary]="true" inputId="requireAdminLogin"
+                label="Require admin login" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Admin username</span>
+            <app-input-text key="adminUsername" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.securitySettings.adminUsername"
+                placeholder="admin" />
+            <div class="mt-3 d-block">
+                <button class="button button-accent mr-1"
+                    (click)="changeAdminPasswordComponent.reset(); openChangeAdminPasswordModal()">
+                    Change admin password
+                </button>
+                <button class="button button-accent"
+                    (click)="changeAdminApiKeyComponent.reset(settings.securitySettings.adminApiKey); openChangeAdminApiKeyModal()">
+                    {{ settings.securitySettings.adminApiKey === '' ? 'Set' : 'Change' }} admin API key
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Admin session lifetime</span>
+            <app-input-number key="adminSessionLifetimeHours" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.securitySettings.adminSessionLifetimeHours"
+                [placeholder]="72" [min]="0" [integer]="true" />
+            <span class="ml-2">hours</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Guest session lifetime</span>
+            <app-input-number key="guestSessionLifetimeHours" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.securitySettings.guestSessionLifetimeHours"
+                [placeholder]="24" [min]="0" [integer]="true" />
+            <span class="ml-2">hours</span>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Remote</h3>
+        </div>
+    </div>
+    <div class="row mt-3 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Remote Configs Endpoints</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New remote configs endpoint" tooltipPosition="bottom"
+                (click)="createRemoteConfigsEndpointComponent.reset(); openCreateRemoteConfigsEndpointModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                These are the remote endpoints that will be queried upon reload of the config repository in order to get configs hosted on another machine.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #remoteConfigsEndpointsDt
+                class="no-header"
+                [value]="settings.remoteSettings.configsEndpoints"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.remoteSettings.configsEndpoints.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No remote configs endpoints added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-endpoint>
+                    <tr>
+                        <td width="40%">{{ endpoint.url }}</td>
+                        <td width="40%">{{ endpoint.apiKey }}</td>
+                        <td width="20%" class="text-right">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateRemoteConfigsEndpointModal(endpoint)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteRemoteConfigsEndpoint(endpoint)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Customization</h3>
+        </div>
+    </div>
+    <div *ngIf="themes !== null" class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">UI Theme</span>
+            <app-input-dropdown key="theme"
+                (ngModelChange)="onThemeChange($event)"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="themes"
+                [(ngModel)]="settings.customizationSettings.theme" />
+
+            <button class="button button-transparent ml-2"
+                pTooltip="Add new theme" tooltipPosition="right"
+                (click)="addThemeComponent.reset(); openAddThemeModal()">
+                <fa-icon class="color-good" [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.customizationSettings.playSoundOnHit"
+                [binary]="true" inputId="playSoundOnHit"
+                label="Play a sound when a hit is found" />
+            <!-- Icon to test the sound -->
+            <button class="button button-small button-transparent ml-2"
+                (click)="playHitSound()">
+                <fa-icon [icon]="faVolumeUp" [fixedWidth]="true"></fa-icon>
+                Test
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.customizationSettings.wordWrap"
+                [binary]="true" inputId="wordWrap"
+                label="Word Wrap in code editor" />
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #createProxyCheckTargetModal
+    header="New proxy check target" 
+    [(visible)]="createProxyCheckTargetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-proxy-check-target
+        #createProxyCheckTargetComponent
+        (confirm)="createProxyCheckTarget($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateProxyCheckTargetModal
+    header="Update proxy check target" 
+    [(visible)]="updateProxyCheckTargetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-proxy-check-target
+        [target]="selectedProxyCheckTarget!"
+        (confirm)="updateProxyCheckTarget($event)" />
+</p-dialog>
+
+<p-dialog 
+    #createCustomSnippetModal
+    header="New custom snippet" 
+    [(visible)]="createCustomSnippetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-custom-snippet
+        #createCustomSnippetComponent
+        (confirm)="createCustomSnippet($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateCustomSnippetModal
+    header="Update custom snippet" 
+    [(visible)]="updateCustomSnippetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-custom-snippet
+        [snippet]="selectedCustomSnippet!"
+        (confirm)="updateCustomSnippet($event)" />
+</p-dialog>
+
+<p-dialog 
+    #changeAdminPasswordModal
+    header="Change admin password" 
+    [(visible)]="changeAdminPasswordModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-change-admin-password
+        #changeAdminPasswordComponent
+        (confirm)="changeAdminPassword($event)" />
+</p-dialog>
+
+<p-dialog 
+    #changeAdminApiKeyModal
+    header="Change admin API key" 
+    [(visible)]="changeAdminApiKeyModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-change-admin-api-key
+        #changeAdminApiKeyComponent
+        (confirm)="changeAdminApiKey($event)" />
+</p-dialog>
+
+<p-dialog 
+    #createRemoteConfigsEndpointModal
+    header="New remote configs endpoint" 
+    [(visible)]="createRemoteConfigsEndpointModalVisible" 
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-create-remote-configs-endpoint
+        #createRemoteConfigsEndpointComponent
+        (confirm)="createRemoteConfigsEndpoint($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateRemoteConfigsEndpointModal
+    header="Update remote configs endpoint" 
+    [(visible)]="updateRemoteConfigsEndpointModalVisible" 
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-update-remote-configs-endpoint
+        [endpoint]="selectedRemoteConfigsEndpoint!"
+        (confirm)="updateRemoteConfigsEndpoint($event)" />
+</p-dialog>
+
+<p-dialog 
+    #addThemeModal
+    header="Add theme" 
+    [(visible)]="addThemeModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-theme
+        #addThemeComponent
+        (confirm)="uploadTheme($event)" />
+</p-dialog>
+
+<audio #hitSoundPlayer>
+    <source src="../../../../../assets/sounds/hit.wav" type="audio/wav">
+</audio>

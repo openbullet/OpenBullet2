@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Route
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The path used to reach this public config sharing endpoint (without the base URL)."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="route" type="text"
+                spellcheck="false"
+                [(ngModel)]="route"
+                placeholder="my-route" />
+            <br />
+            <span class="text-small color-inactive">
+                At least 1 character. Allowed characters: A-Z a-z 0-9 _ -
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Create
+            </button>
+        </div>
+    </div>
+</div>

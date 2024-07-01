@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <p-fileUpload 
+                #fileUpload
+                name="Add Theme"
+                [customUpload]="true"
+                [auto]="true"
+                (uploadHandler)="selectedFile = $event.files[0]"
+                (onRemove)="selectedFile = null"
+                [multiple]="false"
+                accept=".css"
+                [maxFileSize]="1 * 1000 * 1000">
+
+            </p-fileUpload>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Add
+            </button>
+        </div>
+    </div>
+</div>

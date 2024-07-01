@@ -1,0 +1,79 @@
+<div class="row mt-1">
+    <div class="mb-1">
+        <span class="text-small">Label</span>
+    </div>
+    <app-input-text key="blockLabel"
+        class="input-small w-100"
+        ngDefaultControl
+        (validityChange)="valueChanged()"
+        [(ngModel)]="block.label"
+        [placeholder]="descriptor.name" />
+</div>
+<div class="row mt-2">
+    <div class="col align-self-stretch pr-1 pl-0">
+        <div class="mb-1">
+            <span class="text-small">Input variables (comma separated list)</span>
+        </div>
+        <app-input-text key="inputVariables"
+            class="input-small w-100"
+            ngDefaultControl
+            (ngModelChange)="valueChanged()"
+            [(ngModel)]="block.inputVariables"
+            pTooltip="Comma separated list of input variables that should be passed from the bot to the interpreter's context" />
+    </div>
+    <div class="col-auto pl-1 pr-0">
+        <div class="mb-1 w-100">
+            <span class="text-small">Interpreter</span>
+        </div>
+        <app-input-dropdown key="interpreter"
+            itemClass="input-small" optionClass="input-small"
+            ngDefaultControl
+            (ngModelChange)="interpreterChanged($event)"
+            [options]="interpreters"
+            [ngModel]="block.interpreter" />
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="w-100">
+        <span class="text-small">Output variables</span>
+        <button class="button button-transparent ml-2" 
+            pTooltip="Add an output variable"
+            (click)="addOutputVariable()">
+            <fa-icon class="color-good" [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+        </button>
+    </div>
+</div>
+<div class="row mt-1" *ngFor="let outputVariable of block.outputVariables; let i = index">
+    <div class="col-12 px-0">
+        <div class="d-flex justify-content-between w-100">
+            <app-input-dropdown [key]="'outputVariableType' + i"
+                itemClass="input-small" optionClass="input-small"
+                ngDefaultControl
+                (validityChange)="valueChanged()"
+                [options]="variableTypes"
+                [(ngModel)]="outputVariable.type" />
+            <app-input-text [key]="'outputVariableName' + i"
+                class="input-small ml-1 w-100"
+                ngDefaultControl
+                (ngModelChange)="valueChanged()"
+                [(ngModel)]="outputVariable.name"
+                pTooltip="Name of the variable that will be extracted from the interpreter's context and added to the bot" />
+            <button class="button button-transparent ml-2" 
+                pTooltip="Remove this output variable"
+                (click)="removeOutputVariable(i)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-12 px-0">
+        <div style="height: 500px; width: 100%">
+            <app-code-editor #editor
+                [language]="getLanguage(block.interpreter)"
+                ngDefaultControl 
+                (loaded)="editorLoaded()"
+                (codeChanged)="codeChanged($event)" />
+        </div>
+    </div>
+</div>

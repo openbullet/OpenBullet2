@@ -38,5 +38,14 @@ namespace RuriLib.Models.Data.DataPools
         {
             for (var i = min; i <= max; i += step) yield return i;
         }
+        
+        /// <inheritdoc/>
+        public override void Reload()
+        {
+            var end = Start + Step * (Amount - 1);
+            var maxLength = end.ToString().Length;
+            DataList = Range(Start, end, Step)
+                .Select(i => Pad ? i.ToString().PadLeft(maxLength, '0') : i.ToString());
+        }
     }
 }

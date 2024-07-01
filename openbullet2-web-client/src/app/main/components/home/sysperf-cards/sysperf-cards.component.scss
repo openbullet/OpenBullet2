@@ -1,0 +1,46 @@
+@import "../../../../../styles/variables.scss";
+
+.perf-timespan {
+    color: var(--fg-inactive);
+    font-size: 12px;
+    margin-left: 1rem;
+}
+
+.perf-bad {
+    color: var(--fg-bad);
+}
+
+.perf-good {
+    color: var(--fg-good);
+}
+
+.perf-flat {
+    color: var(--fg-inactive);
+}
+
+.perf-metric {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.perf-metric-small {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.perf-metric-label {
+    color: var(--fg-inactive);
+    font-size: 10px;
+}
+
+.perf-network-down {
+    color: var(--fg-accent);
+    line-height: 14px;
+    height: 14px;
+}
+
+.perf-network-up {
+    color: var(--fg-inactive);
+    line-height: 14px;
+    height: 14px;
+}

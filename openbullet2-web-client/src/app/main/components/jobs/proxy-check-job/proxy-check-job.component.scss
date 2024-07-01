@@ -1,0 +1,132 @@
+.ball {
+    background-color: var(--bg-secondary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    align-self: center;
+}
+
+.job-name {
+    line-height: 30px;
+    align-self: center;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.edit-button {
+    align-self: center;
+    margin-left: auto;
+}
+
+.back-to-jobs-container {
+    display: flex;
+
+    .back-to-jobs {
+        align-self: flex-start;
+        /* TODO: Add cute bounce animation to angle bracket on hover */
+        cursor: pointer;
+    }
+}
+
+.proxy-stats {
+    .proxy-stat {
+        display: block;
+    }
+}
+
+.named-card {
+    .named-card-key {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+        font-weight: 500;
+        color: var(--fg-inactive);
+    }
+
+    .named-card-value {
+        background-color: var(--bg-secondary);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+    }
+}
+
+.job-chip {
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--bg-primary);
+    display: inline-block;
+    height: 30px;
+    align-self: center;
+}
+
+.job-controls {
+    .col {
+        padding: 0px 5px;
+    }
+
+    .col:first-child {
+        padding-left: 0px;
+    }
+
+    .col:last-child {
+        padding-right: 0px;
+    }
+}
+
+.progress-label {
+    position: absolute;
+    z-index: 1;
+    width: 400px;
+    top: 5px;
+    left: calc(50% - 200px);
+    display: flex;
+
+    .progress-label-text {
+        margin: auto;
+        
+        span {
+            font-weight: 600;
+            color: var(--fg-light);
+        }
+    }
+}
+
+.job-progress {
+    background-color: var(--bg-primary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.logs {
+    height: 350px;
+    overflow-y: auto;
+
+    .log-line {
+        .log-line-time {
+            color: var(--fg-inactive);
+            font-size: 14px;
+        }
+    
+        .log-line-message {
+            font-size: 14px;
+            margin-left: 5px;
+        }
+    }
+}
+
+.change-bots-button {
+    height: 24px;
+    margin-top: -3px;
+}
+
+.change-bots-input-wrapper {
+    display: flex;
+    margin-bottom: -6px;
+}

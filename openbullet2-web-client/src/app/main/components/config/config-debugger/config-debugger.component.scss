@@ -1,0 +1,21 @@
+@import "../../../../../styles/variables.scss";
+
+.logs-container {
+    background-color: var(--bg-secondary);
+    padding: 10px;
+    width: 100%;
+    height: 600px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.log-message {
+    width: 100%;
+    display: block;
+    font-family: Chivo Mono;
+    font-variant-ligatures: none;
+    margin-bottom: 5px;
+    font-size: 14px;
+    white-space: break-spaces;
+    word-break: break-all;
+}

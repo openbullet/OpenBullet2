@@ -1,0 +1,85 @@
+<h1>
+    <fa-icon [icon]="faTags" [fixedWidth]="true"></fa-icon>
+    Metadata
+</h1>
+<h6 class="color-inactive">
+    Some basic information about this config
+</h6>
+
+<div class="mt-3" *ngIf="config === null">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            No config selected
+        </h5>
+        <span class="text-small">
+            No config was selected, please select a config first.
+        </span>
+    </p-card>
+</div>
+
+<div *ngIf="config !== null" class="container-fluid no-paddings">
+    <div class="row my-3">
+        <div class="col-12">
+            <span>ID: </span>
+            <span class="color-inactive">{{ config.id }}</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Name</span>
+            <app-input-text key="name" class="d-block mt-2"
+                ngDefaultControl
+                (validityChange)="localSave(); nameChanged();"
+                [(ngModel)]="config.metadata.name"
+                placeholder="New Config" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Author</span>
+            <app-input-text key="author" class="d-block mt-2"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.metadata.author"
+                placeholder="Anonymous" regex="^.*$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Category</span>
+            <app-input-text key="category" class="d-block mt-2"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.metadata.category"
+                placeholder="Default" regex="^.*$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Image</span>
+            <img class="config-icon d-block my-2" 
+                [src]="'data:image/png;base64,' + config.metadata.base64Image" />
+            <button class="button button-secondary mr-2" 
+                (click)="openEditImageModal()">
+                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                <span class="ml-2">Change</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    #editConfigImageModal
+    header="Edit the image"
+    [(visible)]="editImageModalVisible"
+    [modal]="true" 
+    [style]="{ width: '50vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-edit-config-image
+        #editConfigImageComponent
+        (confirm)="editImage($event)" />
+</p-dialog>

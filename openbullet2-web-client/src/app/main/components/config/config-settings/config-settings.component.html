@@ -1,0 +1,487 @@
+<h1>
+    <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+    Config Settings
+</h1>
+<h6 class="color-inactive">
+    Settings of your config, like the allowed wordlist types and the 
+    <i>use proxies</i> toggle
+</h6>
+
+<div class="mt-3" *ngIf="config === null">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            No config selected
+        </h5>
+        <span class="text-small">
+            No config was selected, please select a config first.
+        </span>
+    </p-card>
+</div>
+
+<div *ngIf="config !== null && envSettings !== null" class="container-fluid no-paddings">
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>General</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Suggested amount of Bots</span>
+            <app-input-number key="suggestedBots" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.generalSettings.suggestedBots"
+                placeholder="1" [min]="1" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">CPM Limit (0 for no limit)</span>
+            <app-input-number key="maximumCPM" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.generalSettings.maximumCPM"
+                placeholder="0" [min]="0" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.generalSettings.saveEmptyCaptures"
+                [binary]="true" inputId="saveEmptyCaptures"
+                label="Save empty captures too" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.generalSettings.reportLastCaptchaOnRetry"
+                [binary]="true" inputId="reportLastCaptchaOnRetry"
+                label="Report the last captcha if the bot ends with a RETRY status" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Statuses for which the bot will continue / stop</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.generalSettings.continueStatuses"
+                [allItems]="botStatuses"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Proxies</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.proxySettings.useProxies"
+                [binary]="true" inputId="useProxies"
+                label="Use proxies" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Maximum uses per proxy (0 is infinite)</span>
+            <app-input-number key="maxUsesPerProxy" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.proxySettings.maxUsesPerProxy"
+                placeholder="0" [min]="0" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 to disable)</span>
+            <app-input-number key="banLoopEvasion" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.proxySettings.banLoopEvasion"
+                placeholder="0" [min]="0" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Ban the proxy when the bot ends with one of these statuses</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.proxySettings.banProxyStatuses"
+                [allItems]="botStatuses"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Allowed proxy types</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.proxySettings.allowedProxyTypes"
+                [allItems]="proxyTypes">
+                <ng-template #itemTemplate let-item>
+                    {{ item | titlecase }}
+                </ng-template>
+            </app-multiple-selector>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Data</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Allowed wordlist types</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.dataSettings.allowedWordlistTypes"
+                [allItems]="wordlistTypes"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.dataSettings.urlEncodeDataAfterSlicing"
+                [binary]="true" inputId="urlEncodeDataAfterSlicing"
+                label="URL Encode data after slicing" />
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Data Rules</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New simple data rule" tooltipPosition="bottom"
+                (click)="createSimpleDataRule()">
+                Simple
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent ml-2"
+                pTooltip="New regex data rule" tooltipPosition="bottom"
+                (click)="createRegexDataRule()">
+                Regex
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let rule of config.settings.dataSettings.dataRules.simple" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleSliceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.sliceName"
+                placeholder="DATA" />
+            <span class="d-block mt-1 text-small color-inactive">Slice name</span>
+        </div>
+        <div class="col-auto">
+            <app-input-dropdown key="simpleDataRuleComparison"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="stringRules"
+                [(ngModel)]="rule.comparison" />
+        </div>
+        <div class="col align-self-stretch px-2">
+            <app-input-text key="simpleDataRuleStringToCompare" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.stringToCompare"
+                placeholder="" />
+            <span class="d-block mt-1 text-small color-inactive">Compared value</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.caseSensitive"
+                [binary]="true" inputId="simpleDataRuleCaseSensitive"
+                label="Case sensitive" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.invert"
+                [binary]="true" inputId="simpleDataRuleInvert"
+                label="Invert" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeSimpleDataRule(rule)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let rule of config.settings.dataSettings.dataRules.regex" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleSliceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.sliceName"
+                placeholder="DATA" />
+            <span class="d-block mt-1 text-small color-inactive">Slice name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleRegexToMatch"
+                class="input-small w-100 monospace"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.regexToMatch"
+                placeholder="^.*$" />
+            <span class="d-block mt-1 text-small color-inactive">Regular Expression to match</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.invert"
+                [binary]="true" inputId="simpleDataRuleInvert"
+                label="Invert" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeRegexDataRule(rule)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Resources</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New lines from file resource" tooltipPosition="bottom"
+                (click)="createLinesFromFileResource()">
+                Lines from file
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent ml-2"
+                pTooltip="New random lines from file resource" tooltipPosition="bottom"
+                (click)="createRandomLinesFromFileResource()">
+                Random lines from file
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let resource of config.settings.dataSettings.resources.linesFromFile" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="linesFromFileResourceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.name"
+                placeholder="resource" />
+            <span class="d-block mt-1 text-small color-inactive">Resource name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="linesFromFileResourceLocation"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.location"
+                placeholder="resource.txt" />
+            <span class="d-block mt-1 text-small color-inactive">Location</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.loopsAround"
+                [binary]="true" inputId="linesFromFileResourceLoopsAround"
+                label="Loops around" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.ignoreEmptyLines"
+                [binary]="true" inputId="linesFromFileResourceIgnoreEmptyLines"
+                label="Ignore empty lines" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeLinesFromFileResource(resource)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let resource of config.settings.dataSettings.resources.randomLinesFromFile" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="randomLinesFromFileResourceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.name"
+                placeholder="resource" />
+            <span class="d-block mt-1 text-small color-inactive">Resource name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="randomLinesFromFileResourceLocation"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.location"
+                placeholder="resource.txt" />
+            <span class="d-block mt-1 text-small color-inactive">Location</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.unique"
+                [binary]="true" inputId="randomLinesFromFileResourceUnique"
+                label="Only unique lines" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.ignoreEmptyLines"
+                [binary]="true" inputId="randomLinesFromFileResourceIgnoreEmptyLines"
+                label="Ignore empty lines" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeRandomLinesFromFileResource(resource)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Inputs</h3>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Custom Inputs</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New custom input" tooltipPosition="bottom"
+                (click)="createCustomInput()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start a job and their answer will be inserted as a variable of type string that you can use as you please.
+            </span>
+        </div>
+    </div>
+    <div *ngFor="let input of config.settings.inputSettings.customInputs" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputDescription" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.description"
+                placeholder="What is your country?" />
+            <span class="d-block mt-1 text-small color-inactive">Description (question for the user)</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputVariableName"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.variableName"
+                placeholder="COUNTRY" />
+            <span class="d-block mt-1 text-small color-inactive">Variable Name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputDefaultAnswer"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.defaultAnswer"
+                placeholder="England" />
+            <span class="d-block mt-1 text-small color-inactive">Default Answer</span>
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeCustomInput(input)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Browser</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Quit the browser when the bot ends with one of these statuses</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.browserSettings.quitBrowserStatuses"
+                [allItems]="botStatuses"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.headless"
+                [binary]="true" inputId="headless"
+                label="Headless" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.loadOnlyDocumentAndScript"
+                [binary]="true" inputId="loadOnlyDocumentAndScript"
+                label=" Load only document and script" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.dismissDialogs"
+                [binary]="true" inputId="dismissDialogs"
+                label="Dismiss dialogs" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="d-block mb-2">Command line arguments (e.g. <code>--disable-notifications --incognito</code>)</span>
+            <app-input-text key="maximumCPM" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.commandLineArgs"
+                placeholder="--disable-notifications --incognito" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.ignoreHttpsErrors"
+                [binary]="true" inputId="ignoreHttpsErrors"
+                label="Ignore HTTPS errors" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Blocked URLs: if the URL of the resource contains any of the given texts it will not be loaded (case insensitive)</span>
+            <app-input-list key="userAgents"
+                class="d-block w-100 mt-2"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(list)]="config.settings.browserSettings.blockedUrls"
+                placeholder="example.com" />
+        </div>
+    </div>
+</div>

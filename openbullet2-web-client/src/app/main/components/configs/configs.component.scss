@@ -1,0 +1,45 @@
+@import "../../../../styles/variables.scss";
+
+.config-table-icon {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.configs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap: 5px;
+    width: 100%;
+}
+
+.config-item {
+    text-align: center;
+    width: 180px;
+    height: 100%;
+    margin: auto;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    
+    * {
+        cursor: pointer;
+    }
+
+    .config-grid-buttons {
+        display: none;
+    }
+}
+
+.config-item:hover {
+    background-color: var(--bg-secondary);
+
+    .config-grid-buttons {
+        display: block;
+    }
+}
+
+.config-grid-icon {
+    max-width: 60px;
+    max-height: 60px;
+}

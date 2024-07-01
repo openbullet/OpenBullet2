@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    URL
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="The URL that will be called through the proxy to check if the proxy works."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="url" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="url"
+                placeholder="https://example.com" />
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Success key
+                    <fa-icon [icon]="faCircleQuestion"
+                        pTooltip="If this value is present in the response content of the proxied request, the proxy is marked as working."
+                        [fixedWidth]="true"></fa-icon>
+                </span>
+            </div>
+            <input id="successKey" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="successKey"
+                placeholder="&lt;title&gt;Example Domain&lt;/title&gt;" />
+            <br />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Create
+            </button>
+        </div>
+    </div>
+</div>

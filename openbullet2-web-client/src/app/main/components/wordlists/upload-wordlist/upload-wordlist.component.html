@@ -1,0 +1,99 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <span class="text-small">
+                Use this window to create a wordlist by uploading a file to the remote server. This is helpful if you're not accessing OpenBullet 2 from the same machine.
+                Do not use this if you're running OpenBullet 2 locally. Instead, choose the <i>Add > From Local File</i> option. This
+                will prevent the file from being needlessly sent through the browser and copied to the same disk.
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <input id="name" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="name"
+                placeholder="My Wordlist" />
+        </div>
+        <div class="col-auto">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="wordlistType"
+                [options]="wordlistTypes">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Purpose</span>
+            </div>
+            <input id="purpose" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="purpose"
+                placeholder="" />
+            <br />
+            <span class="text-small color-inactive">
+                What is this wordlist going to be used for?
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- TODO: Add drag and drop area -->
+            <p-fileUpload 
+                #fileUpload
+                name="Upload wordlist file"
+                [customUpload]="true"
+                [auto]="true"
+                (uploadHandler)="selectedFile = $event.files[0]"
+                [multiple]="false"
+                (onSelect)="fileSelected($event)"
+                (onError)="uploadError($event)"
+                (onClear)="clearUpload()"
+                (onRemove)="clearUpload()"
+                accept=".txt"
+                [maxFileSize]="2 * 1000 * 1000 * 1000">
+            </p-fileUpload>
+        </div>
+    </div>
+    <div *ngIf="uploadProgress !== null" class="row my-2">
+        <div class="col-12">
+            <p-progressBar 
+                [mode]="isUploading && uploadProgress === 100 ? 'indeterminate' : 'determinate'"
+                [value]="uploadProgress"></p-progressBar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">File Path</span>
+            </div>
+            <input id="filePath" type="text" class="w-100"
+                spellcheck="false"
+                [(ngModel)]="filePath" [readonly]="true"
+                placeholder="Upload the file, its path will be displayed here" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button *ngIf="filePath === null"
+                class="button button-accent float-right" 
+                [disabled]="isUploading"
+                (click)="upload()">
+                {{ isUploading ? 'Uploading...' : 'Upload' }}
+            </button>
+            <button *ngIf="filePath !== null"
+                class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Add
+            </button>
+        </div>
+    </div>
+</div>
