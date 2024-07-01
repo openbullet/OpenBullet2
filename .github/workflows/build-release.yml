@@ -3,7 +3,7 @@ name: Build + Release
 on:
   push:
     branches:
-    - 'release'
+    - 'master'
 
 jobs:
   build:
