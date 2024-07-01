@@ -71,6 +71,7 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: '.release/*'
         file_glob: true
+        release_name: ${{ env.VERSION }}
         tag: ${{ env.VERSION }}
         overwrite: true
         prerelease: true

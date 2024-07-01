@@ -71,45 +71,12 @@ public static class FileSystemHelper
                         }
                     }
                 });
-                
         }
-        // If the file does not exist, we will delete everything except the whitelisted files and folders.
+        // If the file does not exist, skip the deletion
         else
         {
             AnsiConsole.MarkupLine(
-                "[yellow]build-files.txt not found, cleaning up everything not in the whitelist...[/]");
-            
-            AnsiConsole.Status()
-                .Start("[yellow]Deleting...[/]", ctx =>
-                {
-                    foreach (var entry in Directory.EnumerateFileSystemEntries(Directory.GetCurrentDirectory()))
-                    {
-                        var isDirectory = (File.GetAttributes(entry) & FileAttributes.Directory) == FileAttributes.Directory;
-                    
-                        // If it even contains appsettings.json or UserData, disregard it (prevent accidental deletion)
-                        if (entry.Contains("appsettings.json") || entry.Contains("UserData"))
-                        {
-                            continue;
-                        }
-                        
-                        // If it's the current executable, disregard it
-                        if (entry == Process.GetCurrentProcess().MainModule?.FileName)
-                        {
-                            continue;
-                        }
-                    
-                        ctx.Status($"Deleting {entry}...");
-                
-                        if (isDirectory)
-                        {
-                            Directory.Delete(entry, true);
-                        }
-                        else
-                        {
-                            File.Delete(entry);
-                        }
-                    }
-                });
+                "[yellow]build-files.txt not found, skipping file deletion...[/]");
         }
     }
 
