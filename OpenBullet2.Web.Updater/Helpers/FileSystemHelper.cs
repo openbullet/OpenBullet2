@@ -85,9 +85,9 @@ public static class FileSystemHelper
                     foreach (var entry in Directory.EnumerateFileSystemEntries(Directory.GetCurrentDirectory()))
                     {
                         var isDirectory = (File.GetAttributes(entry) & FileAttributes.Directory) == FileAttributes.Directory;
-                    
-                        // If it's appsettings.json or the UserData folder, disregard it
-                        if (entry == "appsettings.json" || entry.StartsWith("UserData"))
+                        
+                        // If it even contains appsettings.json or UserData, disregard it (prevent accidental deletion)
+                        if (entry.Contains("appsettings.json") || entry.Contains("UserData"))
                         {
                             continue;
                         }
