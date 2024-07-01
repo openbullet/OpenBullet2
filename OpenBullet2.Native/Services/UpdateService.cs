@@ -74,7 +74,7 @@ namespace OpenBullet2.Native.Services
                     // Take the first and get its name
                     var json = await response.Content.ReadAsStringAsync();
                     var release = JToken.Parse(json);
-                    var releaseName = release["name"].ToString();
+                    var releaseName = release["tag_name"].ToString();
 
                     // Try to parse that name to a Version object
                     RemoteVersion = Version.Parse(releaseName);

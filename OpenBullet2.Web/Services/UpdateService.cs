@@ -99,7 +99,7 @@ public class UpdateService : BackgroundService, IUpdateService
             // Take the first and get its name
             var json = await response.Content.ReadAsStringAsync();
             var release = JToken.Parse(json);
-            var releaseName = release["name"]?.ToString() ?? "0.0.1";
+            var releaseName = release["tag_name"]?.ToString() ?? "0.0.1";
 
             // Try to parse that name to a Version object
             RemoteVersion = Version.Parse(releaseName);
