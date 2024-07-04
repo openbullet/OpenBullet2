@@ -175,6 +175,7 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case Interpreter.NodeJS:
+                    // for @Kermit with <3
                     var nodeScript = @$"module.exports = async ({MakeInputs()}) => {{
                         {Script}
                         var noderesult = {{
