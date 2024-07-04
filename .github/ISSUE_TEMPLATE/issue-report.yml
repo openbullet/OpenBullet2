@@ -17,7 +17,7 @@ body:
       options:
         - label: This is a **bug**, not a question or a configuration issue; Please visit our forum first to troubleshoot with volunteers, before creating a report. The links can be found [here](https://discourse.openbullet.dev/).
           required: true
-        - label: This issue is **not** already reported on [GitHub](https://github.com/openbullet/OpenBullet2/issues?q=is%3Aissue+is%3Aopen+label%3Abug) _(I've searched it)_.
+        - label: This issue is **not** already reported on [GitHub](https://github.com/openbullet/OpenBullet2/issues?q=is%3Aissue+is%3Aopen+label%3Abug) *(I've searched it)*.
           required: true
         - label: I'm using an up to date version of OpenBullet2. We generally do not support previous older versions. If possible, please update to the latest version before opening an issue.
           required: true
@@ -65,7 +65,7 @@ body:
   - type: textarea
     id: actual-behavior
     attributes:
-      label: What is the current _bug_ behavior?
+      label: What is the current bug behavior?
       description: Write down the incorrect behavior that currently happens after following the reproduction steps.
       placeholder: |
         The wordlists table in the Wordlists section is always empty, regardless of how many wordlists are in the database.
@@ -74,17 +74,19 @@ body:
   - type: textarea
     id: expected-behavior
     attributes:
-      label: What is the expected _correct_ behavior?
+      label: What is the expected correct behavior?
       description: Write down the correct expected behavior that is supposed to happen after following the reproduction steps.
       placeholder: |
         The wordlists table in the Wordlists section displays the wordlists that the current user has access to.
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: client-version
     attributes:
       label: Version of the client
       description: What version of OpenBullet2 are you using?
+      placeholder: |
+        Version: [e.g. 0.3.x] 
     validations:
       required: true
   - type: dropdown
@@ -143,11 +145,11 @@ body:
       label: Relevant screenshots or videos
       description: Attach relevant screenshots or videos related to this report.
   - type: textarea
-    id: csharp-code
+    id: lolicode
     attributes:
-      label: Relevant C# code if needed
-      description: Please copy and paste any relevant C# code to reproduce the issue. This will be automatically formatted into code, so no need for backticks.
-      render: shell
+      label: Relevant LoliCode if needed
+      description: Please copy and paste any relevant LoliCode to reproduce the issue. This will be automatically formatted into code, so no need for backticks.
+      render: csharp
   - type: textarea
     id: additional-information
     attributes:
