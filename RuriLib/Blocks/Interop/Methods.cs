@@ -1,4 +1,4 @@
-﻿using Jering.Javascript.NodeJS;
+using Jering.Javascript.NodeJS;
 using Jint;
 using Microsoft.Scripting.Hosting;
 using RuriLib.Attributes;
@@ -40,10 +40,33 @@ namespace RuriLib.Blocks.Interop
          * of writing C# code that calls these methods where necessary once it's transpiled.
          */
 
-        public static async Task<T> InvokeNode<T>(BotData data, string scriptFile, object[] parameters)
+        public static async Task<T> InvokeNode<T>(BotData data, string scriptOrFile, object[] parameters, bool isScript = false)
         {
             data.Logger.LogHeader();
-            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, null, parameters, data.CancellationToken).ConfigureAwait(false);
+            T result;
+
+            if (isScript)
+            {
+                // If it's a script, use InvokeFromStringAsync
+                result = await StaticNodeJSService.InvokeFromStringAsync<T>(
+                    scriptOrFile,  // This is now the script content
+                    null,          // newCacheIdentifier
+                    null,          // exportName
+                    parameters,    // args
+                    data.CancellationToken
+                ).ConfigureAwait(false);
+            }
+            else
+            {
+                // If it's a file, use the original InvokeFromFileAsync
+                result = await StaticNodeJSService.InvokeFromFileAsync<T>(
+                    scriptOrFile,  // This is the file path
+                    null,          // exportName
+                    parameters,    // args
+                    data.CancellationToken
+                ).ConfigureAwait(false);
+            }
+
             data.Logger.Log($"Executed NodeJS script with result: {result}", LogColors.PaleChestnut);
             return result;
         }
