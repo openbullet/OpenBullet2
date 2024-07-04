@@ -14,7 +14,7 @@ jobs:
 
     # Checkout the repository
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         
@@ -56,6 +56,7 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: '.release/*'
         file_glob: true
+        release_name: ${{ env.VERSION }}
         tag: ${{ env.VERSION }}
         overwrite: true
         prerelease: false
