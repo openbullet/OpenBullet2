@@ -1,0 +1,157 @@
+name: "🐛 Bug Report"
+description: File a bug report
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    id: introduction
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        Please keep in mind that OpenBullet is a [free and open-source](https://github.com/openbullet/OpenBullet2) project, made up entirely and exclusively of **volunteers** who donate their free time to the project.
+  - type: checkboxes
+    id: before-posting
+    attributes:
+      label: "This issue respects the following points:"
+      description: All conditions are **required**. Failure to comply with any of these conditions may cause your issue to be closed without comment.
+      options:
+        - label: This is a **bug**, not a question or a configuration issue; Please visit our forum first to troubleshoot with volunteers, before creating a report. The links can be found [here](https://discourse.openbullet.dev/).
+          required: true
+        - label: This issue is **not** already reported on [GitHub](https://github.com/openbullet/OpenBullet2/issues?q=is%3Aissue+is%3Aopen+label%3Abug) *(I've searched it)*.
+          required: true
+        - label: I'm using an up to date version of OpenBullet2. We generally do not support previous older versions. If possible, please update to the latest version before opening an issue.
+          required: true
+        - label: I agree to follow OpenBullet's [Code of Conduct](https://docs.openbullet.dev/docs/community-standards).
+          required: true
+        - label: This report addresses only a single issue; If you encounter multiple issues, kindly create separate reports for each one.
+          required: true
+  - type: markdown
+    id: preliminary-information
+    attributes:
+      value: |
+        ### General preliminary information
+
+        Please keep the following in mind when creating this issue:
+
+        1. Fill in as much of the template as possible. When you are unsure about the relevancy of a section, do include the information requested in that section. Only leave out information in sections when you are completely sure about it not being relevant.
+        2. Provide as much detail as possible. Do not assume other people to know what is going on.
+        3. Keep everything readable and structured. Nobody enjoys reading poorly written reports that are difficult to understand.
+        4. Keep an eye on your report as long as it is open, your involvement might be requested at a later moment.
+        5. Keep the title short and descriptive. The title is not the place to write down a full description of the issue.
+        6. When deciding to leave out information in a field, leave it blank and empty. Avoid writing things such as `n/a` for empty fields.
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Description of the bug
+      description: Please provide a detailed description on the bug you encountered, in a readable and comprehensible way.
+      placeholder: |
+        After upgrading to version x.y.z of OpenBullet 2, my wordlists aren't being displayed anymore. After testing with both the admin and a guest user, none of them could see any wordlists. I have tried downloading OpenBullet 2 to a clean folder with no `UserData` and I can reliably reproduce the issue. By checking the SQLite database I can see that there are rows pointing to existing files, but they are not being correctly retrieved by the back-end.
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Reproduction steps
+      description: Reproduction steps should be complete and self-contained. Anyone can reproduce this issue by following these steps. Furthermore, the steps should be clear and easy to follow.
+      placeholder: |
+        1. Start OpenBullet 2 web client
+        2. Log in as the admin user
+        3. Navigate to the Wordlists page
+        4. Add a new wordlist
+        5. Refresh the page
+        6. Nothing is shown in the wordlists table
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: What is the current bug behavior?
+      description: Write down the incorrect behavior that currently happens after following the reproduction steps.
+      placeholder: |
+        The wordlists table in the Wordlists section is always empty, regardless of how many wordlists are in the database.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What is the expected correct behavior?
+      description: Write down the correct expected behavior that is supposed to happen after following the reproduction steps.
+      placeholder: |
+        The wordlists table in the Wordlists section displays the wordlists that the current user has access to.
+    validations:
+      required: true
+  - type: input
+    id: client-version
+    attributes:
+      label: Version of the client
+      description: What version of OpenBullet2 are you using?
+      placeholder: |
+        Version: [e.g. 0.3.x] 
+    validations:
+      required: true
+  - type: dropdown
+    id: client-type
+    attributes:
+      label: Type of client
+      description: Which type of OpenBullet2 client are you using?
+      options:
+        - Web client
+        - Native client
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: environment-information
+    attributes:
+      label: Environment
+      description: |
+        Accurately fill in as much environment details as possible. If a certain environment field is not shown in the template below, but you consider useful information, please include it.
+        Examples:
+        - **OS**: [e.g. Debian 12, Windows 11]
+        - **Virtualization**: [e.g. Docker, KVM, LXC]
+        - **Browser**: [e.g. Firefox 91, Chrome 93, Safari 13, native client]
+      value: |
+        - OS:
+        - Virtualization:
+        - Browser:
+      render: markdown
+    validations:
+      required: true
+  - type: markdown
+    id: general-information-logs
+    attributes:
+      value: |
+        When providing logs, please keep the following things in mind:
+        1. **DO NOT** use external paste services. If logs are too large to paste into the field, upload them as text files.
+        2. Please provide complete logs.
+          - Ensure to capture all relevant information, encompassing both the events leading up to and following the occurrence of the issue. Typically, providing 10 *lines preceding and succeeding* the problem should be adequate.
+        3. Please do not run logs through any translation program. We exclusively accept raw, untranslated logs. Particularly exercise caution if your browser automatically translates pages by default.
+          - **DO NOT** forget to censor out personal information such as public IP addresses.
+        4. Please do not include logs as screenshots, with the only exception being client logs in browsers.
+  - type: textarea
+    id: openbullet-logs
+    attributes:
+      label: OpenBullet2 logs
+      description: Please copy and paste any relevant log output. The web client log files can be found in the `UserData/Logs` folder in a .txt format. The native client has a crash.log file in the main folder only when a crash happens.
+      render: shell
+  - type: textarea
+    id: browser-logs
+    attributes:
+      label: Client / Browser logs
+      description: Access browser logs by using the F12 to bring up the console. Screenshots are typically easier to read than raw logs.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Relevant screenshots or videos
+      description: Attach relevant screenshots or videos related to this report.
+  - type: textarea
+    id: lolicode
+    attributes:
+      label: Relevant LoliCode if needed
+      description: Please copy and paste any relevant LoliCode to reproduce the issue. This will be automatically formatted into code, so no need for backticks.
+      render: csharp
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Any additional information that might be useful to this issue.
