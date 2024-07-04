@@ -81,17 +81,17 @@ body:
     validations:
       required: true
   - type: textarea
-    id: version
+    id: client-version
     attributes:
-      label: Version of the software
+      label: Version of the client
       description: What version of OpenBullet2 are you using?
     validations:
       required: true
   - type: dropdown
-    id: version
+    id: client-type
     attributes:
-      label: Type of the software
-      description: Which type of OpenBullet2 are you using?
+      label: Type of client
+      description: Which type of OpenBullet2 client are you using?
       options:
         - Web client
         - Native client
