@@ -32,6 +32,9 @@ Found a bug or have a feature request? Please help us improve by submitting an i
 
 [![Open an issue](https://img.shields.io/badge/Bug-Report_a_bug-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=bug-report.yaml&title=%5BBug%5D%3A+) [![Request a feature](https://img.shields.io/badge/Feature-Request_a_feature-2292A4.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=feature_request.md&title=%5BREQUEST%5D)
 
+## 📊 Stats
+![Alt](https://repobeats.axiom.co/api/embed/c51394480e5e3da9259cae343f80dd1c53a8b263.svg "Repobeats analytics image")
+
 ## License
 This software is licensed under the MIT License.
 
