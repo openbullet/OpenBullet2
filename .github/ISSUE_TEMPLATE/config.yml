@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 📃 Documentation Issue
+      url: https://github.com/openbullet/openbullet2-docs/issues/new
+      about: This issue tracker is not for documentation issues. Please file documentation issues here.
+    - name: 🤔 Questions and Help
+      url: https://discourse.openbullet.dev/
+      about: This issue tracker is not for support questions. Please refer to the OpenBullet community's help and discussion forums.
