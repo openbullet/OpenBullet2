@@ -6,6 +6,7 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Interop
@@ -40,37 +41,57 @@ namespace RuriLib.Blocks.Interop
          * of writing C# code that calls these methods where necessary once it's transpiled.
          */
 
-        public static async Task<T> InvokeNode<T>(BotData data, string scriptOrFile, object[] parameters, bool isScript = false)
+        public static async Task<T> InvokeNode<T>(BotData data, (string, string) scriptOrFile, object[] parameters, bool isScript = false)
         {
             data.Logger.LogHeader();
             T result;
 
             if (isScript)
             {
-                // If it's a script, use InvokeFromStringAsync
-                result = await StaticNodeJSService.InvokeFromStringAsync<T>(
-                    scriptOrFile,  // This is now the script content
-                    null,          // newCacheIdentifier
-                    null,          // exportName
-                    parameters,    // args
-                    data.CancellationToken
-                ).ConfigureAwait(false);
+                result = await InvokeFromStringOrCache<T>(data, scriptOrFile, parameters);
             }
             else
             {
-                // If it's a file, use the original InvokeFromFileAsync
-                result = await StaticNodeJSService.InvokeFromFileAsync<T>(
-                    scriptOrFile,  // This is the file path
-                    null,          // exportName
-                    parameters,    // args
-                    data.CancellationToken
-                ).ConfigureAwait(false);
+               
+                result = await InvokeFromFile<T>(data, scriptOrFile.Item2 /*hash*/, parameters);
             }
 
             data.Logger.Log($"Executed NodeJS script with result: {result}", LogColors.PaleChestnut);
             return result;
         }
+        private static async Task<T> InvokeFromStringOrCache<T>(BotData data, (string, string) script, object[] parameters)
+        {
+            string hash = Path.GetFileNameWithoutExtension(script.Item2).Split('/').Last();
 
+            var (isCached, cachedResult) = await StaticNodeJSService.TryInvokeFromCacheAsync<T>(
+                hash,
+                null,
+                parameters,
+                data.CancellationToken
+            ).ConfigureAwait(false);
+
+            if (isCached)
+            {
+                return cachedResult;
+            }
+
+            return await StaticNodeJSService.InvokeFromStringAsync<T>(
+                script.Item1,
+                hash,
+                null,
+                parameters,
+                data.CancellationToken
+            ).ConfigureAwait(false);
+        }
+        private static Task<T> InvokeFromFile<T>(BotData data, string filePath, object[] parameters)
+        {
+            return StaticNodeJSService.InvokeFromFileAsync<T>(
+                filePath,
+                null,
+                parameters,
+                data.CancellationToken
+            );
+        }
         public static Engine InvokeJint(BotData data, Engine engine, string scriptFile)
         {
             data.Logger.LogHeader();

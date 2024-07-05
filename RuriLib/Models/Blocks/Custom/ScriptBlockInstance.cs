@@ -175,7 +175,6 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case Interpreter.NodeJS:
-                    // for @Kermit with <3
                     var nodeScript = @$"module.exports = async ({MakeInputs()}) => {{
                         {Script}
                         var noderesult = {{
@@ -183,20 +182,16 @@ namespace RuriLib.Models.Blocks.Custom
                         }};
                         return noderesult;
                         }}";
-                    string a = @"DID YOU REALLY TRY TO 
-                            SEE THE SAUCE
-                            BROOOO ?";
-                    scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(a)));
+
+                    scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(nodeScript)));
+
                     scriptPath = $"Scripts/{scriptHash}.{GetScriptFileExtension(Interpreter)}";
 
-                    if (!Directory.Exists("Scripts"))
-                        Directory.CreateDirectory("Scripts");
-
-                    if (!File.Exists(scriptPath))
-                        File.WriteAllText(scriptPath, a);
                     string escapedScript = JsonConvert.ToString(nodeScript);
 
-                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, {escapedScript}, new object[] {{ {InputVariables} }}, true);");
+                    (string, string) scriptNHash = (escapedScript, JsonConvert.ToString(scriptPath));
+
+                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, {scriptNHash}, new object[] {{ {InputVariables} }}, true);");
 
                     foreach (var output in OutputVariables)
                     {
