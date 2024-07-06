@@ -185,13 +185,9 @@ namespace RuriLib.Models.Blocks.Custom
 
                     scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(nodeScript)));
 
-                    scriptPath = $"Scripts/{scriptHash}.{GetScriptFileExtension(Interpreter)}";
-
                     string escapedScript = JsonConvert.ToString(nodeScript);
 
-                    (string, string) scriptNHash = (escapedScript, JsonConvert.ToString(scriptPath));
-
-                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, {scriptNHash}, new object[] {{ {InputVariables} }}, true);");
+                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, {escapedScript}, new object[] {{ {InputVariables} }}, true, \"{scriptHash}\");");
 
                     foreach (var output in OutputVariables)
                     {
