@@ -247,6 +247,22 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     }
   }
 
+  changeRequireAdminLogin(enabled: boolean) {
+    this.settings!.securitySettings.requireAdminLogin = enabled;
+
+    if (!enabled) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warning',
+        detail: `You have disabled the requirement for admin login.
+        If you do this while your instance is exposed to the public internet,
+        anyone will be able to access your instance without authentication!`,
+        key: 'br',
+        life: 10000,
+      });
+    }
+  }
+
   openChangeAdminPasswordModal() {
     this.changeAdminPasswordModalVisible = true;
   }
