@@ -196,7 +196,10 @@ return noderesult;
                     foreach (var output in OutputVariables)
                     {
                         if (!definedVariables.Contains(output.Name))
+                        {
                             writer.Write($"{ToCSharpType(output.Type)} ");
+                            definedVariables.Add(output.Name);
+                        }
 
                         writer.WriteLine($"{output.Name} = {resultName}.GetProperty(\"{output.Name}\").{GetNodeMethod(output.Type)};");
                     }
