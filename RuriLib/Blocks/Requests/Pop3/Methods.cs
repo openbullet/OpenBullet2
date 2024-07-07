@@ -26,7 +26,7 @@ namespace RuriLib.Blocks.Requests.Pop3
         private static readonly List<string> subdomains = new() { "mail", "pop", "pop3", "m", "pop3-mail", "pop-mail", "inbound", "in", "mx" };
 
         [Block("Connects to a POP3 server by automatically detecting the host and port")]
-        public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000, bool useProxy = true)
+        public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
@@ -38,7 +38,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (useProxy && data.UseProxy && data.Proxy != null)
+            if (data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
@@ -243,7 +243,7 @@ namespace RuriLib.Blocks.Requests.Pop3
         }
 
         [Block("Connects to a POP3 server")]
-        public static async Task Pop3Connect(BotData data, string host, int port, int timeoutMilliseconds = 60000, bool useProxy = true)
+        public static async Task Pop3Connect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
@@ -255,7 +255,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (useProxy && data.UseProxy && data.Proxy != null)
+            if (data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
