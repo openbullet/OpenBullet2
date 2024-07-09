@@ -37,7 +37,7 @@ RUN cp /code/OpenBullet2.Web/dbip-country-lite.mmdb /build
 # --------
 # FRONTEND
 # --------
-FROM node:20.3.0 AS frontend
+FROM node:20.9.0 AS frontend
 
 WORKDIR /code
 
