@@ -34,9 +34,13 @@ jobs:
     - name: Get commit number
       run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
 
-    # Append the commit number to version.txt
+    # Append the commit number to version.txt of the web client
     - name: Append commit number to version.txt
       run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Web/version.txt
+
+    # Append the commit number to version.txt of the native client
+    - name: Append commit number to version.txt
+      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Native/version.txt
 
     # Get the commit description
     - name: Get commit description
