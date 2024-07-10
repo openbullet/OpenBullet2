@@ -8,11 +8,15 @@
             </div>
         </div>
         <div class="col-12">
-            <input [id]="'question-' + question.variableName" type="text"
-                class="w-100"
+            <p-autoComplete [id]="'question-' + question.variableName"
+                inputStyleClass="w-100"
+                class="d-block w-100"
+                ngDefaultControl
+                [suggestions]="getSuggestions(question)"
+                [completeOnFocus]="true"
+                [showEmptyMessage]="false"
                 spellcheck="false"
-                [(ngModel)]="answers[i].answer"
-                placeholder="{{ question.defaultAnswer }}" />
+                [(ngModel)]="answers[i].answer" />
         </div>
     </div>
     <div class="row mt-4 mb-2">

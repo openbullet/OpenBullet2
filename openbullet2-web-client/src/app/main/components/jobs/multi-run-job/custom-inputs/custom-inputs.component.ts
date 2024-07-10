@@ -29,4 +29,9 @@ export class CustomInputsComponent implements OnInit {
 
     this.confirm.emit(this.answers);
   }
+
+  getSuggestions(question: CustomInputQuestionDto): string[] {
+    return question.defaultAnswer.split(',').map(s => s.trim())
+      .filter(s => s.length > 0);
+  }
 }
