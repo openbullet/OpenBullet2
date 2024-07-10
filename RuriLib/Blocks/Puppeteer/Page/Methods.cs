@@ -24,7 +24,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
             {
                 Timeout = timeout,
                 Referer = referer,
-                WaitUntil = new WaitUntilNavigation[] { loadedEvent }
+                WaitUntil = [loadedEvent]
             };
             var response = await page.GoToAsync(url, options);
             data.ADDRESS = response.Url;

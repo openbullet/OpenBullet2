@@ -57,19 +57,16 @@
                           IsChecked="{Binding UseCustomUserAgentsList}" 
                           VerticalContentAlignment="Center"
                           Margin="5 10 0 0"/>
-                <RichTextBox x:Name="customUserAgentsListRTB" 
+                <TextBox x:Name="customUserAgentsListTextBox" 
                              Background="{DynamicResource BackgroundSecondary}" 
                              Foreground="{DynamicResource ForegroundMain}" 
                              FontFamily="Consolas" 
                              Margin="5 10 5 0"
                              Height="100"
+                             VerticalContentAlignment="Top"
+                             AcceptsReturn="True"
                              TextChanged="CustomUserAgentsChanged">
-                    <RichTextBox.Resources>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                    </RichTextBox.Resources>
-                </RichTextBox>
+                </TextBox>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Proxies</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
@@ -90,33 +87,27 @@
                     <Label>(in milliseconds)</Label>
                 </StackPanel>
                 <Label>Global BAN keys (one per line)</Label>
-                <RichTextBox x:Name="globalBanKeysRTB" 
+                <TextBox x:Name="globalBanKeysTextBox" 
                              Background="{DynamicResource BackgroundSecondary}" 
                              Foreground="{DynamicResource ForegroundMain}" 
                              FontFamily="Consolas"
                              Margin="5"
                              Height="100"
+                             VerticalContentAlignment="Top"
+                             AcceptsReturn="True"
                              TextChanged="GlobalBanKeysChanged">
-                    <RichTextBox.Resources>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                    </RichTextBox.Resources>
-                </RichTextBox>
+                </TextBox>
                 <Label>Global RETRY keys (one per line)</Label>
-                <RichTextBox x:Name="globalRetryKeysRTB" 
+                <TextBox x:Name="globalRetryKeysTextBox" 
                              Background="{DynamicResource BackgroundSecondary}" 
                              Foreground="{DynamicResource ForegroundMain}" 
                              FontFamily="Consolas" 
                              Margin="5"
                              Height="100"
+                             VerticalContentAlignment="Top"
+                             AcceptsReturn="True"
                              TextChanged="GlobalRetryKeysChanged">
-                    <RichTextBox.Resources>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                    </RichTextBox.Resources>
-                </RichTextBox>
+                </TextBox>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Captchas</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">

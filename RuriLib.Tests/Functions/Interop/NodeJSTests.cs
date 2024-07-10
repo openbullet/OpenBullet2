@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RuriLib.Tests.Functions.Interop
 {
-    public class NodeJSTests
+    public class NodeJsTests
     {
-        private string BuildScript(string innerScript, string[] inputs, string[] outputs)
+        private static string BuildScript(string innerScript, string[] inputs, string[] outputs)
         {
             return @$"module.exports = (callback, {MakeInputs(inputs)}) => {{
 {innerScript}
@@ -20,64 +21,49 @@ callback(null, noderesult);
 }}";
         }
 
-        private string MakeNodeObject(string[] outputs)
+        private static string MakeNodeObject(string[] outputs)
             => string.Join("\r\n", outputs.Select(o => $"  '{o}': {o},"));
 
-        private string MakeInputs(string[] inputs)
+        private static string MakeInputs(string[] inputs)
             => string.Join(",", inputs.Select(i => Regex.Match(i, "[A-Za-z0-9]+$")));
 
         [Fact]
-        public void InvokeNode_IntegerSum_ReturnInteger()
+        public async Task InvokeNode_IntegerSum_ReturnInteger()
         {
-            var script = BuildScript(
-                "var result = x + y;",
-                new string[] { "x", "y" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { 3, 5 }).Result;
+            var script = BuildScript("var result = x + y;", ["x", "y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [3, 5]);
             Assert.Equal(8, result.GetProperty("result").GetInt32());
         }
 
         [Fact]
-        public void InvokeNode_FloatSum_ReturnFloat()
+        public async Task InvokeNode_FloatSum_ReturnFloat()
         {
-            var script = BuildScript(
-                "var result = x + y;",
-                new string[] { "x", "y" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { 3.5f, 5.2f }).Result;
+            var script = BuildScript("var result = x + y;", ["x", "y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [3.5f, 5.2f]);
             Assert.Equal(8.7f, result.GetProperty("result").GetSingle());
         }
 
         [Fact]
-        public void InvokeNode_BoolAnd_ReturnBool()
+        public async Task InvokeNode_BoolAnd_ReturnBool()
         {
-            var script = BuildScript(
-                "var result = x && y;",
-                new string[] { "x", "y" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { true, false }).Result;
+            var script = BuildScript("var result = x && y;", ["x", "y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [true, false]);
             Assert.False(result.GetProperty("result").GetBoolean());
         }
 
         [Fact]
-        public void InvokeNode_StringChain_ReturnString()
+        public async Task InvokeNode_StringChain_ReturnString()
         {
-            var script = BuildScript(
-                "var result = x + y;",
-                new string[] { "x", "y" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { "my", "string" }).Result;
+            var script = BuildScript("var result = x + y;", ["x", "y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, ["my", "string"]);
             Assert.Equal("mystring", result.GetProperty("result").GetString());
         }
 
         [Fact]
-        public void InvokeNode_OutputList_ReturnList()
+        public async Task InvokeNode_OutputList_ReturnList()
         {
-            var script = BuildScript(
-                "var result = [ x, y ];",
-                new string[] { "x", "y" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { "a", "b" }).Result;
+            var script = BuildScript("var result = [ x, y ];", ["x", "y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, ["a", "b"]);
             var outputList = result.GetProperty("result").EnumerateArray().Select(e => e.GetString()).ToList();
             Assert.Equal(2, outputList.Count);
             Assert.Equal("a", outputList[0]);
@@ -85,36 +71,27 @@ callback(null, noderesult);
         }
 
         [Fact]
-        public void InvokeNode_InputList_ReturnString()
+        public async Task InvokeNode_InputList_ReturnString()
         {
-            var inputList = new List<string> { "a", "b" };
-            var script = BuildScript(
-                "var result = x[0];",
-                new string[] { "x" },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { inputList }).Result;
+            List<string> inputList = ["a", "b"];
+            var script = BuildScript("var result = x[0];", ["x"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [inputList]);
             Assert.Equal("a", result.GetProperty("result").GetString());
         }
 
         [Fact]
-        public void InvokeNode_NoInputs_ReturnString()
+        public async Task InvokeNode_NoInputs_ReturnString()
         {
-            var script = BuildScript(
-                "var result = 'hello';",
-                new string[] {  },
-                new string[] { "result" });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { }).Result;
+            var script = BuildScript("var result = 'hello';", [], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, []);
             Assert.Equal("hello", result.GetProperty("result").GetString());
         }
 
         [Fact]
-        public void InvokeNode_NoOutputs_ReturnNothing()
+        public async Task InvokeNode_NoOutputs_ReturnNothing()
         {
-            var script = BuildScript(
-                "var result = x + y;",
-                new string[] { "x", "y" },
-                new string[] {  });
-            JsonElement result = StaticNodeJSService.InvokeFromStringAsync<dynamic>(script, args: new object[] { 3, 5 }).Result;
+            var script = BuildScript("var result = x + y;", ["x", "y"], []);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [3, 5]);
             Assert.Throws<KeyNotFoundException>(() => result.GetProperty("result"));
         }
     }

@@ -55,6 +55,7 @@
                 FontFamily="Consolas"
                 Grid.Row="1"
                 AcceptsReturn="True"
+                VerticalContentAlignment="Top"
                 Text="{Binding UsingsString}" />
         </Grid>
 

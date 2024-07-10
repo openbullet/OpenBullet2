@@ -1,4 +1,5 @@
-﻿using RuriLib.Extensions;
+﻿using System.Runtime.InteropServices;
+using RuriLib.Extensions;
 using Xunit;
 
 namespace RuriLib.Tests.Extensions
@@ -51,6 +52,12 @@ namespace RuriLib.Tests.Extensions
         [InlineData("../../windows/system32/cmd.exe")]
         public void IsSubPathOf_IllegalSubPath_False(string path)
         {
+            // Skip if not on Windows
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return;
+            }
+            
             Assert.False(path.IsSubPathOf("C:/test/"));
         }
 

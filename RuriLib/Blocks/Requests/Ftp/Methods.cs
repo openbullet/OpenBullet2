@@ -143,7 +143,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             data.Logger.Log("Disconnected from the FTP server", LogColors.Maize);
         }
 
-        [Block("Gets the protocol log", name = "Get Imap Log")]
+        [Block("Gets the protocol log", name = "Get FTP Log")]
         public static string FtpGetLog(BotData data)
         {
             data.Logger.LogHeader();

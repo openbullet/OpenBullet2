@@ -46,7 +46,14 @@
             <TabItem x:Name="pasteTab">
                 <StackPanel>
                     <Label Content="Paste your proxies in the box below" />
-                    <TextBox x:Name="proxiesBox" AcceptsReturn="True" TextWrapping="Wrap" Height="100" VerticalScrollBarVisibility="Auto" Margin="0 5" FontFamily="Consolas"/>
+                    <TextBox x:Name="proxiesBox"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Height="100"
+                             VerticalScrollBarVisibility="Auto"
+                             Margin="0 5"
+                             VerticalContentAlignment="Top"
+                             FontFamily="Consolas"/>
                 </StackPanel>
             </TabItem>
             <TabItem x:Name="remoteTab">

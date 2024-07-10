@@ -1,4 +1,4 @@
-﻿using Jering.Javascript.NodeJS;
+using Jering.Javascript.NodeJS;
 using Jint;
 using Microsoft.Scripting.Hosting;
 using RuriLib.Attributes;
@@ -6,6 +6,7 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Interop
@@ -39,13 +40,61 @@ namespace RuriLib.Blocks.Interop
          * These are not blocks, but they take BotData as an input. The ScriptBlockInstance will take care
          * of writing C# code that calls these methods where necessary once it's transpiled.
          */
-
-        public static async Task<T> InvokeNode<T>(BotData data, string scriptFile, object[] parameters)
+        public static async Task<T> InvokeNode<T>(BotData data, string scriptOrFile, object[] parameters, bool isScript = false, string scriptHash = null)
         {
             data.Logger.LogHeader();
-            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, null, parameters, data.CancellationToken).ConfigureAwait(false);
+            T result;
+
+            if (isScript)
+            {
+                result = await InvokeFromStringOrCache<T>(data, scriptOrFile, parameters, scriptHash);
+            }
+            else
+            {
+                result = await InvokeFromFile<T>(data, scriptOrFile, parameters);
+            }
+
             data.Logger.Log($"Executed NodeJS script with result: {result}", LogColors.PaleChestnut);
             return result;
+        }
+
+        private static async Task<T> InvokeFromStringOrCache<T>(BotData data, string script, object[] parameters, string scriptHash = null)
+        {
+            if (string.IsNullOrEmpty(scriptHash))
+            {
+                return await StaticNodeJSService.InvokeFromStringAsync<T>(
+                    script, 
+                    scriptHash, 
+                    null, 
+                    parameters, 
+                    data.CancellationToken
+                ).ConfigureAwait(false);
+            }
+
+            var (isCached, cachedResult) = await StaticNodeJSService.TryInvokeFromCacheAsync<T>(
+                scriptHash, 
+                null, 
+                parameters, 
+                data.CancellationToken
+            ).ConfigureAwait(false);
+
+            return isCached ? cachedResult : await StaticNodeJSService.InvokeFromStringAsync<T>(
+                script, 
+                scriptHash, 
+                null, 
+                parameters, 
+                data.CancellationToken
+            ).ConfigureAwait(false);
+        }
+
+        private static async Task<T> InvokeFromFile<T>(BotData data, string filePath, object[] parameters)
+        {
+            return await StaticNodeJSService.InvokeFromFileAsync<T>(
+                filePath,
+                null,
+                parameters,
+                data.CancellationToken
+            ).ConfigureAwait(false);
         }
 
         public static Engine InvokeJint(BotData data, Engine engine, string scriptFile)

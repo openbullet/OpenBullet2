@@ -27,24 +27,24 @@ namespace OpenBullet2.Native.Views.Pages
             InitializeComponent();
 
             UpdateCaptchaTabControl(vm.CurrentCaptchaService);
-            SetRTBContents();
+            SetMultiLineTextBoxContents();
         }
 
         private void CustomUserAgentsChanged(object sender, TextChangedEventArgs e)
-            => vm.UserAgents = customUserAgentsListRTB.Lines().ToList();
+            => vm.UserAgents = customUserAgentsListTextBox.Text.Split(Environment.NewLine).ToList();
 
         private void GlobalBanKeysChanged(object sender, TextChangedEventArgs e)
-            => vm.GlobalBanKeys = globalBanKeysRTB.Lines().ToList();
+            => vm.GlobalBanKeys = globalBanKeysTextBox.Text.Split(Environment.NewLine).ToList();
 
         private void GlobalRetryKeysChanged(object sender, TextChangedEventArgs e)
-            => vm.GlobalRetryKeys = globalRetryKeysRTB.Lines().ToList();
+            => vm.GlobalRetryKeys = globalRetryKeysTextBox.Text.Split(Environment.NewLine).ToList();
 
         private async void Save(object sender, RoutedEventArgs e) => await vm.Save();
 
         private void Reset(object sender, RoutedEventArgs e)
         {
             vm.Reset();
-            SetRTBContents();
+            SetMultiLineTextBoxContents();
         }
 
         private async void CheckCaptchaBalance(object sender, RoutedEventArgs e)
@@ -67,16 +67,11 @@ namespace OpenBullet2.Native.Views.Pages
             captchaServiceTabControl.SelectedIndex = index;
         }
 
-        private void SetRTBContents()
+        private void SetMultiLineTextBoxContents()
         {
-            customUserAgentsListRTB.Document.Blocks.Clear();
-            customUserAgentsListRTB.AppendText(string.Join(Environment.NewLine, vm.UserAgents), Colors.White);
-
-            globalBanKeysRTB.Document.Blocks.Clear();
-            globalBanKeysRTB.AppendText(string.Join(Environment.NewLine, vm.GlobalBanKeys), Colors.White);
-
-            globalRetryKeysRTB.Document.Blocks.Clear();
-            globalRetryKeysRTB.AppendText(string.Join(Environment.NewLine, vm.GlobalRetryKeys), Colors.White);
+            customUserAgentsListTextBox.Text = string.Join(Environment.NewLine, vm.UserAgents);
+            globalBanKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalBanKeys);
+            globalRetryKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalRetryKeys);
         }
     }
 }

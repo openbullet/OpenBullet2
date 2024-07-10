@@ -26,13 +26,13 @@ namespace OpenBullet2.Native.Views.Pages
             DataContext = vm;
 
             InitializeComponent();
-            SetRTBContents();
+            SetMultiLineTextBoxContents();
         }
 
         public void UpdateViewModel() => vm.UpdateViewModel();
 
         private void BlockedUrlsChanged(object sender, TextChangedEventArgs e)
-            => vm.BlockedUrls = blockedUrlsRTB.Lines().ToList();
+            => vm.BlockedUrls = blockedUrlsTextBox.Text.Split(Environment.NewLine).ToList();
 
         private void AddCustomInput(object sender, RoutedEventArgs e) => vm.AddCustomInput();
         private void RemoveCustomInput(object sender, RoutedEventArgs e)
@@ -48,10 +48,9 @@ namespace OpenBullet2.Native.Views.Pages
         private void RemoveDataRule(object sender, RoutedEventArgs e)
             => vm.RemoveDataRule((DataRule)(sender as Button).Tag);
 
-        private void SetRTBContents()
+        private void SetMultiLineTextBoxContents()
         {
-            blockedUrlsRTB.Document.Blocks.Clear();
-            blockedUrlsRTB.AppendText(string.Join(Environment.NewLine, vm.BlockedUrls), Colors.White);
+            blockedUrlsTextBox.Text = string.Join(Environment.NewLine, vm.BlockedUrls);
         }
 
         private void TestDataRules(object sender, RoutedEventArgs e)

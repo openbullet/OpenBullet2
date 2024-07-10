@@ -39,11 +39,11 @@
         <div class="col-auto pr-0">
             <app-input-dropdown key="wordlistType"
                 itemClass="input-small" optionClass="input-small"
-                (validityChange)="localSave()"
                 ngDefaultControl
+                [displayFunction]="invariantDisplayFunction"
                 [options]="wordlistTypes"
                 [(ngModel)]="settings.wordlistType"
-                (ngModelChange)="currentWordlistTypeChanged.emit($event)" />
+                (ngModelChange)="currentWordlistTypeChanged.emit($event); localSave()" />
             <span class="d-block mt-1 text-small color-inactive">Wordlist type</span>
         </div>
     </div>

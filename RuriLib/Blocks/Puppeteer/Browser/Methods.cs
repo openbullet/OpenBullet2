@@ -145,7 +145,13 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             data.Logger.LogHeader();
 
             var browser = GetBrowser(data);
-            var page = (await browser.PagesAsync())[index];
+            
+            // Workaround https://github.com/hardkoded/puppeteer-sharp/issues/1587
+            await browser.GetVersionAsync();
+            
+            var pages = await browser.PagesAsync();
+            var page = pages[index];
+            
             await page.BringToFrontAsync();
             SetPageAndFrame(data, page);
 

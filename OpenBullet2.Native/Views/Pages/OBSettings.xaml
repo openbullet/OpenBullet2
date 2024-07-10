@@ -148,7 +148,7 @@
                                     </Button>
                                     <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Description" />
                                     <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Description}" Height="30" Margin="5 0" />
-                                    <TextBox Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" FontFamily="Consolas" AcceptsReturn="True" Text="{Binding Body}" Margin="5" />
+                                    <TextBox Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" FontFamily="Consolas" VerticalContentAlignment="Top" AcceptsReturn="True" Text="{Binding Body}" Margin="5" />
                                 </Grid>
                             </Border>
                         </DataTemplate>

@@ -276,7 +276,8 @@
         <div class="col-12">
             <p-checkbox
                 (onChange)="touched = true" ngDefaultControl 
-                [(ngModel)]="settings.securitySettings.requireAdminLogin"
+                [ngModel]="settings.securitySettings.requireAdminLogin"
+                (ngModelChange)="changeRequireAdminLogin($event)"
                 [binary]="true" inputId="requireAdminLogin"
                 label="Require admin login" />
         </div>
