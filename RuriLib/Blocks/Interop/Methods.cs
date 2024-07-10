@@ -45,7 +45,7 @@ namespace RuriLib.Blocks.Interop
             data.Logger.LogHeader();
             T result;
 
-            if (isScript && !string.IsNullOrEmpty(scriptHash))
+            if (isScript)
             {
                 result = await InvokeFromStringOrCache<T>(data, scriptOrFile, parameters, scriptHash);
             }
@@ -58,25 +58,31 @@ namespace RuriLib.Blocks.Interop
             return result;
         }
 
-        private static async Task<T> InvokeFromStringOrCache<T>(BotData data, string script, object[] parameters, string scriptHash)
+        private static async Task<T> InvokeFromStringOrCache<T>(BotData data, string script, object[] parameters, string scriptHash = null)
         {
+            if (string.IsNullOrEmpty(scriptHash))
+            {
+                return await StaticNodeJSService.InvokeFromStringAsync<T>(
+                    script, 
+                    scriptHash, 
+                    null, 
+                    parameters, 
+                    data.CancellationToken
+                ).ConfigureAwait(false);
+            }
+
             var (isCached, cachedResult) = await StaticNodeJSService.TryInvokeFromCacheAsync<T>(
-                scriptHash,
-                null,
-                parameters,
+                scriptHash, 
+                null, 
+                parameters, 
                 data.CancellationToken
             ).ConfigureAwait(false);
 
-            if (isCached)
-            {
-                return cachedResult;
-            }
-
-            return await StaticNodeJSService.InvokeFromStringAsync<T>(
-                script,
-                scriptHash,
-                null,
-                parameters,
+            return isCached ? cachedResult : await StaticNodeJSService.InvokeFromStringAsync<T>(
+                script, 
+                scriptHash, 
+                null, 
+                parameters, 
                 data.CancellationToken
             ).ConfigureAwait(false);
         }
