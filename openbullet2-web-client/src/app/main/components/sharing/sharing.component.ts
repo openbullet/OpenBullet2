@@ -13,6 +13,7 @@ import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
 import { EndpointDto } from '../../dtos/sharing/endpoint.dto';
 import { ConfigService } from '../../services/config.service';
 import { SharingService } from '../../services/sharing.service';
+import { randomString } from 'src/app/shared/utils/strings';
 
 @Component({
   selector: 'app-sharing',
@@ -42,7 +43,7 @@ export class SharingComponent implements OnInit {
     private configService: ConfigService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshConfigs();
@@ -143,7 +144,7 @@ export class SharingComponent implements OnInit {
   }
 
   generateApiKey(endpoint: EndpointDto) {
-    endpoint.apiKeys.push(crypto.randomUUID());
+    endpoint.apiKeys.push(randomString(20));
   }
 
   removeApiKey(endpoint: EndpointDto, apiKey: string) {

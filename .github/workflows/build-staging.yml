@@ -6,8 +6,20 @@ on:
     - 'staging'
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Unit and integration tests
+      run: dotnet test
+
   build:
     runs-on: ubuntu-latest
+    needs: test
     # Only run if the commit message contains the string [build]
     if: contains(github.event.head_commit.message, '[build]')
     steps:
@@ -22,9 +34,13 @@ jobs:
     - name: Get commit number
       run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
 
-    # Append the commit number to version.txt
+    # Append the commit number to version.txt of the web client
     - name: Append commit number to version.txt
       run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Web/version.txt
+
+    # Append the commit number to version.txt of the native client
+    - name: Append commit number to version.txt
+      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Native/version.txt
 
     # Get the commit description
     - name: Get commit description

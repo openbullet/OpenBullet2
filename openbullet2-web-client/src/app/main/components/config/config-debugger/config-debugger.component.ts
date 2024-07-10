@@ -76,11 +76,12 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     this.wordlistTypes = this.envSettings.wordlistTypes.map((t) => t.name);
     this.settings = this.debuggerSettingsService.loadLocalSettings();
 
-    // Set the first wordlist type as the current one, so if the user
-    // moves their favourite wordlist type to the top of Environment.ini,
-    // it will be selected by default
-    this.settings.wordlistType = this.wordlistTypes[0];
-    this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
+    // If the current wordlist type is null or not in the list,
+    // set it to the first one in the list
+    if (this.settings?.wordlistType !== null && !this.wordlistTypes.includes(this.settings.wordlistType)) {
+      this.settings.wordlistType = this.wordlistTypes[0];
+      this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
+    }
 
     this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
       // Request the current state
@@ -232,5 +233,9 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       default:
         return '[UNKNOWN TYPE]';
     }
+  }
+
+  invariantDisplayFunction(x: string) {
+    return x;
   }
 }

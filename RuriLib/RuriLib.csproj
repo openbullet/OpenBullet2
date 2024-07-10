@@ -15,7 +15,7 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
-    <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.4" />
+    <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
     <PackageReference Include="Jint" Version="3.1.2" />
     <PackageReference Include="JWT" Version="10.1.1" />
     <PackageReference Include="MailKit" Version="4.6.0" />

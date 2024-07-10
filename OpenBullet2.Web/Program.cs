@@ -266,15 +266,18 @@ app.MapFallbackToController(
 );
 
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>().Settings;
+var updateService = app.Services.GetRequiredService<IUpdateService>();
 
 Console.ForegroundColor = ConsoleColor.White;
-Console.WriteLine("""
+Console.WriteLine($"""
                      ____                   ____        ____     __     ___ 
                     / __ \____  ___  ____  / __ )__  __/ / /__  / /_   |__ \
                    / / / / __ \/ _ \/ __ \/ __  / / / / / / _ \/ __/   __/ /
                   / /_/ / /_/ /  __/ / / / /_/ / /_/ / / /  __/ /_    / __/ 
                   \____/ .___/\___/_/ /_/_____/\__,_/_/_/\___/\__/   /____/ 
                       /_/                                                                               
+                      
+                  v{updateService.CurrentVersion} [{updateService.CurrentVersionType}]    
                   """);
 Console.ForegroundColor = ConsoleColor.Red;
 Console.WriteLine("""
