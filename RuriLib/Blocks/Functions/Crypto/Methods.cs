@@ -217,7 +217,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         }
 
         [Block("Generates a JSON Web Token using a secret key, payload, optional extra headers and specified algorithm type",
-            name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default")]
+            name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default. For JWTs using asymmetric key signatures, the secret must be provided in PEM format.")]
         public static string JwtEncode(BotData data, JwtAlgorithmName algorithm, string secret, string extraHeaders = "{}", string payload = "{}")
         {
             var extraHeadersDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(extraHeaders);
