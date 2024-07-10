@@ -101,7 +101,7 @@ jobs:
         wait-timeout-minutes: 5
   
   docker:
-    name: Push Docker image to Docker Hub
+    name: Build and Push Docker image to Docker Hub
     needs: build
     runs-on: ubuntu-latest
     steps:
