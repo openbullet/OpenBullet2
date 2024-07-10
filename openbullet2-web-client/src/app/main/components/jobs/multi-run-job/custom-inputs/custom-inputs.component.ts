@@ -16,7 +16,7 @@ export class CustomInputsComponent implements OnInit {
     this.answers = this.questions.map(q => {
       return {
         variableName: q.variableName,
-        answer: q.currentAnswer ?? '',
+        answer: q.currentAnswer ?? this.getDefaultAnswer(q)
       };
     });
   }
@@ -33,5 +33,17 @@ export class CustomInputsComponent implements OnInit {
   getSuggestions(question: CustomInputQuestionDto): string[] {
     return question.defaultAnswer.split(',').map(s => s.trim())
       .filter(s => s.length > 0);
+  }
+
+  getDefaultAnswer(question: CustomInputQuestionDto): string {
+    // If the default answer is a comma separated list, return the first element
+    const suggestions = this.getSuggestions(question);
+
+    if (suggestions.length > 0) {
+      return suggestions[0];
+    }
+
+    // Otherwise, return the default answer
+    return question.defaultAnswer;
   }
 }
