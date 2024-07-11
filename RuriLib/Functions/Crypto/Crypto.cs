@@ -628,6 +628,7 @@ namespace RuriLib.Functions.Crypto
         {
             IJwtAlgorithm algorithm = null;
             RSA rsa = null;
+            ECDsa ecdsa = null;
             try
             {
                 switch (algorithmName)
@@ -671,6 +672,21 @@ namespace RuriLib.Functions.Crypto
                         rsa.ImportFromPem(secret.ToCharArray());
                         algorithm = new RS4096Algorithm(rsa, rsa);
                         break;
+                    case JwtAlgorithmName.ES256:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES256Algorithm(ecdsa, ecdsa);
+                        break;
+                    case JwtAlgorithmName.ES384:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES384Algorithm(ecdsa, ecdsa);
+                        break;
+                    case JwtAlgorithmName.ES512:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES512Algorithm(ecdsa, ecdsa);
+                        break;
                     default:
                         throw new NotSupportedException("This algorithm is not supported at the moment");
                 }
@@ -684,6 +700,7 @@ namespace RuriLib.Functions.Crypto
             finally
             {
                 rsa?.Dispose();
+                ecdsa?.Dispose();
             }
         }
         #endregion
