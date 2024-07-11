@@ -9,7 +9,7 @@ services:
         # You can set a windows dir like 'C:/OB2/UserData/:/app/UserData/' but it will always be 'local dir:docker dir'
             - './UserData:/app/UserData/'
         ports:
-            - '8069:5000'
+            - '5000:5000'
 
 volumes:
     UserData:
