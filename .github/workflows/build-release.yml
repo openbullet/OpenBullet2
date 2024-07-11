@@ -129,5 +129,5 @@ jobs:
       with:
         push: true
         file: ./Dockerfile.remote
-        platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
+        platforms: linux/arm64/v8,linux/amd64
         tags: openbullet/openbullet2:latest,openbullet/openbullet2:${{ env.VERSION }}
