@@ -1,3 +1,6 @@
+# This Dockerfile is meant to be run locally to build the OpenBullet2 project
+# for normal usage via docker.
+
 # -------
 # BACKEND
 # -------
@@ -62,8 +65,5 @@ RUN webdrivermanager firefox chrome --linkpath /usr/local/bin || true
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-
 EXPOSE 5000
 CMD ["dotnet", "./OpenBullet2.Web.dll", "--urls=http://*:5000"]
-    

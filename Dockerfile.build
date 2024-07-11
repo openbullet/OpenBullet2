@@ -1,3 +1,5 @@
+# This Dockerfile is meant to be run in a CI/CD pipeline to build the OpenBullet2 project.
+
 # -------
 # BACKEND
 # -------
