@@ -6,6 +6,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS backend
 WORKDIR /code
 
 COPY . .
+
+#Disable Beauty to avoid Errors
+RUN sed -i 's/<DisableBeauty>False<\/DisableBeauty>/<DisableBeauty>True<\/DisableBeauty>/' OpenBullet2.Web/OpenBullet2.Web.csproj
+
 RUN dotnet publish OpenBullet2.Web -c Release -o /build
 
 WORKDIR /build
