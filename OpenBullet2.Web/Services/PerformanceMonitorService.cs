@@ -142,20 +142,27 @@ public class PerformanceMonitorService : IHostedService
 
     private static async Task<(long upload, long download)> ReadNetworkUsage()
     {
-        if (!NetworkInterface.GetIsNetworkAvailable())
+        try
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                return (0, 0);
+            }
+            
+            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            var startUpload = GetCurrentNetUpload(interfaces);
+            var startDownload = GetCurrentNetDownload(interfaces);
+
+            await Task.Delay(100);
+
+            var netUpload = GetCurrentNetUpload(interfaces) - startUpload;
+            var netDownload = GetCurrentNetDownload(interfaces) - startDownload;
+            return (netUpload * 10, netDownload * 10);    
+        }
+        catch
         {
             return (0, 0);
         }
-
-        var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-        var startUpload = GetCurrentNetUpload(interfaces);
-        var startDownload = GetCurrentNetDownload(interfaces);
-
-        await Task.Delay(100);
-
-        var netUpload = GetCurrentNetUpload(interfaces) - startUpload;
-        var netDownload = GetCurrentNetDownload(interfaces) - startDownload;
-        return (netUpload * 10, netDownload * 10);
     }
 
     private static long GetCurrentNetUpload(NetworkInterface[] interfaces)
