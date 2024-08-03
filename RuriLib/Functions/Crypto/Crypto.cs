@@ -626,19 +626,82 @@ namespace RuriLib.Functions.Crypto
         #region JWT
         public static string JwtEncode(JwtAlgorithmName algorithmName, string secret, IDictionary<string, object> extraHeaders, IDictionary<string, object> payload)
         {
-            IJwtAlgorithm algorithm = algorithmName switch
+            IJwtAlgorithm algorithm = null;
+            RSA rsa = null;
+            ECDsa ecdsa = null;
+            try
             {
-                JwtAlgorithmName.HS256 => new HMACSHA256Algorithm(),
-                JwtAlgorithmName.HS384 => new HMACSHA384Algorithm(),
-                JwtAlgorithmName.HS512 => new HMACSHA512Algorithm(),
-                _ => throw new NotSupportedException("This algorithm is not supported at the moment")
-            };
-
-            var jsonSerializer = new JsonNetSerializer();
-            var urlEncoder = new JwtBase64UrlEncoder();
-            var jwtEncoder = new JwtEncoder(algorithm, jsonSerializer, urlEncoder);
-
-            return jwtEncoder.Encode(extraHeaders, payload, secret);
+                switch (algorithmName)
+                {
+                    case JwtAlgorithmName.HS256:
+                        algorithm = new HMACSHA256Algorithm();
+                        break;
+                    case JwtAlgorithmName.HS384:
+                        algorithm = new HMACSHA384Algorithm();
+                        break;
+                    case JwtAlgorithmName.HS512:
+                        algorithm = new HMACSHA512Algorithm();
+                        break;
+                    case JwtAlgorithmName.RS256:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS256Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.RS384:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS384Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.RS512:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS512Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.RS1024:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS1024Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.RS2048:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS2048Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.RS4096:
+                        rsa = RSA.Create();
+                        rsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new RS4096Algorithm(rsa, rsa);
+                        break;
+                    case JwtAlgorithmName.ES256:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES256Algorithm(ecdsa, ecdsa);
+                        break;
+                    case JwtAlgorithmName.ES384:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES384Algorithm(ecdsa, ecdsa);
+                        break;
+                    case JwtAlgorithmName.ES512:
+                        ecdsa = ECDsa.Create();
+                        ecdsa.ImportFromPem(secret.ToCharArray());
+                        algorithm = new ES512Algorithm(ecdsa, ecdsa);
+                        break;
+                    default:
+                        throw new NotSupportedException("This algorithm is not supported at the moment");
+                }
+            
+                var jsonSerializer = new JsonNetSerializer();
+                var urlEncoder = new JwtBase64UrlEncoder();
+                var jwtEncoder = new JwtEncoder(algorithm, jsonSerializer, urlEncoder);
+            
+                return jwtEncoder.Encode(extraHeaders, payload, secret);
+            }
+            finally
+            {
+                rsa?.Dispose();
+                ecdsa?.Dispose();
+            }
         }
         #endregion
 

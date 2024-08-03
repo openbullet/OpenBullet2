@@ -1,4 +1,4 @@
-﻿using IronPython.Compiler;
+using IronPython.Compiler;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using PuppeteerSharp;

@@ -1,4 +1,5 @@
-﻿using RuriLib.Exceptions;
+using Newtonsoft.Json;
+using RuriLib.Exceptions;
 using RuriLib.Extensions;
 using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Crypto;
@@ -150,7 +151,7 @@ namespace RuriLib.Models.Blocks.Custom
 
                     if (!File.Exists(scriptPath))
                         File.WriteAllText(scriptPath, Script);
-                    
+
                     writer.WriteLine($"var {engineName} = new Engine();");
 
                     if (!string.IsNullOrWhiteSpace(InputVariables))
@@ -175,23 +176,18 @@ namespace RuriLib.Models.Blocks.Custom
 
                 case Interpreter.NodeJS:
                     var nodeScript = @$"module.exports = async ({MakeInputs()}) => {{
-{Script}
-var noderesult = {{
-{MakeNodeObject()}
-}};
-return noderesult;
-}}";
+                        {Script}
+                        var noderesult = {{
+                        {MakeNodeObject()}
+                        }};
+                        return noderesult;
+                        }}";
 
                     scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(nodeScript)));
-                    scriptPath = $"Scripts/{scriptHash}.{GetScriptFileExtension(Interpreter)}";
 
-                    if (!Directory.Exists("Scripts"))
-                        Directory.CreateDirectory("Scripts");
+                    string escapedScript = JsonConvert.ToString(nodeScript);
 
-                    if (!File.Exists(scriptPath))
-                        File.WriteAllText(scriptPath, nodeScript);
-
-                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, \"{scriptPath}\", new object[] {{ {InputVariables} }});");
+                    writer.WriteLine($"var {resultName} = await InvokeNode<dynamic>(data, {escapedScript}, new object[] {{ {InputVariables} }}, true, \"{scriptHash}\");");
 
                     foreach (var output in OutputVariables)
                     {
