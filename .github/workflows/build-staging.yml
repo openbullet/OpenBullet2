@@ -93,7 +93,7 @@ jobs:
         file_glob: true
         release_name: ${{ env.VERSION }}
         tag: ${{ env.VERSION }}
-        overwrite: true
+        overwrite: false
         prerelease: true
         make_latest: true
         # Show ONLY the commit description in the release (without)
