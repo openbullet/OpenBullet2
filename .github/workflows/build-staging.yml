@@ -51,7 +51,7 @@ jobs:
 
     # Read the version
     - name: Read version
-      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
+      run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
     # Build using docker
     - name: Build using docker
