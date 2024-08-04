@@ -9,19 +9,28 @@ export enum CaptchaServiceType {
   AntiCaptcha = 'antiCaptcha',
   CustomTwoCaptcha = 'customTwoCaptcha',
   DeathByCaptcha = 'deathByCaptcha',
-  DeCaptcher = 'deCaptcher',
+  CaptchaCoder = 'captchaCoder',
   ImageTyperz = 'imageTyperz',
   CapMonster = 'capMonster',
   AzCaptcha = 'azCaptcha',
-  CaptchasIO = 'captchasIO',
+  CaptchasIo = 'captchasIo',
   RuCaptcha = 'ruCaptcha',
   SolveCaptcha = 'solveCaptcha',
-  SolveRecaptcha = 'solveRecaptcha',
   TrueCaptcha = 'trueCaptcha',
-  NineKW = 'nineKW',
+  NineKw = 'nineKw',
   CustomAntiCaptcha = 'customAntiCaptcha',
-  AnyCaptcha = 'anyCaptcha',
   CapSolver = 'capSolver',
+  CapMonsterCloud = 'capMonsterCloud',
+  HumanCoder = 'humanCoder',
+  Nopecha = 'nopecha',
+  NoCaptchaAi = 'noCaptchaAi',
+  MetaBypassTech = 'metaBypassTech',
+  CaptchaAi = 'captchaAi',
+  NextCaptcha = 'nextCaptcha',
+  EzCaptcha = 'ezCaptcha',
+  EndCaptcha = 'endCaptcha',
+  BestCaptchaSolver = 'bestCaptchaSolver',
+  CapGuru = 'capGuru',
 }
 
 export enum BrowserType {
@@ -64,12 +73,11 @@ export interface CaptchaRLSettings {
   customTwoCaptchaPort: number;
   deathByCaptchaUsername: string;
   deathByCaptchaPassword: string;
-  deCaptcherUsername: string;
-  deCaptcherPassword: string;
+  captchaCoderApiKey: string;
+  humanCoderApiKey: string;
   imageTyperzApiKey: string;
   ruCaptchaApiKey: string;
   solveCaptchaApiKey: string;
-  solveRecaptchaApiKey: string;
   trueCaptchaUsername: string;
   trueCaptchaApiKey: string;
   twoCaptchaApiKey: string;
@@ -77,8 +85,21 @@ export interface CaptchaRLSettings {
   customAntiCaptchaApiKey: string;
   customAntiCaptchaDomain: string;
   customAntiCaptchaPort: number;
-  anyCaptchaApiKey: string;
   capSolverApiKey: string;
+  capMonsterCloudApiKey: string;
+  metaBypassTechClientId: string;
+  metaBypassTechClientSecret: string;
+  metaBypassTechUsername: string;
+  metaBypassTechPassword: string;
+  nextCaptchaApiKey: string;
+  noCaptchaAiApiKey: string;
+  nopechaApiKey: string;
+  bestCaptchaSolverApiKey: string;
+  captchaAiApiKey: string;
+  ezCaptchaApiKey: string;
+  endCaptchaUsername: string;
+  endCaptchaPassword: string;
+  capGuruApiKey: string;
 }
 
 export interface ProxyRLSettings {
