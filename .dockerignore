@@ -1,1 +1,13 @@
+Changelog/
+.github
+.git
+.gitignore
+.dockerignore
+Dockerfile
+Dockerfile.build
+Dockerfile.remote
+docker-compose.yml
+CONTRIBUTORS.md
+LICENSE
+README.md
 openbullet2-web-client/node_modules

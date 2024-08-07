@@ -51,19 +51,35 @@ COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
 # Install dependencies
-RUN apt-get update -yq && apt-get install -y --no-install-recommends apt-utils
-RUN apt-get upgrade -yq && apt-get install -yq apt-utils curl git nano wget unzip python3 python3-pip
+RUN echo "deb http://deb.debian.org/debian/ unstable main contrib non-free" >> /etc/apt/sources.list.d/debian.list \
+ && apt-get update -yq \
+ && apt-get install -y --no-install-recommends \
+    apt-utils \
+ && apt-get upgrade -yq \
+ && apt-get install -yq \
+    curl \
+    wget \
+    unzip \
+    git \
+    python3 \
+    python3-pip
 
 # Setup nodejs
-RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - && apt-get install -yq nodejs build-essential
-RUN echo "deb http://deb.debian.org/debian/ unstable main contrib non-free" >> /etc/apt/sources.list.d/debian.list
+RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - \
+ && apt-get install -yq \
+    nodejs \
+    build-essential
 
 # Install chromium and firefox for selenium and puppeteer
-RUN apt-get update -yq && apt-get install -y --no-install-recommends firefox chromium
-RUN pip3 install webdrivermanager || true
-RUN webdrivermanager firefox chrome --linkpath /usr/local/bin || true
+RUN apt-get update -yq && apt-get install -y --no-install-recommends firefox chromium \
+ && pip3 install webdrivermanager || true \
+ && webdrivermanager firefox chrome --linkpath /usr/local/bin || true
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Clean up
+RUN apt-get remove curl wget unzip --yes \
+&& apt-get clean autoclean --yes \
+&& apt-get autoremove --yes \
+&& rm -rf /var/cache/apt/archives* /var/lib/apt/lists/*
 
 EXPOSE 5000
 CMD ["dotnet", "./OpenBullet2.Web.dll", "--urls=http://*:5000"]
