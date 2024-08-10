@@ -67,7 +67,9 @@
         <div class="row mt-2" *ngFor="let setting of Object.values(block.settings)">
             <div class="col-12 px-0">
                 <div class="mb-1">
-                    <span class="text-small">
+                    <span
+                        *ngIf="setting.type !== BlockSettingType.Bool"
+                        class="text-small">
                         {{setting.name | pascalcase}} {{setting.type === BlockSettingType.ByteArray ? '(Base 64)' : ''}}
                     </span>
                     <app-bool-setting
