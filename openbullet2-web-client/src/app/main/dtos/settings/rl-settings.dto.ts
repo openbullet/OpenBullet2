@@ -85,7 +85,6 @@ export interface CaptchaRLSettings {
   customAntiCaptchaApiKey: string;
   customAntiCaptchaDomain: string;
   customAntiCaptchaPort: number;
-  capSolverApiKey: string;
   capMonsterCloudApiKey: string;
   metaBypassTechClientId: string;
   metaBypassTechClientSecret: string;

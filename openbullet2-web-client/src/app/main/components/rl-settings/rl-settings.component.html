@@ -411,13 +411,7 @@
     </div>
     <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapSolver">
         <div class="col-12">
-            <span class="mr-2">CapSolver API Key</span>
-            <app-input-text key="capSolverApiKey"
-                class="input-small" [style]="{ width: '600px' }"
-                (touched)="touched = true" ngDefaultControl
-                (validityChange)="onValidityChange($event)"
-                [(ngModel)]="settings.captchaSettings.capSolverApiKey"
-                placeholder="API_KEY" />
+            <span class="mr-2 color-bad">CapSolver itself explicitly asked to be removed from the software. Please choose another service.</span>
         </div>
     </div>
     <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapMonsterCloud">

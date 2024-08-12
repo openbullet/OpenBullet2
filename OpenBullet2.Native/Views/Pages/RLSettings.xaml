@@ -342,9 +342,7 @@
                     <TabItem>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                                <Label>Api Key</Label>
-                                <TextBox Text="{Binding CapSolverApiKey}"
-                                Width="400"></TextBox>
+                                <TextBlock Foreground="{DynamicResource ForegroundBad}">CapSolver itself explicitly asked to be removed from the software. Please choose another service.</TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </TabItem>

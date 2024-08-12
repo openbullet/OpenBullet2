@@ -414,17 +414,7 @@ public class RLSettingsViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-
-    public string CapSolverApiKey
-    {
-        get => Captcha.CapSolverApiKey;
-        set
-        {
-            Captcha.CapSolverApiKey = value;
-            OnPropertyChanged();
-        }
-    }
-        
+    
     public string CapMonsterCloudApiKey
     {
         get => Captcha.CapMonsterCloudApiKey;

@@ -31,7 +31,8 @@ public class CaptchaServiceFactory
             CaptchaServiceType.NineKw => new NineKwService(settings.NineKWApiKey),
             CaptchaServiceType.CustomAntiCaptcha => new CustomAntiCaptchaService(settings.CustomAntiCaptchaApiKey,
                 GetUri(settings.CustomAntiCaptchaDomain, settings.CustomAntiCaptchaPort)),
-            CaptchaServiceType.CapSolver => new CapSolverService(settings.CapSolverApiKey),
+            CaptchaServiceType.CapSolver => throw new NotSupportedException(
+                "CapSolver itself explicitly asked to be removed from the software. Please choose another service."),
             CaptchaServiceType.CapMonsterCloud => new CapMonsterCloudService(settings.CapMonsterCloudApiKey),
             CaptchaServiceType.HumanCoder => new HumanCoderService(settings.HumanCoderApiKey),
             CaptchaServiceType.Nopecha => new NopechaService(settings.NopechaApiKey),

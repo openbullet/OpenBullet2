@@ -32,7 +32,6 @@ public class CaptchaSettings
     public string CustomAntiCaptchaApiKey { get; set; } = "";
     public string CustomAntiCaptchaDomain { get; set; } = "";
     public int CustomAntiCaptchaPort { get; set; } = 80;
-    public string CapSolverApiKey { get; set; } = "";
     public string CapMonsterCloudApiKey { get; set; } = "";
     public string MetaBypassTechClientId { get; set; } = "";
     public string MetaBypassTechClientSecret { get; set; } = "";
