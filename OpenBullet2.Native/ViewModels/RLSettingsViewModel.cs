@@ -554,6 +554,16 @@ public class RLSettingsViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    
+    public string AycdApiKey
+    {
+        get => Captcha.AycdApiKey;
+        set
+        {
+            Captcha.AycdApiKey = value;
+            OnPropertyChanged();
+        }
+    }
 
     public string PuppeteerChromeBinaryLocation
     {

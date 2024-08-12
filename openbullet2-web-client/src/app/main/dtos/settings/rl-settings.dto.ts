@@ -31,6 +31,7 @@ export enum CaptchaServiceType {
   EndCaptcha = 'endCaptcha',
   BestCaptchaSolver = 'bestCaptchaSolver',
   CapGuru = 'capGuru',
+  Aycd = 'aycd',
 }
 
 export enum BrowserType {
@@ -99,6 +100,7 @@ export interface CaptchaRLSettings {
   endCaptchaUsername: string;
   endCaptchaPassword: string;
   capGuruApiKey: string;
+  aycdApiKey: string;
 }
 
 export interface ProxyRLSettings {

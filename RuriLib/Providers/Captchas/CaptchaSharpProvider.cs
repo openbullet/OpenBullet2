@@ -130,6 +130,10 @@ public class CaptchaSharpProvider : ICaptchaProvider
         string captchaId, string siteUrl, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
         => _service.SolveGeeTestV4Async(captchaId, siteUrl, sessionParams, cancellationToken);
     
+    public Task<StringResponse> SolveCloudflareChallengePageAsync(
+        string siteUrl, string pageHtml, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+        => _service.SolveCloudflareChallengePageAsync(siteUrl, pageHtml, sessionParams, cancellationToken);
+    
     public Task ReportSolutionAsync(string captchaId, CaptchaType type, bool correct,
         CancellationToken cancellationToken = default)
         => _service.ReportSolutionAsync(captchaId, type, correct, cancellationToken);

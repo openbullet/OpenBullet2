@@ -46,4 +46,5 @@ public class CaptchaSettings
     public string EndCaptchaUsername { get; set; } = "";
     public string EndCaptchaPassword { get; set; } = "";
     public string CapGuruApiKey { get; set; } = "";
+    public string AycdApiKey { get; set; } = "";
 }

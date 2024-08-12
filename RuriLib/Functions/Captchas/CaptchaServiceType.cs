@@ -85,4 +85,7 @@ public enum CaptchaServiceType
         
     /// <summary>The service provided by https://cap.guru/</summary>
     CapGuru = 27,
+    
+    /// <summary>The service provided by https://aycd.io/</summary>
+    Aycd = 28,
 }

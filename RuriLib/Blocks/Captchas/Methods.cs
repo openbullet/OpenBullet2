@@ -414,14 +414,14 @@ public static class Methods
         extraInfo =
             "The response will be a list and its elements are (in order) captcha id, lot number, pass token, gen time, captcha output")]
     public static async Task<List<string>> SolveGeeTestV4Captcha(BotData data, string captchaId,
-        string siteUrl, string userAgent =
+        string siteUrl, bool useProxy = false, string userAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36")
     {
         data.Logger.LogHeader();
         await CheckBalanceAsync(data).ConfigureAwait(false);
         
         var response = await data.Providers.Captcha.SolveGeeTestV4Async(captchaId, siteUrl,
-            CreateSessionParams(data, useProxy: false, userAgent), data.CancellationToken).ConfigureAwait(false);
+            CreateSessionParams(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
         
         AddCaptchaId(data, response.Id, CaptchaType.GeeTestV4);
         data.Logger.Log("Got solution!", LogColors.ElectricBlue);
@@ -431,6 +431,24 @@ public static class Methods
         data.Logger.Log($"Gen Time: {response.GenTime}", LogColors.ElectricBlue);
         data.Logger.Log($"Captcha Output: {response.CaptchaOutput}", LogColors.ElectricBlue);
         return [response.CaptchaId, response.LotNumber, response.PassToken, response.GenTime, response.CaptchaOutput];
+    }
+
+    [Block("Solves a Cloudflare Challenge page",
+        extraInfo = "The response will contain the value of the cf_clearance cookie")]
+    public static async Task<string> SolveCloudflareChallengePage(BotData data,
+        string siteUrl, string pageHtml, bool useProxy = false, string userAgent =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36")
+    {
+        data.Logger.LogHeader();
+        await CheckBalanceAsync(data).ConfigureAwait(false);
+        
+        var response = await data.Providers.Captcha.SolveCloudflareChallengePageAsync(
+            siteUrl, pageHtml,
+            CreateSessionParams(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
+        
+        AddCaptchaId(data, response.Id, CaptchaType.CloudflareChallengePage);
+        data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
+        return response.Response;
     }
 
     [Block("Reports an incorrectly solved captcha to the service in order to get funds back")]

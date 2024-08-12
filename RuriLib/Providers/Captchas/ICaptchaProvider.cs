@@ -113,6 +113,10 @@ public interface ICaptchaProvider
         string captchaId, string siteUrl,
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default);
 
+    Task<StringResponse> SolveCloudflareChallengePageAsync(
+        string siteUrl, string pageHtml,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default);
+
     Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default);
 }

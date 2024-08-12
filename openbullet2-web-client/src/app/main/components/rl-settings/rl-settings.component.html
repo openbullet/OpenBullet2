@@ -565,6 +565,17 @@
                 placeholder="API_KEY" />
         </div>
     </div>
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.Aycd">
+        <div class="col-12">
+            <span class="mr-2">AYCD API Key</span>
+            <app-input-text key="aycdApiKey"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.captchaSettings.aycdApiKey"
+                placeholder="API_KEY" />
+        </div>
+    </div>
     <div class="row my-3">
         <div class="col-12">
             <button class="button button-secondary"

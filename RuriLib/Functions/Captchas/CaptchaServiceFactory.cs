@@ -45,6 +45,7 @@ public class CaptchaServiceFactory
             CaptchaServiceType.EndCaptcha => new EndCaptchaService(settings.EndCaptchaUsername, settings.EndCaptchaPassword),
             CaptchaServiceType.BestCaptchaSolver => new BestCaptchaSolverService(settings.BestCaptchaSolverApiKey),
             CaptchaServiceType.CapGuru => new CapGuruService(settings.CapGuruApiKey),
+            CaptchaServiceType.Aycd => new AycdService(settings.AycdApiKey),
             _ => throw new NotSupportedException(),
         };
 

@@ -74,6 +74,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     CaptchaServiceType.EndCaptcha,
     CaptchaServiceType.BestCaptchaSolver,
     CaptchaServiceType.CapGuru,
+    CaptchaServiceType.Aycd,
   ];
   CaptchaServiceType = CaptchaServiceType;
 
