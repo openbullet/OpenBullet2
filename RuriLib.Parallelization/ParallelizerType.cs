@@ -1,23 +1,22 @@
-﻿namespace RuriLib.Parallelization
+﻿namespace RuriLib.Parallelization;
+
+/// <summary>
+/// The types of parallelizing techniques available.
+/// </summary>
+public enum ParallelizerType
 {
     /// <summary>
-    /// The types of parallelizing techniques available.
+    /// Uses tasks to parallelize work.
     /// </summary>
-    public enum ParallelizerType
-    {
-        /// <summary>
-        /// Uses tasks to parallelize work.
-        /// </summary>
-        TaskBased,
+    TaskBased,
 
-        /// <summary>
-        /// Uses threads to parallelize work.
-        /// </summary>
-        ThreadBased,
+    /// <summary>
+    /// Uses threads to parallelize work.
+    /// </summary>
+    ThreadBased,
 
-        /// <summary>
-        /// Uses Parallel.ForEachAsync to parallelize work.
-        /// </summary>
-        ParallelBased
-    }
+    /// <summary>
+    /// Uses Parallel.ForEachAsync to parallelize work.
+    /// </summary>
+    ParallelBased
 }
