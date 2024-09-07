@@ -4,12 +4,10 @@ using System.Net;
 using System.Text;
 using System.Net.Http;
 using System.Threading;
-using System.Net.Sockets;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using RuriLib.Http.Helpers;
-using RuriLib.Http;
 using System.IO.Pipelines;
 using System.Buffers;
 
@@ -219,7 +217,7 @@ namespace RuriLib.Http
             if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
                 headerName.Equals("Set-Cookie2", StringComparison.OrdinalIgnoreCase))
             {
-                SetCookie(headerValue);
+                SetCookies(headerValue, cookies, uri);
             }
             // If it's a content header
             else if (ContentHelper.IsContentHeader(headerName))
@@ -243,8 +241,25 @@ namespace RuriLib.Http
                 response.Headers.TryAddWithoutValidation(headerName, headerValue);
             }
         }
-        // Sets the value of a cookie
-        private void SetCookie(string value)
+
+        /// <summary>
+        /// Sets a list of comma-separated cookies.
+        /// </summary>
+        internal static void SetCookies(string value, CookieContainer cookies, Uri uri)
+        {
+            // Cookie values, as per the RFC, cannot contain commas. A comma is used
+            // to separate multiple cookies in the same Set-Cookie header. So, we split
+            // the header by commas and set each cookie individually.
+            foreach (var cookie in value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                SetCookie(cookie, cookies, uri);
+            }
+        }
+        
+        /// <summary>
+        /// Sets a single cookie.
+        /// </summary>
+        internal static void SetCookie(string value, CookieContainer cookies, Uri uri)
         {
             if (value.Length == 0)
             {
@@ -261,7 +276,7 @@ namespace RuriLib.Http
             }
 
             string cookieValue;
-            var cookieName = value.Substring(0, separatorPos);
+            var cookieName = value[..separatorPos];
 
             if (endCookiePos == -1)
             {
@@ -273,7 +288,7 @@ namespace RuriLib.Http
 
                 #region Get Expiration Time
 
-                var expiresPos = value.IndexOf("expires=");
+                var expiresPos = value.IndexOf("expires=", StringComparison.OrdinalIgnoreCase);
 
                 if (expiresPos != -1)
                 {
