@@ -197,7 +197,7 @@ namespace RuriLib.Models.Blocks.Custom
                             definedVariables.Add(output.Name);
                         }
 
-                        writer.WriteLine($"{output.Name} = {resultName}.GetProperty(\"{output.Name}\").{GetNodeMethod(output.Type)};");
+                        writer.WriteLine($"{output.Name} = {GetNodeMethod(resultName, output)};");
                     }
 
                     break;
@@ -249,16 +249,16 @@ namespace RuriLib.Models.Blocks.Custom
             return writer.ToString();
         }
 
-        private string GetNodeMethod(VariableType type)
+        private string GetNodeMethod(string resultName, OutputVariable output)
         {
-            return type switch
+            return output.Type switch
             {
-                VariableType.Bool => "GetBoolean()",
-                VariableType.ByteArray => "GetBytesFromBase64()",
-                VariableType.Float => "GetSingle()",
-                VariableType.Int => "GetInt32()",
-                VariableType.ListOfStrings => "EnumerateArray().Select(e => e.GetString()).ToList()",
-                VariableType.String => "ToString()",
+                VariableType.Bool => $"{resultName}.GetProperty(\"{output.Name}\").GetBoolean()",
+                VariableType.ByteArray => $"{resultName}.GetProperty(\"{output.Name}\").GetBytesFromBase64()",
+                VariableType.Float => $"{resultName}.GetProperty(\"{output.Name}\").GetSingle()",
+                VariableType.Int => $"{resultName}.GetProperty(\"{output.Name}\").GetInt32()",
+                VariableType.ListOfStrings => $"((IEnumerable<System.Text.Json.JsonElement>){resultName}.GetProperty(\"{output.Name}\").EnumerateArray()).Select(e => e.GetString()).ToList()",
+                VariableType.String => $"{resultName}.GetProperty(\"{output.Name}\").ToString()",
                 _ => throw new NotImplementedException() // Dictionary not implemented yet
             };
         }
