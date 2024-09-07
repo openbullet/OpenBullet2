@@ -34,7 +34,7 @@ jobs:
         
     # Read the version
     - name: Read version
-      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
+      run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
     # Build using docker
     - name: Build using docker
@@ -72,7 +72,7 @@ jobs:
         file_glob: true
         release_name: ${{ env.VERSION }}
         tag: ${{ env.VERSION }}
-        overwrite: true
+        overwrite: false
         prerelease: false
         make_latest: true
         # Show ONLY the commit description in the release (without)

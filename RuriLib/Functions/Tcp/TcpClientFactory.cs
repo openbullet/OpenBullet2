@@ -15,18 +15,22 @@ namespace RuriLib.Functions.Tcp
         /// Creates a socket that talks to the given <paramref name="host"/> on the given <paramref name="port"/>
         /// (optionally through a proxy) and returns the <see cref="NetworkStream"/>.
         /// </summary>
-        public static Task<TcpClient> GetClientAsync(string host, int port, TimeSpan timeout, Proxy proxy = null,
+        public static Task<TcpClient> GetClientAsync(string host, int port, TimeSpan timeout, Proxy? proxy = null,
             CancellationToken cancellationToken = default)
         {
             ProxyClient client;
 
-            if (proxy == null)
+            if (proxy is null)
             {
-                client = new NoProxyClient(new ProxySettings());
+                client = new NoProxyClient(new ProxySettings
+                {
+                    ConnectTimeout = timeout,
+                    ReadWriteTimeOut = timeout
+                });
             }
             else
             {
-                var settings = new ProxySettings()
+                var settings = new ProxySettings
                 {
                     Host = proxy.Host,
                     Port = proxy.Port,

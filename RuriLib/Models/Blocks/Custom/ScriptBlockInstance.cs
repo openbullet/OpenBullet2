@@ -197,7 +197,7 @@ namespace RuriLib.Models.Blocks.Custom
                             definedVariables.Add(output.Name);
                         }
 
-                        writer.WriteLine($"{output.Name} = {resultName}.GetProperty(\"{output.Name}\").{GetNodeMethod(output.Type)};");
+                        writer.WriteLine($"{output.Name} = {GetNodeMethod(resultName, output)};");
                     }
 
                     break;
@@ -249,17 +249,18 @@ namespace RuriLib.Models.Blocks.Custom
             return writer.ToString();
         }
 
-        private string GetNodeMethod(VariableType type)
+        private string GetNodeMethod(string resultName, OutputVariable output)
         {
-            return type switch
+            return output.Type switch
             {
-                VariableType.Bool => "GetBoolean()",
-                VariableType.ByteArray => "GetBytesFromBase64()",
-                VariableType.Float => "GetSingle()",
-                VariableType.Int => "GetInt32()",
-                VariableType.ListOfStrings => "EnumerateArray().Select(e => e.GetString()).ToList()",
-                VariableType.String => "ToString()",
-                _ => throw new NotImplementedException() // Dictionary not implemented yet
+                VariableType.Bool => $"{resultName}.GetProperty(\"{output.Name}\").GetBoolean()",
+                VariableType.ByteArray => $"{resultName}.GetProperty(\"{output.Name}\").GetBytesFromBase64()",
+                VariableType.Float => $"{resultName}.GetProperty(\"{output.Name}\").GetSingle()",
+                VariableType.Int => $"{resultName}.GetProperty(\"{output.Name}\").GetInt32()",
+                VariableType.String => $"{resultName}.GetProperty(\"{output.Name}\").ToString()",
+                VariableType.ListOfStrings => $"((System.Text.Json.JsonElement.ArrayEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateArray()).Select(e => e.GetString()).ToList()",
+                VariableType.DictionaryOfStrings => $"((System.Text.Json.JsonElement.ObjectEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateObject()).ToDictionary(e => e.Name, e => e.Value.GetString())",
+                _ => throw new NotImplementedException()
             };
         }
 
@@ -287,7 +288,8 @@ namespace RuriLib.Models.Blocks.Custom
                 VariableType.Int => "int",
                 VariableType.ListOfStrings => "List<string>",
                 VariableType.String => "string",
-                _ => throw new NotImplementedException() // Dictionary not implemented yet
+                VariableType.DictionaryOfStrings => "Dictionary<string, string>",
+                _ => throw new NotImplementedException()
             };
         }
 

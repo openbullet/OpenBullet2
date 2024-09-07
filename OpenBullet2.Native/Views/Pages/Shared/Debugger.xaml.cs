@@ -30,9 +30,19 @@ namespace OpenBullet2.Native.Views.Pages.Shared
 
             logRTB.Font = new System.Drawing.Font("Consolas", 10);
             logRTB.BackColor = System.Drawing.Color.FromArgb(22, 22, 22);
-
+            logRTB.HandleCreated += (_, _) => FixAutoWordSelection(logRTB);
+            
             variablesRTB.Font = new System.Drawing.Font("Consolas", 10);
             variablesRTB.BackColor = System.Drawing.Color.FromArgb(22, 22, 22);
+            variablesRTB.HandleCreated += (_, _) => FixAutoWordSelection(variablesRTB);
+        }
+
+        private void FixAutoWordSelection(System.Windows.Forms.RichTextBox rtb)
+        {
+            // Stupid ass workaround because WinForms RichTextBox is broken
+            // https://stackoverflow.com/questions/3678620/c-sharp-richtextbox-selection-problem
+            rtb.AutoWordSelection = true;
+            rtb.AutoWordSelection = false;
         }
 
         private void ShowLog(object sender, RoutedEventArgs e) => tabControl.SelectedIndex = 0;
@@ -40,7 +50,7 @@ namespace OpenBullet2.Native.Views.Pages.Shared
         private void ShowHTML(object sender, RoutedEventArgs e) => tabControl.SelectedIndex = 2;
 
         private async void Start(object sender, RoutedEventArgs e)
-        {
+        {   
             if (!vm.PersistLog)
             {
                 logRTB.Clear();

@@ -35,13 +35,17 @@ jobs:
     - name: Get commit number
       run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
 
-    # Append the commit number to version.txt of the web client
-    - name: Append commit number to version.txt
-      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Web/version.txt
+    # Read the version
+    - name: Read version
+      run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
-    # Append the commit number to version.txt of the native client
+    # Overwrite the contents of version.txt with $VERSION.$COMMIT_NUMBER
     - name: Append commit number to version.txt
-      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Native/version.txt
+      run: echo "${{ env.VERSION }}.${{ env.COMMIT_NUMBER }}" > OpenBullet2.Web/version.txt
+
+    # Do the same for the native client
+    - name: Append commit number to version.txt
+      run: echo "${{ env.VERSION }}.${{ env.COMMIT_NUMBER }}" > OpenBullet2.Native/version.txt
 
     # Get the commit description
     - name: Get commit description
@@ -51,8 +55,8 @@ jobs:
         echo 'EOF' >> $GITHUB_ENV
 
     # Read the version
-    - name: Read version
-      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
+    - name: Read version again
+      run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
     # Build using docker
     - name: Build using docker
@@ -90,7 +94,7 @@ jobs:
         file_glob: true
         release_name: ${{ env.VERSION }}
         tag: ${{ env.VERSION }}
-        overwrite: true
+        overwrite: false
         prerelease: true
         make_latest: true
         # Show ONLY the commit description in the release (without)
