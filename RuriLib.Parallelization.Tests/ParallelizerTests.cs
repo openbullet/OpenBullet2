@@ -20,15 +20,15 @@ public class ParallelizerTests
     private int _progressCount;
     private bool _lastResult;
     private bool _completedFlag;
-    private Exception _lastException;
+    private Exception? _lastException;
 
-    private void OnProgress(object sender, float value) => _progressCount++;
+    private void OnProgress(object? sender, float value) => _progressCount++;
     
-    private void OnResult(object sender, ResultDetails<int, bool> value) => _lastResult = value.Result;
+    private void OnResult(object? sender, ResultDetails<int, bool> value) => _lastResult = value.Result;
     
-    private void OnCompleted(object sender, EventArgs e) => _completedFlag = true;
+    private void OnCompleted(object? sender, EventArgs e) => _completedFlag = true;
     
-    private void OnException(object sender, Exception ex) => _lastException = ex;
+    private void OnException(object? sender, Exception ex) => _lastException = ex;
     
     [Fact]
     public async Task Run_QuickTasks_CompleteAndCall()
