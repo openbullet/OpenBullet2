@@ -408,6 +408,7 @@ export class ConfigStackerComponent implements OnInit {
 
     // This should never happen, but just in case
     if (this.envSettings === null) {
+      console.error('Environment settings not loaded yet');
       return suggestions;
     }
 
@@ -415,6 +416,7 @@ export class ConfigStackerComponent implements OnInit {
 
     // This should never happen, but just in case
     if (wordlistType === undefined) {
+      console.error('Wordlist type not found');
       return suggestions;
     }
 
@@ -425,6 +427,7 @@ export class ConfigStackerComponent implements OnInit {
 
     // This should never happen, but just in case
     if (this.stack === null) {
+      console.error('Stack not loaded yet');
       return suggestions;
     }
 

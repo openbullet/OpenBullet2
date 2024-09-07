@@ -80,8 +80,9 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     // set it to the first one in the list
     if (this.settings?.wordlistType !== null && !this.wordlistTypes.includes(this.settings.wordlistType)) {
       this.settings.wordlistType = this.wordlistTypes[0];
-      this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
     }
+
+    this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
 
     this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
       // Request the current state
