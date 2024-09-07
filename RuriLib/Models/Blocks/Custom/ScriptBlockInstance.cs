@@ -257,9 +257,10 @@ namespace RuriLib.Models.Blocks.Custom
                 VariableType.ByteArray => $"{resultName}.GetProperty(\"{output.Name}\").GetBytesFromBase64()",
                 VariableType.Float => $"{resultName}.GetProperty(\"{output.Name}\").GetSingle()",
                 VariableType.Int => $"{resultName}.GetProperty(\"{output.Name}\").GetInt32()",
-                VariableType.ListOfStrings => $"((IEnumerable<System.Text.Json.JsonElement>){resultName}.GetProperty(\"{output.Name}\").EnumerateArray()).Select(e => e.GetString()).ToList()",
                 VariableType.String => $"{resultName}.GetProperty(\"{output.Name}\").ToString()",
-                _ => throw new NotImplementedException() // Dictionary not implemented yet
+                VariableType.ListOfStrings => $"((System.Text.Json.JsonElement.ArrayEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateArray()).Select(e => e.GetString()).ToList()",
+                VariableType.DictionaryOfStrings => $"((System.Text.Json.JsonElement.ObjectEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateObject()).ToDictionary(e => e.Name, e => e.Value.GetString())",
+                _ => throw new NotImplementedException()
             };
         }
 
@@ -287,7 +288,8 @@ namespace RuriLib.Models.Blocks.Custom
                 VariableType.Int => "int",
                 VariableType.ListOfStrings => "List<string>",
                 VariableType.String => "string",
-                _ => throw new NotImplementedException() // Dictionary not implemented yet
+                VariableType.DictionaryOfStrings => "Dictionary<string, string>",
+                _ => throw new NotImplementedException()
             };
         }
 
