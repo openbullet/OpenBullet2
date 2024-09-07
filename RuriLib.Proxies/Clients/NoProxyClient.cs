@@ -4,41 +4,37 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Proxies.Clients
+namespace RuriLib.Proxies.Clients;
+
+/// <summary>
+/// A dummy client that does not proxy the connection.
+/// </summary>
+public class NoProxyClient : ProxyClient
 {
     /// <summary>
-    /// A dummy client that does not proxy the connection.
+    /// Provides unproxied connections.
     /// </summary>
-    public class NoProxyClient : ProxyClient
+    public NoProxyClient(ProxySettings? settings = null) : base(settings ?? new ProxySettings())
     {
-        /// <summary>
-        /// Provides unproxied connections.
-        /// </summary>
-        public NoProxyClient(ProxySettings settings = null) : base(settings ?? new ProxySettings())
-        {
 
+    }
+
+    /// <inheritdoc/>
+    protected override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(destinationHost);
+
+        if (!PortHelper.ValidateTcpPort(destinationPort))
+        {
+            throw new ArgumentOutOfRangeException(nameof(destinationPort));
         }
 
-        /// <inheritdoc/>
-        protected override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
-            CancellationToken cancellationToken = default)
+        if (client is not { Connected: true })
         {
-            if (string.IsNullOrEmpty(destinationHost))
-            {
-                throw new ArgumentException(null, nameof(destinationHost));
-            }
-
-            if (!PortHelper.ValidateTcpPort(destinationPort))
-            {
-                throw new ArgumentOutOfRangeException(nameof(destinationPort));
-            }
-
-            if (client == null || !client.Connected)
-            {
-                throw new SocketException();
-            }
-
-            return Task.CompletedTask;
+            throw new SocketException();
         }
+
+        return Task.CompletedTask;
     }
 }
