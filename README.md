@@ -1,6 +1,6 @@
 ![Logo](https://i.imgur.com/sToEkJC.png)
 
-OpenBullet 2 is a cross platform automation suite powered by .NET core. It allows to perform requests towards a target webapp and offers a lot of tools to work with the results. This software can be used for **scraping** and **parsing data**, automated **pentesting** and much more.
+OpenBullet 2 is a cross-platform automation suite powered by .NET. It allows to perform requests towards a target webapp and offers a lot of tools to work with the results. This software can be used for **scraping** and **parsing data**, automated **penetration testing** and much more.
 
 ## ⚠️ Disclaimer
 Performing (D)DoS or credential stuffing attacks on sites you do not have permission to test is **illegal!** The developer will not be held responsible for improper use of this software.

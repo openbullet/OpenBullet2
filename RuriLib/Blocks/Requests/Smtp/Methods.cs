@@ -7,7 +7,6 @@ using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -331,7 +330,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var client = GetAuthenticatedClient(data);
+            var client = GetClient(data);
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(senderName, senderAddress));
@@ -359,7 +358,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var client = GetAuthenticatedClient(data);
+            var client = GetClient(data);
 
             var message = new MimeMessage();
             message.From.AddRange(senders.Select(s => new MailboxAddress(s.Key, s.Value)));
@@ -391,18 +390,6 @@ namespace RuriLib.Blocks.Requests.Smtp
 
         private static SmtpClient GetClient(BotData data)
             => data.TryGetObject<SmtpClient>("smtpClient") ?? throw new Exception("Connect the SMTP client first!");
-
-        private static SmtpClient GetAuthenticatedClient(BotData data)
-        {
-            var client = GetClient(data);
-
-            if (!client.IsAuthenticated)
-            {
-                throw new Exception("Authenticate the SMTP client first!");
-            }
-
-            return client;
-        }
 
         private static IProxyClient MapProxyClient(BotData data)
         {

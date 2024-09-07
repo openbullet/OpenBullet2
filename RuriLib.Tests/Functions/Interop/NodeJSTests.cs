@@ -71,6 +71,17 @@ callback(null, noderesult);
         }
 
         [Fact]
+        public async Task InvokeNode_OutputDictionary_ReturnsDictionary()
+        {
+            var script = BuildScript("var result = { x: 'a', y };", ["y"], ["result"]);
+            var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, ["b"]);
+            var outputDict = result.GetProperty("result").EnumerateObject().ToDictionary(e => e.Name, e => e.Value.GetString());
+            Assert.Equal(2, outputDict.Count);
+            Assert.Equal("a", outputDict["x"]);
+            Assert.Equal("b", outputDict["y"]);
+        }
+
+        [Fact]
         public async Task InvokeNode_InputList_ReturnString()
         {
             List<string> inputList = ["a", "b"];

@@ -72,16 +72,17 @@ public class DiskConfigRepository : IConfigRepository
     {
         var file = GetFileName(id);
 
-        if (File.Exists(file))
+        if (!File.Exists(file))
         {
-            using var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
-
-            var config = await ConfigPacker.UnpackAsync(fileStream);
-            config.Id = id;
-            return config;
+            throw new FileNotFoundException();
         }
+        
+        await using var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
 
-        throw new FileNotFoundException();
+        var config = await ConfigPacker.UnpackAsync(fileStream);
+        config.Id = id;
+        return config;
+
     }
 
     /// <inheritdoc/>
@@ -89,16 +90,17 @@ public class DiskConfigRepository : IConfigRepository
     {
         var file = GetFileName(id);
 
-        if (File.Exists(file))
+        if (!File.Exists(file))
         {
-            using FileStream fileStream = new(file, FileMode.Open, FileAccess.Read);
-            using var ms = new MemoryStream();
-            await fileStream.CopyToAsync(ms);
-
-            return ms.ToArray();
+            throw new FileNotFoundException();
         }
+        
+        await using FileStream fileStream = new(file, FileMode.Open, FileAccess.Read);
+        using var ms = new MemoryStream();
+        await fileStream.CopyToAsync(ms);
 
-        throw new FileNotFoundException();
+        return ms.ToArray();
+
     }
 
     /// <inheritdoc/>
@@ -129,7 +131,7 @@ public class DiskConfigRepository : IConfigRepository
         else if (extension == ".loli")
         {
             using var ms = new MemoryStream();
-            stream.CopyTo(ms);
+            await stream.CopyToAsync(ms);
             ms.Seek(0, SeekOrigin.Begin);
             var content = Encoding.UTF8.GetString(ms.ToArray());
             var id = Path.GetFileNameWithoutExtension(fileName);
