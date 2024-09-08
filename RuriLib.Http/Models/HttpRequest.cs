@@ -7,196 +7,209 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using RuriLib.Http.Exceptions;
 
-namespace RuriLib.Http.Models
+namespace RuriLib.Http.Models;
+
+/// <summary>
+/// An HTTP request that can be sent using a <see cref="RLHttpClient"/>.
+/// </summary>
+public class HttpRequest : IDisposable
 {
     /// <summary>
-    /// An HTTP request that can be sent using a <see cref="RLHttpClient"/>.
+    /// Whether to write the absolute URI in the first line of the request instead of
+    /// the relative path (e.g. https://example.com/abc instead of /abc)
     /// </summary>
-    public class HttpRequest : IDisposable
+    public bool AbsoluteUriInFirstLine { get; set; } = false;
+
+    /// <summary>
+    /// The HTTP version to use.
+    /// </summary>
+    public Version Version { get; set; } = new(1, 1);
+
+    /// <summary>
+    /// The HTTP method to use.
+    /// </summary>
+    public HttpMethod Method { get; set; } = HttpMethod.Get;
+
+    /// <summary>
+    /// The URI of the remote resource.
+    /// </summary>
+    public Uri? Uri { get; set; }
+
+    /// <summary>
+    /// The cookies to send inside the Cookie header of this request.
+    /// </summary>
+    public Dictionary<string, string> Cookies { get; set; } = new();
+
+    /// <summary>
+    /// The headers of this request.
+    /// </summary>
+    public Dictionary<string, string> Headers { get; set; } = new();
+
+    /// <summary>
+    /// The content of this request.
+    /// </summary>
+    public HttpContent? Content { get; set; }
+
+    /// <summary>
+    /// Gets the raw bytes that will be sent on the network stream.
+    /// </summary>
+    /// <param name="cancellationToken">The token to cancel the operation</param>
+    public async Task<byte[]> GetBytesAsync(CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Whether to write the absolute URI in the first line of the request instead of
-        /// the relative path (e.g. https://example.com/abc instead of /abc)
-        /// </summary>
-        public bool AbsoluteUriInFirstLine { get; set; } = false;
+        using var ms = new MemoryStream();
+        ms.Write(Encoding.ASCII.GetBytes(BuildFirstLine()));
+        ms.Write(Encoding.ASCII.GetBytes(BuildHeaders()));
 
-        /// <summary>
-        /// The HTTP version to use.
-        /// </summary>
-        public Version Version { get; set; } = new(1, 1);
-
-        /// <summary>
-        /// The HTTP method to use.
-        /// </summary>
-        public HttpMethod Method { get; set; } = HttpMethod.Get;
-
-        /// <summary>
-        /// The URI of the remote resource.
-        /// </summary>
-        public Uri Uri { get; set; }
-
-        /// <summary>
-        /// The cookies to send inside the Cookie header of this request.
-        /// </summary>
-        public Dictionary<string, string> Cookies { get; set; } = new();
-
-        /// <summary>
-        /// The headers of this request.
-        /// </summary>
-        public Dictionary<string, string> Headers { get; set; } = new();
-
-        /// <summary>
-        /// The content of this request.
-        /// </summary>
-        public HttpContent Content { get; set; }
-
-        /// <summary>
-        /// Gets the raw bytes that will be sent on the network stream.
-        /// </summary>
-        /// <param name="cancellationToken">The token to cancel the operation</param>
-        public async Task<byte[]> GetBytesAsync(CancellationToken cancellationToken = default)
+        if (Content != null)
         {
-            using var ms = new MemoryStream();
-            ms.Write(Encoding.ASCII.GetBytes(BuildFirstLine()));
-            ms.Write(Encoding.ASCII.GetBytes(BuildHeaders()));
-
-            if (Content != null)
-            {
-                ms.Write(await Content.ReadAsByteArrayAsync(cancellationToken));
-            }
-
-            return ms.ToArray();
+            ms.Write(await Content.ReadAsByteArrayAsync(cancellationToken));
         }
 
-        private static readonly string newLine = "\r\n";
+        return ms.ToArray();
+    }
 
-        /// <summary>
-        /// Safely adds a header to the dictionary.
-        /// </summary>
-        public void AddHeader(string name, string value)
+    private const string _newLine = "\r\n";
+
+    /// <summary>
+    /// Safely adds a header to the dictionary.
+    /// </summary>
+    public void AddHeader(string name, string value)
+    {
+        // Make sure Host is written properly otherwise it won't get picked up below
+        if (name.Equals("Host", StringComparison.OrdinalIgnoreCase))
         {
-            // Make sure Host is written properly otherwise it won't get picked up below
-            if (name.Equals("Host", StringComparison.OrdinalIgnoreCase))
-            {
-                Headers["Host"] = value;
-            }
-            else
-            {
-                Headers[name] = value;
-            }
+            Headers["Host"] = value;
+        }
+        else
+        {
+            Headers[name] = value;
+        }
+    }
+
+    // Builds the first line, for example
+    // GET /resource HTTP/1.1
+    private string BuildFirstLine()
+    {
+        if (Version >= new Version(2, 0))
+        {
+            throw new RLHttpException($"HTTP/{Version.Major}.{Version.Minor} not supported yet");
+        }
+        
+        if (Uri is null)
+        {
+            throw new RLHttpException("Uri cannot be null");
         }
 
-        // Builds the first line, for example
-        // GET /resource HTTP/1.1
-        private string BuildFirstLine()
-        {
-            if (Version >= new Version(2, 0))
-                throw new Exception($"HTTP/{Version.Major}.{Version.Minor} not supported yet");
+        return $"{Method.Method} {(AbsoluteUriInFirstLine ? Uri.AbsoluteUri : Uri.PathAndQuery)} HTTP/{Version}{_newLine}";
+    }
 
-            return $"{Method.Method} {(AbsoluteUriInFirstLine ? Uri.AbsoluteUri : Uri.PathAndQuery)} HTTP/{Version}{newLine}";
+    // Builds the headers, for example
+    // Host: example.com
+    // Connection: Close
+    private string BuildHeaders()
+    {
+        if (Uri is null)
+        {
+            throw new RLHttpException("Uri cannot be null");
+        }
+        
+        // NOTE: Do not use AppendLine because it appends \n instead of \r\n
+        // on Unix-like systems.
+        var sb = new StringBuilder();
+        var finalHeaders = new List<KeyValuePair<string, string>>();
+
+        // Add the Host header if not already provided
+        if (!HeaderExists("Host", out _))
+        {
+            finalHeaders.Add("Host", Uri.Host);
         }
 
-        // Builds the headers, for example
-        // Host: example.com
-        // Connection: Close
-        private string BuildHeaders()
+        // If there is no Connection header, add it
+        if (!HeaderExists("Connection", out _))
         {
-            // NOTE: Do not use AppendLine because it appends \n instead of \r\n
-            // on Unix-like systems.
-            var sb = new StringBuilder();
-            var finalHeaders = new List<KeyValuePair<string, string>>();
+            finalHeaders.Add("Connection", "Close");
+        }
 
-            // Add the Host header if not already provided
-            if (!HeaderExists("Host", out _))
+        // Add the non-content headers
+        finalHeaders.AddRange(Headers);
+
+        // Add the Cookie header if not set manually and container not null
+        if (!HeaderExists("Cookie", out _) && Cookies.Count != 0)
+        {
+            var cookieBuilder = new StringBuilder();
+
+            foreach (var cookie in Cookies)
             {
-                finalHeaders.Add("Host", Uri.Host);
+                cookieBuilder
+                    .Append($"{cookie.Key}={cookie.Value}; ");
             }
 
-            // If there is no Connection header, add it
-            if (!HeaderExists("Connection", out var connectionHeaderName))
+            // Remove the last ; and space if not empty
+            if (cookieBuilder.Length > 2)
             {
-                finalHeaders.Add("Connection", "Close");
+                cookieBuilder.Remove(cookieBuilder.Length - 2, 2);
             }
 
-            // Add the non-content headers
-            foreach (var header in Headers)
+            finalHeaders.Add("Cookie", cookieBuilder);
+        }
+
+        // Add the content headers
+        if (Content != null)
+        {
+            foreach (var header in Content.Headers)
             {
-                finalHeaders.Add(header);
-            }
-
-            // Add the Cookie header if not set manually and container not null
-            if (!HeaderExists("Cookie", out _) && Cookies.Any())
-            {
-                var cookieBuilder = new StringBuilder();
-
-                foreach (var cookie in Cookies)
+                // If it was already set, skip
+                if (!HeaderExists(header.Key, out _))
                 {
-                    cookieBuilder
-                        .Append($"{cookie.Key}={cookie.Value}; ");
-                }
-
-                // Remove the last ; and space if not empty
-                if (cookieBuilder.Length > 2)
-                {
-                    cookieBuilder.Remove(cookieBuilder.Length - 2, 2);
-                }
-
-                finalHeaders.Add("Cookie", cookieBuilder);
-            }
-
-            // Add the content headers
-            if (Content != null)
-            {
-                foreach (var header in Content.Headers)
-                {
-                    // If it was already set, skip
-                    if (!HeaderExists(header.Key, out _))
-                    {
-                        finalHeaders.Add(header.Key, string.Join(' ', header.Value));
-                    }
-                }
-
-                // Add the Content-Length header if not already present
-                if (!finalHeaders.Any(h => h.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
-                {
-                    var contentLength = Content.Headers.ContentLength;
-
-                    if (contentLength.HasValue && contentLength.Value > 0)
-                    {
-                        finalHeaders.Add("Content-Length", contentLength);
-                    }
+                    finalHeaders.Add(header.Key, string.Join(' ', header.Value));
                 }
             }
 
-            // Write all non-empty headers to the StringBuilder
-            foreach (var header in finalHeaders.Where(h => !string.IsNullOrEmpty(h.Value)))
+            // Add the Content-Length header if not already present
+            if (!finalHeaders.Any(h => h.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
             {
-                sb
-                    .Append(header.Key)
-                    .Append(": ")
-                    .Append(header.Value)
-                    .Append(newLine);
+                var contentLength = Content.Headers.ContentLength;
+
+                if (contentLength is > 0)
+                {
+                    finalHeaders.Add("Content-Length", contentLength);
+                }
             }
-
-            // Write the final blank line after all headers
-            sb.Append(newLine);
-
-            return sb.ToString();
         }
 
-        /// <summary>
-        /// Checks whether a header that matches a given <paramref name="name"/> exists. If it exists,
-        /// its original name will be written to <paramref name="actualName"/>.
-        /// </summary>
-        public bool HeaderExists(string name, out string actualName)
+        // Write all non-empty headers to the StringBuilder
+        foreach (var header in finalHeaders.Where(h => !string.IsNullOrEmpty(h.Value)))
         {
-            var key = Headers.Keys.FirstOrDefault(k => k.Equals(name, StringComparison.OrdinalIgnoreCase));
-            actualName = key;
-            return key != null;
+            sb
+                .Append(header.Key)
+                .Append(": ")
+                .Append(header.Value)
+                .Append(_newLine);
         }
 
-        /// <inheritdoc/>
-        public void Dispose() => Content?.Dispose();
+        // Write the final blank line after all headers
+        sb.Append(_newLine);
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Checks whether a header that matches a given <paramref name="name"/> exists. If it exists,
+    /// its original name will be written to <paramref name="actualName"/>.
+    /// </summary>
+    public bool HeaderExists(string name, out string? actualName)
+    {
+        var key = Headers.Keys.FirstOrDefault(k => k.Equals(name, StringComparison.OrdinalIgnoreCase));
+        actualName = key;
+        return key != null;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Content?.Dispose();
     }
 }
