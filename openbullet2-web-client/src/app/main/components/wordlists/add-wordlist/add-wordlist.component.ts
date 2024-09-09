@@ -24,7 +24,8 @@ export class AddWordlistComponent {
   public reset() {
     this.name = '';
     this.purpose = '';
-    this.wordlistType = 'Default';
+    this.wordlistType = this.wordlistTypes.length > 0
+      ? this.wordlistTypes[0] : 'Default';
     this.filePath = '';
     this.isCreating = false;
   }
