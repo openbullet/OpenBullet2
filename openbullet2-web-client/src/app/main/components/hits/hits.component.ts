@@ -162,7 +162,10 @@ export class HitsComponent implements OnInit {
       });
 
       this.hitService.getConfigNames().subscribe((configNames) => {
-        this.configNames = ['anyConfig', ...configNames];
+        this.configNames = [
+          'anyConfig',
+          ...configNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+        ];
       });
     });
   }

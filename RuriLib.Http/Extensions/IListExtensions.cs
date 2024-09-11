@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace RuriLib.Http.Extensions
+namespace RuriLib.Http.Extensions;
+
+internal static class ListExtensions
 {
-    static internal class IListExtensions
-    {
-        public static void Add(this IList<KeyValuePair<string, string>> list, string key, object value)
-            => list.Add(new KeyValuePair<string, string>(key, value.ToString()));
-    }
+    public static void Add(this IList<KeyValuePair<string, string>> list, string key, object value)
+        => list.Add(new KeyValuePair<string, string>(key, value.ToString()!));
 }

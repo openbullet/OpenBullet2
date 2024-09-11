@@ -9,6 +9,7 @@
     <Version>1.0.2</Version>
     <Authors>Ruri</Authors>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>

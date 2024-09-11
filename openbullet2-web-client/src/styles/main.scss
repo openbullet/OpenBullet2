@@ -384,6 +384,12 @@ p-menubarsub > .p-submenu-list {
     background-color: unset;
 }
 
+app-changelog, .readme, .announcement {
+    ul {
+        margin-bottom: 1rem;
+    }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;

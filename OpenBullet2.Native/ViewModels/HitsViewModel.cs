@@ -44,8 +44,10 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public IEnumerable<string> ConfigNames => new string[] { "All" }.Concat(
-            HitsCollection.GroupBy(h => h.ConfigName).Select(g => g.First().ConfigName));
+        public IEnumerable<string> ConfigNames => _firstConfigNamesOption.Concat(
+            HitsCollection.GroupBy(h => h.ConfigName)
+                .Select(g => g.First().ConfigName)
+                .Order(StringComparer.OrdinalIgnoreCase));
 
         private string configFilter = "All";
         public string ConfigFilter
@@ -75,6 +77,8 @@ namespace OpenBullet2.Native.ViewModels
                 OnPropertyChanged(nameof(Total));
             }
         }
+
+        private static readonly string[] _firstConfigNamesOption = new[] { "All" };
 
         public HitsViewModel()
         {
