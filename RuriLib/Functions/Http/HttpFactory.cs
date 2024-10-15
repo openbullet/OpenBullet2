@@ -33,7 +33,7 @@ namespace RuriLib.Functions.Http
             };
         }
 
-        public static RLHttpClient GetRLHttpClient(Proxy proxy, HttpOptions options)
+        public static RLHttpClient GetRLHttpClient(Proxy? proxy, HttpOptions options)
         {
             var client = GetProxyClient(proxy, options);
 
@@ -59,11 +59,11 @@ namespace RuriLib.Functions.Http
             };
         }
 
-        private static ProxyClient GetProxyClient(Proxy proxy, HttpOptions options)
+        private static ProxyClient GetProxyClient(Proxy? proxy, HttpOptions options)
         {
             ProxyClient client;
 
-            if (proxy == null)
+            if (proxy is null)
             {
                 client = new NoProxyClient(new ProxySettings());
             }

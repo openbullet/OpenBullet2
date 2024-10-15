@@ -216,7 +216,7 @@ public class ParallelizerTests
     [Fact]
     public async Task Run_PauseAndResume_CompleteAll()
     {
-        var count = 10;
+        const int count = 10;
         var parallelizer = ParallelizerFactory<int, bool>.Create(
             type: _type,
             workItems: Enumerable.Range(1, count),

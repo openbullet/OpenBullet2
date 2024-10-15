@@ -1,34 +1,36 @@
 ﻿using System;
 
-namespace RuriLib.Attributes
+namespace RuriLib.Attributes;
+
+/// <summary>
+/// Attribute used to decorate a block that can display images.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+public class BlockImage : Attribute
 {
     /// <summary>
-    /// Attribute used to decorate a block that can display images.
+    /// The unique id of the image.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class BlockImage : Attribute
+    // ReSharper disable once InconsistentNaming
+    public string id;
+
+    /// <summary>
+    /// The max width in pixels.
+    /// </summary>
+    // ReSharper disable once InconsistentNaming
+    public int maxWidth = 300;
+
+    /// <summary>
+    /// The max height in pixels.
+    /// </summary>
+    // ReSharper disable once InconsistentNaming
+    public int maxHeight = 300;
+
+    /// <summary>
+    /// Defines a block image with a given <paramref name="id"/>.
+    /// </summary>
+    public BlockImage(string id)
     {
-        /// <summary>
-        /// The unique id of the image.
-        /// </summary>
-        public string id = null;
-
-        /// <summary>
-        /// The max width in pixels.
-        /// </summary>
-        public int maxWidth = 300;
-
-        /// <summary>
-        /// The max height in pixels.
-        /// </summary>
-        public int maxHeight = 300;
-
-        /// <summary>
-        /// Defines a block image with a given <paramref name="id"/>.
-        /// </summary>
-        public BlockImage(string id)
-        {
-            this.id = id;
-        }
+        this.id = id;
     }
 }

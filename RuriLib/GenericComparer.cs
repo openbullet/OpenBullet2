@@ -1,18 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace RuriLib
+namespace RuriLib;
+
+public class GenericComparer<T> : IEqualityComparer<T>
 {
-    public class GenericComparer<T> : IEqualityComparer<T>
+    public bool Equals(T? x, T? y)
     {
-        public bool Equals([AllowNull] T x, [AllowNull] T y)
+        if (x == null && y == null)
         {
-            if (x == null && y == null) return true;
-            else if (x == null || y == null) return false;
-            else return x.GetHashCode() == y.GetHashCode();
+            return true;
         }
 
-        public int GetHashCode([DisallowNull] T obj)
-            => obj.GetHashCode();
+        if (x == null || y == null)
+        {
+            return false;
+        }
+            
+        return x.GetHashCode() == y.GetHashCode();
     }
+
+    public int GetHashCode([DisallowNull] T obj)
+        => obj.GetHashCode();
 }

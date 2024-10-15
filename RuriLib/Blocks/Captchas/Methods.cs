@@ -454,9 +454,9 @@ public static class Methods
     [Block("Reports an incorrectly solved captcha to the service in order to get funds back")]
     public static async Task ReportLastSolution(BotData data)
     {
-        var lastCaptcha = data.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
-
         data.Logger.LogHeader();
+        
+        var lastCaptcha = data.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
         
         if (lastCaptcha is null)
         {

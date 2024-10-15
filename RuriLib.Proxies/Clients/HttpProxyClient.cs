@@ -14,11 +14,11 @@ namespace RuriLib.Proxies.Clients;
 /// <summary>
 /// A client that provides proxies connections via HTTP proxies.
 /// </summary>
-public class HttpProxyClient : ProxyClient
+public partial class HttpProxyClient : ProxyClient
 {
     /// <summary>
     /// The HTTP version to send in the first line of the request to the proxy.
-    /// By default it's 1.1
+    /// By default, it's 1.1
     /// </summary>
     public string ProtocolVersion { get; set; } = "1.1";
 
@@ -59,7 +59,7 @@ public class HttpProxyClient : ProxyClient
         {
             client.Close();
 
-            if (ex is IOException || ex is SocketException)
+            if (ex is IOException or SocketException)
             {
                 throw new ProxyException("Error while working with proxy", ex);
             }
@@ -137,7 +137,7 @@ public class HttpProxyClient : ProxyClient
         }
 
         // Check if the response is a correct HTTP response
-        var match = Regex.Match(response, "HTTP/[0-9\\.]* ([0-9]{3})");
+        var match = HttpResponseRegex().Match(response);
 
         if (!match.Success)
         {
@@ -151,4 +151,7 @@ public class HttpProxyClient : ProxyClient
 
         return statusCode;
     }
+
+    [GeneratedRegex("HTTP/[0-9\\.]* ([0-9]{3})")]
+    private static partial Regex HttpResponseRegex();
 }

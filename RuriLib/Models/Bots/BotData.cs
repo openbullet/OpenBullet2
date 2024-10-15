@@ -39,7 +39,7 @@ public class BotData
     public int BOTNUM { get; set; } = 0;
 
     // This dictionary will hold stateful objects like a captcha provider, a TCP client, a selenium webdriver...
-    private readonly Dictionary<string, object> _objects = new();
+    private readonly Dictionary<string, object?> _objects = new();
         
     [Obsolete("Do not use this property, it's only here for retro compatibility but it can cause memory leaks." +
               " Use the SetObject and TryGetObject methods instead!")]
@@ -126,7 +126,7 @@ public class BotData
         DisposeObjectsExcept(["puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine"]);
     }
 
-    public void SetObject(string name, object obj, bool disposeExisting = true)
+    public void SetObject(string name, object? obj, bool disposeExisting = true)
     {
         if (_objects.TryGetValue(name, out var existing))
         {

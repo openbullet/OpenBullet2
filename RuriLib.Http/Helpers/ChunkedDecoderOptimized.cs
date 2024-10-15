@@ -50,13 +50,12 @@ internal class ChunkedDecoderOptimized : IDisposable
         }
     }
 
-    private int GetChunkLength(ref ReadOnlySequence<byte> buff)
+    private static int GetChunkLength(ref ReadOnlySequence<byte> buff)
     {
         if (buff.IsSingleSegment)
         {
-            var index = -1;
             var span = buff.FirstSpan;
-            index = span.IndexOf(_crlfBytes);
+            var index = span.IndexOf(_crlfBytes);
             
             if (index == -1)
             {
