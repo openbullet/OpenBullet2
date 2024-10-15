@@ -1,17 +1,22 @@
 ﻿using System;
 
-namespace RuriLib.Exceptions
+namespace RuriLib.Exceptions;
+
+/// <summary>
+/// An exception that is thrown when a Wordlist Type with the given name was not present
+/// in the Environment settings.
+/// </summary>
+public class InvalidWordlistTypeException : Exception
 {
     /// <summary>
-    /// An exception that is thrown when a Wordlist Type with the given name was not present
-    /// in the Environment settings.
+    /// Creates a <see cref="InvalidWordlistTypeException"/> with a message that contains the invalid type.
     /// </summary>
-    public class InvalidWordlistTypeException : Exception
+    /// <param name="type">
+    /// The invalid Wordlist Type that was not found in the Environment settings.
+    /// </param>
+    public InvalidWordlistTypeException(string type) 
+        : base($"The Wordlist Type {type} was not found in the Environment settings")
     {
-        public InvalidWordlistTypeException(string type) 
-            : base($"The Wordlist Type {type} was not found in the Environment settings")
-        {
 
-        }
     }
 }

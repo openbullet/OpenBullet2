@@ -3,7 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Ruri</Authors>
+    <Description>The library that powers OpenBullet.</Description>
+    <Copyright>Ruri 2024</Copyright>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,16 +1,19 @@
 ﻿using System;
 
-namespace RuriLib.Exceptions
+namespace RuriLib.Exceptions;
+
+/// <summary>
+/// An exception that is thrown when no Wordlist Types were specified
+/// in the Environment settings.
+/// </summary>
+public class NoWordlistTypesExceptions : Exception
 {
     /// <summary>
-    /// An exception that is thrown when no Wordlist Types were specified
-    /// in the Environment settings.
+    /// Creates a new <see cref="NoWordlistTypesExceptions"/>.
     /// </summary>
-    public class NoWordlistTypesExceptions : Exception
+    public NoWordlistTypesExceptions() :
+        base("No Wordlist Types specified in the Environment settings")
     {
-        public NoWordlistTypesExceptions() : base("No Wordlist Types specified in the Environment settings")
-        {
 
-        }
     }
 }

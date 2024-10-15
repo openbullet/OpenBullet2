@@ -15,11 +15,17 @@ public class Variable : Attribute
     // ReSharper disable once InconsistentNaming
     public string? defaultVariableName;
 
+    /// <summary>
+    /// Marks the parameter as a variable with no default name.
+    /// </summary>
     public Variable()
     {
 
     }
 
+    /// <summary>
+    /// Marks the parameter as a variable with the given default name.
+    /// </summary>
     public Variable(string defaultVariableName)
     {
         this.defaultVariableName = defaultVariableName;
