@@ -1,50 +1,56 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    LC_ALL="en_US.UTF-8" \
+    LANG="en_US.UTF-8" \
+    LANGUAGE="en_US:en"
 
 # Install basic dependencies
 RUN apt-get update -yq \
-    && apt-get install -y --no-install-recommends \
-        apt-utils \
-        curl \
-        git \
-        nano \
-        wget \
-        unzip \
-        python3 \
-        python3-pip \
-        gnupg \
-        lsb-release \
-        software-properties-common
+ && apt-get install -y --no-install-recommends \
+    curl \
+    wget \
+    unzip \
+    gnupg \
+    git \
+    python3 \
+    python3-pip \
+    lsb-release \
+    software-properties-common
 
 # Setup Node.js (LTS Version)
 RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -yq nodejs build-essential
+ && apt-get install -yq \
+    nodejs \
+    build-essential
 
 # Add Mozilla Team PPA for the latest Firefox
 RUN echo "deb http://ppa.launchpad.net/mozillateam/ppa/ubuntu focal main" | tee /etc/apt/sources.list.d/mozillateam-ppa.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9BDB3D89CE49EC21 \
-    && apt-get update -yq
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9BDB3D89CE49EC21 \
+ && apt-get update -yq
 
 # Install the latest Firefox and Chromium
 RUN apt-get install -y --no-install-recommends \
-        firefox \
-        chromium
+    firefox \
+    chromium
 
 # Install WebDriverManager
 RUN pip3 install webdrivermanager || true \
-    && webdrivermanager firefox chrome --linkpath /usr/local/bin || true
-
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+ && webdrivermanager firefox chrome --linkpath /usr/local/bin || true
 
 WORKDIR /app
 
 # Download and unpack the latest OpenBullet2.Web release
 RUN wget https://github.com/openbullet/openbullet2/releases/latest/download/OpenBullet2.Web.zip \
-    && unzip OpenBullet2.Web.zip \
-    && rm OpenBullet2.Web.zip
+ && unzip OpenBullet2.Web.zip \
+ && rm OpenBullet2.Web.zip
+
+# Clean up
+RUN apt-get remove curl wget unzip gnupg --yes \
+&& apt-get clean autoclean --yes \
+&& apt-get autoremove --yes \
+&& rm -rf /var/cache/apt/archives* /var/lib/apt/lists/*
 
 EXPOSE 5000
 

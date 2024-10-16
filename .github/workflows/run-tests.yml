@@ -11,13 +11,19 @@ on:
       - staging
       
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  run-tests:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+    runs-on: "${{ matrix.os }}"
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+        
     - name: Unit and integration tests
       run: dotnet test
