@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Proxies;
 using RuriLib.Models.Jobs;
@@ -29,6 +29,11 @@ public class MultiRunJobOptions : JobOptions
 
     /// <summary>
     /// The proxy mode.
+    /// </summary>
+    public bool Logoff { get; set; } = false;
+
+    /// <summary>
+    /// disable log
     /// </summary>
     public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
 
