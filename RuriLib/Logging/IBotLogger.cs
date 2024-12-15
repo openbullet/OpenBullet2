@@ -29,22 +29,22 @@ namespace RuriLib.Logging
         /// <summary>
         /// Called when a new entry was written to the log.
         /// </summary>
-        event EventHandler<BotLoggerEntry> NewEntry;
+        event EventHandler<BotLoggerEntry>? NewEntry;
 
         /// <summary>
         /// Logs the name of the method that called this method.
         /// </summary>
-        void LogHeader([CallerMemberName] string caller = null);
+        void LogHeader([CallerMemberName] string? caller = null);
 
         /// <summary>
         /// Logs a new <paramref name="message"/> with a given <paramref name="color"/>.
         /// If the <paramref name="message"/> contains HTML code, set <paramref name="canViewAsHtml"/> to true.
         /// </summary>
-        void Log(string message, string color = "#fff", bool canViewAsHtml = false);
+        void Log(string? message, string color = "#fff", bool canViewAsHtml = false);
 
         /// <summary>
         /// Logs a multi-line message (with lines stored in an <paramref name="enumerable"/>) with a given <paramref name="color"/>.
-        /// If the <paramref name="message"/> contains HTML code, set <paramref name="canViewAsHtml"/> to true.
+        /// If the <paramref name="enumerable"/> contains HTML code, set <paramref name="canViewAsHtml"/> to true.
         /// </summary>
         void Log(IEnumerable<string> enumerable, string color = "#fff", bool canViewAsHtml = false);
 

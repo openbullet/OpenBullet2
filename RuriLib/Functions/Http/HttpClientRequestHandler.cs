@@ -187,9 +187,9 @@ namespace RuriLib.Functions.Http
             // Rewrite the value of the Content-Type header otherwise it will add double quotes around it like
             // Content-Type: multipart/form-data; boundary="------WebKitFormBoundaryewozmkbxwbblilpm"
             var multipartContent = new MultipartFormDataContent(options.Boundary);
-            multipartContent.Headers.ContentType.Parameters.First(o => o.Name == "boundary").Value = options.Boundary;
+            multipartContent.Headers.ContentType!.Parameters.First(o => o.Name == "boundary").Value = options.Boundary;
 
-            FileStream fileStream = null;
+            FileStream? fileStream = null;
 
             foreach (var c in options.Contents)
             {
@@ -219,13 +219,11 @@ namespace RuriLib.Functions.Http
                 }
             }
 
-            using var request = new HttpRequestMessage
-            {
-                Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
-                RequestUri = new Uri(options.Url),
-                Version = Version.Parse(options.HttpVersion),
-                Content = multipartContent
-            };
+            using var request = new HttpRequestMessage();
+            request.Method = new System.Net.Http.HttpMethod(options.Method.ToString());
+            request.RequestUri = new Uri(options.Url);
+            request.Version = Version.Parse(options.HttpVersion);
+            request.Content = multipartContent;
 
             foreach (var header in options.CustomHeaders)
             {
@@ -248,20 +246,23 @@ namespace RuriLib.Functions.Http
             }
             finally
             {
-                if (fileStream != null)
+                if (fileStream is not null)
+                {
                     await fileStream.DisposeAsync().ConfigureAwait(false);
+                }
             }
         }
 
-        private static void LogHttpRequestData(BotData data, HttpRequestMessage request, string content = null, string boundary = null)
+        private static void LogHttpRequestData(BotData data, HttpRequestMessage request,
+            string? content = null, string? boundary = null)
         {
             using var writer = new StringWriter();
 
             // Log the method, uri and http version
-            writer.WriteLine($"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
+            writer.WriteLine($"{request.Method.Method} {request.RequestUri?.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
 
             // Log the headers
-            writer.WriteLine($"Host: {request.RequestUri.Host}");
+            writer.WriteLine($"Host: {request.RequestUri?.Host}");
 
             foreach (var header in request.Headers)
             {
@@ -270,10 +271,12 @@ namespace RuriLib.Functions.Http
             }
 
             // Log the cookie header
-            var cookies = data.COOKIES.Select(c => $"{c.Key}={c.Value}");
+            var cookies = data.COOKIES.Select(c => $"{c.Key}={c.Value}").ToList();
 
-            if (cookies.Any())
+            if (cookies.Count != 0)
+            {
                 writer.WriteLine($"Cookie: {string.Join("; ", cookies)}");
+            }
 
             if (request.Content != null && content != null)
             {
@@ -293,9 +296,9 @@ namespace RuriLib.Functions.Http
                         writer.WriteLine(content);
                         break;
 
-                    case MultipartFormDataContent x:
+                    case MultipartFormDataContent:
                         writer.WriteLine($"Content-Type: multipart/form-data; boundary=\"{boundary}\"");
-                        writer.WriteLine($"Content-Length: (not calculated)");
+                        writer.WriteLine("Content-Length: (not calculated)");
                         writer.WriteLine();
                         writer.WriteLine(content);
                         break;
@@ -327,19 +330,12 @@ namespace RuriLib.Functions.Http
             }
 
             // Address
-            data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
+            data.ADDRESS = response.RequestMessage!.RequestUri!.AbsoluteUri;
             data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
 
             // Response code
             data.RESPONSECODE = (int)response.StatusCode;
             data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
-
-            // Headers
-            static string GetHeaderValue(KeyValuePair<string, IEnumerable<string>> header)
-            {
-                var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
-                return string.Join(separator, header.Value);
-            }
 
             data.HEADERS = response.Headers.ToDictionary(h => h.Key, GetHeaderValue);
             
@@ -362,39 +358,6 @@ namespace RuriLib.Functions.Http
                 data.COOKIES[cookie.Name] = cookie.Value;
             }
 
-            static bool TryParseCookie(string cookieHeader, out string cookieName, out string cookieValue)
-            {
-                cookieName = null;
-                cookieValue = null;
-
-                if (cookieHeader.Length == 0)
-                {
-                    return false;
-                }
-
-                var endCookiePos = cookieHeader.IndexOf(';');
-                var separatorPos = cookieHeader.IndexOf('=');
-
-                if (separatorPos == -1)
-                {
-                    // Invalid cookie, simply don't add it
-                    return false;
-                }
-
-                cookieName = cookieHeader[..separatorPos];
-
-                if (endCookiePos == -1)
-                {
-                    cookieValue = cookieHeader[(separatorPos + 1)..];
-                }
-                else
-                {
-                    cookieValue = cookieHeader.Substring(separatorPos + 1, (endCookiePos - separatorPos) - 1);
-                }
-
-                return true;
-            }
-
             // HttpClient has trouble with the Set-Cookie header https://github.com/dotnet/runtime/issues/20942
             // so we will help it out...
             foreach (var header in response.Headers)
@@ -406,7 +369,10 @@ namespace RuriLib.Functions.Http
                     {
                         if (TryParseCookie(cookieHeader, out var cookieName, out var cookieValue))
                         {
-                            data.COOKIES[cookieName] = cookieValue;
+                            if (cookieName is not null && cookieValue is not null)
+                            {
+                                data.COOKIES[cookieName] = cookieValue;
+                            }
                         }
                     }
                 }
@@ -416,7 +382,7 @@ namespace RuriLib.Functions.Http
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
             // Decode brotli if still compressed
-            if (data.HEADERS.ContainsKey("Content-Encoding") && data.HEADERS["Content-Encoding"].Contains("br"))
+            if (data.HEADERS.TryGetValue("Content-Encoding", out var value) && value.Contains("br"))
             {
                 try
                 {
@@ -448,8 +414,16 @@ namespace RuriLib.Functions.Http
             // Source
             if (!string.IsNullOrWhiteSpace(requestOptions.CodePagesEncoding))
             {
-                data.SOURCE = CodePagesEncodingProvider.Instance
-                    .GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE);
+                var encoding = CodePagesEncodingProvider.Instance
+                    .GetEncoding(requestOptions.CodePagesEncoding);
+
+                if (encoding is null)
+                {
+                    throw new NotSupportedException(
+                        $"Encoding {requestOptions.CodePagesEncoding} is not supported");
+                }
+                
+                data.SOURCE = encoding.GetString(data.RAWSOURCE);
             }
             else
             {
@@ -463,6 +437,42 @@ namespace RuriLib.Functions.Http
 
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);
             data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
+            return;
+
+            static bool TryParseCookie(string cookieHeader, out string? cookieName, out string? cookieValue)
+            {
+                cookieName = null;
+                cookieValue = null;
+
+                if (cookieHeader.Length == 0)
+                {
+                    return false;
+                }
+
+                var endCookiePos = cookieHeader.IndexOf(';');
+                var separatorPos = cookieHeader.IndexOf('=');
+
+                if (separatorPos == -1)
+                {
+                    // Invalid cookie, simply don't add it
+                    return false;
+                }
+
+                cookieName = cookieHeader[..separatorPos];
+
+                cookieValue = endCookiePos == -1 ? 
+                    cookieHeader[(separatorPos + 1)..] 
+                    : cookieHeader.Substring(separatorPos + 1, endCookiePos - separatorPos - 1);
+
+                return true;
+            }
+
+            // Headers
+            static string GetHeaderValue(KeyValuePair<string, IEnumerable<string>> header)
+            {
+                var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
+                return string.Join(separator, header.Value);
+            }
         }
     }
 }

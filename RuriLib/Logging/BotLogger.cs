@@ -18,20 +18,20 @@ namespace RuriLib.Logging
         /// <inheritdoc/>
         public string ExecutingBlock { get; set; } = "Unknown";
 
-        private readonly List<BotLoggerEntry> entries = new();
+        private readonly List<BotLoggerEntry> _entries = [];
 
         /// <inheritdoc/>
-        public event EventHandler<BotLoggerEntry> NewEntry;
+        public event EventHandler<BotLoggerEntry>? NewEntry;
 
         /// <inheritdoc/>
         public IEnumerable<BotLoggerEntry> Entries
         {
             get
             {
-                lock (entries)
+                lock (_entries)
                 {
                     // Make a copy of the list so it's thread safe
-                    return entries.ToList();
+                    return _entries.ToList();
                 }
             }
         }
@@ -52,21 +52,23 @@ namespace RuriLib.Logging
         }
 
         /// <inheritdoc/>
-        public void Log(string message, string color = "#fff", bool canViewAsHtml = false)
+        public void Log(string? message, string color = "#fff", bool canViewAsHtml = false)
         {
             if (!Enabled)
+            {
                 return;
+            }
 
             var entry = new BotLoggerEntry
             {
-                Message = message,
+                Message = message ?? string.Empty,
                 Color = color,
                 CanViewAsHtml = canViewAsHtml
             };
 
-            lock (entries)
+            lock (_entries)
             {
-                entries.Add(entry);
+                _entries.Add(entry);
             }
             
             NewEntry?.Invoke(this, entry);
@@ -76,7 +78,9 @@ namespace RuriLib.Logging
         public void Log(IEnumerable<string> enumerable, string color = "#fff", bool canViewAsHtml = false)
         {
             if (!Enabled)
+            {
                 return;
+            }
 
             var entry = new BotLoggerEntry
             {
@@ -85,26 +89,36 @@ namespace RuriLib.Logging
                 CanViewAsHtml = canViewAsHtml
             };
 
-            lock (entries)
+            lock (_entries)
             {
-                entries.Add(entry);
+                _entries.Add(entry);
             }
             
             NewEntry?.Invoke(this, entry);
         }
 
         /// <inheritdoc/>
-        public void LogHeader([CallerMemberName] string caller = null)
+        public void LogHeader([CallerMemberName] string? caller = null)
         {
-            // Do not log if called by lolicode
+            // Do not log if called by LoliCode
             if (!Enabled || ExecutingBlock == "LoliCode")
+            {
                 return;
+            }
 
             var callingMethod = new StackFrame(1).GetMethod();
+            
+            if (callingMethod is null)
+            {
+                return;
+            }
+            
             var attribute = callingMethod.GetCustomAttribute<Block>();
 
-            if (attribute is { name: { } })
+            if (attribute is { name: not null })
+            {
                 caller = attribute.name;
+            }
 
             var entry = new BotLoggerEntry
             {
@@ -112,10 +126,10 @@ namespace RuriLib.Logging
                 Color = LogColors.ChromeYellow
             };
 
-            lock (entries)
+            lock (_entries)
             {
-                entries.Add(new BotLoggerEntry { Message = string.Empty });
-                entries.Add(entry);
+                _entries.Add(new BotLoggerEntry { Message = string.Empty });
+                _entries.Add(entry);
             }
             
             NewEntry?.Invoke(this, entry);
@@ -124,9 +138,9 @@ namespace RuriLib.Logging
         /// <inheritdoc/>
         public void Clear()
         {
-            lock (entries)
+            lock (_entries)
             {
-                entries.Clear();
+                _entries.Clear();
             }
         }
     }
