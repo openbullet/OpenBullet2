@@ -197,8 +197,12 @@ namespace RuriLib.Helpers.Blocks
         /// </summary>
         public static VariableType? ToVariableType(Type type)
         {
-            _variableTypes.TryGetValue(type, out var value);
-            return value ?? throw new InvalidCastException(
+            if (_variableTypes.TryGetValue(type, out var value))
+            {
+                return value;
+            }
+            
+            throw new InvalidCastException(
                 $"The type {type} could not be casted to VariableType");
         }
 
