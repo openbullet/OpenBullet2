@@ -1,38 +1,44 @@
-﻿using RuriLib.Extensions;
-using RuriLib.Models.Blocks.Settings;
+﻿using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Parameters
+namespace RuriLib.Models.Blocks.Parameters;
+
+/// <summary>
+/// A parameter of type int.
+/// </summary>
+public class IntParameter : BlockParameter
 {
-    public class IntParameter : BlockParameter
+    /// <summary>
+    /// The default value of the parameter.
+    /// </summary>
+    public int DefaultValue { get; set; }
+
+    /// <summary></summary>
+    public IntParameter(string name) : base(name)
     {
-        public int DefaultValue { get; set; }
 
-        public IntParameter()
-        {
-
-        }
-
-        public IntParameter(string name, int defaultValue = 0)
-        {
-            Name = name;
-            DefaultValue = defaultValue;
-        }
-
-        public IntParameter(string name, string defaultVariableName = "")
-        {
-            Name = name;
-            DefaultVariableName = defaultVariableName;
-            InputMode = SettingInputMode.Variable;
-        }
-
-        public override BlockSetting ToBlockSetting()
-            => new()
-            {
-                Name = Name,
-                Description = Description,
-                ReadableName = PrettyName ?? Name.ToReadableName(),
-                FixedSetting = new IntSetting { Value = DefaultValue },
-                InputMode = InputMode
-            };
     }
+
+    /// <summary></summary>
+    public IntParameter(string name, int defaultValue = 0) : base(name)
+    {
+        DefaultValue = defaultValue;
+    }
+
+    /// <summary></summary>
+    public IntParameter(string name, string defaultVariableName = "") : base(name)
+    {
+        DefaultVariableName = defaultVariableName;
+        InputMode = SettingInputMode.Variable;
+    }
+
+    /// <inheritdoc />
+    public override BlockSetting ToBlockSetting()
+        => new()
+        {
+            Name = Name,
+            Description = Description,
+            ReadableName = PrettyName,
+            FixedSetting = new IntSetting { Value = DefaultValue },
+            InputMode = InputMode
+        };
 }

@@ -180,13 +180,13 @@ namespace RuriLib.Models.Blocks.Custom
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.Content, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.Content, new StringParameter(string.Empty));
 
                                 // Read another line to parse the content-type
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.ContentType, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.ContentType, new StringParameter(string.Empty));
 
                                 RequestParams = standardReqParams;
                                 break;
@@ -198,14 +198,14 @@ namespace RuriLib.Models.Blocks.Custom
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.Content, new ByteArrayParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.Content, new ByteArrayParameter(string.Empty));
 
 
                                 // Read another line to parse the content-type
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.ContentType, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.ContentType, new StringParameter(string.Empty));
 
                                 RequestParams = rawReqParams;
                                 break;
@@ -217,13 +217,13 @@ namespace RuriLib.Models.Blocks.Custom
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Username, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Username, new StringParameter(string.Empty));
 
                                 // Read another line to parse the password
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Password, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Password, new StringParameter(string.Empty));
 
                                 RequestParams = basicAuthReqParams;
                                 break;
@@ -235,7 +235,7 @@ namespace RuriLib.Models.Blocks.Custom
                                 line = reader.ReadLine().Trim();
                                 lineCopy = line;
                                 lineNumber++;
-                                LoliCodeParser.ParseSettingValue(ref line, multipartReqParams.Boundary, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, multipartReqParams.Boundary, new StringParameter(string.Empty));
 
                                 RequestParams = multipartReqParams;
                                 break;
@@ -266,15 +266,15 @@ namespace RuriLib.Models.Blocks.Custom
                         {
                             case "STRING":
                                 var stringContent = new StringHttpContentSettingsGroup();
-                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Name, new StringParameter());
-                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Data, new StringParameter());
-                                LoliCodeParser.ParseSettingValue(ref line, stringContent.ContentType, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Name, new StringParameter(string.Empty));
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Data, new StringParameter(string.Empty));
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.ContentType, new StringParameter(string.Empty));
                                 multipart.Contents.Add(stringContent);
                                 break;
 
                             case "RAW":
                                 var rawContent = new RawHttpContentSettingsGroup();
-                                LoliCodeParser.ParseSettingValue(ref line, rawContent.Name, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawContent.Name, new StringParameter(string.Empty));
 
                                 // HACK: Cache the line to prevent it from being modified by the parser
                                 // if the parse fails, we can still use the original line to parse the content-type
@@ -286,22 +286,22 @@ namespace RuriLib.Models.Blocks.Custom
                                 try
                                 {
                                     LoliCodeParser.ParseSettingValue(ref line, rawContent.Data,
-                                        new ByteArrayParameter());
+                                        new ByteArrayParameter(string.Empty));
                                 }
                                 catch
                                 {
                                     line = lineCopyCache;
                                 }
                                 
-                                LoliCodeParser.ParseSettingValue(ref line, rawContent.ContentType, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawContent.ContentType, new StringParameter(string.Empty));
                                 multipart.Contents.Add(rawContent);
                                 break;
 
                             case "FILE":
                                 var fileContent = new FileHttpContentSettingsGroup();
-                                LoliCodeParser.ParseSettingValue(ref line, fileContent.Name, new StringParameter());
-                                LoliCodeParser.ParseSettingValue(ref line, fileContent.FileName, new StringParameter());
-                                LoliCodeParser.ParseSettingValue(ref line, fileContent.ContentType, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.Name, new StringParameter(string.Empty));
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.FileName, new StringParameter(string.Empty));
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.ContentType, new StringParameter(string.Empty));
                                 multipart.Contents.Add(fileContent);
                                 break;
                         }

@@ -10,14 +10,15 @@ using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using System.Text.Json;
+using OpenBullet2.Web.Exceptions;
 
 namespace OpenBullet2.Web.Utils;
 
-static internal class BlockMapper
+internal static class BlockMapper
 {
     // Here I did the dto -> block mappings manually while I find
     // a way to make automapper work properly on BlockSetting...
-    static internal List<BlockInstance> MapStack(
+    internal static List<BlockInstance> MapStack(
         this List<JsonElement> jsonElements, IMapper mapper)
     {
         var stack = new List<BlockInstance>();
@@ -27,6 +28,11 @@ static internal class BlockMapper
             // Get the id of the block
             var id = jsonElement.GetProperty("id").GetString();
             BlockInstance block;
+
+            if (id is null)
+            {
+                throw new MappingException("Block id not found");
+            }
 
             switch (id)
             {
@@ -212,7 +218,7 @@ static internal class BlockMapper
         foreach (var c in dto.Contents)
         {
             var contentDto = PolyMapper.ConvertPolyDto<HttpContentSettingsGroupDto>(
-                (JsonElement)c!);
+                (JsonElement)c);
 
             HttpContentSettingsGroup content;
 
@@ -269,44 +275,44 @@ static internal class BlockMapper
         }
 
         setting.InputMode = dto.InputMode;
-        setting.InputVariableName = dto.InputVariableName;
+        setting.InputVariableName = dto.InputVariableName ?? string.Empty;
         var value = (JsonElement)dto.Value!;
 
         switch (dto.Type)
         {
             case BlockSettingType.String:
-                ((StringSetting)setting.FixedSetting).Value = value.GetString();
-                ((InterpolatedStringSetting)setting.InterpolatedSetting).Value = value.GetString();
+                ((StringSetting)setting.FixedSetting!).Value = value.GetString();
+                ((InterpolatedStringSetting)setting.InterpolatedSetting!).Value = value.GetString();
                 break;
 
             case BlockSettingType.Int:
-                ((IntSetting)setting.FixedSetting).Value = value.GetInt32();
+                ((IntSetting)setting.FixedSetting!).Value = value.GetInt32();
                 break;
 
             case BlockSettingType.Float:
-                ((FloatSetting)setting.FixedSetting).Value = value.GetSingle();
+                ((FloatSetting)setting.FixedSetting!).Value = value.GetSingle();
                 break;
 
             case BlockSettingType.Bool:
-                ((BoolSetting)setting.FixedSetting).Value = value.GetBoolean();
+                ((BoolSetting)setting.FixedSetting!).Value = value.GetBoolean();
                 break;
 
             case BlockSettingType.ByteArray:
-                ((ByteArraySetting)setting.FixedSetting).Value = value.GetBytesFromBase64();
+                ((ByteArraySetting)setting.FixedSetting!).Value = value.GetBytesFromBase64();
                 break;
 
             case BlockSettingType.ListOfStrings:
-                ((ListOfStringsSetting)setting.FixedSetting).Value = value
-                    .Deserialize<List<string>>(Globals.JsonOptions);
-                ((InterpolatedListOfStringsSetting)setting.InterpolatedSetting).Value = value
-                    .Deserialize<List<string>>(Globals.JsonOptions);
+                ((ListOfStringsSetting)setting.FixedSetting!).Value = value
+                    .Deserialize<List<string>>(Globals.JsonOptions)!;
+                ((InterpolatedListOfStringsSetting)setting.InterpolatedSetting!).Value = value
+                    .Deserialize<List<string>>(Globals.JsonOptions)!;
                 break;
 
             case BlockSettingType.DictionaryOfStrings:
-                ((DictionaryOfStringsSetting)setting.FixedSetting).Value = value
-                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
-                ((InterpolatedDictionaryOfStringsSetting)setting.InterpolatedSetting).Value = value
-                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
+                ((DictionaryOfStringsSetting)setting.FixedSetting!).Value = value
+                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions)!;
+                ((InterpolatedDictionaryOfStringsSetting)setting.InterpolatedSetting!).Value = value
+                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions)!;
                 break;
 
             case BlockSettingType.Enum:

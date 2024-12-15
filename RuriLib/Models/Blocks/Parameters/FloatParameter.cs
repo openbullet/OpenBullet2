@@ -1,38 +1,44 @@
-﻿using RuriLib.Extensions;
-using RuriLib.Models.Blocks.Settings;
+﻿using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Parameters
+namespace RuriLib.Models.Blocks.Parameters;
+
+/// <summary>
+/// A parameter of type float.
+/// </summary>
+public class FloatParameter : BlockParameter
 {
-    public class FloatParameter : BlockParameter
+    /// <summary>
+    /// The default value of the parameter.
+    /// </summary>
+    public float DefaultValue { get; set; }
+
+    /// <summary></summary>
+    public FloatParameter(string name) : base(name)
     {
-        public float DefaultValue { get; set; }
 
-        public FloatParameter()
-        {
-
-        }
-
-        public FloatParameter(string name, float defaultValue = 0)
-        {
-            Name = name;
-            DefaultValue = defaultValue;
-        }
-
-        public FloatParameter(string name, string defaultVariableName = "")
-        {
-            Name = name;
-            DefaultVariableName = defaultVariableName;
-            InputMode = SettingInputMode.Variable;
-        }
-
-        public override BlockSetting ToBlockSetting()
-            => new()
-            {
-                Name = Name,
-                Description = Description,
-                ReadableName = PrettyName ?? Name.ToReadableName(),
-                FixedSetting = new FloatSetting { Value = DefaultValue },
-                InputMode = InputMode
-            };
     }
+
+    /// <summary></summary>
+    public FloatParameter(string name, float defaultValue = 0) : base(name)
+    {
+        DefaultValue = defaultValue;
+    }
+
+    /// <summary></summary>
+    public FloatParameter(string name, string defaultVariableName = "") : base(name)
+    {
+        DefaultVariableName = defaultVariableName;
+        InputMode = SettingInputMode.Variable;
+    }
+
+    /// <inheritdoc />
+    public override BlockSetting ToBlockSetting()
+        => new()
+        {
+            Name = Name,
+            Description = Description,
+            ReadableName = PrettyName,
+            FixedSetting = new FloatSetting { Value = DefaultValue },
+            InputMode = InputMode
+        };
 }

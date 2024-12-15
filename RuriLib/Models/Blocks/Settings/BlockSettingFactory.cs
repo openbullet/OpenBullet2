@@ -58,10 +58,10 @@ namespace RuriLib.Models.Blocks.Settings
                 Description = description,
                 ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
-                FixedSetting = new EnumSetting { EnumType = typeof(T), Value = defaultValue }
+                FixedSetting = new EnumSetting(typeof(T)) { Value = defaultValue }
             };
 
-        public static BlockSetting CreateStringSetting(string name, string defaultValue = "",
+        public static BlockSetting CreateStringSetting(string name, string? defaultValue = "",
             SettingInputMode mode = SettingInputMode.Fixed, bool multiLine = false, string readableName = null,
             string description = null) 
             => new()
@@ -83,8 +83,8 @@ namespace RuriLib.Models.Blocks.Settings
                 }
             };
 
-        public static BlockSetting CreateListOfStringsSetting(string name, List<string> defaultValue = null,
-            SettingInputMode mode = SettingInputMode.Fixed, string readableName = null, string description = null)
+        public static BlockSetting CreateListOfStringsSetting(string name, List<string>? defaultValue = null,
+            SettingInputMode mode = SettingInputMode.Fixed, string? readableName = null, string? description = null)
             => new()
             {
                 Name = name,
@@ -93,11 +93,11 @@ namespace RuriLib.Models.Blocks.Settings
                 InputMode = mode,
                 InterpolatedSetting = new InterpolatedListOfStringsSetting
                 {
-                    Value = defaultValue ?? new List<string>()
+                    Value = defaultValue ?? []
                 },
                 FixedSetting = new ListOfStringsSetting
                 {
-                    Value = defaultValue ?? new List<string>()
+                    Value = defaultValue ?? []
                 }
             };
 

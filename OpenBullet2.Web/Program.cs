@@ -130,7 +130,7 @@ builder.Services.AddScoped<IJobRepository, DbJobRepository>();
 builder.Services.AddScoped<IGuestRepository, DbGuestRepository>();
 builder.Services.AddScoped<IRecordRepository, DbRecordRepository>();
 builder.Services.AddScoped<IWordlistRepository>(service =>
-    new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
+    new HybridWordlistRepository(service.GetRequiredService<ApplicationDbContext>(),
         $"{Globals.UserDataFolder}/Wordlists"));
 
 builder.Services.AddScoped<DataPoolFactoryService>();
@@ -143,7 +143,7 @@ builder.Services.AddSingleton<IAnnouncementService, AnnouncementService>();
 builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
-    new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
+    new DiskConfigRepository(service.GetRequiredService<RuriLibSettingsService>(),
         $"{Globals.UserDataFolder}/Configs"));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
@@ -155,7 +155,7 @@ builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<ProxyCheckOutputFactory>();
 builder.Services.AddSingleton<JobManagerService>();
 builder.Services.AddSingleton(service =>
-    new JobMonitorService(service.GetService<JobManagerService>(),
+    new JobMonitorService(service.GetRequiredService<JobManagerService>(),
         $"{Globals.UserDataFolder}/triggeredActions.json", false));
 builder.Services.AddSingleton<HitStorageService>();
 builder.Services.AddSingleton(_ => new RuriLibSettingsService(Globals.UserDataFolder));
@@ -166,7 +166,7 @@ builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
-    new FileJobLogger(service.GetService<RuriLibSettingsService>(),
+    new FileJobLogger(service.GetRequiredService<RuriLibSettingsService>(),
         $"{Globals.UserDataFolder}/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();

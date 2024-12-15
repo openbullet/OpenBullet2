@@ -1,38 +1,45 @@
-﻿using RuriLib.Extensions;
-using RuriLib.Models.Blocks.Settings;
+﻿using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Parameters
+namespace RuriLib.Models.Blocks.Parameters;
+
+/// <summary>
+/// A parameter of type bool.
+/// </summary>
+public class BoolParameter : BlockParameter
 {
-    public class BoolParameter : BlockParameter
+    /// <summary>
+    /// The default value of the parameter.
+    /// </summary>
+    public bool DefaultValue { get; set; }
+
+    /// <summary></summary>
+    public BoolParameter(string name) : base(name)
     {
-        public bool DefaultValue { get; set; }
 
-        public BoolParameter()
-        {
-
-        }
-
-        public BoolParameter(string name, bool defaultValue = false)
-        {
-            Name = name;
-            DefaultValue = defaultValue;
-        }
-
-        public BoolParameter(string name, string defaultVariableName = "")
-        {
-            Name = name;
-            DefaultVariableName = defaultVariableName;
-            InputMode = SettingInputMode.Variable;
-        }
-
-        public override BlockSetting ToBlockSetting()
-            => new()
-            {
-                Name = Name,
-                Description = Description,
-                ReadableName = PrettyName ?? Name.ToReadableName(),
-                FixedSetting = new BoolSetting { Value = DefaultValue },
-                InputMode = InputMode
-            };
     }
+
+    /// <summary></summary>
+    public BoolParameter(string name, bool defaultValue = false) : base(name)
+    {
+        Name = name;
+        DefaultValue = defaultValue;
+    }
+
+    /// <summary></summary>
+    public BoolParameter(string name, string defaultVariableName = "") : base(name)
+    {
+        DefaultVariableName = defaultVariableName;
+        InputMode = SettingInputMode.Variable;
+    }
+
+    /// <inheritdoc />
+    public override BlockSetting ToBlockSetting()
+        => new()
+        {
+            Name = Name,
+            Description = Description,
+            ReadableName = PrettyName,
+            FixedSetting = new BoolSetting { Value = DefaultValue },
+            InputMode = InputMode
+        };
 }

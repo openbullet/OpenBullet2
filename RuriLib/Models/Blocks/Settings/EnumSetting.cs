@@ -3,41 +3,65 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace RuriLib.Models.Blocks.Settings
+namespace RuriLib.Models.Blocks.Settings;
+
+/// <summary>
+/// A setting that holds an enum value.
+/// </summary>
+public class EnumSetting : Setting
 {
-    public class EnumSetting : Setting
+    private Type _enumType;
+    private readonly Dictionary<string, string> _enumValues = [];
+
+    public EnumSetting(Type enumType)
     {
-        private Type enumType = null;
-        public Type EnumType
-        { 
-            get => enumType;
-            set
+        _enumType = enumType;
+    }
+    
+    /// <summary>
+    /// The type of the enum.
+    /// </summary>
+    public Type EnumType
+    { 
+        get => _enumType;
+        set
+        {
+            _enumType = value;
+
+            // Populate the enum values dictionary (used to have nicer enum names to display)
+            foreach (var name in _enumType.GetEnumNames())
             {
-                enumType = value;
+                var fi = _enumType.GetField(name);
 
-                // Populate the enum values dictionary (used to have nicer enum names to display)
-                foreach (var name in enumType.GetEnumNames())
+                if (fi.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
                 {
-                    var fi = enumType.GetField(name);
-
-                    if (fi.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
-                    {
-                        enumValues[attributes.First().Description] = name;
-                    }
-                    else
-                    {
-                        enumValues[name] = name;
-                    }
+                    _enumValues[attributes.First().Description] = name;
+                }
+                else
+                {
+                    _enumValues[name] = name;
                 }
             }
         }
-        public string Value { get; set; }
-
-        public IEnumerable<string> PrettyNames => enumValues.Keys;
-        public string PrettyName => enumValues.First(kvp => kvp.Value == Value).Key;
-        
-        private readonly Dictionary<string, string> enumValues = new();
-
-        public void SetFromPrettyName(string prettyName) => Value = enumValues[prettyName];
     }
+    
+    /// <summary>
+    /// The value of the setting.
+    /// </summary>
+    public string Value { get; set; }
+
+    /// <summary>
+    /// The pretty names of the enum values.
+    /// </summary>
+    public IEnumerable<string> PrettyNames => _enumValues.Keys;
+    
+    /// <summary>
+    /// The pretty name of the current value.
+    /// </summary>
+    public string PrettyName => _enumValues.First(kvp => kvp.Value == Value).Key;
+    
+    /// <summary>
+    /// Sets the value of the setting from a pretty name.
+    /// </summary>
+    public void SetFromPrettyName(string prettyName) => Value = _enumValues[prettyName];
 }

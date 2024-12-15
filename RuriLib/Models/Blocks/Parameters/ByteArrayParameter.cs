@@ -2,40 +2,49 @@
 using RuriLib.Models.Blocks.Settings;
 using System;
 
-namespace RuriLib.Models.Blocks.Parameters
+namespace RuriLib.Models.Blocks.Parameters;
+
+/// <summary>
+/// A parameter of type byte array.
+/// </summary>
+public class ByteArrayParameter : BlockParameter
 {
-    public class ByteArrayParameter : BlockParameter
+    /// <summary>
+    /// The default value of the parameter.
+    /// </summary>
+    public byte[] DefaultValue { get; set; } = [];
+
+    /// <summary></summary>
+    public ByteArrayParameter(string name) : base(name)
     {
-        public byte[] DefaultValue { get; set; }
 
-        public ByteArrayParameter()
-        {
-
-        }
-
-        public ByteArrayParameter(string name, byte[] defaultValue = null, SettingInputMode inputMode = SettingInputMode.Fixed)
-        {
-            Name = name;
-            InputMode = inputMode;
-            DefaultValue = defaultValue ?? Array.Empty<byte>();
-        }
-
-        public ByteArrayParameter(string name, string defaultVariableName = "")
-        {
-            Name = name;
-            DefaultVariableName = defaultVariableName;
-            DefaultValue = Array.Empty<byte>();
-            InputMode = SettingInputMode.Variable;
-        }
-
-        public override BlockSetting ToBlockSetting()
-            => new()
-            {
-                Name = Name,
-                Description = Description,
-                ReadableName = PrettyName ?? Name.ToReadableName(),
-                FixedSetting = new ByteArraySetting { Value = DefaultValue },
-                InputMode = InputMode
-            };
     }
+
+    /// <summary></summary>
+    public ByteArrayParameter(string name, byte[]? defaultValue = null,
+        SettingInputMode inputMode = SettingInputMode.Fixed) : base(name)
+    {
+        InputMode = inputMode;
+        DefaultValue = defaultValue ?? [];
+    }
+
+    /// <summary></summary>
+    public ByteArrayParameter(string name, string defaultVariableName = "")
+        : base(name)
+    {
+        Name = name;
+        DefaultVariableName = defaultVariableName;
+        InputMode = SettingInputMode.Variable;
+    }
+
+    /// <inheritdoc />
+    public override BlockSetting ToBlockSetting()
+        => new()
+        {
+            Name = Name,
+            Description = Description,
+            ReadableName = PrettyName,
+            FixedSetting = new ByteArraySetting { Value = DefaultValue },
+            InputMode = InputMode
+        };
 }
