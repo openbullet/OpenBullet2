@@ -8,9 +8,15 @@ using System.Data;
 // ReSharper disable once CheckNamespace
 namespace RuriLib.Blocks.Functions.Float;
 
+/// <summary>
+/// Blocks for working with floating point numbers.
+/// </summary>
 [BlockCategory("Float Functions", "Blocks for working with floating point numbers", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Rounds the value up to the nearest integer.
+    /// </summary>
     [Block("Rounds the value up to the nearest integer")]
     public static int Ceil(BotData data, [Variable] float input)
     {
@@ -21,6 +27,9 @@ public static class Methods
         return rounded;
     }
 
+    /// <summary>
+    /// Rounds the value down to the nearest integer.
+    /// </summary>
     [Block("Rounds the value down to the nearest integer")]
     public static int Floor(BotData data, [Variable] float input)
     {
@@ -31,6 +40,9 @@ public static class Methods
         return rounded;
     }
 
+    /// <summary>
+    /// Rounds the value to the nearest integer.
+    /// </summary>
     [Block("Rounds the value to the nearest integer")]
     public static int RoundToInteger(BotData data, [Variable] float input)
     {
@@ -41,6 +53,9 @@ public static class Methods
         return rounded;
     }
 
+    /// <summary>
+    /// Rounds the value to the given decimal places.
+    /// </summary>
     [Block("Rounds the value to the given decimal places")]
     public static float Round(BotData data, [Variable] float input, int decimalPlaces = 2)
     {
@@ -51,6 +66,9 @@ public static class Methods
         return rounded;
     }
 
+    /// <summary>
+    /// Computes the value of a given mathematical expression.
+    /// </summary>
     [Block("Computes the value of a given mathematical expression")]
     public static float Compute(BotData data, [Variable] string input)
     {
@@ -61,6 +79,9 @@ public static class Methods
         return result;
     }
 
+    /// <summary>
+    /// Generates a random float between two values (inclusive).
+    /// </summary>
     [Block("Generates a random float between two values (inclusive)")]
     public static float RandomFloat(BotData data, float minimum = 0, float maximum = 1)
     {
@@ -71,6 +92,9 @@ public static class Methods
         return random;
     }
 
+    /// <summary>
+    /// Takes the maximum between two floats.
+    /// </summary>
     [Block("Takes the maximum between two floats", name = "Maximum Float")]
     public static float TakeMaxFloat(BotData data, float first, float second)
     {
@@ -81,6 +105,9 @@ public static class Methods
         return max;
     }
 
+    /// <summary>
+    /// Takes the minimum between two floats.
+    /// </summary>
     [Block("Takes the minimum between two floats", name = "Minimum Float")]
     public static float TakeMinFloat(BotData data, float first, float second)
     {

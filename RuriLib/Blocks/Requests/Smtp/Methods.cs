@@ -28,6 +28,9 @@ public static class Methods
     private static readonly List<string> _subdomains =
         ["mail", "smtp-mail", "outbound", "out", "mx", "smtp", "smtps", "m"];
         
+    /// <summary>
+    /// Connects to a SMTP server by automatically detecting the host and port.
+    /// </summary>
     [Block("Connects to a SMTP server by automatically detecting the host and port")]
     public static async Task SmtpAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
     {
@@ -43,7 +46,7 @@ public static class Methods
 
         if (data.UseProxy && data.Proxy != null)
         {
-            client.ProxyClient = MapProxyClient(data);
+            client.ProxyClient = MapProxyClient(data.Proxy);
         }
 
         data.SetObject("smtpClient", client);
@@ -253,6 +256,9 @@ public static class Methods
         return await response.Content!.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Connects to a SMTP server.
+    /// </summary>
     [Block("Connects to a SMTP server")]
     public static async Task SmtpConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
     {
@@ -268,7 +274,7 @@ public static class Methods
 
         if (data.UseProxy && data.Proxy != null)
         {
-            client.ProxyClient = MapProxyClient(data);
+            client.ProxyClient = MapProxyClient(data.Proxy);
         }
 
         data.SetObject("smtpClient", client);
@@ -277,6 +283,9 @@ public static class Methods
         data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
     }
 
+    /// <summary>
+    /// Disconnects from a SMTP server.
+    /// </summary>
     [Block("Disconnects from a SMTP server")]
     public static async Task SmtpDisconnect(BotData data)
     {
@@ -295,6 +304,9 @@ public static class Methods
         }
     }
 
+    /// <summary>
+    /// Logs into an account.
+    /// </summary>
     [Block("Logs into an account")]
     public static async Task SmtpLogin(BotData data, string email, string password, int timeoutMilliseconds = 10000)
     {
@@ -310,6 +322,9 @@ public static class Methods
         data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
     }
 
+    /// <summary>
+    /// Gets the protocol log", name = "Get Smtp Log.
+    /// </summary>
     [Block("Gets the protocol log", name = "Get Smtp Log")]
     public static string SmtpGetLog(BotData data)
     {
@@ -324,6 +339,9 @@ public static class Methods
         return log;
     }
 
+    /// <summary>
+    /// Sends a mail to the recipient.
+    /// </summary>
     [Block("Sends a mail to the recipient")]
     public static async Task SmtpSendMail(BotData data, string senderName, string senderAddress,
         string recipientName, string recipientAddress, string subject, string textBody, string htmlBody)

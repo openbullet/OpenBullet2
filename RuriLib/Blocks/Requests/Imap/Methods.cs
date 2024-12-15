@@ -30,6 +30,9 @@ public static class Methods
     private static readonly List<string> _subdomains =
         ["mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m"];
 
+    /// <summary>
+    /// Connects to an IMAP server by automatically detecting the host and port.
+    /// </summary>
     [Block("Connects to an IMAP server by automatically detecting the host and port")]
     public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
     {
@@ -245,6 +248,9 @@ public static class Methods
         return await response.Content!.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Connects to an IMAP server.
+    /// </summary>
     [Block("Connects to an IMAP server")]
     public static async Task ImapConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
     {

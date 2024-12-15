@@ -11,6 +11,9 @@ namespace RuriLib.Blocks.Utility.Conversion;
 [BlockCategory("Conversion", "Blocks for converting between different encodings", "#fad6a5")]
 public static class Methods
 {
+    /// <summary>
+    /// Converts a hex string to a byte array.
+    /// </summary>
     [Block("Converts a hex string to a byte array", name = "Hex => Bytes")]
     public static byte[] HexStringToByteArray(BotData data, [Variable] string hexString, bool addPadding = true)
     {
@@ -19,6 +22,9 @@ public static class Methods
         return HexConverter.ToByteArray(hexString, addPadding);
     }
 
+    /// <summary>
+    /// Converts a byte array to a hex string.
+    /// </summary>
     [Block("Converts a byte array to a hex string", name = "Bytes => Hex")]
     public static string ByteArrayToHexString(BotData data, [Variable] byte[] bytes)
     {
@@ -28,6 +34,9 @@ public static class Methods
         return hex;
     }
 
+    /// <summary>
+    /// Converts a base64 string to a byte array.
+    /// </summary>
     [Block("Converts a base64 string to a byte array", name = "Base64 => Bytes")]
     public static byte[] Base64StringToByteArray(BotData data, [Variable] string base64String, bool urlEncoded = false)
     {
@@ -36,6 +45,9 @@ public static class Methods
         return Base64Converter.ToByteArray(base64String, urlEncoded);
     }
 
+    /// <summary>
+    /// Converts a byte array to a base64 string.
+    /// </summary>
     [Block("Converts a byte array to a base64 string", name = "Bytes => Base64")]
     public static string ByteArrayToBase64String(BotData data, [Variable] byte[] bytes, bool urlEncoded = false)
     {
@@ -45,6 +57,9 @@ public static class Methods
         return b64;
     }
 
+    /// <summary>
+    /// Converts a (big) integer to a byte array.
+    /// </summary>
     [Block("Converts a (big) integer to a byte array", name = "Big Integer => Bytes")]
     public static byte[] BigIntegerToByteArray(BotData data, [Variable] string bigInteger)
     {
@@ -53,6 +68,9 @@ public static class Methods
         return BigInteger.Parse(bigInteger).ToByteArray();
     }
 
+    /// <summary>
+    /// Converts a byte array to a (big) integer.
+    /// </summary>
     [Block("Converts a byte array to a (big) integer", name = "Bytes => Big Integer")]
     public static string ByteArrayToBigInteger(BotData data, [Variable] byte[] bytes)
     {

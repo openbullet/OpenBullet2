@@ -15,6 +15,9 @@ namespace RuriLib.Blocks.Utility.Files;
 [BlockCategory("Files", "Blocks for working with files and folders", "#fad6a5")]
 public static class Methods
 {
+    /// <summary>
+    /// Checks if a file exists.
+    /// </summary>
     [Block("Checks if a file exists")]
     public static bool FileExists(BotData data, string path)
     {
@@ -29,6 +32,9 @@ public static class Methods
     }
 
     #region Read File
+    /// <summary>
+    /// Reads the entire content of a file to a single string.
+    /// </summary>
     [Block("Reads the entire content of a file to a single string")]
     public static async Task<string> FileRead(BotData data, string path, FileEncoding encoding = FileEncoding.UTF8)
     {
@@ -42,6 +48,9 @@ public static class Methods
         return text;
     }
 
+    /// <summary>
+    /// Reads all lines of a file.
+    /// </summary>
     [Block("Reads all lines of a file")]
     public static async Task<List<string>> FileReadLines(BotData data, string path, FileEncoding encoding = FileEncoding.UTF8)
     {
@@ -55,6 +64,9 @@ public static class Methods
         return lines.ToList();
     }
 
+    /// <summary>
+    /// Reads all bytes of a file.
+    /// </summary>
     [Block("Reads all bytes of a file")]
     public static async Task<byte[]> FileReadBytes(BotData data, string path)
     {
@@ -122,6 +134,9 @@ public static class Methods
     #endregion
 
     #region Append File
+    /// <summary>
+    /// Appends a string at the end of a file.
+    /// </summary>
     [Block("Appends a string at the end of a file")]
     public static async Task FileAppend(BotData data, string path, [Interpolated] string content,
         FileEncoding encoding = FileEncoding.UTF8)

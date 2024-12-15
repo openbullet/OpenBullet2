@@ -7,6 +7,9 @@ namespace RuriLib.Blocks.Functions;
 [BlockCategory("Functions", "General purpose functions", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Generates a random User Agent using the builtin provider or a custom list.
+    /// </summary>
     [Block("Generates a random User Agent using the builtin provider or a custom list")]
     public static string RandomUserAgent(BotData data, UAPlatform platform = UAPlatform.All)
     {

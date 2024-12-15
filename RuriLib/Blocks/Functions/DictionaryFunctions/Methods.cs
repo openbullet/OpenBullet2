@@ -7,9 +7,15 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace RuriLib.Blocks.Functions.Dictionary;
 
+/// <summary>
+/// Blocks for working with dictionaries.
+/// </summary>
 [BlockCategory("Dictionary Functions", "Blocks for working with dictionaries", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Adds an item to the dictionary.
+    /// </summary>
     [Block("Adds an item to the dictionary")]
     public static void AddKeyValuePair(BotData data, [Variable] Dictionary<string, string> dictionary, string key, string value)
     {
@@ -19,6 +25,9 @@ public static class Methods
         data.Logger.Log($"Added ({key}, {value})", LogColors.YellowGreen);
     }
 
+    /// <summary>
+    /// Gets the value of a key in the dictionary.
+    /// </summary>
     [Block("Removes an item with a given key from the dictionary")]
     public static void RemoveByKey(BotData data, [Variable] Dictionary<string, string> dictionary, string key)
     {
@@ -29,6 +38,9 @@ public static class Methods
             LogColors.YellowGreen);
     }
 
+    /// <summary>
+    /// Gets the value of a key in the dictionary.
+    /// </summary>
     [Block("Gets a dictionary key by value (old <DICT{value}>)")]
     public static string GetKey(BotData data, [Variable] Dictionary<string, string> dictionary, string value)
     {

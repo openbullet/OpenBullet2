@@ -11,9 +11,15 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace RuriLib.Blocks.Functions.List;
 
+/// <summary>
+/// Blocks for working with lists of strings.
+/// </summary>
 [BlockCategory("List Functions", "Blocks for working with lists of strings", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Counts the number of elements in the list.
+    /// </summary>
     [Block("Counts the number of elements in the list")]
     public static int GetListLength(BotData data, [Variable] List<string> list)
     {
@@ -24,6 +30,9 @@ public static class Methods
         return count;
     }
 
+    /// <summary>
+    /// Joins all the strings in the list to create a single string with the given separator.
+    /// </summary>
     [Block("Joins all the strings in the list to create a single string with the given separator")]
     public static string JoinList(BotData data, [Variable] List<string> list, string separator = ",")
     {
@@ -34,6 +43,9 @@ public static class Methods
         return joined;
     }
 
+    /// <summary>
+    /// Sorts a list alphabetically.
+    /// </summary>
     [Block("Sorts a list alphabetically", extraInfo = "If the elements of the list are numeric values, set numeric to true")]
     public static void SortList(BotData data, [Variable] List<string> list, bool ascending = true, bool numeric = false)
     {
@@ -59,6 +71,9 @@ public static class Methods
         data.Logger.Log("Sorted list in " + (ascending ? "ascending" : "descending") + " order", LogColors.YellowGreen);
     }
 
+    /// <summary>
+    /// Concatenates two lists into a single one.
+    /// </summary>
     [Block("Concatenates two lists into a single one")]
     public static List<string> ConcatLists(BotData data, [Variable] List<string> list1, [Variable] List<string> list2)
     {
@@ -69,6 +84,9 @@ public static class Methods
         return concat;
     }
 
+    /// <summary>
+    /// Zips two lists into a single one.
+    /// </summary>
     [Block("Zips two lists into a single one", 
         extraInfo = "You can specify the format for joined elements. " +
                     "[0] is replaced with an element from the first list, and [1] with an element from the second list. " +
@@ -106,6 +124,9 @@ public static class Methods
         return mapped;
     }
 
+    /// <summary>
+    /// Adds an item to a list.
+    /// </summary>
     [Block("Adds an item to a list",
         extraInfo = "If the index is negative, it will start from the end of the list. For example an index of -1 will add the item at the end of the list")]
     public static void AddToList(BotData data, [Variable] List<string> list, string item, int index = -1)
@@ -126,6 +147,9 @@ public static class Methods
         data.Logger.Log($"Added {item} at index {index}", LogColors.YellowGreen);
     }
 
+    /// <summary>
+    /// Removes an item from a list.
+    /// </summary>
     [Block("Removes an item from a list",
         extraInfo = "If the index is negative, it will start from the end of the list. For example an index of -1 will remove the item at the end of the list")]
     public static void RemoveFromList(BotData data, [Variable] List<string> list, int index = 0)

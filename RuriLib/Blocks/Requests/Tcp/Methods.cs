@@ -17,6 +17,9 @@ namespace RuriLib.Blocks.Requests.Tcp;
 [BlockCategory("TCP", "Blocks to send data over TCP", "#e0b0ff")]
 public static class Methods
 {
+    /// <summary>
+    /// Establishes a TCP connection with the given server.
+    /// </summary>
     [Block("Establishes a TCP connection with the given server")]
     public static async Task TcpConnect(BotData data, string host, int port, bool useSSL, int timeoutMilliseconds = 10000)
     {
@@ -47,6 +50,9 @@ public static class Methods
         data.Logger.Log($"The client connected to {host} on port {port}", LogColors.Mauve);
     }
 
+    /// <summary>
+    /// Sends a message (ASCII) on the previously opened socket and read the response (ASCII) right after.
+    /// </summary>
     [Block("Sends a message (ASCII) on the previously opened socket and read the response (ASCII) right after")]
     public static async Task<string> TcpSendRead(BotData data, string message, bool unescape = true, bool terminateWithCRLF = true,
         int bytesToRead = 4096, int timeoutMilliseconds = 60000, [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
@@ -85,6 +91,9 @@ public static class Methods
         return response;
     }
 
+    /// <summary>
+    /// Sends a message on the previously opened socket and read the response right after.
+    /// </summary>
     [Block("Sends a message on the previously opened socket and read the response right after")]
     public static async Task<byte[]> TcpSendReadBytes(BotData data, byte[] bytes,
         int bytesToRead = 4096, int timeoutMilliseconds = 60000)
@@ -111,6 +120,9 @@ public static class Methods
         return bytesRead;
     }
 
+    /// <summary>
+    /// Sends a message(ASCII) on the previously opened socket.
+    /// </summary>
     [Block("Sends a message(ASCII) on the previously opened socket")]
     public static async Task TcpSend(BotData data, string message, bool unescape = true, bool terminateWithCRLF = true,
         [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
@@ -138,6 +150,9 @@ public static class Methods
         data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
     }
 
+    /// <summary>
+    /// Sends a message on the previously opened socket.
+    /// </summary>
     [Block("Sends a message on the previously opened socket")]
     public static async Task TcpSendBytes(BotData data, byte[] bytes)
     {
@@ -149,6 +164,9 @@ public static class Methods
         data.Logger.Log($"Sent {bytes.Length} bytes", LogColors.Mauve);
     }
 
+    /// <summary>
+    /// Reads a message (ASCII) from the previously opened socket.
+    /// </summary>
     [Block("Reads a message (ASCII) from the previously opened socket")]
     public static async Task<string> TcpRead(BotData data, int bytesToRead = 4096, 
         int timeoutMilliseconds = 60000, [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
@@ -169,6 +187,9 @@ public static class Methods
         return response;
     }
 
+    /// <summary>
+    /// Reads a raw message from the previously opened socket.
+    /// </summary>
     [Block("Reads a raw message from the previously opened socket")]
     public static async Task<byte[]> TcpReadBytes(BotData data, int bytesToRead = 4096,
         int timeoutMilliseconds = 60000)
@@ -190,7 +211,9 @@ public static class Methods
         return bytesRead;
     }
 
-
+    /// <summary>
+    /// Sends an HTTP message on the previously opened socket and reads the response.
+    /// </summary>
     [Block("Sends an HTTP message on the previously opened socket and reads the response",
         extraInfo = "Use this block instead of SendMessage or it will only read the headers")]
     public static async Task<string> TcpSendReadHttp(BotData data, string message, bool unescape = true,
@@ -252,6 +275,9 @@ public static class Methods
         return response;
     }
 
+    /// <summary>
+    /// Closes the previously opened socket.
+    /// </summary>
     [Block("Closes the previously opened socket")]
     public static void TcpDisconnect(BotData data)
     {

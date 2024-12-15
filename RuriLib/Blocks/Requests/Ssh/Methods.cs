@@ -11,6 +11,9 @@ namespace RuriLib.Blocks.Requests.Ssh;
 [BlockCategory("SSH", "Blocks for SSH", "#6699ff")]
 public static class Methods
 {
+    /// <summary>
+    /// Logs in via SSH with the given credentials.
+    /// </summary>
     [Block("Logs in via SSH with the given credentials", name = "Authenticate (Password)")]
     public static void SshAuthenticateWithPassword(BotData data, string host, int port = 22, string username = "root",
         string password = "", int timeoutMilliseconds = 30000, int channelTimeoutMilliseconds = 1000, int retryAttempts = 10)
@@ -43,6 +46,9 @@ public static class Methods
         data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
     }
 
+    /// <summary>
+    /// Logs in via SSH with no credentials.
+    /// </summary>
     [Block("Logs in via SSH with no credentials", name = "Authenticate (None)")]
     public static void SshAuthenticateWithNone(BotData data, string host, int port = 22, string username = "root",
         int timeoutMilliseconds = 30000, int channelTimeoutMilliseconds = 1000, int retryAttempts = 10)
@@ -75,6 +81,9 @@ public static class Methods
         data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
     }
 
+    /// <summary>
+    /// Logs in via SSH with a private key stored in the given file.
+    /// </summary>
     [Block("Logs in via SSH with a private key stored in the given file", name = "Authenticate (Private Key)")]
     public static void SshAuthenticateWithPK(BotData data, string host, int port = 22, string username = "root",
         string keyFile = "rsa.key", string keyFilePassword = "", int timeoutMilliseconds = 30000,
@@ -110,6 +119,9 @@ public static class Methods
         data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
     }
 
+    /// <summary>
+    /// Executes a command via SSH", name = "Run Command.
+    /// </summary>
     [Block("Executes a command via SSH", name = "Run Command")]
     public static string SshRunCommand(BotData data, string command)
     {

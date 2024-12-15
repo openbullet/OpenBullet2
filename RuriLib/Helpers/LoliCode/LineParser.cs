@@ -9,7 +9,7 @@ namespace RuriLib.Helpers.LoliCode
     /// <summary>
     /// Has methods to parse LoliCode tokens.
     /// </summary>
-    public static class LineParser
+    public static partial class LineParser
     {
         /// <summary>
         /// Parses a generic LoliCode token (anything until a space character) and moves forward.
@@ -18,10 +18,12 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "[^ ]*");
+            var match = TokenRegex().Match(input);
 
             if (!match.Success)
+            {
                 throw new Exception("Could not parse the token");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -36,10 +38,12 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "-?[0-9]*");
+            var match = IntRegex().Match(input);
 
             if (!match.Success)
+            {
                 throw new Exception("Could not parse the int");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -54,10 +58,12 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "-?[0-9\\.]*");
+            var match = FloatRegex().Match(input);
 
             if (!match.Success)
-                throw new Exception("Could not parse the int");
+            {
+                throw new Exception("Could not parse the float");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -66,21 +72,23 @@ namespace RuriLib.Helpers.LoliCode
         }
 
         /// <summary>
-        /// Parses a <see cref="byte[]"/> value and moves forward.
+        /// Parses an array of <see cref="byte"/> value and moves forward.
         /// </summary>
         public static byte[] ParseByteArray(ref string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return Array.Empty<byte>();
+                return [];
             }
             
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "[A-Za-z0-9+/=]+");
+            var match = ByteArrayRegex().Match(input);
 
             if (!match.Success)
+            {
                 throw new Exception("Could not parse the byte array");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -95,10 +103,12 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "^([Tt]rue)|([Ff]alse)");
+            var match = BoolRegex().Match(input);
 
             if (!match.Success)
+            {
                 throw new Exception("Could not parse the bool");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -119,7 +129,7 @@ namespace RuriLib.Helpers.LoliCode
             if (input[0] != '[')
                 throw new Exception("Could not parse the list");
 
-            input = input.Substring(1);
+            input = input[1..];
             input = input.TrimStart();
 
             // "one", "two"]
@@ -131,7 +141,9 @@ namespace RuriLib.Helpers.LoliCode
 
                 //  "two"]
                 if (input[0] == ',')
-                    input = input.Substring(1);
+                {
+                    input = input[1..];
+                }
 
                 // "two"]
                 input = input.TrimStart();
@@ -155,7 +167,9 @@ namespace RuriLib.Helpers.LoliCode
 
             // Syntax of a dictionary of strings: { ("key1", "value1"), ("key2", "value2") }
             if (input[0] != '{')
+            {
                 throw new Exception("Could not parse the dictionary");
+            }
 
             input = input[1..];
             input = input.TrimStart();
@@ -164,7 +178,9 @@ namespace RuriLib.Helpers.LoliCode
             while (input[0] != '}')
             {
                 if (input[0] != '(')
+                {
                     throw new Exception("Could not parse the dictionary");
+                }
 
                 input = input[1..];
                 input = input.TrimStart();
@@ -174,7 +190,9 @@ namespace RuriLib.Helpers.LoliCode
 
                 // , "value1"), ("key2", "value2") }
                 if (input[0] != ',')
+                {
                     throw new Exception("Could not parse the dictionary");
+                }
 
                 input = input[1..];
                 input = input.TrimStart();
@@ -190,7 +208,9 @@ namespace RuriLib.Helpers.LoliCode
 
                 // , ("key2", "value2") }
                 if (input[0] == ',')
+                {
                     input = input[1..];
+                }
 
                 //  ("key2", "value2") }
                 input = input.TrimStart();
@@ -210,10 +230,12 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "\"(\\\\.|[^\\\"])*\"");
+            var match = LiteralRegex().Match(input);
 
             if (!match.Success)
+            {
                 throw new Exception("Could not parse the literal");
+            }
 
             input = input[match.Value.Length..];
             input = input.TrimStart();
@@ -223,5 +245,23 @@ namespace RuriLib.Helpers.LoliCode
             var obj = JObject.Parse(json);
             return (string)obj["literal"];
         }
+
+        [GeneratedRegex("[A-Za-z0-9+/=]+")]
+        private static partial Regex ByteArrayRegex();
+        
+        [GeneratedRegex("\"(\\\\.|[^\\\"])*\"")]
+        private static partial Regex LiteralRegex();
+        
+        [GeneratedRegex("^([Tt]rue)|([Ff]alse)")]
+        private static partial Regex BoolRegex();
+        
+        [GeneratedRegex("-?[0-9\\.]*")]
+        private static partial Regex FloatRegex();
+        
+        [GeneratedRegex("-?[0-9]*")]
+        private static partial Regex IntRegex();
+        
+        [GeneratedRegex("[^ ]*")]
+        private static partial Regex TokenRegex();
     }
 }

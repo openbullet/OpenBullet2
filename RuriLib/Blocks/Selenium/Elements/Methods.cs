@@ -18,6 +18,9 @@ namespace RuriLib.Blocks.Selenium.Elements;
 [BlockCategory("Elements", "Blocks for interacting with elements on a selenium browser page", "#bdda57")]
 public static class Methods
 {
+    /// <summary>
+    /// Sets the value of the specified attribute of an element.
+    /// </summary>
     [Block("Sets the value of the specified attribute of an element", name = "Set Attribute Value")]
     public static void SeleniumSetAttributeValue(BotData data, FindElementBy findBy, string identifier, int index,
         string attributeName, string value)
@@ -32,6 +35,9 @@ public static class Methods
         data.Logger.Log($"Set value {value} of attribute {attributeName} by executing {script}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Clears the text in an input field.
+    /// </summary>
     [Block("Clears the text in an input field", name = "Clear Field")]
     public static void SeleniumClearField(BotData data, FindElementBy findBy, string identifier, int index)
     {
@@ -43,6 +49,9 @@ public static class Methods
         data.Logger.Log("Cleared the field", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Types text in an input field.
+    /// </summary>
     [Block("Types text in an input field", name = "Type")]
     public static async Task SeleniumTypeElement(BotData data, FindElementBy findBy, string identifier, int index,
         string text, int timeBetweenKeystrokes = 0)
@@ -62,6 +71,9 @@ public static class Methods
         data.Logger.Log($"Typed {text}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Types text in an input field with human-like random delays.
+    /// </summary>
     [Block("Types text in an input field with human-like random delays", name = "Type Human")]
     public static async Task SeleniumTypeElementHuman(BotData data, FindElementBy findBy, string identifier, int index,
         string text)
@@ -83,6 +95,9 @@ public static class Methods
         data.Logger.Log($"Typed {text}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Clicks an element.
+    /// </summary>
     [Block("Clicks an element", name = "Click")]
     public static void SeleniumClick(BotData data, FindElementBy findBy, string identifier, int index)
     {
@@ -95,6 +110,9 @@ public static class Methods
         data.Logger.Log("Clicked the element", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Submits a form.
+    /// </summary>
     [Block("Submits a form", name = "Submit")]
     public static void SeleniumSubmit(BotData data, FindElementBy findBy, string identifier, int index)
     {
@@ -107,6 +125,9 @@ public static class Methods
         data.Logger.Log($"Submitted the form", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Selects a value in a select element.
+    /// </summary>
     [Block("Selects a value in a select element", name = "Select")]
     public static void SeleniumSelect(BotData data, FindElementBy findBy, string identifier, int index, string value)
     {
@@ -119,6 +140,9 @@ public static class Methods
         data.Logger.Log($"Selected value {value}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Selects a value by index in a select element.
+    /// </summary>
     [Block("Selects a value by index in a select element", name = "Select by Index")]
     public static void SeleniumSelectByIndex(BotData data, FindElementBy findBy, string identifier, int index, int selectionIndex)
     {
@@ -131,6 +155,9 @@ public static class Methods
         data.Logger.Log($"Selected value at index {selectionIndex}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Selects a value by text in a select element.
+    /// </summary>
     [Block("Selects a value by text in a select element", name = "Select by Text")]
     public static void SeleniumSelectByText(BotData data, FindElementBy findBy, string identifier, int index, string text)
     {
@@ -143,6 +170,9 @@ public static class Methods
         data.Logger.Log($"Selected text {text}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Gets the value of an attribute of an element.
+    /// </summary>
     [Block("Gets the value of an attribute of an element", name = "Get Attribute Value")]
     public static string SeleniumGetAttributeValue(BotData data, FindElementBy findBy, string identifier, int index,
         string attributeName = "innerText")

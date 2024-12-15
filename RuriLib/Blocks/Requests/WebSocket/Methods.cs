@@ -17,6 +17,9 @@ namespace RuriLib.Blocks.Requests.WebSocket;
 [BlockCategory("Web Sockets", "Blocks to send and receive messages through websockets", "#addfad")]
 public static class Methods
 {
+    /// <summary>
+    /// Connects to a Web Socket.
+    /// </summary>
     [Block("Connects to a Web Socket", name = "WebSocket Connect",
         extraInfo = "Only works with HTTP proxies or without any proxy")]
     public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string>? customHeaders = null)
@@ -110,6 +113,9 @@ public static class Methods
         data.Logger.Log($"The Web Socket client connected to {url}", LogColors.MossGreen);
     }
 
+    /// <summary>
+    /// Sends a message on the Web Socket.
+    /// </summary>
     [Block("Sends a message on the Web Socket", name = "WebSocket Send")]
     public static void WsSend(BotData data, string message)
     {
@@ -121,6 +127,9 @@ public static class Methods
         data.Logger.Log($"Sent {message} to the server", LogColors.MossGreen);
     }
 
+    /// <summary>
+    /// Sends a raw binary message on the Web Socket.
+    /// </summary>
     [Block("Sends a raw binary message on the Web Socket", name = "WebSocket Send Raw")]
     public static void WsSendRaw(BotData data, byte[] message)
     {
@@ -132,6 +141,9 @@ public static class Methods
         data.Logger.Log($"Sent {message.Length} bytes to the server", LogColors.MossGreen);
     }
 
+    /// <summary>
+    /// Gets unread messages that the server sent since the last read.
+    /// </summary>
     [Block("Gets unread messages that the server sent since the last read", name = "WebSocket Read")]
     public static async Task<List<string>> WsRead(BotData data, int pollIntervalInMilliseconds = 10, int timeoutMilliseconds = 10000)
     {
@@ -165,6 +177,9 @@ public static class Methods
         return cloned;
     }
 
+    /// <summary>
+    /// Disconnects the existing Web Socket.
+    /// </summary>
     [Block("Disconnects the existing Web Socket", name = "WebSocket Disconnect")]
     public static void WsDisconnect(BotData data)
     {

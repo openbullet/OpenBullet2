@@ -414,6 +414,7 @@ namespace RuriLib.Functions.Crypto
         #endregion
 
         #region AES
+
         /// <summary>
         /// Encrypts data with AES.
         /// </summary>
@@ -433,14 +434,14 @@ namespace RuriLib.Functions.Crypto
             }
 
             // Check arguments.
-            if (plainText == null || plainText.Length <= 0)
+            if (plainText is not { Length: > 0 })
             {
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentNullException(nameof(plainText));
             }
 
-            if (key == null || key.Length <= 0)
+            if (key is not { Length: > 0 })
             {
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             using var aes = Aes.Create();
@@ -452,8 +453,8 @@ namespace RuriLib.Functions.Crypto
             aes.Mode = mode;
             aes.Padding = padding;
 
-            using var decryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-            return PerformCryptography(plainText, decryptor);
+            using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            return PerformCryptography(plainText, encryptor);
         }
 
         /// <summary>
@@ -475,14 +476,14 @@ namespace RuriLib.Functions.Crypto
             }
 
             // Check arguments.
-            if (plainText == null || plainText.Length <= 0)
+            if (plainText is not { Length: > 0 })
             {
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentNullException(nameof(plainText));
             }
 
-            if (key == null || key.Length <= 0)
+            if (key is not { Length: > 0 })
             {
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             // Create an Aes object
@@ -530,14 +531,14 @@ namespace RuriLib.Functions.Crypto
             }
 
             // Check arguments.
-            if (cipherText == null || cipherText.Length <= 0)
+            if (cipherText is not { Length: > 0 })
             {
-                throw new ArgumentNullException("cipherText");
+                throw new ArgumentNullException(nameof(cipherText));
             }
                 
-            if (key == null || key.Length <= 0)
+            if (key is not { Length: > 0 })
             {
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             using var aes = Aes.Create();
@@ -572,19 +573,19 @@ namespace RuriLib.Functions.Crypto
             }
 
             // Check arguments.
-            if (cipherText == null || cipherText.Length <= 0)
+            if (cipherText is not { Length: > 0 })
             {
-                throw new ArgumentNullException("cipherText");
+                throw new ArgumentNullException(nameof(cipherText));
             }
 
             if (key == null || key.Length <= 0)
             {
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             // Declare the string used to hold
             // the decrypted text.
-            string plaintext = null;
+            string plaintext;
 
             using var aes = Aes.Create();
             aes.KeySize = keySize;
@@ -599,15 +600,13 @@ namespace RuriLib.Functions.Crypto
             var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
             // Create the streams used for decryption.
-            using (var msDecrypt = new MemoryStream(cipherText))
-            {
-                using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-                using var srDecrypt = new StreamReader(csDecrypt);
+            using var msDecrypt = new MemoryStream(cipherText);
+            using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+            using var srDecrypt = new StreamReader(csDecrypt);
 
-                // Read the decrypted bytes from the decrypting stream
-                // and place them in a string.
-                plaintext = srDecrypt.ReadToEnd();
-            }
+            // Read the decrypted bytes from the decrypting stream
+            // and place them in a string.
+            plaintext = srDecrypt.ReadToEnd();
 
             return plaintext;
         }
@@ -626,9 +625,9 @@ namespace RuriLib.Functions.Crypto
         #region JWT
         public static string JwtEncode(JwtAlgorithmName algorithmName, string secret, IDictionary<string, object> extraHeaders, IDictionary<string, object> payload)
         {
-            IJwtAlgorithm algorithm = null;
-            RSA rsa = null;
-            ECDsa ecdsa = null;
+            IJwtAlgorithm algorithm;
+            RSA? rsa = null;
+            ECDsa? ecdsa = null;
             try
             {
                 switch (algorithmName)

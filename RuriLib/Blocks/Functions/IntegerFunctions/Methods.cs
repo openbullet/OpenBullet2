@@ -6,9 +6,15 @@ using System;
 // ReSharper disable once CheckNamespace
 namespace RuriLib.Blocks.Functions.Integer;
 
+/// <summary>
+/// Blocks for working with integer numbers.
+/// </summary>
 [BlockCategory("Integer Functions", "Blocks for working with integer numbers", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Generates a random integer between two values (inclusive).
+    /// </summary>
     [Block("Generates a random integer between two values (inclusive)")]
     public static int RandomInteger(BotData data, int minimum = 0, int maximum = 10)
     {
@@ -19,6 +25,9 @@ public static class Methods
         return random;
     }
 
+    /// <summary>
+    /// Takes the maximum between two integers.
+    /// </summary>
     [Block("Takes the maximum between two integers", name = "Maximum Int")]
     public static int TakeMaxInt(BotData data, int first, int second)
     {
@@ -29,6 +38,9 @@ public static class Methods
         return max;
     }
 
+    /// <summary>
+    /// Takes the minimum between two integers.
+    /// </summary>
     [Block("Takes the minimum between two integers", name = "Minimum int")]
     public static int TakeMinInt(BotData data, int first, int second)
     {

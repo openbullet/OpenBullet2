@@ -48,10 +48,10 @@ public static class ByteArrayExtensions
 
     /// <summary>
     /// Converts a <see cref="T:byte[]"/> to a <see cref="T:byte[]"/>.
-    /// Copies the byte array to a new one.
+    /// Returns the byte array itself.
     /// </summary>
     public static byte[] AsBytes(this byte[] bytes)
-        => bytes.ToArray();
+        => bytes;
 
     /// <summary>
     /// Converts a <see cref="T:byte[]"/> to a <see cref="string"/>.

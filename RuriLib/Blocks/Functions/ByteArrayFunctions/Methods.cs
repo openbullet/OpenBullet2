@@ -7,9 +7,15 @@ using System;
 // ReSharper disable once CheckNamespace
 namespace RuriLib.Blocks.Functions.ByteArray;
 
+/// <summary>
+/// Blocks for working with byte arrays.
+/// </summary>
 [BlockCategory("Byte Array Functions", "Blocks for working with byte arrays", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Merge two byte arrays together to form a longer one.
+    /// </summary>
     [Block("Merges two byte arrays together to form a longer one")]
     public static byte[] MergeByteArrays(BotData data, byte[] first, byte[] second)
     {

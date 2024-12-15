@@ -11,6 +11,9 @@ namespace RuriLib.Blocks.Utility.Images;
 [BlockCategory("Images", "Blocks for working with images", "#fad6a5")]
 public static class Methods
 {
+    /// <summary>
+    /// Converts an svg image to a byte array containing a png image.
+    /// </summary>
     [Block("Converts an svg image to a byte array containing a png image")]
     public static byte[] SvgToPng(BotData data, string xml, int width = 300, int height = 150)
     {

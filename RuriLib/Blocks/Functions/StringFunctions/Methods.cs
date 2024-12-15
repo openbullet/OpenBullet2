@@ -30,6 +30,9 @@ public static class Methods
 
     #endregion
 
+    /// <summary>
+    /// Rounds the value down to the nearest integer.
+    /// </summary>
     [Block("Rounds the value down to the nearest integer")]
     public static int CountOccurrences(BotData data, [Variable] string input, string word)
     {
@@ -40,6 +43,9 @@ public static class Methods
         return occurrences;
     }
 
+    /// <summary>
+    /// Retrieves a piece of an input string.
+    /// </summary>
     [Block("Retrieves a piece of an input string")]
     public static string Substring(BotData data, [Variable] string input, int index, int length)
     {
@@ -50,6 +56,9 @@ public static class Methods
         return substring;
     }
 
+    /// <summary>
+    /// Reverses the characters in the input string.
+    /// </summary>
     [Block("Reverses the characters in the input string")]
     public static string Reverse(BotData data, [Variable] string input)
     {

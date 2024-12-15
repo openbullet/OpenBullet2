@@ -4,6 +4,9 @@ using System;
 
 namespace RuriLib.Functions.Captchas;
 
+/// <summary>
+/// Provides a factory to create <see cref="CaptchaService"/> instances.
+/// </summary>
 public class CaptchaServiceFactory
 {
     /// <summary>

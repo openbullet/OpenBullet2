@@ -8,6 +8,9 @@ namespace RuriLib.Blocks.Functions.Time;
 [BlockCategory("Time", "Blocks for working with dates and times", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Gets the current unix time in seconds.
+    /// </summary>
     [Block("Gets the current unix time in seconds")]
     public static int CurrentUnixTime(BotData data, bool useUtc = false)
     {
@@ -19,6 +22,9 @@ public static class Methods
         return time;
     }
 
+    /// <summary>
+    /// Converts a unix time to a formatted datetime string.
+    /// </summary>
     [Block("Converts a unix time to a formatted datetime string")]
     public static string UnixTimeToDate(BotData data, [Variable] int unixTime, string format = "yyyy-MM-dd:HH-mm-ss")
     {
@@ -29,6 +35,9 @@ public static class Methods
         return date;
     }
 
+    /// <summary>
+    /// Parses a unix time from a formatted datetime string.
+    /// </summary>
     [Block("Parses a unix time from a formatted datetime string")]
     public static int DateToUnixTime(BotData data, [Variable] string datetime, string format)
     {
@@ -39,6 +48,9 @@ public static class Methods
         return time;
     }
 
+    /// <summary>
+    /// Converts a unix time to an ISO8601 datetime string.
+    /// </summary>
     [Block("Converts a unix time to an ISO8601 datetime string")]
     public static string UnixTimeToISO8601(BotData data, [Variable] int unixTime)
     {

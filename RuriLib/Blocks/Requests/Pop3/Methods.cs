@@ -26,6 +26,9 @@ public static class Methods
     private static readonly List<string> _subdomains =
         ["mail", "pop", "pop3", "m", "pop3-mail", "pop-mail", "inbound", "in", "mx"];
 
+    /// <summary>
+    /// Connects to a POP3 server by automatically detecting the host and port.
+    /// </summary>
     [Block("Connects to a POP3 server by automatically detecting the host and port")]
     public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
     {
@@ -39,9 +42,9 @@ public static class Methods
             ServerCertificateValidationCallback = (_, _, _, _) => true
         };
 
-        if (data.UseProxy && data.Proxy != null)
+        if (data is { UseProxy: true, Proxy: not null })
         {
-            client.ProxyClient = MapProxyClient(data);
+            client.ProxyClient = MapProxyClient(data.Proxy);
         }
 
         data.SetObject("pop3Client", client);
@@ -256,7 +259,7 @@ public static class Methods
 
         if (data is { UseProxy: true, Proxy: not null })
         {
-            client.ProxyClient = MapProxyClient(data);
+            client.ProxyClient = MapProxyClient(data.Proxy);
         }
 
         data.SetObject("pop3Client", client);

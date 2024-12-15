@@ -18,6 +18,9 @@ namespace RuriLib.Blocks.Selenium.Browser;
 [BlockCategory("Browser", "Blocks for interacting with a selenium browser", "#bdda57")]
 public static class Methods
 {
+    /// <summary>
+    /// Opens a new selenium browser.
+    /// </summary>
     [Block("Opens a new selenium browser", name = "Open Browser")]
     public static void SeleniumOpenBrowser(BotData data, string extraCmdLineArgs = "")
     {
@@ -161,6 +164,9 @@ public static class Methods
         UpdateSeleniumData(data);
     }
 
+    /// <summary>
+    /// Closes an open selenium browser.
+    /// </summary>
     [Block("Closes an open selenium browser", name = "Close Browser")]
     public static void SeleniumCloseBrowser(BotData data)
     {
@@ -173,6 +179,9 @@ public static class Methods
         data.Logger.Log("Browser closed successfully!", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Opens a new page in a new browser tab.
+    /// </summary>
     [Block("Opens a new page in a new browser tab", name = "New Tab")]
     public static void SeleniumNewTab(BotData data)
     {

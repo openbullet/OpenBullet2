@@ -11,6 +11,9 @@ namespace RuriLib.Blocks.Utility;
 [BlockCategory("Utility", "Utility blocks for miscellaneous purposes", "#fad6a5")]
 public static class Methods
 {
+    /// <summary>
+    /// Clears the cookie jar used for HTTP requests.
+    /// </summary>
     [Block("Clears the cookie jar used for HTTP requests")]
     public static void ClearCookies(BotData data)
     {
@@ -19,6 +22,9 @@ public static class Methods
         data.Logger.Log("Cleared the HTTP cookie jar", LogColors.DeepChampagne);
     }
 
+    /// <summary>
+    /// Sleeps for a specified amount of milliseconds.
+    /// </summary>
     [Block("Sleeps for a specified amount of milliseconds")]
     public static async Task Delay(BotData data, int milliseconds)
     {
@@ -27,6 +33,9 @@ public static class Methods
         data.Logger.Log($"Waited {milliseconds} ms", LogColors.DeepChampagne);
     }
 
+    /// <summary>
+    /// Retrieves a unique hardware ID for the current machine.
+    /// </summary>
     [Block("Retrieves a unique hardware ID for the current machine", name = "Get HWID")]
     public static string GetHWID(BotData data)
     {

@@ -13,6 +13,9 @@ namespace RuriLib.Blocks.Selenium.Page;
 [BlockCategory("Page", "Blocks for interacting with a selenium browser page", "#bdda57")]
 public static class Methods
 {
+    /// <summary>
+    /// Navigates to a given URL in the current page.
+    /// </summary>
     [Block("Navigates to a given URL in the current page", name = "Navigate To")]
     public static void SeleniumNavigateTo(BotData data, string url = "https://example.com", int timeout = 30000)
     {
@@ -26,6 +29,9 @@ public static class Methods
         data.Logger.Log($"Navigated to {url}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Clears the page cookies.
+    /// </summary>
     [Block("Clears the page cookies", name = "Clear Cookies")]
     public static void SeleniumClearCookies(BotData data)
     {
@@ -35,6 +41,9 @@ public static class Methods
         data.Logger.Log($"Deleted all cookies from the page", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Sends a key to the page.
+    /// </summary>
     [Block("Sends a key to the page", name = "Page Type")]
     public static void SeleniumPageType(BotData data, string text)
     {
@@ -98,6 +107,9 @@ public static class Methods
         // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
     }
 
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and saves it to an output file.
+    /// </summary>
     [Block("Takes a screenshot of the entire browser page and saves it to an output file", name = "Screenshot Page")]
     public static void SeleniumScreenshotPage(BotData data, string file)
     {
@@ -109,6 +121,9 @@ public static class Methods
         data.Logger.Log($"Took a screenshot of the page and saved it to {file}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and converts it to a base64 string.
+    /// </summary>
     [Block("Takes a screenshot of the entire browser page and converts it to a base64 string", name = "Screenshot Page Base64")]
     public static string SeleniumScreenshotPageBase64(BotData data)
     {
@@ -120,6 +135,9 @@ public static class Methods
         return screenshot.AsBase64EncodedString;
     }
 
+    /// <summary>
+    /// Scrolls the page by a given amount of pixels.
+    /// </summary>
     [Block("Scrolls the page by a given amount of pixels", name = "Scroll by")]
     public static void SeleniumScrollBy(BotData data, int x, int y)
     {
@@ -132,6 +150,9 @@ public static class Methods
         data.Logger.Log($"Scrolled by {x} px to the right and {y} px to the bottom", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Gets the full DOM of the page.
+    /// </summary>
     [Block("Gets the full DOM of the page", name = "Get DOM")]
     public static string SeleniumGetDOM(BotData data)
     {
@@ -144,6 +165,9 @@ public static class Methods
         return dom;
     }
 
+    /// <summary>
+    /// Gets the cookies for a given domain from the browser.
+    /// </summary>
     [Block("Gets the cookies for a given domain from the browser", name = "Get Cookies")]
     public static Dictionary<string, string> SeleniumGetCookies(BotData data, string domain)
     {
@@ -157,6 +181,9 @@ public static class Methods
         return cookies.ToDictionary(c => c.Name, c => c.Value);
     }
 
+    /// <summary>
+    /// Sets the cookies for a given domain in the browser page.
+    /// </summary>
     [Block("Sets the cookies for a given domain in the browser page", name = "Set Cookies")]
     public static void SeleniumSetCookies(BotData data, string domain, Dictionary<string, string> cookies)
     {
@@ -172,6 +199,9 @@ public static class Methods
         data.Logger.Log($"Set {cookies.Count} cookies for {domain}", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Switches to the main frame of the page.
+    /// </summary>
     [Block("Switches to the main frame of the page", name = "Switch to Main Frame")]
     public static void SeleniumSwitchToMainFrame(BotData data)
     {
@@ -181,6 +211,9 @@ public static class Methods
         data.Logger.Log($"Switched to main frame", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Switches to the alert frame of the page.
+    /// </summary>
     [Block("Switches to the alert frame of the page", name = "Switch to Alert")]
     public static void SeleniumSwitchToAlert(BotData data)
     {
@@ -190,6 +223,9 @@ public static class Methods
         data.Logger.Log($"Switched to alert frame", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Switches to the parent frame.
+    /// </summary>
     [Block("Switches to the parent frame", name = "Switch to Parent Frame")]
     public static void SeleniumSwitchToParent(BotData data)
     {
@@ -199,6 +235,9 @@ public static class Methods
         data.Logger.Log($"Switched to parent frame", LogColors.JuneBud);
     }
 
+    /// <summary>
+    /// Evaluates a js expression in the current page and returns a json response.
+    /// </summary>
     [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
     public static string SeleniumExecuteJs(BotData data, [MultiLine] string expression)
     {

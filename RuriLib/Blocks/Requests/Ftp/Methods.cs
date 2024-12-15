@@ -16,6 +16,9 @@ namespace RuriLib.Blocks.Requests.Ftp;
 [BlockCategory("FTP", "Blocks to work with the FTP protocol", "#fbec5d")]
 public static class Methods
 {
+    /// <summary>
+    /// Connects to an FTP server.
+    /// </summary>
     [Block("Connects to an FTP server")]
     public static async Task FtpConnect(BotData data, string host, int port = 21, 
         string username = "", string password = "", int timeoutMilliseconds = 10000)
@@ -72,6 +75,9 @@ public static class Methods
         data.Logger.Log($"Connected to {host}:{port}", LogColors.Maize);
     }
 
+    /// <summary>
+    /// Lists the folders on the FTP server.
+    /// </summary>
     [Block("Lists the folders on the FTP server")]
     public static async Task<List<string>> FtpListItems(BotData data, FtpItemKind kind = FtpItemKind.FilesAndFolders, bool recursive = false)
     {
@@ -99,6 +105,9 @@ public static class Methods
         return list;
     }
 
+    /// <summary>
+    /// Downloads a file from the FTP server.
+    /// </summary>
     [Block("Downloads a file from the FTP server")]
     public static async Task FtpDownloadFile(BotData data, string remoteFileName, string localFileName)
     {
@@ -110,6 +119,9 @@ public static class Methods
         data.Logger.Log($"{remoteFileName} downloaded to {localFileName}", LogColors.Maize);
     }
 
+    /// <summary>
+    /// Downloads a folder from the FTP server.
+    /// </summary>
     [Block("Downloads a folder from the FTP server")]
     public static async Task FtpDownloadFolder(BotData data, string remoteDir, string localDir, 
         FtpLocalExists existsPolicy = FtpLocalExists.Skip)
@@ -122,6 +134,9 @@ public static class Methods
         data.Logger.Log($"{remoteDir} downloaded to {localDir}", LogColors.Maize);
     }
 
+    /// <summary>
+    /// Uploads a file to the FTP server.
+    /// </summary>
     [Block("Uploads a file to the FTP server")]
     public static async Task FtpUploadFile(BotData data, string remoteFileName, string localFileName,
         FtpRemoteExists existsPolicy = FtpRemoteExists.Overwrite)
@@ -134,6 +149,9 @@ public static class Methods
         data.Logger.Log($"{localFileName} uploaded to {remoteFileName}", LogColors.Maize);
     }
 
+    /// <summary>
+    /// Disconnects from the connected FTP server.
+    /// </summary>
     [Block("Disconnects from the connected FTP server")]
     public static async Task FtpDisconnect(BotData data)
     {
@@ -144,6 +162,9 @@ public static class Methods
         data.Logger.Log("Disconnected from the FTP server", LogColors.Maize);
     }
 
+    /// <summary>
+    /// Gets the protocol log", name = "Get FTP Log.
+    /// </summary>
     [Block("Gets the protocol log", name = "Get FTP Log")]
     public static string FtpGetLog(BotData data)
     {

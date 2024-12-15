@@ -10,9 +10,15 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Puppeteer.Page;
 
+/// <summary>
+/// Blocks for interacting with a puppeteer browser page.
+/// </summary>
 [BlockCategory("Page", "Blocks for interacting with a puppeteer browser page", "#e9967a")]
 public static class Methods
 {
+    /// <summary>
+    /// Navigates to a given URL in the current page.
+    /// </summary>
     [Block("Navigates to a given URL in the current page", name = "Navigate To")]
     public static async Task PuppeteerNavigateTo(BotData data, string url = "https://example.com",
         WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load, string referer = "", int timeout = 30000)
@@ -35,6 +41,9 @@ public static class Methods
         data.Logger.Log($"Navigated to {url}", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Waits for navigation to complete.
+    /// </summary>
     [Block("Waits for navigation to complete", name = "Wait for Navigation")]
     public static async Task PuppeteerWaitForNavigation(BotData data,
         WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load, int timeout = 30000)
@@ -57,6 +66,9 @@ public static class Methods
         data.Logger.Log("Waited for navigation to complete", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Clears cookies in the page stored for a specific website.
+    /// </summary>
     [Block("Clears cookies in the page stored for a specific website", name = "Clear Cookies")]
     public static async Task PuppeteerClearCookies(BotData data, string website)
     {
@@ -117,6 +129,9 @@ public static class Methods
         // Full list of keys: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js
     }
 
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and saves it to an output file.
+    /// </summary>
     [Block("Takes a screenshot of the entire browser page and saves it to an output file", name = "Screenshot Page")]
     public static async Task PuppeteerScreenshotPage(BotData data, string file, bool fullPage = false, bool omitBackground = false)
     {
@@ -134,6 +149,9 @@ public static class Methods
         data.Logger.Log($"Took a screenshot of the {(fullPage ? "full" : "visible")} page and saved it to {file}", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and converts it to a base64 string.
+    /// </summary>
     [Block("Takes a screenshot of the entire browser page and converts it to a base64 string", name = "Screenshot Page Base64")]
     public static async Task<string> PuppeteerScreenshotPageBase64(BotData data, bool fullPage = false, bool omitBackground = false)
     {
@@ -152,6 +170,9 @@ public static class Methods
         return base64;
     }
 
+    /// <summary>
+    /// Scrolls to the top of the page.
+    /// </summary>
     [Block("Scrolls to the top of the page", name = "Scroll to Top")]
     public static async Task PuppeteerScrollToTop(BotData data)
     {
@@ -162,6 +183,9 @@ public static class Methods
         data.Logger.Log("Scrolled to the top of the page", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Scrolls to the bottom of the page.
+    /// </summary>
     [Block("Scrolls to the bottom of the page", name = "Scroll to Bottom")]
     public static async Task PuppeteerScrollToBottom(BotData data)
     {
@@ -172,6 +196,9 @@ public static class Methods
         data.Logger.Log("Scrolled to the bottom of the page", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Scrolls the page by a certain amount horizontally and vertically.
+    /// </summary>
     [Block("Scrolls the page by a certain amount horizontally and vertically", name = "Scroll by")]
     public static async Task PuppeteerScrollBy(BotData data, int horizontalScroll, int verticalScroll)
     {
@@ -182,6 +209,9 @@ public static class Methods
         data.Logger.Log($"Scrolled by ({horizontalScroll}, {verticalScroll})", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Sets the viewport dimensions and options.
+    /// </summary>
     [Block("Sets the viewport dimensions and options", name = "Set Viewport")]
     public static async Task PuppeteerSetViewport(BotData data, int width, int height, bool isMobile = false, bool isLandscape = false, float scaleFactor = 1f)
     {
@@ -203,6 +233,9 @@ public static class Methods
         data.Logger.Log($"Set the viewport size to {width}x{height}", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Gets the full DOM of the page.
+    /// </summary>
     [Block("Gets the full DOM of the page", name = "Get DOM")]
     public static async Task<string> PuppeteerGetDOM(BotData data)
     {
@@ -216,6 +249,9 @@ public static class Methods
         return dom;
     }
 
+    /// <summary>
+    /// Gets the cookies for a given domain from the browser. If the domain is empty, gets all cookies from the page..
+    /// </summary>
     [Block("Gets the cookies for a given domain from the browser. If the domain is empty, gets all cookies from the page.", name = "Get Cookies")]
     public static async Task<Dictionary<string, string>> PuppeteerGetCookies(BotData data, string domain)
     {
@@ -233,6 +269,9 @@ public static class Methods
         return cookies.ToDictionary(c => c.Name, c => c.Value);
     }
 
+    /// <summary>
+    /// Sets the cookies for a given domain in the browser page.
+    /// </summary>
     [Block("Sets the cookies for a given domain in the browser page", name = "Set Cookies")]
     public static async Task PuppeteerSetCookies(BotData data, string domain, Dictionary<string, string> cookies)
     {
@@ -244,6 +283,9 @@ public static class Methods
         data.Logger.Log($"Set {cookies.Count} cookies for {domain}", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Sets the User Agent of the browser page.
+    /// </summary>
     [Block("Sets the User Agent of the browser page", name = "Set User-Agent")]
     public static async Task PuppeteerSetUserAgent(BotData data, string userAgent)
     {
@@ -255,6 +297,9 @@ public static class Methods
         data.Logger.Log($"User Agent set to {userAgent}", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Switches to the main frame of the page.
+    /// </summary>
     [Block("Switches to the main frame of the page", name = "Switch to Main Frame")]
     public static void PuppeteerSwitchToMainFrame(BotData data)
     {
@@ -264,6 +309,9 @@ public static class Methods
         data.Logger.Log("Switched to main frame", LogColors.DarkSalmon);
     }
 
+    /// <summary>
+    /// Evaluates a js expression in the current page and returns a json response.
+    /// </summary>
     [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
     public static async Task<string> PuppeteerExecuteJs(BotData data, [MultiLine] string expression)
     {
@@ -278,6 +326,9 @@ public static class Methods
         return json;
     }
 
+    /// <summary>
+    /// Captures the response from the given URL.
+    /// </summary>
     [Block("Captures the response from the given URL", name = "Wait for Response")]
     public static async Task PuppeteerWaitForResponse(BotData data, string url, int timeoutMilliseconds = 60000)
     {

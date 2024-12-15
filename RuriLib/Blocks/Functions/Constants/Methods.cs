@@ -8,9 +8,15 @@ using System.Linq;
 
 namespace RuriLib.Blocks.Functions.Constants;
 
+/// <summary>
+/// Blocks to assign constant values to variables.
+/// </summary>
 [BlockCategory("Constants", "Blocks that allow to assign constant values to variables", "#9acd32")]
 public static class Methods
 {
+    /// <summary>
+    /// Creates a constant string.
+    /// </summary>
     [Block("Creates a constant string")]
     public static string ConstantString(BotData data, [MultiLine] string value)
     {
@@ -20,6 +26,9 @@ public static class Methods
         return value;
     }
 
+    /// <summary>
+    /// Creates a constant integer.
+    /// </summary>
     [Block("Creates a constant integer")]
     public static int ConstantInteger(BotData data, int value)
     {
@@ -29,6 +38,9 @@ public static class Methods
         return value;
     }
 
+    /// <summary>
+    /// Creates a constant float.
+    /// </summary>
     [Block("Creates a constant float")]
     public static float ConstantFloat(BotData data, float value)
     {
@@ -38,6 +50,9 @@ public static class Methods
         return value;
     }
 
+    /// <summary>
+    /// Creates a constant bool.
+    /// </summary>
     [Block("Creates a constant bool")]
     public static bool ConstantBool(BotData data, bool value)
     {
@@ -47,6 +62,9 @@ public static class Methods
         return value;
     }
 
+    /// <summary>
+    /// Creates a constant byte array.
+    /// </summary>
     [Block("Creates a constant byte array")]
     public static byte[] ConstantByteArray(BotData data, byte[] value)
     {
@@ -56,6 +74,9 @@ public static class Methods
         return value;
     }
 
+    /// <summary>
+    /// Creates a constant list.
+    /// </summary>
     [Block("Creates a constant list")]
     public static List<string> ConstantList(BotData data, List<string> value)
     {
@@ -65,6 +86,9 @@ public static class Methods
         return value.Select(i => i).ToList(); // Clone the list
     }
 
+    /// <summary>
+    /// Creates a constant dictionary.
+    /// </summary>
     [Block("Creates a constant dictionary")]
     public static Dictionary<string, string> ConstantDictionary(BotData data, Dictionary<string, string> value)
     {

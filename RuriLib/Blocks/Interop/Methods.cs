@@ -14,6 +14,9 @@ namespace RuriLib.Blocks.Interop;
 [BlockCategory("Interop", "Blocks for interoperability with other programs", "#ddadaf")]
 public static class Methods
 {
+    /// <summary>
+    /// Executes a shell command and redirects all stdout to the output variable.
+    /// </summary>
     [Block("Executes a shell command and redirects all stdout to the output variable")]
     public static string ShellCommand(BotData data, string executable, string arguments)
     {
