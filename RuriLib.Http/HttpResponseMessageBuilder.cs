@@ -562,6 +562,7 @@ namespace RuriLib.Http
                 "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
                 "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
                 "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
+                "zstd" => new ZstdSharp.DecompressionStream(stream, leaveOpen: false),
                 _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
             };
         }

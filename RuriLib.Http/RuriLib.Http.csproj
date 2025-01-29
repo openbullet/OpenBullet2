@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.4" />
   </ItemGroup>
 
   <ItemGroup>
