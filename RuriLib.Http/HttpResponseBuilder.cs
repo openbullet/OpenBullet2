@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -500,6 +499,7 @@ namespace RuriLib.Http
                 "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
                 "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
                 "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
+                "zstd" => new ZstdSharp.DecompressionStream(stream, leaveOpen: false),
                 "utf-8" => stream,
                 _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
             };
