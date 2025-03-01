@@ -1,10 +1,11 @@
 ﻿using RuriLib.Attributes;
 using RuriLib.Models.Bots;
 using RuriLib.Providers.UserAgents;
+using System;
 
-namespace RuriLib.Blocks.Functions
+namespace RuriLib.Blocks.Functions.Miscellanous
 {
-    [BlockCategory("Functions", "General purpose functions", "#9acd32")]
+    [BlockCategory("Miscellanous", "General purpose functions", "#9acd32")]
     public static class Methods
     {
         [Block("Generates a random User Agent using the builtin provider or a custom list")]
@@ -25,6 +26,19 @@ namespace RuriLib.Blocks.Functions
 
             data.Logger.Log(ua);
             return ua;
+        }
+
+        [Block("Generates a random GUID using the builtin provider",
+            extraInfo = "Full list of formats here: https://learn.microsoft.com/en-us/dotnet/api/system.guid.tostring under the 'Remarks' section")]
+        public static string RandomGuid(BotData data, string format = "D")
+        {
+            data.Logger.LogHeader();
+            data.Logger.Log("Getting random GUID from the builtin provider");
+            
+            var guid = Guid.NewGuid().ToString(format);
+            data.Logger.Log(guid);
+
+            return guid;
         }
     }
 }
