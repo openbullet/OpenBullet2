@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
@@ -107,6 +107,7 @@ public class JobFactoryService
             BotLimit = BotLimit,
             CurrentBotDatas = new BotData[BotLimit],
             Skip = options.Skip,
+            Logoff = options.Logoff,
             HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
             ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
             Providers = new(_settingsService)

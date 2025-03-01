@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -300,6 +300,16 @@ namespace OpenBullet2.Native.Views.Dialogs
             set
             {
                 Options.Skip = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Logoff
+        {
+            get => Options.Logoff;
+            set
+            {
+                Options.Logoff = value;
                 OnPropertyChanged();
             }
         }

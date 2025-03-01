@@ -41,6 +41,7 @@ namespace RuriLib.Models.Jobs
         public int Bots { get; set; } = 1;
         public int BotLimit { get; init; } = 200;
         public int Skip { get; set; } = 0;
+        public bool Logoff { get; set; } = false;
         public Config Config { get; set; }
         public DataPool DataPool { get; set; }
         public List<ProxySource> ProxySources { get; set; } = new List<ProxySource>();
@@ -925,7 +926,7 @@ namespace RuriLib.Models.Jobs
         {
             var botData = details.Result.BotData;
 
-            if (IsHitStatus(botData.STATUS))
+            if (IsHitStatus(botData.STATUS)&&!Logoff)
             {
                 // Fire and forget
                 RegisterHit(details.Result).ConfigureAwait(false);
