@@ -1,4 +1,4 @@
-﻿using RuriLib.Http.Helpers;
+using RuriLib.Http.Helpers;
 using RuriLib.Http.Models;
 using System;
 using System.Collections.Generic;
@@ -500,6 +500,7 @@ internal class HttpResponseBuilder
             "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
             "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
             "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
+            "zstd" => new ZstdSharp.DecompressionStream(stream, leaveOpen: false),
             "utf-8" => stream,
             _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
         };

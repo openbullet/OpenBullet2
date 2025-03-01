@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -536,6 +536,7 @@ internal class HttpResponseMessageBuilder
             "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
             "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
             "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
+            "zstd" => new ZstdSharp.DecompressionStream(stream, leaveOpen: false),
             _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
         };
     }
