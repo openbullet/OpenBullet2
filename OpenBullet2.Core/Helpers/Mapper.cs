@@ -14,7 +14,7 @@ public static class Mapper
         Country = proxy.Country,
         Host = proxy.Host,
         Port = proxy.Port,
-        LastChecked = proxy.LastChecked.Value,
+        LastChecked = proxy.LastChecked ?? default,
         Username = proxy.Username,
         Password = proxy.Password,
         Ping = proxy.Ping,
