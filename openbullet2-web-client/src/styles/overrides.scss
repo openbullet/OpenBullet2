@@ -218,6 +218,14 @@ p-chip.mt-2 > .p-chip {
     background-color: var(--bg-primary) !important;
 }
 
+.p-dropdown-header {
+    padding: 0 !important;
+}
+
+.p-dropdown-filter {
+    padding: 0 10px !important;
+}
+
 .p-inputtext, .p-link {
     font-family: Poppins !important;
 }

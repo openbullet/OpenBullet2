@@ -39,6 +39,7 @@
                 class="ml-2"
                 [(ngModel)]="configName"
                 (ngModelChange)="refreshHits()"
+                [filter]="true"
                 [options]="configNames">
                 <ng-template let-item pTemplate="selectedItem">
                     <span>{{item | pascalcase : true}}</span>
