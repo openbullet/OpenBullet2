@@ -11,6 +11,7 @@ using System;
 using OpenQA.Selenium;
 using System.Linq;
 using System.Drawing;
+using RuriLib.Extensions;
 using RuriLib.Helpers;
 
 namespace RuriLib.Blocks.Selenium.Browser;
@@ -84,8 +85,7 @@ public static class Methods
 
                 if (data is { UseProxy: true, Proxy: not null })
                 {
-                    // TODO: Add support for auth proxies using yove
-                    chromeop.AddArgument($"--proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}");
+                    chromeop.AddProxy(data.Proxy);
                 }
 
                 data.SetObject("selenium", new ChromeDriver(chromeservice, chromeop));
