@@ -30,7 +30,7 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
         {
             var entity = await _proxyRepo.GetAsync(proxy.Id);
             entity.Country = proxy.Country;
-            entity.LastChecked = proxy.LastChecked;
+            entity.LastChecked = proxy.LastChecked.Value;
             entity.Ping = proxy.Ping;
             entity.Status = proxy.WorkingStatus;
 
