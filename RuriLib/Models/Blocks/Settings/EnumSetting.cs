@@ -27,7 +27,7 @@ public class EnumSetting : Setting
         set
         {
             _enumType = value;
-
+            
             // Populate the enum values dictionary (used to have nicer enum names to display)
             foreach (var name in _enumType.GetEnumNames())
             {
@@ -54,11 +54,14 @@ public class EnumSetting : Setting
     /// The pretty names of the enum values.
     /// </summary>
     public IEnumerable<string> PrettyNames => _enumValues.Keys;
-    
+
     /// <summary>
     /// The pretty name of the current value.
     /// </summary>
-    public string PrettyName => _enumValues.First(kvp => kvp.Value == Value).Key;
+    public string PrettyName
+        => _enumValues.ContainsValue(Value)
+            ? _enumValues.First(kvp => kvp.Value == Value).Key
+            : Value;
     
     /// <summary>
     /// Sets the value of the setting from a pretty name.
