@@ -33,7 +33,7 @@ public class CaptchaServiceFactory
                 GetUri(settings.CustomAntiCaptchaDomain, settings.CustomAntiCaptchaPort)),
             CaptchaServiceType.CapSolver => throw new NotSupportedException(
                 "CapSolver itself explicitly asked to be removed from the software. Please choose another service."),
-            CaptchaServiceType.CapMonsterCloud => new CapMonsterCloudService(settings.CapMonsterCloudApiKey),
+            CaptchaServiceType.CapMonsterCloud => new CapMonsterCloudAmazonWafService(settings.CapMonsterCloudApiKey),
             CaptchaServiceType.HumanCoder => new HumanCoderService(settings.HumanCoderApiKey),
             CaptchaServiceType.Nopecha => new NopechaService(settings.NopechaApiKey),
             CaptchaServiceType.NoCaptchaAi => new NoCaptchaAiService(settings.NoCaptchaAiApiKey),
