@@ -243,13 +243,12 @@ namespace RuriLib.Blocks.Functions.Crypto
             return hashed;
         }
 
-        [Block("Generates a BCrypt hash from an input by generating a salt", name = "BCrypt Hash (Gen Salt)",
-            extraInfo = "bcryptjs uses salt revision 2X by default currently")]
-        public static string BCryptHashGenSalt(BotData data, string input, int rounds = 10, SaltRevision saltRevision = SaltRevision.Revision2X)
+        [Block("Generates a BCrypt hash from an input by generating a salt", name = "BCrypt Hash (Gen Salt)")]
+        public static string BCryptHashGenSalt(BotData data, string input, int rounds = 10)
         {
             data.Logger.LogHeader();
 
-            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptGenSalt(input, rounds, saltRevision);
+            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptGenSalt(input, rounds);
             data.Logger.Log($"Hashed: {hashed}", LogColors.YellowGreen);
 
             return hashed;

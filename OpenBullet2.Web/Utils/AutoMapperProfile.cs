@@ -85,7 +85,7 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<CreateGuestDto, GuestEntity>()
             .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto =>
-                BCrypt.Net.BCrypt.HashPassword(dto.Password, SaltRevision.Revision2B)))
+                BCrypt.Net.BCrypt.HashPassword(dto.Password)))
             .ForMember(entity => entity.AllowedAddresses, e => e.MapFrom(dto =>
                 string.Join(',', dto.AllowedAddresses)));
 
@@ -95,7 +95,7 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<UpdateGuestPasswordDto, GuestEntity>()
             .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto =>
-                BCrypt.Net.BCrypt.HashPassword(dto.Password, SaltRevision.Revision2B)));
+                BCrypt.Net.BCrypt.HashPassword(dto.Password)));
 
         CreateMap<GuestEntity, GuestDto>()
             .ForMember(dto => dto.AllowedAddresses, e => e.MapFrom(entity =>
