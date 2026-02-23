@@ -96,7 +96,7 @@ namespace RuriLib.Blocks.Selenium.Browser
                     fireservice.SuppressInitialDiagnosticInformation = true;
                     fireservice.HideCommandPromptWindow = true;
                     fireop.AddArgument("--log-level=3");
-                    fireop.BrowserExecutableLocation = provider.FirefoxBinaryLocation;
+                    fireop.BinaryLocation = provider.FirefoxBinaryLocation;
 
                     if (Utils.IsDocker())
                     {

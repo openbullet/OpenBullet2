@@ -105,6 +105,7 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
+        <PackageReference Include="AngleSharp" Version="1.4.0" />
         <PackageReference Include="MahApps.Metro" Version="2.4.10" />
         <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
         <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />

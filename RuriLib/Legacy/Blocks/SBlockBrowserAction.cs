@@ -404,7 +404,7 @@ namespace RuriLib.Legacy.Blocks
                     fireservice.SuppressInitialDiagnosticInformation = true;
                     fireservice.HideCommandPromptWindow = true;
                     fireop.AddArgument("--log-level=3");
-                    fireop.BrowserExecutableLocation = provider.FirefoxBinaryLocation;
+                    fireop.BinaryLocation = provider.FirefoxBinaryLocation;
 
                     if (Helpers.Utils.IsDocker())
                     {
