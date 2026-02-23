@@ -367,6 +367,28 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public double UiScale
+        {
+            get => Customization.UiScale;
+            set
+            {
+                Customization.UiScale = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(UiScalePercentage));
+                RefreshTheme();
+            }
+        }
+
+        public int UiScalePercentage
+        {
+            get => (int)(UiScale * 100);
+            set
+            {
+                UiScale = (double)value / 100;
+                OnPropertyChanged();
+            }
+        }
+
         public string BackgroundImagePath
         {
             get => Customization.BackgroundImagePath;

@@ -318,6 +318,16 @@
                         <mah:ColorPicker SelectedColor="{Binding BackgroundButton}" Width="150" />
                     </StackPanel>
                 </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>UI Scale (%)</Label>
+                    <mah:NumericUpDown Minimum="50"
+                                       Maximum="200"
+                                       Interval="5"
+                                       Value="{Binding UiScalePercentage}"
+                                       Width="150"/>
+                </StackPanel>
+
                 <Grid Margin="0 5 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />

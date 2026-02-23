@@ -125,4 +125,9 @@ public class CustomizationSettings
     /// Whether to play a sound when a hit is found.
     /// </summary>
     public bool PlaySoundOnHit { get; set; } = false;
+
+    /// <summary>
+    /// The UI scale (1.0 = 100%). Native UI only.
+    /// </summary>
+    public double UiScale { get; set; } = 1.0;
 }

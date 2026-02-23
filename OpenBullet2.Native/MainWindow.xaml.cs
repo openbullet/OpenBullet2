@@ -354,6 +354,7 @@ namespace OpenBullet2.Native
 
         public void SetTheme(CustomizationSettings customization)
         {
+            vm.UpdateUiScale();
             Brush.SetAppColor("BackgroundMain", customization.BackgroundMain);
             Brush.SetAppColor("BackgroundSecondary", customization.BackgroundSecondary);
             Brush.SetAppColor("BackgroundInput", customization.BackgroundInput);
@@ -401,6 +402,8 @@ namespace OpenBullet2.Native
 
         public bool IsConfigSelected => Config != null;
 
+        public double UiScale => obSettingsService.Settings.CustomizationSettings.UiScale;
+
         public MainWindowViewModel()
         {
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
@@ -412,6 +415,8 @@ namespace OpenBullet2.Native
                 ConfigSelected?.Invoke(config);
             };
         }
+
+        public void UpdateUiScale() => OnPropertyChanged(nameof(UiScale));
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {

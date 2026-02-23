@@ -24,6 +24,9 @@
     </Window.Resources>
 
     <Grid x:Name="Root" Margin="0">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding UiScale}" ScaleY="{Binding UiScale}" />
+        </Grid.LayoutTransform>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
