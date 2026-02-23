@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install basic dependencies
+# Install dependencies, Node.js, and browsers in a single layer
 RUN apt-get update -yq \
     && apt-get install -y --no-install-recommends \
         apt-utils \
@@ -12,32 +12,15 @@ RUN apt-get update -yq \
         wget \
         unzip \
         python3 \
-        python3-pip \
-        gnupg \
-        lsb-release \
-        software-properties-common
+        nodejs npm \
+        chromium \
+        firefox-esr \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Setup Node.js (LTS Version)
-RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -yq nodejs build-essential
-
-# Add Mozilla Team PPA for the latest Firefox
-RUN echo "deb http://ppa.launchpad.net/mozillateam/ppa/ubuntu focal main" | tee /etc/apt/sources.list.d/mozillateam-ppa.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9BDB3D89CE49EC21 \
-    && apt-get update -yq
-
-# Install the latest Firefox and Chromium
-RUN apt-get install -y --no-install-recommends \
-        firefox \
-        chromium
-
-# Install WebDriverManager
-RUN pip3 install webdrivermanager || true \
-    && webdrivermanager firefox chrome --linkpath /usr/local/bin || true
-
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Note: Selenium 4.6+ includes Selenium Manager which automatically
+# downloads the correct browser drivers at runtime. No need for
+# the deprecated webdrivermanager pip package.
 
 WORKDIR /app
 
