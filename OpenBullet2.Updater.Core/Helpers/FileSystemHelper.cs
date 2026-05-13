@@ -122,7 +122,7 @@ public static class FileSystemHelper
                 {
                     ctx.Status($"Backing up {entry}...");
 
-                    if (ShouldPreserveEntry(entry))
+                    if (ShouldAlwaysPreserveEntry(entry) || ShouldPreserveExistingEntry(installDirectory, entry))
                     {
                         continue;
                     }
@@ -153,7 +153,7 @@ public static class FileSystemHelper
                 {
                     ctx.Status($"Installing {entry}...");
 
-                    if (ShouldPreserveEntry(entry))
+                    if (ShouldAlwaysPreserveEntry(entry) || ShouldPreserveExistingEntry(installDirectory, entry))
                     {
                         continue;
                     }
@@ -189,7 +189,7 @@ public static class FileSystemHelper
         {
             foreach (var entry in stagedEntries)
             {
-                if (ShouldPreserveEntry(entry))
+                if (ShouldAlwaysPreserveEntry(entry))
                 {
                     continue;
                 }
@@ -237,8 +237,11 @@ public static class FileSystemHelper
             .Where(entry => !string.IsNullOrWhiteSpace(entry))
             .ToArray();
 
-    private static bool ShouldPreserveEntry(string entry)
-        => entry == "appsettings.json" || entry.StartsWith("UserData");
+    private static bool ShouldAlwaysPreserveEntry(string entry)
+        => entry.StartsWith("UserData");
+
+    private static bool ShouldPreserveExistingEntry(string installDirectory, string entry)
+        => entry == "appsettings.json" && File.Exists(Path.Combine(installDirectory, "appsettings.json"));
 
     private static bool PathExists(string path)
         => File.Exists(path) || Directory.Exists(path);
