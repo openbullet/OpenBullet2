@@ -174,8 +174,8 @@ public static class FileSystemHelper
                         MovePath(destination, backupPath);
                     }
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-                    MovePath(source, destination);
+                    CopyPath(source, destination);
+                    TryDeletePath(source);
                 }
             });
     }
@@ -294,6 +294,35 @@ public static class FileSystemHelper
         }
     }
 
+    private static void CopyPath(string source, string destination)
+    {
+        if (File.Exists(source))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+            File.Copy(source, destination, overwrite: true);
+        }
+        else if (Directory.Exists(source))
+        {
+            Directory.CreateDirectory(destination);
+
+            foreach (var sourceDirectory in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)
+                         .OrderBy(path => path.Count(c => c == Path.DirectorySeparatorChar)))
+            {
+                var relativePath = Path.GetRelativePath(source, sourceDirectory);
+                Directory.CreateDirectory(Path.Combine(destination, relativePath));
+            }
+
+            foreach (var sourceFile in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+            {
+                var relativePath = Path.GetRelativePath(source, sourceFile);
+                var destinationFile = Path.Combine(destination, relativePath);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationFile)!);
+                File.Copy(sourceFile, destinationFile, overwrite: true);
+            }
+        }
+    }
+
     private static void DeletePath(string path)
     {
         if (File.Exists(path))
@@ -311,6 +340,19 @@ public static class FileSystemHelper
         if (Directory.Exists(updateDirectory))
         {
             Directory.Delete(updateDirectory, true);
+        }
+    }
+
+    private static void TryDeletePath(string path)
+    {
+        try
+        {
+            DeletePath(path);
+        }
+        catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+        {
+            AnsiConsole.MarkupLineInterpolated(
+                $"[yellow]Could not delete temporary path {Markup.Escape(path)} after copying, leaving it in place.[/]");
         }
     }
 
