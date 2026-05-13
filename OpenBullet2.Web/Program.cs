@@ -27,6 +27,10 @@ using Mapster;
 using Microsoft.OpenApi;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
+using Serilog.Exceptions;
+using Serilog.Formatting.Compact;
+using Serilog.Settings.Configuration;
+using Serilog.Sinks.SystemConsole;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,7 +110,13 @@ builder.Services.AddSingleton(_ => WebMapperConfig.Create());
 builder.Services.AddScoped<IObjectMapper, MapsterObjectMapper>();
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));
+    configuration.ReadFrom.Configuration(
+        context.Configuration,
+        new ConfigurationReaderOptions(
+            typeof(ConsoleLoggerConfigurationExtensions).Assembly,
+            typeof(FileLoggerConfigurationExtensions).Assembly,
+            typeof(LoggerEnrichmentConfigurationExtensions).Assembly,
+            typeof(CompactJsonFormatter).Assembly)));
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
 
