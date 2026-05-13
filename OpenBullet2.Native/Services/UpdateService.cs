@@ -13,8 +13,8 @@ public class UpdateService : IDisposable
     private readonly string versionFile = "version.txt";
     private readonly Timer timer;
 
-    public Version CurrentVersion { get; private set; } = new(0, 3, 2);
-    public Version RemoteVersion { get; private set; } = new(0, 3, 2);
+    public Version CurrentVersion { get; private set; } = new(0, 3, 3);
+    public Version RemoteVersion { get; private set; } = new(0, 3, 3);
     public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
     public string CurrentVersionType => CurrentVersion.Major == 0
         ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
