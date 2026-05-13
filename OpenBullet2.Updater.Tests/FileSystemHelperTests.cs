@@ -78,6 +78,29 @@ public class FileSystemHelperTests
     }
 
     [Fact]
+    public async Task ApplyUpdateAsync_CleanInstall_WithTopLevelDirectory_Succeeds()
+    {
+        using var install = new TemporaryDirectory();
+
+        await using var archive = CreateArchive(
+            ("version.txt", "0.3.3.2960"),
+            ("build-files.txt", string.Join(Environment.NewLine,
+                "version.txt",
+                "build-files.txt",
+                "libraries",
+                "OpenBullet2.Web.dll")),
+            ("OpenBullet2.Web.dll", "web assembly"),
+            (Path.Combine("libraries", "dependency.dll"), "dependency"));
+
+        await ApplyUpdateAsync(archive, install.Path);
+
+        Assert.Equal("0.3.3.2960", ReadInstallFile(install.Path, "version.txt"));
+        Assert.Equal("web assembly", ReadInstallFile(install.Path, "OpenBullet2.Web.dll"));
+        Assert.Equal("dependency", ReadInstallFile(install.Path, Path.Combine("libraries", "dependency.dll")));
+        Assert.Empty(Directory.GetDirectories(install.Path, ".ob2-update-*"));
+    }
+
+    [Fact]
     public async Task ApplyUpdateAsync_RestoresPreviousBuildWhenStagedPayloadIsInvalid()
     {
         using var install = new TemporaryDirectory();

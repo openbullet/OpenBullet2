@@ -261,11 +261,36 @@ public static class FileSystemHelper
     {
         if (File.Exists(source))
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             File.Move(source, destination);
         }
         else if (Directory.Exists(source))
         {
-            Directory.Move(source, destination);
+            Directory.CreateDirectory(destination);
+
+            foreach (var sourceDirectory in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)
+                         .OrderBy(path => path.Count(c => c == Path.DirectorySeparatorChar)))
+            {
+                var relativePath = Path.GetRelativePath(source, sourceDirectory);
+                Directory.CreateDirectory(Path.Combine(destination, relativePath));
+            }
+
+            foreach (var sourceFile in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+            {
+                var relativePath = Path.GetRelativePath(source, sourceFile);
+                var destinationFile = Path.Combine(destination, relativePath);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationFile)!);
+
+                if (File.Exists(destinationFile))
+                {
+                    File.Delete(destinationFile);
+                }
+
+                File.Move(sourceFile, destinationFile);
+            }
+
+            Directory.Delete(source, true);
         }
     }
 
