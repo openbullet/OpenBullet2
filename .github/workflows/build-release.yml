@@ -8,8 +8,8 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    # Only run if the commit message contains the string [build]
-    if: contains(github.event.head_commit.message, '[build]')
+    # Only run if the commit message contains [build] and does not contain [skip-tests]
+    if: contains(github.event.head_commit.message, '[build]') && !contains(github.event.head_commit.message, '[skip-tests]')
     strategy:
       fail-fast: false
       matrix:
@@ -34,6 +34,10 @@ jobs:
   build-updaters:
     runs-on: ubuntu-latest
     needs: test
+    if: |
+      always() &&
+      contains(github.event.head_commit.message, '[build]') &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped')
     strategy:
       fail-fast: false
       matrix:
@@ -96,6 +100,11 @@ jobs:
     needs:
     - test
     - build-updaters
+    if: |
+      always() &&
+      contains(github.event.head_commit.message, '[build]') &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.build-updaters.result == 'success' || needs.build-updaters.result == 'skipped')
     steps:
 
     # Checkout the repository
