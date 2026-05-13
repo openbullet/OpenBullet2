@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-trixie-slim
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
 
 ENV DEBIAN_FRONTEND=noninteractive
 

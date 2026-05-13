@@ -3,7 +3,7 @@
 # -------
 # BACKEND
 # -------
-FROM mcr.microsoft.com/dotnet/sdk:10.0-trixie-slim AS backend
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 
 WORKDIR /code
 
@@ -46,7 +46,7 @@ RUN mkdir /build && mv dist/* /build
 # ---------
 # AGGREGATE
 # ---------
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-trixie-slim
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
 
 RUN apt-get update -yq && apt-get install -y --no-install-recommends curl
 
