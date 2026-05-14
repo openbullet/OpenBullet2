@@ -245,7 +245,15 @@ p-pickList.configs-picker > div > div.p-picklist-target-controls {
         .col, .col-1, .col-2, .col-3, .col-4, .col-6, .col-12 {
             padding: 0px;
         }
+
+        margin-left: 0px;
+        margin-right: 0px;
     }
+}
+
+.container-fluid.no-paddings {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 label {
