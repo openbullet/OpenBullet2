@@ -10,6 +10,7 @@ using OpenBullet2.Web;
 using OpenBullet2.Web.Controllers;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Mcp;
 using OpenBullet2.Web.Middleware;
 using OpenBullet2.Web.Services;
 using OpenBullet2.Web.SignalR;
@@ -25,6 +26,7 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using Mapster;
 using Microsoft.OpenApi;
+using ModelContextProtocol.AspNetCore;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
 using Serilog.Exceptions;
@@ -119,6 +121,12 @@ builder.Host.UseSerilog((context, configuration) =>
             typeof(CompactJsonFormatter).Assembly)));
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
+builder.Services.AddMcpServer()
+    .WithHttpTransport(options =>
+    {
+        options.Stateless = true;
+    })
+    .WithTools<OpenBulletMcpTools>();
 
 // Scoped
 builder.Services.AddScoped<IProxyRepository, DbProxyRepository>();
@@ -228,6 +236,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapMcp("/mcp");
 
 app.MapHub<ConfigDebuggerHub>("hubs/config-debugger", options =>
 {
