@@ -37,7 +37,15 @@ public class Stack2CSharpTranspiler
             writer.WriteLine($"// BLOCK: {block.Label}");
             writer.WriteLine($"data.ExecutingBlock({CSharpWriter.SerializeString(block.Label)});");
 
-            writer.Write(block.ToSyntax(syntaxContext).ToSnippet());
+            if (block is LoliCodeBlockInstance loliCodeBlock)
+            {
+                writer.Write(loliCodeBlock.BuildScriptSnippet(syntaxContext.DefinedVariables));
+            }
+            else
+            {
+                writer.Write(block.ToSyntax(syntaxContext).ToSnippet());
+            }
+
             writer.WriteLine();
 
             // If in step by step mode, and if not the last block, check if pause was requested

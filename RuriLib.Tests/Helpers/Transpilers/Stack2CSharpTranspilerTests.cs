@@ -71,6 +71,38 @@ public class Stack2CSharpTranspilerTests
         Assert.Equal(1, script.Split("await data.Stepper.WaitForStepAsync(data.CancellationToken);").Length - 1);
     }
 
+    [Fact]
+    public void Transpile_RawLoliCodeScopeAcrossBlockBoundary_PreservesOpenScope()
+    {
+        var script = """
+            if (data.SOURCE.Contains("document.cookie = \"sessionCookie="))
+            {
+              string cookieValue = string.Empty;
+              data.Logger.Enabled = false;
+            BLOCK:HttpRequest
+            LABEL:Main Page Session Cookie
+              url = "https://example.com"
+              customCookies = ${("sessionCookie", "<cookieValue>")}
+              TYPE:STANDARD
+              ""
+              "application/x-www-form-urlencoded"
+            ENDBLOCK
+            data.Logger.Enabled = true;
+            }
+            """;
+
+        var blocks = Loli2StackTranspiler.Transpile(script);
+        var generated = NormalizeGeneratedScript(Stack2CSharpTranspiler.Transpile(blocks, new ConfigSettings()));
+
+        Assert.Contains("data.Logger.Enabled = false;\n// BLOCK: Main Page Session Cookie", generated);
+        Assert.DoesNotContain("data.Logger.Enabled = false;\n}\n// BLOCK: Main Page Session Cookie", generated);
+        Assert.Contains("await HttpRequestStandard(data, new StandardHttpRequestOptions", generated);
+        Assert.Contains("CustomCookies = new Dictionary<string, string>", generated);
+        Assert.Contains("$\"sessionCookie\"", generated);
+        Assert.Contains("$\"{cookieValue}\"", generated);
+        Assert.Contains("data.Logger.Enabled = true;\n}", generated);
+    }
+
     private static AutoBlockInstance CreateAutoBlock()
     {
         var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
