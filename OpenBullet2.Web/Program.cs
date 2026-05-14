@@ -230,6 +230,7 @@ app.UseCors(o => o
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthTokenVerificationMiddleware>();
+app.UseMiddleware<McpAuthorizationMiddleware>();
 
 app.UseRouting();
 

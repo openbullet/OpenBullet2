@@ -1,5 +1,7 @@
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
+using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Interfaces;
 using Xunit;
 
@@ -53,5 +55,64 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("OpenBullet 2 server info", text);
         Assert.Contains(version.ToString(), text);
         Assert.Contains(Path.GetFullPath(UserDataFolder), text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_WhenLoginRequired_AnonymousClientIsRejected()
+    {
+        RequireLogin();
+
+        using var client = Factory.CreateClient();
+        var response = await client.GetAsync("/mcp", TestCancellationToken);
+
+        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_WhenLoginRequired_AdminBearerTokenCanCallTool()
+    {
+        RequireLogin();
+
+        using var httpClient = Factory.CreateClient();
+        ImpersonateAdmin(httpClient);
+
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_openbullet_server_info",
+            cancellationToken: TestCancellationToken);
+
+        Assert.False(result.IsError ?? false);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_WhenLoginRequired_GuestBearerTokenIsRejected()
+    {
+        RequireLogin();
+
+        using var httpClient = Factory.CreateClient();
+        var guestRepo = GetRequiredService<IGuestRepository>();
+        var guest = new GuestEntity
+        {
+            Username = "guest_user",
+            AccessExpiration = DateTime.UtcNow.AddDays(1),
+            AllowedAddresses = string.Empty,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
+        };
+
+        await guestRepo.AddAsync(guest, TestCancellationToken);
+        ImpersonateGuest(httpClient, guest);
+
+        var response = await httpClient.GetAsync("/mcp", TestCancellationToken);
+
+        Assert.Equal(System.Net.HttpStatusCode.Forbidden, response.StatusCode);
     }
 }
