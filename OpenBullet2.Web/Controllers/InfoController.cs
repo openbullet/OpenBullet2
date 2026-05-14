@@ -22,17 +22,17 @@ namespace OpenBullet2.Web.Controllers;
 [TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class InfoController(IAnnouncementService announcementService,
-    HttpClient httpClient, IUpdateService updateService,
+    IChangelogService changelogService, IUpdateService updateService,
     JobManagerService jobManager, IProxyRepository proxyRepo,
     IWordlistRepository wordlistRepo, IHitRepository hitRepo,
     IGuestRepository guestRepo, ConfigService configService,
     PluginRepository pluginRepository) : ApiController
 {
     private readonly IAnnouncementService _announcementService = announcementService;
+    private readonly IChangelogService _changelogService = changelogService;
     private readonly ConfigService _configService = configService;
     private readonly IGuestRepository _guestRepo = guestRepo;
     private readonly IHitRepository _hitRepo = hitRepo;
-    private readonly HttpClient _httpClient = httpClient;
     private readonly JobManagerService _jobManager = jobManager;
     private readonly PluginRepository _pluginRepository = pluginRepository;
     private readonly IProxyRepository _proxyRepo = proxyRepo;
@@ -103,18 +103,7 @@ public class InfoController(IAnnouncementService announcementService,
 
         try
         {
-            // The changelog is only present for stable builds in the master branch
-            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
-            using var response = await _httpClient.GetAsync(url, cancellationToken);
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new ResourceNotFoundException(
-                    ErrorCode.RemoteResourceNotFound,
-                    $"Changelog for version {v}", url);
-            }
-
-            markdown = await response.Content.ReadAsStringAsync(cancellationToken);
+            markdown = await _changelogService.FetchChangelogAsync(v, cancellationToken);
         }
         catch (ResourceNotFoundException)
         {

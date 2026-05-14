@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Jobs;
@@ -52,15 +55,21 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
     public async Task GetChangelog_Success()
     {
         // Arrange
-        using var client = Factory.CreateClient();
         var updateService = GetRequiredService<IUpdateService>();
+        const string expectedMarkdown = "# Changelog\r\n- Test entry";
+        using var factory = Factory.WithWebHostBuilder(builder => builder.ConfigureServices(services =>
+        {
+            services.RemoveAll<IChangelogService>();
+            services.AddSingleton<IChangelogService>(new TestChangelogService(expectedMarkdown));
+        }));
+        using var client = factory.CreateClient();
 
         // Act
         var result = await GetJsonAsync<ChangelogDto>(client, "/api/v1/info/changelog");
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.NotEmpty(result.Value.MarkdownText);
+        Assert.Equal(expectedMarkdown, result.Value.MarkdownText);
 
         var version = new Version(result.Value.Version);
 
@@ -240,6 +249,12 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(1, info.ConfigsCount);
         Assert.Equal(1, info.GuestsCount);
         Assert.Equal(0, info.PluginsCount);
+    }
+
+    private sealed class TestChangelogService(string markdown) : IChangelogService
+    {
+        public Task<string> FetchChangelogAsync(string version, CancellationToken cancellationToken)
+            => Task.FromResult(markdown);
     }
 }
 

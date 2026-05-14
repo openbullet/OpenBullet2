@@ -174,7 +174,7 @@ builder.Services.AddSingleton<MultiRunJobService>();
 builder.Services.AddSingleton<LoliCodeAutocompletionService>();
 
 // HttpClient
-builder.Services.AddHttpClient<InfoController>(client =>
+builder.Services.AddHttpClient<IChangelogService, ChangelogService>(client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
 });
