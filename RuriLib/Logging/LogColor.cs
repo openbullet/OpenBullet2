@@ -1,5 +1,6 @@
 namespace RuriLib.Logging;
 #pragma warning disable CS1591
+
 /// <summary>
 /// HTML color codes identified by their names.
 /// The colors can be found at https://www.colorhexa.com/color-names
