@@ -62,6 +62,12 @@ public class CSharpWriterTests
     }
 
     [Fact]
+    public void SerializeInterpString_Newlines_AreEscaped()
+    {
+        Assert.Equal("$\"first\\r\\nsecond {value}\\nthird\"", CSharpWriter.SerializeInterpString("first\r\nsecond <value>\nthird"));
+    }
+
+    [Fact]
     public void SerializeByteArray_Null_ReturnsNullLiteral()
     {
         Assert.Equal("null", CSharpWriter.SerializeByteArray(null));

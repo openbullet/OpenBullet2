@@ -196,6 +196,8 @@ public class CSharpWriter
             {
                 sb.Append(segment.Literal!
                     .Replace("\\", "\\\\")
+                    .Replace("\r", "\\r")
+                    .Replace("\n", "\\n")
                     .Replace("\"", "\\\"")
                     .Replace("{", "{{")
                     .Replace("}", "}}"));
