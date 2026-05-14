@@ -23,6 +23,7 @@ import { PickListModule } from 'primeng/picklist';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
+import { SplitterModule } from 'primeng/splitter';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { SharedModule } from '../shared/shared.module';
@@ -240,6 +241,7 @@ import { BaseChartDirective } from 'ng2-charts';
     FileUploadModule,
     DialogModule,
     TableModule,
+    SplitterModule,
     ChipModule,
     BaseChartDirective,
     MarkdownModule.forRoot(),

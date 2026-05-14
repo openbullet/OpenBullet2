@@ -1,4 +1,22 @@
 .stacker-container {
+    .stacker-panel {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .stacker-panel-left {
+        padding-right: 0.25rem;
+    }
+
+    .stacker-panel-right {
+        padding-left: 0.25rem;
+
+        app-config-debugger {
+            display: block;
+            width: 100%;
+        }
+    }
+
     .stack-container {
         .stack {
             margin-top: 1rem;

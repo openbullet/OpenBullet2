@@ -380,3 +380,106 @@ p-accordiontab {
     background-color: var(--fg-accent) !important;
     border: 1px solid var(--fg-accent) !important;
 }
+
+.editor-debugger-splitter.p-splitter {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+}
+
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-panel {
+    min-width: 400px;
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-panel,
+.editor-debugger-splitter.p-splitter .p-splitter-panel-nested,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter-resizing {
+    background: transparent !important;
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
+    position: relative;
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+    border-radius: 999px;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-gutter > .p-splitter-gutter-handle {
+    width: 7px !important;
+    height: 28px !important;
+}
+
+.editor-debugger-splitter.p-splitter-vertical > .p-splitter-gutter > .p-splitter-gutter-handle {
+    width: 28px !important;
+    height: 7px !important;
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter .p-splitter-gutter-handle::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    background: var(--fg-inactive);
+    transition: background-color .15s ease;
+}
+
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-gutter > .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-gutter > .p-splitter-gutter-handle::after {
+    top: 50%;
+    width: 1px;
+    height: 9px;
+    transform: translateY(-50%);
+}
+
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-gutter > .p-splitter-gutter-handle::before {
+    left: 2px;
+}
+
+.editor-debugger-splitter.p-splitter-horizontal > .p-splitter-gutter > .p-splitter-gutter-handle::after {
+    right: 2px;
+}
+
+.editor-debugger-splitter.p-splitter-vertical > .p-splitter-gutter > .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter-vertical > .p-splitter-gutter > .p-splitter-gutter-handle::after {
+    left: 50%;
+    width: 9px;
+    height: 1px;
+    transform: translateX(-50%);
+}
+
+.editor-debugger-splitter.p-splitter-vertical > .p-splitter-gutter > .p-splitter-gutter-handle::before {
+    top: 2px;
+}
+
+.editor-debugger-splitter.p-splitter-vertical > .p-splitter-gutter > .p-splitter-gutter-handle::after {
+    bottom: 2px;
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:hover .p-splitter-gutter-handle,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:focus-within .p-splitter-gutter-handle,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter.p-splitter-gutter-resizing .p-splitter-gutter-handle {
+    background: var(--bg-accent) !important;
+    border-color: var(--fg-accent-light) !important;
+    box-shadow: 0 0 0 1px var(--fg-accent-light);
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:hover .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:hover .p-splitter-gutter-handle::after,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:focus-within .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter:focus-within .p-splitter-gutter-handle::after,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter.p-splitter-gutter-resizing .p-splitter-gutter-handle::before,
+.editor-debugger-splitter.p-splitter .p-splitter-gutter.p-splitter-gutter-resizing .p-splitter-gutter-handle::after {
+    background: var(--fg-accent-light);
+}
+
+.editor-debugger-splitter.p-splitter .p-splitter-gutter .p-splitter-gutter-handle:focus-visible {
+    box-shadow: 0 0 0 1px var(--fg-accent-light) !important;
+}
