@@ -40,6 +40,8 @@ public class DescriptorsRepository
         [typeof(Task<byte[]>)] = VariableType.ByteArray
     };
 
+    private readonly Dictionary<string, BlockCategory> categoryDefinitions = [];
+
     /// <summary>
     /// The descriptors keyed by their unique id.
     /// </summary>
@@ -59,6 +61,7 @@ public class DescriptorsRepository
     public void Recreate()
     {
         Descriptors.Clear();
+        categoryDefinitions.Clear();
 
         Descriptors["Keycheck"] = new KeycheckBlockDescriptor();
         Descriptors["HttpRequest"] = new HttpRequestBlockDescriptor();
@@ -105,6 +108,11 @@ public class DescriptorsRepository
                 continue;
             }
 
+            var typeNamespace = type.Namespace ?? throw new InvalidOperationException(
+                $"Type {type.FullName} has no namespace");
+
+            RegisterCategoryDefinition(type, typeNamespace, category);
+
             foreach (var method in type.GetMethods())
             {
                 var attribute = method.GetCustomAttribute<Attributes.Block>();
@@ -119,9 +127,6 @@ public class DescriptorsRepository
                 {
                     throw new Exception($"Duplicate descriptor id: {blockId}");
                 }
-
-                var typeNamespace = type.Namespace ?? throw new InvalidOperationException(
-                    $"Type {type.FullName} has no namespace");
 
                 Descriptors[blockId] = new AutoBlockDescriptor
                 {
@@ -151,6 +156,12 @@ public class DescriptorsRepository
 
         AddBlockActions(assembly);
     }
+
+    private void RegisterCategoryDefinition(
+        Type type,
+        string typeNamespace,
+        Attributes.BlockCategory category)
+        => categoryDefinitions[typeNamespace] = CreateBlockCategory(type, typeNamespace, category);
 
     private void AddBlockActions(Assembly assembly)
     {
@@ -357,9 +368,70 @@ public class DescriptorsRepository
         };
 
         PushLeaves(root, 0);
+        ResolveCategories(root, string.Empty);
 
         return root;
     }
+
+    private void ResolveCategories(CategoryTreeNode node, string path)
+    {
+        foreach (var subCategory in node.SubCategories)
+        {
+            ResolveCategories(subCategory, JoinCategoryPath(path, subCategory.Name));
+        }
+
+        node.ResolvedCategory = ResolveCategory(node, path);
+    }
+
+    private BlockCategory ResolveCategory(CategoryTreeNode node, string path)
+    {
+        if (node.IsRoot)
+        {
+            return new BlockCategory
+            {
+                Name = node.Name,
+                Description = "All block categories"
+            };
+        }
+
+        if (categoryDefinitions.TryGetValue(path, out var category))
+        {
+            category.Name = node.Name;
+            category.Path = path;
+            return category;
+        }
+
+        if (node.Descriptors.Count > 0)
+        {
+            category = node.Descriptors.First().Category;
+            category.Name = node.Name;
+            category.Path = path;
+            return category;
+        }
+
+        if (node.SubCategories.Count > 0)
+        {
+            category = node.SubCategories.First().Category;
+            category.Name = node.Name;
+            category.Path = path;
+            category.Namespace = path;
+            category.Description = $"Blocks in the {node.Name} category";
+            return category;
+        }
+
+        return new BlockCategory
+        {
+            Name = node.Name,
+            Path = path,
+            Namespace = path,
+            Description = $"Blocks in the {node.Name} category"
+        };
+    }
+
+    private static string JoinCategoryPath(string parentPath, string categoryName)
+        => string.IsNullOrEmpty(parentPath)
+            ? categoryName
+            : $"{parentPath}.{categoryName}";
 
     private void PushLeaves(CategoryTreeNode node, int level)
     {

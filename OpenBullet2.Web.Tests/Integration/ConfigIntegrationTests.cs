@@ -1646,6 +1646,12 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 .SubCategories.First(sc => sc.Name == "Blocks")
                 .SubCategories.First(sc => sc.Name == "Functions")
                 .DescriptorIds);
+        Assert.Equal("Blocks for performing network requests",
+            root.SubCategories
+                .First(sc => sc.Name == "RuriLib")
+                .SubCategories.First(sc => sc.Name == "Blocks")
+                .SubCategories.First(sc => sc.Name == "Requests")
+                .Category.Description);
     }
 
     /// <summary>

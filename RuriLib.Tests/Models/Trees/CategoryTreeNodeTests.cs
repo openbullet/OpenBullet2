@@ -8,6 +8,34 @@ namespace RuriLib.Tests.Models.Trees;
 public class CategoryTreeNodeTests
 {
     [Fact]
+    public void Category_WithResolvedCategory_ReturnsResolvedCategory()
+    {
+        var node = new CategoryTreeNode
+        {
+            ResolvedCategory = new BlockCategory
+            {
+                Name = "Requests",
+                Description = "Blocks for performing network requests"
+            },
+            Descriptors =
+            [
+                new BlockDescriptor
+                {
+                    Category = new BlockCategory
+                    {
+                        Name = "DNS",
+                        Description = "Blocks to query DNS records"
+                    }
+                }
+            ]
+        };
+
+        Assert.Equal("Requests", node.Category.Name);
+        Assert.Equal("Blocks for performing network requests",
+            node.Category.Description);
+    }
+
+    [Fact]
     public void Category_WithDescriptor_ReturnsDescriptorCategory()
     {
         var category = new BlockCategory { Name = "Leaf", Path = "A.B" };

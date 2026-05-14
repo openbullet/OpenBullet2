@@ -28,14 +28,14 @@
             <div class="blocks-grid">
                 <div class="block-item"
                     [ngStyle]="{
-                        backgroundColor: category.getCategory()?.backgroundColor,
-                        color: category.getCategory()?.foregroundColor
+                        backgroundColor: node.category.backgroundColor,
+                        color: node.category.foregroundColor
                     }"
-                    (click)="selectCategory(category)"
-                    *ngFor="let category of subCategories">
-                    {{category.name}}
+                    (click)="selectCategory(node)"
+                    *ngFor="let node of subCategories">
+                    {{node.name}}
                     <span class="category-description">
-                        {{category.getCategory()?.description ?? ''}}
+                        {{node.category.description}}
                     </span>
                 </div>
                 <div class="block-item"

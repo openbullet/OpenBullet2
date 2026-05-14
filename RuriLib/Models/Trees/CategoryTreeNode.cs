@@ -11,6 +11,11 @@ namespace RuriLib.Models.Trees;
 public class CategoryTreeNode
 {
     /// <summary>
+    /// The resolved category metadata for this node, when available.
+    /// </summary>
+    public BlockCategory? ResolvedCategory { get; set; }
+
+    /// <summary>
     /// The parent category node, if any.
     /// </summary>
     public CategoryTreeNode? Parent { get; set; }
@@ -42,6 +47,11 @@ public class CategoryTreeNode
     {
         get
         {
+            if (ResolvedCategory is { } resolvedCategory)
+            {
+                return resolvedCategory;
+            }
+
             if (Descriptors.Count > 0)
             {
                 return Descriptors.First().Category;

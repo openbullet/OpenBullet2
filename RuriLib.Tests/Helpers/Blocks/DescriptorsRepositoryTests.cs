@@ -75,6 +75,23 @@ public class DescriptorsRepositoryTests
         Assert.Contains(Flatten(tree), descriptor => descriptor.Id == "ConstantString");
     }
 
+    [Fact]
+    public void AsTree_ParentCategoriesUseScopedMetadata()
+    {
+        var repository = new DescriptorsRepository();
+
+        var tree = repository.AsTree();
+        var requestsCategory = tree.SubCategories
+            .First(sc => sc.Name == "RuriLib")
+            .SubCategories.First(sc => sc.Name == "Blocks")
+            .SubCategories.First(sc => sc.Name == "Requests")
+            .Category;
+
+        Assert.Equal("Requests", requestsCategory.Name);
+        Assert.Equal("Blocks for performing network requests",
+            requestsCategory.Description);
+    }
+
     private static IEnumerable<BlockDescriptor> Flatten(CategoryTreeNode node)
         => node.Descriptors.Concat(node.SubCategories.SelectMany(Flatten));
 }

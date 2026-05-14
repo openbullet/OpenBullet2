@@ -630,6 +630,15 @@ public class ConfigController : ApiController
         => new()
         {
             Name = node.Name,
+            Category = new()
+            {
+                Name = node.Category.Name,
+                Path = node.Category.Path,
+                Namespace = node.Category.Namespace,
+                Description = node.Category.Description,
+                BackgroundColor = node.Category.BackgroundColor,
+                ForegroundColor = node.Category.ForegroundColor
+            },
             SubCategories = node.SubCategories.Select(MapCategoryTreeNode).ToList(),
             DescriptorIds = node.Descriptors.Select(d => d.Id).ToList()
         };
