@@ -45,6 +45,16 @@ public class ScriptBuilderTests
     }
 
     [Fact]
+    public void GetUsings_ContainsCommonRawCSharpNamespaces()
+    {
+        var usings = ScriptBuilder.GetUsings().ToList();
+
+        Assert.Contains("System.Globalization", usings);
+        Assert.Contains("System.Text.Json", usings);
+        Assert.Contains("System.Text.RegularExpressions", usings);
+    }
+
+    [Fact]
     public async Task Build_DynamicHelperCallFromGlobals_RunsSuccessfully()
     {
         dynamic globals = new ExpandoObject();
