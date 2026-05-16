@@ -28,6 +28,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         var tools = await client.ListToolsAsync(cancellationToken: TestCancellationToken);
 
         Assert.Contains(tools, tool => tool.Name == "get_openbullet_server_info");
+        Assert.Contains(tools, tool => tool.Name == "get_openbullet_environment");
     }
 
     [Fact]
@@ -55,6 +56,33 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("OpenBullet 2 server info", text);
         Assert.Contains(version.ToString(), text);
         Assert.Contains(Path.GetFullPath(UserDataFolder), text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_CallsEnvironmentTool()
+    {
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_openbullet_environment",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+
+        Assert.False(result.IsError ?? false);
+        Assert.Contains("Environment.ini", text);
+        Assert.Contains(Path.GetFullPath(Path.Combine(UserDataFolder, "Environment.ini")), text);
+        Assert.Contains("[WORDLIST TYPE]", text);
+        Assert.Contains("Name=Default", text);
     }
 
     [Fact]

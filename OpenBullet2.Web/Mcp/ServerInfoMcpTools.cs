@@ -6,10 +6,10 @@ using OpenBullet2.Web.Interfaces;
 namespace OpenBullet2.Web.Mcp;
 
 /// <summary>
-/// Sample MCP tools exposed by the OpenBullet 2 web server.
+/// MCP tools related to OpenBullet 2 server state.
 /// </summary>
 [McpServerToolType]
-public sealed class OpenBulletMcpTools
+public sealed class ServerInfoMcpTools
 {
     /// <summary>
     /// Returns a small read-only summary of the current server state.
