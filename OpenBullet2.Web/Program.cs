@@ -131,6 +131,7 @@ builder.Services.AddMcpServer()
     .WithTools<ConfigMcpTools>()
     .WithTools<ConfigMakingMcpTools>()
     .WithTools<ConfigDebugMcpTools>()
+    .WithTools<BlockReferenceMcpTools>()
     .WithTools<SettingsMcpTools>();
 
 // Scoped

@@ -11,6 +11,7 @@ using OpenBullet2.Web.Dtos.Settings;
 using RuriLib.Services;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
+using RuriLib.Models.Blocks.Parameters;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using Xunit;
@@ -45,6 +46,8 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
         Assert.Contains(tools, tool => tool.Name == "convert_lolicode_to_csharp");
         Assert.Contains(tools, tool => tool.Name == "debug_config");
+        Assert.Contains(tools, tool => tool.Name == "list_blocks");
+        Assert.Contains(tools, tool => tool.Name == "get_block_details");
         Assert.Contains(tools, tool => tool.Name == "get_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "update_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
@@ -358,6 +361,94 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
             variable.GetProperty("name").GetString() == "TEST"
             && variable.GetProperty("value").GetString() == "Test data");
         Assert.True(root.GetProperty("error").ValueKind is JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_ListsBlocksByCategory()
+    {
+        var descriptor = RuriLib.Globals.DescriptorsRepository.Descriptors["HttpRequest"];
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "list_blocks",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var categories = json.RootElement.GetProperty("categories").EnumerateArray().ToList();
+        var category = categories.FirstOrDefault(c => c.GetProperty("path").GetString() == descriptor.Category.Path);
+        var blocks = category.GetProperty("blocks").EnumerateArray().ToList();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal(descriptor.Category.Name, category.GetProperty("name").GetString());
+        Assert.Equal(descriptor.Category.Description, category.GetProperty("description").GetString());
+        Assert.False(category.TryGetProperty("backgroundColor", out _));
+        Assert.False(category.TryGetProperty("foregroundColor", out _));
+        Assert.False(category.TryGetProperty("namespace", out _));
+        Assert.Contains(blocks, b => b.GetProperty("id").GetString() == descriptor.Id
+            && b.GetProperty("name").GetString() == descriptor.Name
+            && b.GetProperty("description").GetString() == descriptor.Description);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsBlockDetails()
+    {
+        var descriptor = RuriLib.Globals.DescriptorsRepository.Descriptors["HttpRequest"];
+        var enumParameter = descriptor.Parameters.Values.OfType<EnumParameter>().First();
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_block_details",
+            new Dictionary<string, object?>
+            {
+                ["blockIds"] = new[] { descriptor.Id, "DefinitelyMissingBlock" }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var root = json.RootElement;
+        var blocks = root.GetProperty("blocks").EnumerateArray().ToList();
+        var block = blocks.Single();
+        var parameters = block.GetProperty("parameters").EnumerateArray().ToList();
+        var parameter = parameters.First(p => p.GetProperty("name").GetString() == enumParameter.Name);
+        var notFoundBlockIds = root.GetProperty("notFoundBlockIds").EnumerateArray().Select(e => e.GetString()).ToList();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal(descriptor.Id, block.GetProperty("id").GetString());
+        Assert.Equal(descriptor.Name, block.GetProperty("name").GetString());
+        Assert.Equal(descriptor.Description, block.GetProperty("description").GetString());
+        Assert.Equal(descriptor.ExtraInfo, block.GetProperty("extraInfo").GetString());
+        Assert.Equal(descriptor.ReturnType?.ToString(), block.GetProperty("returnType").GetString());
+        Assert.Equal(descriptor.Category.Path, block.GetProperty("category").GetProperty("path").GetString());
+        Assert.False(block.GetProperty("category").TryGetProperty("backgroundColor", out _));
+        Assert.False(block.GetProperty("category").TryGetProperty("foregroundColor", out _));
+        Assert.False(block.GetProperty("category").TryGetProperty("namespace", out _));
+        Assert.Equal("enumParam", parameter.GetProperty("kind").GetString());
+        Assert.Equal(enumParameter.EnumType.Name, parameter.GetProperty("type").GetString());
+        Assert.Equal(enumParameter.DefaultValue, parameter.GetProperty("defaultValue").GetString());
+        Assert.Equal(enumParameter.Options, parameter.GetProperty("options").EnumerateArray().Select(o => o.GetString()).ToArray());
+        Assert.Contains("DefinitelyMissingBlock", notFoundBlockIds);
     }
 
     [Fact]
