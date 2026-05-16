@@ -45,6 +45,8 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_settings");
         Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
         Assert.Contains(tools, tool => tool.Name == "convert_lolicode_to_csharp");
+        Assert.Contains(tools, tool => tool.Name == "get_config_making_guide");
+        Assert.Contains(tools, tool => tool.Name == "get_config_making_topic");
         Assert.Contains(tools, tool => tool.Name == "debug_config");
         Assert.Contains(tools, tool => tool.Name == "list_blocks");
         Assert.Contains(tools, tool => tool.Name == "get_block_details");
@@ -110,6 +112,79 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(Path.GetFullPath(Path.Combine(UserDataFolder, "Environment.ini")), text);
         Assert.Contains("[WORDLIST TYPE]", text);
         Assert.Contains("Name=Default", text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigMakingGuide()
+    {
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_making_guide",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var root = json.RootElement;
+        var topics = root.GetProperty("deepDiveTopics").EnumerateArray().ToList();
+        var topicIds = topics.Select(t => t.GetProperty("id").GetString()).ToList();
+        var guide = root.GetProperty("guide").GetString();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal("OpenBullet 2 Config Making Guide", root.GetProperty("title").GetString());
+        Assert.Contains("create_config", guide);
+        Assert.Contains("list_blocks", guide);
+        Assert.Contains("get_block_details", guide);
+        Assert.Contains("convert_lolicode_to_csharp", guide);
+        Assert.Contains("LoliCode and C#", guide);
+        Assert.Contains("lolicode_statements_reference", topicIds);
+        Assert.Contains("startup_script", topicIds);
+        Assert.Contains("data_variable", topicIds);
+        Assert.Contains("input_and_custom_inputs", topicIds);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigMakingTopic()
+    {
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_making_topic",
+            new Dictionary<string, object?>
+            {
+                ["topicId"] = "startup_script"
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var root = json.RootElement;
+        var content = root.GetProperty("content").GetString();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal("startup_script", root.GetProperty("topicId").GetString());
+        Assert.Equal("Startup Script", root.GetProperty("title").GetString());
+        Assert.Contains("only `globals` is available", content);
+        Assert.Contains("`input` is not available", content);
+        Assert.Contains("`data` is not available", content);
     }
 
     [Fact]

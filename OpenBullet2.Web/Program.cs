@@ -130,6 +130,7 @@ builder.Services.AddMcpServer()
     .WithTools<EnvironmentMcpTools>()
     .WithTools<ConfigMcpTools>()
     .WithTools<ConfigMakingMcpTools>()
+    .WithTools<ConfigMakingDocsMcpTools>()
     .WithTools<ConfigDebugMcpTools>()
     .WithTools<BlockReferenceMcpTools>()
     .WithTools<SettingsMcpTools>();
