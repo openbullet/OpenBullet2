@@ -127,7 +127,8 @@ builder.Services.AddMcpServer()
         options.Stateless = true;
     })
     .WithTools<ServerInfoMcpTools>()
-    .WithTools<EnvironmentMcpTools>();
+    .WithTools<EnvironmentMcpTools>()
+    .WithTools<ConfigMcpTools>();
 
 // Scoped
 builder.Services.AddScoped<IProxyRepository, DbProxyRepository>();
