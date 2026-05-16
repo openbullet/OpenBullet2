@@ -14,7 +14,7 @@ public sealed class ConfigMcpTools
     /// <summary>
     /// Lists the currently available configs.
     /// </summary>
-    [McpServerTool(Name = "list_openbullet_configs"),
+    [McpServerTool(Name = "list_configs"),
      Description("Lists the currently available OpenBullet 2 configs as a read-only JSON array with id, name, and lastUpdated fields.")]
     public string ListOpenBulletConfigs(ConfigService configService)
     {

@@ -12,7 +12,7 @@ public sealed class EnvironmentMcpTools
     /// <summary>
     /// Returns the current Environment.ini file as read-only text.
     /// </summary>
-    [McpServerTool(Name = "get_openbullet_environment"),
+    [McpServerTool(Name = "get_environment"),
      Description("Returns the current read-only contents of Environment.ini from the active OpenBullet 2 user data folder.")]
     public string GetOpenBulletEnvironment()
     {

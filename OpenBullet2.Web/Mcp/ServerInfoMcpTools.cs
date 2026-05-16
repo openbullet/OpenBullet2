@@ -14,7 +14,7 @@ public sealed class ServerInfoMcpTools
     /// <summary>
     /// Returns a small read-only summary of the current server state.
     /// </summary>
-    [McpServerTool(Name = "get_openbullet_server_info"),
+    [McpServerTool(Name = "get_server_info"),
      Description("Returns basic read-only information about the running OpenBullet 2 web server.")]
     public string GetOpenBulletServerInfo(
         IUpdateService updateService,

@@ -28,9 +28,9 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
 
         var tools = await client.ListToolsAsync(cancellationToken: TestCancellationToken);
 
-        Assert.Contains(tools, tool => tool.Name == "get_openbullet_server_info");
-        Assert.Contains(tools, tool => tool.Name == "get_openbullet_environment");
-        Assert.Contains(tools, tool => tool.Name == "list_openbullet_configs");
+        Assert.Contains(tools, tool => tool.Name == "get_server_info");
+        Assert.Contains(tools, tool => tool.Name == "get_environment");
+        Assert.Contains(tools, tool => tool.Name == "list_configs");
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
 
         var result = await client.CallToolAsync(
-            "get_openbullet_server_info",
+            "get_server_info",
             cancellationToken: TestCancellationToken);
 
         var version = GetRequiredService<IUpdateService>().CurrentVersion;
@@ -75,7 +75,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
 
         var result = await client.CallToolAsync(
-            "get_openbullet_environment",
+            "get_environment",
             cancellationToken: TestCancellationToken);
 
         var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
@@ -110,7 +110,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
 
         var result = await client.CallToolAsync(
-            "list_openbullet_configs",
+            "list_configs",
             cancellationToken: TestCancellationToken);
 
         var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
@@ -151,7 +151,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
 
         var result = await client.CallToolAsync(
-            "get_openbullet_server_info",
+            "get_server_info",
             cancellationToken: TestCancellationToken);
 
         Assert.False(result.IsError ?? false);
