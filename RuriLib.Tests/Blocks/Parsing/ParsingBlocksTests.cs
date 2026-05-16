@@ -28,6 +28,48 @@ public class ParsingBlocksTests
     }
 
     [Fact]
+    public void ParseBetweenStrings_EmptyLeftDelim_ParsesFromStringStart()
+    {
+        var data = NewBotData();
+
+        var parsed = ParsingMethods.ParseBetweenStrings(
+            data,
+            "The cat is on the table",
+            string.Empty,
+            " is");
+
+        Assert.Equal("The cat", parsed);
+    }
+
+    [Fact]
+    public void ParseBetweenStrings_EmptyRightDelim_ParsesToStringEnd()
+    {
+        var data = NewBotData();
+
+        var parsed = ParsingMethods.ParseBetweenStrings(
+            data,
+            "The cat is on the table",
+            "is ",
+            string.Empty);
+
+        Assert.Equal("on the table", parsed);
+    }
+
+    [Fact]
+    public void ParseBetweenStrings_NullDelimiters_TreatsThemAsStringBounds()
+    {
+        var data = NewBotData();
+
+        var parsed = ParsingMethods.ParseBetweenStrings(
+            data,
+            "The cat is on the table",
+            null!,
+            null!);
+
+        Assert.Equal("The cat is on the table", parsed);
+    }
+
+    [Fact]
     public void QueryJsonTokenRecursive_UrlEncodeOutput_EncodesValues()
     {
         var data = NewBotData();
