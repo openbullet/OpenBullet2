@@ -32,6 +32,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
 
         Assert.Contains(tools, tool => tool.Name == "get_server_info");
         Assert.Contains(tools, tool => tool.Name == "get_environment");
+        Assert.Contains(tools, tool => tool.Name == "create_config");
         Assert.Contains(tools, tool => tool.Name == "list_configs");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
@@ -127,6 +128,44 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(config.Id, text);
         Assert.Contains(config.Metadata.Name, text);
         Assert.Contains(config.Metadata.LastModified.ToString("O"), text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_CreatesConfig()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+        var settingsService = GetRequiredService<OpenBulletSettingsService>();
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "create_config",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(
+            text, JsonSerializerOptions);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.True(response.TryGetValue("id", out var configId));
+        Assert.False(string.IsNullOrWhiteSpace(configId));
+
+        var createdConfig = await configRepo.GetAsync(configId!);
+
+        Assert.NotNull(createdConfig);
+        Assert.Equal(settingsService.Settings.GeneralSettings.DefaultAuthor, createdConfig.Metadata.Author);
+        Assert.Contains(configService.Configs, c => c.Id == configId);
     }
 
     [Fact]

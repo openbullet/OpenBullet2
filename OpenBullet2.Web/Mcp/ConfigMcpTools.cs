@@ -3,6 +3,7 @@ using System.Text.Json;
 using FluentValidation;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Exceptions;
@@ -16,6 +17,24 @@ namespace OpenBullet2.Web.Mcp;
 [McpServerToolType]
 public sealed class ConfigMcpTools
 {
+    /// <summary>
+    /// Creates a new config and returns its ID.
+    /// </summary>
+    [McpServerTool(Name = "create_config"),
+     Description("Creates a new local config and returns its ID as a minimal JSON object.")]
+    public async Task<string> CreateConfig(
+        IConfigRepository configRepo,
+        ConfigService configService,
+        OpenBulletSettingsService settingsService)
+    {
+        var config = await configRepo.CreateAsync();
+        config.Metadata.Author = settingsService.Settings.GeneralSettings.DefaultAuthor;
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        return JsonSerializer.Serialize(new CreateConfigResult(config.Id), JsonSerializerOptions);
+    }
+
     /// <summary>
     /// Updates the readme of a config.
     /// </summary>
@@ -197,6 +216,8 @@ public sealed class ConfigMcpTools
         DateTime LastUpdated);
 
     private sealed record UpdateResult(bool Updated);
+
+    private sealed record CreateConfigResult(string Id);
 
     private sealed record ConfigMetadataResult(
         string Name,
