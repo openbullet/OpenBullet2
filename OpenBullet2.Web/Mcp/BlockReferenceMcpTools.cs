@@ -66,7 +66,8 @@ public sealed class BlockReferenceMcpTools
                 descriptor.ExtraInfo,
                 descriptor.ReturnType?.ToString(),
                 MapCategory(descriptor.Category),
-                descriptor.Parameters.Values.Select(MapParameter).ToList()));
+                descriptor.Parameters.Values.Select(MapParameter).ToList(),
+                GetAgentNotes(descriptor.Id)));
         }
 
         return JsonSerializer.Serialize(new GetBlockDetailsResult(blocks, notFoundBlockIds), JsonSerializerOptions);
@@ -80,6 +81,22 @@ public sealed class BlockReferenceMcpTools
 
     private static BlockCategorySummaryInfo MapCategory(BlockCategory category)
         => new(category.Name, category.Path, category.Description);
+
+    private static List<string> GetAgentNotes(string blockId)
+        => blockId switch
+        {
+            "Keycheck" =>
+            [
+                "When using the Exists or DoesNotExist comparer, still provide an empty string on the right-hand side instead of omitting it."
+            ],
+
+            "Parse" =>
+            [
+                "In Regex mode, captured groups are referenced as [1], [2], and so on, not $1, $2, etc."
+            ],
+
+            _ => []
+        };
 
     private static BlockParameterInfo MapParameter(BlockParameter parameter)
         => parameter switch
@@ -202,7 +219,8 @@ public sealed class BlockReferenceMcpTools
         string ExtraInfo,
         string? ReturnType,
         BlockCategorySummaryInfo Category,
-        List<BlockParameterInfo> Parameters);
+        List<BlockParameterInfo> Parameters,
+        List<string> AgentNotes);
 
     private sealed record BlockCategorySummaryInfo(
         string Name,

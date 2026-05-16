@@ -15,6 +15,17 @@ Common statements:
 - `ACQUIRELOCK` / `RELEASELOCK`: async-safe critical section for shared state
 - `TAKEONE`, `TAKE`: consume config resources
 
+Capture guidance:
+
+- Prefer `SET CAP` or block outputs with `=> CAP @var` when the value should be captured directly.
+- Use `MARK` mainly for an already existing variable that must be added to capture later.
+- Avoid the pattern “create inner-scope variable, then expect it to be captured at script end”.
+
+Scope guidance:
+
+- Variables created only inside inner scopes such as `IF`, `REPEAT`, `FOREACH`, and `WHILE` are not reliable final capture variables.
+- If a value needs to survive to the end of the script, define the variable beforehand in outer scope and assign to it from inside the inner scope.
+
 Important concurrency rule:
 
 - Use `LOCK globals` for synchronous shared-state changes.

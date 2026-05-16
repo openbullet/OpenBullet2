@@ -524,6 +524,44 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(enumParameter.DefaultValue, parameter.GetProperty("defaultValue").GetString());
         Assert.Equal(enumParameter.Options, parameter.GetProperty("options").EnumerateArray().Select(o => o.GetString()).ToArray());
         Assert.Contains("DefinitelyMissingBlock", notFoundBlockIds);
+        Assert.Empty(block.GetProperty("agentNotes").EnumerateArray());
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsBlockDetails_WithAgentNotesForKnownGotchas()
+    {
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_block_details",
+            new Dictionary<string, object?>
+            {
+                ["blockIds"] = new[] { "Keycheck", "Parse" }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var blocks = json.RootElement.GetProperty("blocks").EnumerateArray().ToList();
+        var keycheckNotes = blocks.Single(b => b.GetProperty("id").GetString() == "Keycheck")
+            .GetProperty("agentNotes").EnumerateArray().Select(e => e.GetString()).ToList();
+        var parseNotes = blocks.Single(b => b.GetProperty("id").GetString() == "Parse")
+            .GetProperty("agentNotes").EnumerateArray().Select(e => e.GetString()).ToList();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Contains(keycheckNotes, n => n!.Contains("empty string", StringComparison.Ordinal));
+        Assert.Contains(keycheckNotes, n => n!.Contains("Exists", StringComparison.Ordinal));
+        Assert.Contains(parseNotes, n => n!.Contains("[1]", StringComparison.Ordinal));
+        Assert.Contains(parseNotes, n => n!.Contains("$1", StringComparison.Ordinal));
     }
 
     [Fact]

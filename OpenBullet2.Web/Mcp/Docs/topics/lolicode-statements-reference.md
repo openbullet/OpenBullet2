@@ -213,6 +213,7 @@ LOG myCapture
 Notes:
 
 - these statements were introduced for OB1-style consistency
+- when a value should be captured directly, prefer `SET CAP` over `SET VAR` followed by `MARK`
 
 ## SET USEPROXY
 
@@ -257,6 +258,11 @@ Syntax:
 ```loli
 MARK @myVar
 ```
+
+Notes:
+
+- `MARK` is best used for an already existing variable
+- do not rely on a variable created only inside an inner scope to still be available for final capture
 
 ## UNMARK
 
@@ -304,3 +310,4 @@ Notes:
 - Prefer native statements for flow control, logging, captures, and resource access.
 - Prefer blocks for standard operations with structured parameters and outputs.
 - Mix statements, blocks, and C# when that makes the script simpler.
+- If a variable must be visible for capture at the end of the script, define it beforehand in outer scope and assign to it later as needed.
