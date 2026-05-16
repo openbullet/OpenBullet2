@@ -38,6 +38,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_config_settings");
         Assert.Contains(tools, tool => tool.Name == "update_config_settings");
         Assert.Contains(tools, tool => tool.Name == "get_config_metadata");
+        Assert.Contains(tools, tool => tool.Name == "update_config_metadata");
     }
 
     [Fact]
@@ -415,6 +416,63 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(config.Metadata.Category, root.GetProperty("category").GetString());
         Assert.Equal(config.Metadata.LastModified, root.GetProperty("lastModified").GetDateTime());
         Assert.False(root.TryGetProperty("base64Image", out _));
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdatesConfigMetadata_WithoutChangingImage()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Metadata.Name = "Old Metadata Name";
+        config.Metadata.Author = "Old Author";
+        config.Metadata.Category = "Old Category";
+        config.Metadata.Base64Image = "base64-image-value";
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_metadata",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["metadata"] = new Dictionary<string, object?>
+                {
+                    ["name"] = "Updated Metadata Name",
+                    ["author"] = "Updated Author",
+                    ["category"] = "Updated Category"
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, bool>>(
+            text, JsonSerializerOptions);
+        var reloadedConfig = await configRepo.GetAsync(config.Id);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.True(response["updated"]);
+        Assert.Equal("Updated Metadata Name", config.Metadata.Name);
+        Assert.Equal("Updated Author", config.Metadata.Author);
+        Assert.Equal("Updated Category", config.Metadata.Category);
+        Assert.Equal("base64-image-value", config.Metadata.Base64Image);
+        Assert.Equal("Updated Metadata Name", reloadedConfig.Metadata.Name);
+        Assert.Equal("Updated Author", reloadedConfig.Metadata.Author);
+        Assert.Equal("Updated Category", reloadedConfig.Metadata.Category);
+        Assert.Equal("base64-image-value", reloadedConfig.Metadata.Base64Image);
     }
 
     [Fact]

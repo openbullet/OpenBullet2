@@ -82,6 +82,37 @@ public sealed class ConfigMcpTools
     }
 
     /// <summary>
+    /// Updates the metadata of a config without changing its base64 image.
+    /// </summary>
+    [McpServerTool(Name = "update_config_metadata"),
+     Description("Updates the metadata of a local config without changing its base64 image, and returns a minimal JSON acknowledgment.")]
+    public async Task<string> UpdateConfigMetadata(
+        string configId,
+        ConfigMetadataUpdateInput metadata,
+        ConfigService configService,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var config = GetConfig(configService, configId);
+
+        if (config.IsRemote)
+        {
+            throw new ActionNotAllowedException(
+                ErrorCode.ActionNotAllowedForRemoteConfig,
+                $"Attempted to edit a remote config with id {configId}");
+        }
+
+        config.Metadata.Name = metadata.Name;
+        config.Metadata.Category = metadata.Category;
+        config.Metadata.Author = metadata.Author;
+
+        await configService.SaveAsync(config);
+
+        return JsonSerializer.Serialize(new UpdateResult(true), JsonSerializerOptions);
+    }
+
+    /// <summary>
     /// Gets the metadata of a config.
     /// </summary>
     [McpServerTool(Name = "get_config_metadata"),
@@ -174,4 +205,25 @@ public sealed class ConfigMcpTools
         DateTime CreationDate,
         DateTime LastModified,
         List<string> Plugins);
+
+    /// <summary>
+    /// MCP input for updating config metadata without changing the base64 image.
+    /// </summary>
+    public sealed class ConfigMetadataUpdateInput
+    {
+        /// <summary>
+        /// The new config name.
+        /// </summary>
+        public required string Name { get; init; }
+
+        /// <summary>
+        /// The new config category.
+        /// </summary>
+        public required string Category { get; init; }
+
+        /// <summary>
+        /// The new config author.
+        /// </summary>
+        public required string Author { get; init; }
+    }
 }
