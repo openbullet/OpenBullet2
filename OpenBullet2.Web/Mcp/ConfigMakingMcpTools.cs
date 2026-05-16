@@ -21,10 +21,45 @@ namespace OpenBullet2.Web.Mcp;
 public sealed class ConfigMakingMcpTools
 {
     /// <summary>
+    /// Converts a config's current LoliCode to the emitted C# scripts.
+    /// </summary>
+    [McpServerTool(Name = "convert_lolicode_to_csharp"),
+     Description("Converts a config's current main and startup LoliCode scripts to the emitted C# scripts as a read-only JSON object.")]
+    public string ConvertLoliCodeToCSharp(
+        string configId,
+        ConfigService configService)
+    {
+        var config = GetConfig(configService, configId);
+        var mainScript = config.Mode == ConfigMode.Stack
+            ? Stack2LoliTranspiler.Transpile(config.Stack)
+            : config.LoliCodeScript;
+
+        try
+        {
+            var result = new ConvertLoliCodeResult(
+                true,
+                Loli2CSharpTranspiler.Transpile(mainScript, config.Settings),
+                Loli2CSharpTranspiler.Transpile(config.StartupLoliCodeScript, config.Settings));
+
+            return JsonSerializer.Serialize(result, JsonSerializerOptions);
+        }
+        catch (LoliCodeParsingException ex)
+        {
+            return JsonSerializer.Serialize(new ConvertLoliCodeResult(false, string.Empty, string.Empty, ex.Message),
+                JsonSerializerOptions);
+        }
+        catch (Exception ex)
+        {
+            return JsonSerializer.Serialize(new ConvertLoliCodeResult(false, string.Empty, string.Empty, ex.Message),
+                JsonSerializerOptions);
+        }
+    }
+
+    /// <summary>
     /// Gets the LoliCode making data of a config.
     /// </summary>
     [McpServerTool(Name = "get_config_lolicode"),
-     Description("Gets a config's LoliCode authoring data as a read-only JSON object with the main script, startup script, and custom usings.")]
+     Description("Gets a config's LoliCode making data as a read-only JSON object with the main script, startup script, and custom usings.")]
     public string GetConfigLoliCode(
         string configId,
         ConfigService configService)
@@ -41,7 +76,7 @@ public sealed class ConfigMakingMcpTools
     }
 
     /// <summary>
-    /// Updates the LoliCode authoring data of a config.
+    /// Updates the LoliCode making data of a config.
     /// </summary>
     [McpServerTool(Name = "update_config_lolicode"),
      Description("Updates a config's main LoliCode script, startup script, and custom usings, and returns either a minimal JSON acknowledgment or a fixable validation error.")]
@@ -125,10 +160,16 @@ public sealed class ConfigMakingMcpTools
         string StartupScript,
         List<string> CustomUsings);
 
+    private sealed record ConvertLoliCodeResult(
+        bool Converted,
+        string CSharpScript,
+        string StartupCSharpScript,
+        string? Error = null);
+
     private sealed record UpdateResult(bool Updated, string? Error = null);
 
     /// <summary>
-    /// MCP input for updating a config's LoliCode authoring data.
+    /// MCP input for updating a config's LoliCode making data.
     /// </summary>
     public sealed class ConfigLoliCodeUpdateInput
     {

@@ -39,6 +39,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "list_configs");
         Assert.Contains(tools, tool => tool.Name == "get_settings");
         Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
+        Assert.Contains(tools, tool => tool.Name == "convert_lolicode_to_csharp");
         Assert.Contains(tools, tool => tool.Name == "get_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "update_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
@@ -237,6 +238,48 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsError ?? false);
         Assert.True(root.GetProperty("generalSettings").GetProperty("verboseMode").GetBoolean());
         Assert.False(root.GetProperty("generalSettings").GetProperty("restrictBlocksToCWD").GetBoolean());
+    }
+
+    [Fact]
+    public async Task McpEndpoint_ConvertsLoliCodeToCSharp()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Mode = ConfigMode.LoliCode;
+        config.LoliCodeScript = "LOG \"Hello, world!\"";
+        config.StartupLoliCodeScript = "LOG \"Startup\"";
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "convert_lolicode_to_csharp",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = System.Text.Json.JsonDocument.Parse(text);
+        var root = json.RootElement;
+
+        Assert.False(result.IsError ?? false);
+        Assert.True(root.GetProperty("converted").GetBoolean());
+        Assert.Contains("data.Logger.LogObject(\"Hello, world!\");", root.GetProperty("cSharpScript").GetString());
+        Assert.Contains("data.Logger.LogObject(\"Startup\");", root.GetProperty("startupCSharpScript").GetString());
     }
 
     [Fact]
