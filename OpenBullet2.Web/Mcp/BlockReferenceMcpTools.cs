@@ -90,11 +90,6 @@ public sealed class BlockReferenceMcpTools
                 "When using the Exists or DoesNotExist comparer, still provide an empty string on the right-hand side instead of omitting it."
             ],
 
-            "Parse" =>
-            [
-                "In Regex mode, captured groups are referenced as [1], [2], and so on, not $1, $2, etc."
-            ],
-
             _ => []
         };
 

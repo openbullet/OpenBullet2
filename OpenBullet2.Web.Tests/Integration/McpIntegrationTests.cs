@@ -560,8 +560,49 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsError ?? false);
         Assert.Contains(keycheckNotes, n => n!.Contains("empty string", StringComparison.Ordinal));
         Assert.Contains(keycheckNotes, n => n!.Contains("Exists", StringComparison.Ordinal));
-        Assert.Contains(parseNotes, n => n!.Contains("[1]", StringComparison.Ordinal));
-        Assert.Contains(parseNotes, n => n!.Contains("$1", StringComparison.Ordinal));
+        Assert.Empty(parseNotes);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsBlockDetails_WithHelpfulDescriptionsForComplexParameters()
+    {
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_block_details",
+            new Dictionary<string, object?>
+            {
+                ["blockIds"] = new[] { "Parse", "HttpRequest" }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var blocks = json.RootElement.GetProperty("blocks").EnumerateArray().ToList();
+
+        var parseOutputFormatDescription = blocks.Single(b => b.GetProperty("id").GetString() == "Parse")
+            .GetProperty("parameters").EnumerateArray()
+            .Single(p => p.GetProperty("name").GetString() == "outputFormat")
+            .GetProperty("description").GetString();
+
+        var httpVersionDescription = blocks.Single(b => b.GetProperty("id").GetString() == "HttpRequest")
+            .GetProperty("parameters").EnumerateArray()
+            .Single(p => p.GetProperty("name").GetString() == "httpVersion")
+            .GetProperty("description").GetString();
+
+        Assert.False(result.IsError ?? false);
+        Assert.Contains("[0]", parseOutputFormatDescription);
+        Assert.Contains("[1]", parseOutputFormatDescription);
+        Assert.Contains("HTTP version string", httpVersionDescription);
     }
 
     [Fact]
