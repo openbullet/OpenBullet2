@@ -313,7 +313,15 @@ public static class Methods
     /// </summary>
     [Block("Generates a JSON Web Token using a secret key, payload, optional extra headers and specified algorithm type",
         name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default. For JWTs using asymmetric key signatures, the secret must be provided in PEM format.")]
-    public static string JwtEncode(BotData data, JwtAlgorithmName algorithm, string secret, string extraHeaders = "{}", string payload = "{}")
+    public static string JwtEncode(
+        BotData data,
+        JwtAlgorithmName algorithm,
+        [BlockParam("Secret", "Secret key for symmetric algorithms, or a PEM-formatted private key for asymmetric JWT algorithms.")]
+        string secret,
+        [BlockParam("Extra Headers", "JSON object string with additional header fields to merge into the JWT header, for example {\"kid\":\"my-key-id\"}.")]
+        string extraHeaders = "{}",
+        [BlockParam("Payload", "JSON object string representing the JWT payload/claims, for example {\"sub\":\"123\",\"role\":\"admin\"}.")]
+        string payload = "{}")
     {
         data.Logger.LogHeader();
 
@@ -379,7 +387,14 @@ public static class Methods
     /// </summary>
     [Block("Generates an AWS4 Signature from a key, date, region and service", name = "AWS4 Signature",
         extraInfo = "It returns a byte array and it expects the date to be in the following format: YYYYMMDD")]
-    public static byte[] AWS4Signature(BotData data, string key, string date, string region, string service)
+    public static byte[] AWS4Signature(
+        BotData data,
+        string key,
+        [BlockParam("Date", "Date in AWS Signature V4 format YYYYMMDD, for example 20250130.")]
+        string date,
+        string region,
+        [BlockParam("Service", "AWS service identifier, for example s3, iam, sts, or execute-api.")]
+        string service)
     {
         data.Logger.LogHeader();
 
