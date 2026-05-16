@@ -8,6 +8,7 @@ using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Settings;
 using RuriLib.Services;
+using RuriLib.Models.Configs;
 using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -38,6 +39,8 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "list_configs");
         Assert.Contains(tools, tool => tool.Name == "get_settings");
         Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
+        Assert.Contains(tools, tool => tool.Name == "get_config_lolicode");
+        Assert.Contains(tools, tool => tool.Name == "update_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
         Assert.Contains(tools, tool => tool.Name == "get_config_settings");
@@ -127,11 +130,12 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
             cancellationToken: TestCancellationToken);
 
         var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = System.Text.Json.JsonDocument.Parse(text);
+        var configs = json.RootElement.EnumerateArray().ToList();
 
         Assert.False(result.IsError ?? false);
-        Assert.Contains(config.Id, text);
-        Assert.Contains(config.Metadata.Name, text);
-        Assert.Contains(config.Metadata.LastModified.ToString("O"), text);
+        Assert.Contains(configs, c => c.GetProperty("id").GetString() == config.Id);
+        Assert.Contains(configs, c => c.GetProperty("name").GetString() == config.Metadata.Name);
     }
 
     [Fact]
@@ -233,6 +237,152 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsError ?? false);
         Assert.True(root.GetProperty("generalSettings").GetProperty("verboseMode").GetBoolean());
         Assert.False(root.GetProperty("generalSettings").GetProperty("restrictBlocksToCWD").GetBoolean());
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigLoliCode()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Mode = ConfigMode.LoliCode;
+        config.LoliCodeScript = "LOG \"Hello, World!\"";
+        config.StartupLoliCodeScript = "LOG \"Startup\"";
+        config.Settings.ScriptSettings.CustomUsings = ["System.Linq", "System.Net.Http"];
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_lolicode",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = System.Text.Json.JsonDocument.Parse(text);
+        var root = json.RootElement;
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal("LOG \"Hello, World!\"", root.GetProperty("script").GetString());
+        Assert.Equal("LOG \"Startup\"", root.GetProperty("startupScript").GetString());
+        Assert.Equal("System.Linq", root.GetProperty("customUsings")[0].GetString());
+        Assert.Equal("System.Net.Http", root.GetProperty("customUsings")[1].GetString());
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdatesConfigLoliCode()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.LoliCodeScript = "LOG \"Old script\"";
+        config.StartupLoliCodeScript = string.Empty;
+        config.Settings.ScriptSettings.CustomUsings = ["System"];
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_lolicode",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["loliCode"] = new Dictionary<string, object?>
+                {
+                    ["script"] = "LOG \"Hello, World!\"\nSET VAR \"TEST\" @input.DATA",
+                    ["startupScript"] = "LOG \"Startup\"",
+                    ["customUsings"] = new[] { "System.Linq", "System.Net.Http" }
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, System.Text.Json.JsonElement>>(
+            text, JsonSerializerOptions);
+        var reloadedConfig = await configRepo.GetAsync(config.Id);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.True(response["updated"].GetBoolean());
+        Assert.Equal("LOG \"Hello, World!\"\nSET VAR \"TEST\" @input.DATA", config.LoliCodeScript);
+        Assert.Equal("LOG \"Startup\"", config.StartupLoliCodeScript);
+        Assert.Equal(ConfigMode.LoliCode, config.Mode);
+        Assert.Equal(["System.Linq", "System.Net.Http"], config.Settings.ScriptSettings.CustomUsings);
+        Assert.NotEmpty(config.Stack);
+        Assert.Equal("LOG \"Hello, World!\"\nSET VAR \"TEST\" @input.DATA", reloadedConfig.LoliCodeScript);
+        Assert.Equal("LOG \"Startup\"", reloadedConfig.StartupLoliCodeScript);
+        Assert.Equal(ConfigMode.LoliCode, reloadedConfig.Mode);
+        Assert.Equal(["System.Linq", "System.Net.Http"], reloadedConfig.Settings.ScriptSettings.CustomUsings);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdateConfigLoliCode_InvalidScript_ReturnsParsingError()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_lolicode",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["loliCode"] = new Dictionary<string, object?>
+                {
+                    ["script"] = "BLOCK:ThisIsInvalid\n  abc",
+                    ["startupScript"] = string.Empty,
+                    ["customUsings"] = new[] { "System" }
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, System.Text.Json.JsonElement>>(
+            text, JsonSerializerOptions);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.False(response["updated"].GetBoolean());
+        Assert.Contains("Invalid block id", response["error"].GetString());
     }
 
     [Fact]
