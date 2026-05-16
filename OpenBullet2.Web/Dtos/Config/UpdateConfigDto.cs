@@ -72,5 +72,9 @@ internal class UpdateConfigDtoValidator : AbstractValidator<UpdateConfigDto>
     public UpdateConfigDtoValidator()
     {
         RuleFor(dto => dto.Id).NotEmpty();
+        RuleFor(dto => dto.Settings)
+            .NotNull()
+            .WithMessage("Settings are required.")
+            .SetValidator(new ConfigSettingsDtoValidator()!);
     }
 }

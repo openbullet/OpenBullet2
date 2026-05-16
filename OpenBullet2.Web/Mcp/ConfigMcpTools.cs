@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json;
+using FluentValidation;
+using ModelContextProtocol;
 using ModelContextProtocol.Server;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Config;
@@ -34,6 +36,46 @@ public sealed class ConfigMcpTools
         }
 
         config.Readme = readme.MarkdownText;
+        await configService.SaveAsync(config);
+
+        return JsonSerializer.Serialize(new UpdateResult(true), JsonSerializerOptions);
+    }
+
+    /// <summary>
+    /// Updates the settings of a config.
+    /// </summary>
+    [McpServerTool(Name = "update_config_settings"),
+     Description("Updates the settings of a local config and returns a minimal JSON acknowledgment.")]
+    public async Task<string> UpdateConfigSettings(
+        string configId,
+        ConfigSettingsDto settings,
+        ConfigService configService,
+        IObjectMapper mapper,
+        IValidator<ConfigSettingsDto> validator,
+        CancellationToken cancellationToken)
+    {
+        var validationResult = await validator.ValidateAsync(settings, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(Environment.NewLine,
+                validationResult.Errors
+                    .Select(e => e.ErrorMessage)
+                    .Distinct());
+
+            throw new McpException(errorMessage);
+        }
+
+        var config = GetConfig(configService, configId);
+
+        if (config.IsRemote)
+        {
+            throw new ActionNotAllowedException(
+                ErrorCode.ActionNotAllowedForRemoteConfig,
+                $"Attempted to edit a remote config with id {configId}");
+        }
+
+        mapper.Map(settings, config.Settings);
         await configService.SaveAsync(config);
 
         return JsonSerializer.Serialize(new UpdateResult(true), JsonSerializerOptions);

@@ -36,6 +36,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
         Assert.Contains(tools, tool => tool.Name == "get_config_settings");
+        Assert.Contains(tools, tool => tool.Name == "update_config_settings");
     }
 
     [Fact]
@@ -252,6 +253,123 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(dto.ProxySettings.UseProxies);
         Assert.Equal(42, dto.GeneralSettings.SuggestedBots);
         Assert.Equal(["Credentials"], dto.DataSettings.AllowedWordlistTypes);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdatesConfigSettings()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Settings.ProxySettings.UseProxies = false;
+        config.Settings.GeneralSettings.SuggestedBots = 10;
+        config.Settings.DataSettings.AllowedWordlistTypes = ["Default"];
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_settings",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["settings"] = new Dictionary<string, object?>
+                {
+                    ["generalSettings"] = new Dictionary<string, object?>
+                    {
+                        ["suggestedBots"] = 99
+                    },
+                    ["proxySettings"] = new Dictionary<string, object?>
+                    {
+                        ["useProxies"] = true
+                    },
+                    ["inputSettings"] = new Dictionary<string, object?>(),
+                    ["dataSettings"] = new Dictionary<string, object?>
+                    {
+                        ["allowedWordlistTypes"] = new[] { "Credentials" }
+                    },
+                    ["browserSettings"] = new Dictionary<string, object?>(),
+                    ["scriptSettings"] = new Dictionary<string, object?>()
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, bool>>(
+            text, JsonSerializerOptions);
+        var reloadedConfig = await configRepo.GetAsync(config.Id);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.True(response["updated"]);
+        Assert.True(config.Settings.ProxySettings.UseProxies);
+        Assert.Equal(99, config.Settings.GeneralSettings.SuggestedBots);
+        Assert.Equal(["Credentials"], config.Settings.DataSettings.AllowedWordlistTypes);
+        Assert.True(reloadedConfig.Settings.ProxySettings.UseProxies);
+        Assert.Equal(99, reloadedConfig.Settings.GeneralSettings.SuggestedBots);
+        Assert.Equal(["Credentials"], reloadedConfig.Settings.DataSettings.AllowedWordlistTypes);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdateConfigSettings_InvalidSettings_ReturnsValidationError()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_settings",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["settings"] = new Dictionary<string, object?>
+                {
+                    ["generalSettings"] = new Dictionary<string, object?>
+                    {
+                        ["suggestedBots"] = -1
+                    },
+                    ["proxySettings"] = new Dictionary<string, object?>(),
+                    ["inputSettings"] = new Dictionary<string, object?>(),
+                    ["dataSettings"] = new Dictionary<string, object?>
+                    {
+                        ["allowedWordlistTypes"] = Array.Empty<string>()
+                    },
+                    ["browserSettings"] = new Dictionary<string, object?>(),
+                    ["scriptSettings"] = new Dictionary<string, object?>()
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+
+        Assert.True(result.IsError ?? false);
+        Assert.Contains("SuggestedBots must be greater than or equal to 0.", text);
+        Assert.Contains("AllowedWordlistTypes must contain at least one value.", text);
     }
 
     [Fact]
