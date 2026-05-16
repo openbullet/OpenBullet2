@@ -4,6 +4,7 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Dtos.Config;
 using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -31,6 +32,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_server_info");
         Assert.Contains(tools, tool => tool.Name == "get_environment");
         Assert.Contains(tools, tool => tool.Name == "list_configs");
+        Assert.Contains(tools, tool => tool.Name == "get_config_readme");
     }
 
     [Fact]
@@ -119,6 +121,45 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(config.Id, text);
         Assert.Contains(config.Metadata.Name, text);
         Assert.Contains(config.Metadata.LastModified.ToString("O"), text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigReadme()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Readme = "## MCP Test Readme";
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_readme",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var dto = System.Text.Json.JsonSerializer.Deserialize<ConfigReadmeDto>(
+            text, JsonSerializerOptions);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(dto);
+        Assert.Equal(config.Readme, dto.MarkdownText);
     }
 
     [Fact]

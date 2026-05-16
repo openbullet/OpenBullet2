@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Text.Json;
 using ModelContextProtocol.Server;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Exceptions;
 
 namespace OpenBullet2.Web.Mcp;
 
@@ -11,6 +13,19 @@ namespace OpenBullet2.Web.Mcp;
 [McpServerToolType]
 public sealed class ConfigMcpTools
 {
+    /// <summary>
+    /// Gets the readme of a config.
+    /// </summary>
+    [McpServerTool(Name = "get_config_readme"),
+     Description("Gets the readme of a config as a read-only JSON object with a markdownText field.")]
+    public string GetConfigReadme(string configId, ConfigService configService)
+    {
+        var config = GetConfig(configService, configId);
+        var dto = new ConfigReadmeDto { MarkdownText = config.Readme };
+
+        return JsonSerializer.Serialize(dto, JsonSerializerOptions);
+    }
+
     /// <summary>
     /// Lists the currently available configs.
     /// </summary>
@@ -34,6 +49,11 @@ public sealed class ConfigMcpTools
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true
     };
+
+    private static RuriLib.Models.Configs.Config GetConfig(ConfigService configService, string configId)
+        => configService.Configs.Find(c => c.Id == configId)
+            ?? throw new ApiException(ErrorCode.ConfigNotFound,
+                $"Config with id {configId} was not found");
 
     private sealed record ConfigListItem(
         string Id,
