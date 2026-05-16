@@ -69,7 +69,10 @@ public partial class ConfigMetadata : Page
                 throw new InvalidOperationException("The clipboard does not contain an image");
             }
 
-            vm.SetIconFromClipboard(Clipboard.GetImage());
+            var image = Clipboard.GetImage()
+                ?? throw new InvalidOperationException("Failed to read the image from the clipboard");
+
+            vm.SetIconFromClipboard(image);
         }
         catch (Exception ex)
         {
