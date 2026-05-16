@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -10,6 +11,19 @@ namespace RuriLib.Models.Proxies;
 /// </summary>
 public class Proxy
 {
+    private static readonly Regex ProxyUriRegex = new(
+        @"^(?<scheme>https?|socks4a?|socks5)://(?:(?<userinfo>[^/?#]*)@)?(?<host>\[[^\]]+\]|[^:/?#]+):(?<port>\d+)$",
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+    private static readonly Dictionary<string, ProxyType> ProxyUriSchemeMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["http"] = ProxyType.Http,
+        ["https"] = ProxyType.Http,
+        ["socks4"] = ProxyType.Socks4,
+        ["socks4a"] = ProxyType.Socks4a,
+        ["socks5"] = ProxyType.Socks5
+    };
+
     /// <summary>
     /// The unique identifier of the proxy.
     /// </summary>
@@ -119,6 +133,7 @@ public class Proxy
     /// <example>Proxy.Parse("127.0.0.1:8000")</example>
     /// <example>Proxy.Parse("127.0.0.1:8000:username:password")</example>
     /// <example>Proxy.Parse("(socks5)127.0.0.1:8000")</example>
+    /// <example>Proxy.Parse("socks5://username:password@127.0.0.1:8000")</example>
     public static bool TryParse(string proxyString, out Proxy? proxy, ProxyType defaultType = ProxyType.Http,
         string? defaultUsername = null, string? defaultPassword = null)
     {
@@ -140,6 +155,7 @@ public class Proxy
     /// <example>Proxy.Parse("127.0.0.1:8000")</example>
     /// <example>Proxy.Parse("127.0.0.1:8000:username:password")</example>
     /// <example>Proxy.Parse("(socks5)127.0.0.1:8000")</example>
+    /// <example>Proxy.Parse("socks5://username:password@127.0.0.1:8000")</example>
     public static Proxy Parse(string proxyString, ProxyType defaultType = ProxyType.Http,
         string? defaultUsername = null, string? defaultPassword = null)
     {
@@ -162,6 +178,10 @@ public class Proxy
             }
 
             proxyString = Regex.Replace(proxyString, @"^\((.*)\)", "");
+        }
+        else if (TryParseUriStyleProxy(proxyString, proxy))
+        {
+            return proxy;
         }
 
         if (!proxyString.Contains(':'))
@@ -193,6 +213,44 @@ public class Proxy
         }
 
         return proxy;
+    }
+
+    private static bool TryParseUriStyleProxy(string proxyString, Proxy proxy)
+    {
+        var match = ProxyUriRegex.Match(proxyString);
+
+        if (!match.Success || !Uri.TryCreate(proxyString, UriKind.Absolute, out var uri))
+        {
+            return false;
+        }
+
+        if (!ProxyUriSchemeMap.TryGetValue(uri.Scheme, out var type))
+        {
+            throw new FormatException("Invalid proxy type");
+        }
+
+        proxy.Type = type;
+        proxy.Host = uri.Host;
+
+        if (int.TryParse(match.Groups["port"].Value, out var port))
+        {
+            proxy.Port = port;
+        }
+        else
+        {
+            throw new FormatException("The proxy port must be an integer");
+        }
+
+        if (!string.IsNullOrEmpty(uri.UserInfo))
+        {
+            var fields = uri.UserInfo.Split(':', 2);
+            proxy.Username = Uri.UnescapeDataString(fields[0]);
+            proxy.Password = fields.Length > 1
+                ? Uri.UnescapeDataString(fields[1])
+                : null;
+        }
+
+        return true;
     }
 
     /// <inheritdoc />

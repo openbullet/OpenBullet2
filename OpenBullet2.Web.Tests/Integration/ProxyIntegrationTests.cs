@@ -235,6 +235,52 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public async Task Add_FromList_UriSyntax_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var proxyRepo = GetRequiredService<IProxyRepository>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var dto = new AddProxiesFromListDto
+        {
+            Proxies =
+            [
+                "socks5://uri-user:uri-pass@localhost:6001",
+                "https://127.0.0.1:6002"
+            ],
+            DefaultType = ProxyType.Socks4,
+            DefaultUsername = "default-user",
+            DefaultPassword = "default-pass",
+            ProxyGroupId = group.Id
+        };
+        var result = await PostJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/add", dto);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+
+        var proxies = await proxyRepo.GetAll().ToListAsync(TestCancellationToken);
+
+        Assert.Equal(2, proxies.Count);
+
+        var localhost = proxies.First(p => p.Host == "localhost");
+        Assert.Equal(ProxyType.Socks5, localhost.Type);
+        Assert.Equal("uri-user", localhost.Username);
+        Assert.Equal("uri-pass", localhost.Password);
+
+        var localIp = proxies.First(p => p.Host == "127.0.0.1");
+        Assert.Equal(ProxyType.Http, localIp.Type);
+        Assert.Equal("default-user", localIp.Username);
+        Assert.Equal("default-pass", localIp.Password);
+    }
+
+    [Fact]
     public async Task Add_FromRemote_Success()
     {
         // Arrange

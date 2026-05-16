@@ -29,6 +29,7 @@ public sealed class DialogCreationTests(WpfAppFixture fixture)
             Func<JobOptions, Task> onAccept = _ => Task.CompletedTask;
 
             Assert.NotNull(uiFactory.Create<AddBlockDialog>(new object()));
+            Assert.NotNull(uiFactory.Create<ImportProxiesDialog>(new object()));
             Assert.NotNull(uiFactory.Create<SelectConfigDialog>(new object()));
             Assert.NotNull(uiFactory.Create<SelectWordlistDialog>(new object()));
             Assert.NotNull(uiFactory.Create<MultiRunJobOptionsDialog>(onAccept));
