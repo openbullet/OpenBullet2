@@ -150,6 +150,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("startup_script", topicIds);
         Assert.Contains("data_variable", topicIds);
         Assert.Contains("input_and_custom_inputs", topicIds);
+        Assert.Contains("runtime_outcomes_and_execution_model", topicIds);
     }
 
     [Fact]
@@ -170,7 +171,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
             "get_config_making_topic",
             new Dictionary<string, object?>
             {
-                ["topicId"] = "startup_script"
+                ["topicId"] = "runtime_outcomes_and_execution_model"
             },
             cancellationToken: TestCancellationToken);
 
@@ -180,11 +181,11 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         var content = root.GetProperty("content").GetString();
 
         Assert.False(result.IsError ?? false);
-        Assert.Equal("startup_script", root.GetProperty("topicId").GetString());
-        Assert.Equal("Startup Script", root.GetProperty("title").GetString());
-        Assert.Contains("only `globals` is available", content);
-        Assert.Contains("`input` is not available", content);
-        Assert.Contains("`data` is not available", content);
+        Assert.Equal("runtime_outcomes_and_execution_model", root.GetProperty("topicId").GetString());
+        Assert.Equal("Runtime Outcomes And Execution Model", root.GetProperty("title").GetString());
+        Assert.Contains("`SUCCESS`", content);
+        Assert.Contains("`BAN`", content);
+        Assert.Contains("shared-state logic", content);
     }
 
     [Fact]

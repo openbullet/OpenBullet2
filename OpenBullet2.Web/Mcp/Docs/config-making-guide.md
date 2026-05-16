@@ -16,6 +16,7 @@ An OB2 config is not just a script. It usually includes:
 
 - The main script runs once per bot.
 - The startup script runs before bots start and is meant for shared state.
+- In multi-run jobs, many bots can execute the main script in parallel, so cross-bot state must go through `globals` and proper locking.
 - LoliCode is the normal authoring surface, but it compiles to C# and can contain inline C# directly.
 - Blocks, LoliCode statements, and C# can live in the same script.
 - LoliCode and C# can go hand-in-hand inside the same config when that produces the cleanest result.
@@ -99,11 +100,13 @@ Use both together when that is the cleanest result. In OB2, that is normal, not 
 - Never invent block settings or enum values. Read them from `get_block_details`.
 - Do not assume startup can read `input` or `data`; it cannot.
 - Do not assume a wordlist slice exists unless it is defined by the selected wordlist type in `Environment.ini`.
+- Do not invent custom statuses. If you need non-standard statuses, inspect `get_environment` first and use only statuses that actually exist there.
 - Prefer `CAP` when a value should be captured directly, instead of `VAR` followed by a later `MARK`, unless you are intentionally marking an already existing variable.
 - Variables created only inside inner scopes such as `IF`, `REPEAT`, `FOREACH`, `WHILE`, and similar blocks are not guaranteed to persist at the end of the script, so they may not appear in the final capture output.
 - If a value must be captured after inner-scope logic, define the variable beforehand in outer scope and then assign to it inside the scope.
 - If your script uses extra namespaces, make sure the custom usings are present in config settings.
 - If your script needs shared auth tokens, cookies, counters, or resources, prefer startup plus `globals`.
+- Choose end statuses intentionally: `FAIL`, `NONE`, `RETRY`, `BAN`, `ERROR`, and `SUCCESS` have different effects on retries, hits, and proxies.
 - If your script depends on proxy behavior, align the config proxy settings and test with `debug_config`.
 
 ## Troubleshooting loop

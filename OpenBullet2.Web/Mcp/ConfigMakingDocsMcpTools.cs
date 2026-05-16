@@ -62,6 +62,7 @@ public sealed class ConfigMakingDocsMcpTools
         new("input_and_custom_inputs", "Input And Custom Inputs", "What the input variable contains and how custom inputs are exposed.", "topics/input-and-custom-inputs.md"),
         new("data_variable", "Data Variable", "The runtime shape of data, including response state, proxy state, and logger access.", "topics/data-variable.md"),
         new("data_rules", "Data Rules", "Config-level validation rules applied after wordlist slicing.", "topics/data-rules.md"),
+        new("runtime_outcomes_and_execution_model", "Runtime Outcomes And Execution Model", "How statuses, retries, hits, proxies, debugger behavior, and concurrency affect config design.", "topics/runtime-outcomes-and-execution-model.md"),
         new("globals_variable", "Globals Variable", "Shared cross-bot state and reserved global properties.", "topics/globals-variable.md"),
         new("startup_script", "Startup Script", "When startup runs, what variables exist there, and how to use it safely.", "topics/startup-script.md"),
         new("csharp_interop_and_usings", "C# Interop And Usings", "When to embed C#, when to add usings, and how to mix both styles effectively.", "topics/csharp-interop-and-usings.md"),
