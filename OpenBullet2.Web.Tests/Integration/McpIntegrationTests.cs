@@ -5,6 +5,7 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Settings;
 using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -34,6 +35,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "list_configs");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
+        Assert.Contains(tools, tool => tool.Name == "get_config_settings");
     }
 
     [Fact]
@@ -207,6 +209,49 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(response["updated"]);
         Assert.Equal("Updated MCP readme", config.Readme);
         Assert.Equal("Updated MCP readme", reloadedConfig.Readme);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigSettings()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Settings.ProxySettings.UseProxies = true;
+        config.Settings.GeneralSettings.SuggestedBots = 42;
+        config.Settings.DataSettings.AllowedWordlistTypes = ["Credentials"];
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_settings",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var dto = System.Text.Json.JsonSerializer.Deserialize<ConfigSettingsDto>(
+            text, JsonSerializerOptions);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(dto);
+        Assert.True(dto.ProxySettings.UseProxies);
+        Assert.Equal(42, dto.GeneralSettings.SuggestedBots);
+        Assert.Equal(["Credentials"], dto.DataSettings.AllowedWordlistTypes);
     }
 
     [Fact]

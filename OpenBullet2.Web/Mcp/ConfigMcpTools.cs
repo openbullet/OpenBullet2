@@ -4,6 +4,7 @@ using ModelContextProtocol.Server;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.Mcp;
 
@@ -36,6 +37,22 @@ public sealed class ConfigMcpTools
         await configService.SaveAsync(config);
 
         return JsonSerializer.Serialize(new UpdateResult(true), JsonSerializerOptions);
+    }
+
+    /// <summary>
+    /// Gets the settings of a config.
+    /// </summary>
+    [McpServerTool(Name = "get_config_settings"),
+     Description("Gets the settings of a config as a read-only JSON object.")]
+    public string GetConfigSettings(
+        string configId,
+        ConfigService configService,
+        IObjectMapper mapper)
+    {
+        var config = GetConfig(configService, configId);
+        var dto = mapper.Map<ConfigSettingsDto>(config.Settings);
+
+        return JsonSerializer.Serialize(dto, JsonSerializerOptions);
     }
 
     /// <summary>
