@@ -14,6 +14,31 @@ namespace OpenBullet2.Web.Mcp;
 public sealed class ConfigMcpTools
 {
     /// <summary>
+    /// Updates the readme of a config.
+    /// </summary>
+    [McpServerTool(Name = "update_config_readme"),
+     Description("Updates the readme of a local config and returns a minimal JSON acknowledgment.")]
+    public async Task<string> UpdateConfigReadme(
+        string configId,
+        ConfigReadmeDto readme,
+        ConfigService configService)
+    {
+        var config = GetConfig(configService, configId);
+
+        if (config.IsRemote)
+        {
+            throw new ActionNotAllowedException(
+                ErrorCode.ActionNotAllowedForRemoteConfig,
+                $"Attempted to edit a remote config with id {configId}");
+        }
+
+        config.Readme = readme.MarkdownText;
+        await configService.SaveAsync(config);
+
+        return JsonSerializer.Serialize(new UpdateResult(true), JsonSerializerOptions);
+    }
+
+    /// <summary>
     /// Gets the readme of a config.
     /// </summary>
     [McpServerTool(Name = "get_config_readme"),
@@ -59,4 +84,6 @@ public sealed class ConfigMcpTools
         string Id,
         string Name,
         DateTime LastUpdated);
+
+    private sealed record UpdateResult(bool Updated);
 }

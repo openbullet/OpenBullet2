@@ -33,6 +33,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_environment");
         Assert.Contains(tools, tool => tool.Name == "list_configs");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
+        Assert.Contains(tools, tool => tool.Name == "update_config_readme");
     }
 
     [Fact]
@@ -160,6 +161,52 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsError ?? false);
         Assert.NotNull(dto);
         Assert.Equal(config.Readme, dto.MarkdownText);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_UpdatesConfigReadme()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Readme = "Old readme";
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "update_config_readme",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["readme"] = new Dictionary<string, object?>
+                {
+                    ["markdownText"] = "Updated MCP readme"
+                }
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, bool>>(
+            text, JsonSerializerOptions);
+        var reloadedConfig = await configRepo.GetAsync(config.Id);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(response);
+        Assert.True(response["updated"]);
+        Assert.Equal("Updated MCP readme", config.Readme);
+        Assert.Equal("Updated MCP readme", reloadedConfig.Readme);
     }
 
     [Fact]
