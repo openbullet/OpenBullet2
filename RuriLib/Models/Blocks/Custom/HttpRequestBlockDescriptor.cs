@@ -36,17 +36,35 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
             ["maxNumberOfRedirects"] = new IntParameter("maxNumberOfRedirects", 8),
             ["readResponseContent"] = new BoolParameter("readResponseContent", true),
             ["urlEncodeContent"] = new BoolParameter("urlEncodeContent", false),
-            ["absoluteUriInFirstLine"] = new BoolParameter("absoluteUriInFirstLine", false),
-            ["httpLibrary"] = new EnumParameter("httpLibrary", typeof(HttpLibrary), nameof(HttpLibrary.RuriLibHttp)),
-            ["securityProtocol"] = new EnumParameter("securityProtocol", typeof(SecurityProtocol), nameof(SecurityProtocol.SystemDefault)),
+            ["absoluteUriInFirstLine"] = new BoolParameter("absoluteUriInFirstLine", false)
+            {
+                Description = "If true, writes the absolute URI in the first request line instead of only the path. Useful mainly for some proxy or non-standard server setups."
+            },
+            ["httpLibrary"] = new EnumParameter("httpLibrary", typeof(HttpLibrary), nameof(HttpLibrary.RuriLibHttp))
+            {
+                Description = $"{nameof(HttpLibrary.RuriLibHttp)} is the custom library, {nameof(HttpLibrary.SystemNet)} is the built-in .NET one with HTTP/2.0 and HTTP/3.0 support"
+            },
+            ["securityProtocol"] = new EnumParameter("securityProtocol", typeof(SecurityProtocol), nameof(SecurityProtocol.SystemDefault))
+            {
+                Description = "The SSL/TLS protocol to use"
+            },
             ["ignoreCertificateValidation"] = new BoolParameter("ignoreCertificateValidation", true)
             {
                 Description = "Bypass TLS certificate validity checks."
             },
-            ["useCustomCipherSuites"] = new BoolParameter("useCustomCipherSuites", false),
-            ["alwaysSendContent"] = new BoolParameter("alwaysSendContent", false),
+            ["useCustomCipherSuites"] = new BoolParameter("useCustomCipherSuites", false)
+            {
+                Description = "If true, the request will use only the cipher suites listed in customCipherSuites."
+            },
+            ["alwaysSendContent"] = new BoolParameter("alwaysSendContent", false)
+            {
+                Description = "If true, still sends the request content for methods that normally would omit it, such as GET."
+            },
             ["decodeHtml"] = new BoolParameter("decodeHtml", false),
-            ["codePagesEncoding"] = new StringParameter("codePagesEncoding", string.Empty),
+            ["codePagesEncoding"] = new StringParameter("codePagesEncoding", string.Empty)
+            {
+                Description = "Optional code page name used to decode the response when it is not standard UTF text. Leave empty to use the default behavior."
+            },
             ["customCipherSuites"] = new ListOfStringsParameter("customCipherSuites",
                 [
                     "TLS_AES_128_GCM_SHA256",
@@ -68,7 +86,10 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
                     "TLS_RSA_WITH_AES_256_CBC_SHA",
                     "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
                 ],
-                SettingInputMode.Fixed),
+                SettingInputMode.Fixed)
+            {
+                Description = "Cipher suite names used only when useCustomCipherSuites is true."
+            },
             ["customCookies"] = new DictionaryOfStringsParameter("customCookies", null, SettingInputMode.Interpolated),
             ["customHeaders"] = new DictionaryOfStringsParameter("customHeaders",
                 new Dictionary<string, string>
@@ -81,6 +102,9 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
                 SettingInputMode.Interpolated),
             ["timeoutMilliseconds"] = new IntParameter("timeoutMilliseconds", 15000),
             ["httpVersion"] = new StringParameter("httpVersion", "1.1")
+            {
+                Description = "HTTP version string such as 1.1, 2.0, or 3.0, depending on the selected HTTP library and platform support."
+            }
         };
     }
 }

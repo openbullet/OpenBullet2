@@ -19,8 +19,8 @@ public static class LRParser
     public static IEnumerable<string> ParseBetween(string input, string leftDelim, string rightDelim, bool caseSensitive = true)
     {
         ArgumentNullException.ThrowIfNull(input);
-        ArgumentNullException.ThrowIfNull(leftDelim);
-        ArgumentNullException.ThrowIfNull(rightDelim);
+        leftDelim ??= string.Empty;
+        rightDelim ??= string.Empty;
 
         // No delimiters = return the full input.
         if (leftDelim == string.Empty && rightDelim == string.Empty)

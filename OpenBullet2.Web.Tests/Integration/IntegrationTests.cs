@@ -61,6 +61,22 @@ public class IntegrationTests : IDisposable
         obSettingsService.Settings.SecuritySettings.RequireAdminLogin = true;
     }
 
+    protected void ImpersonateAdmin(HttpClient client)
+    {
+        var settings = GetRequiredService<OpenBulletSettingsService>().Settings.SecuritySettings;
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
+            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, settings.AdminUsername),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+
+        var authService = GetRequiredService<IAuthTokenService>();
+        var token = authService.GenerateToken(claims, TimeSpan.FromHours(6));
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+
     /// <summary>
     /// Sets the Authorization header of the given HttpClient to a JWT
     /// with the claims of the given guest user.

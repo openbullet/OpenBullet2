@@ -240,7 +240,12 @@ public static class Methods
     /// </summary>
     [Block("Generates a random string given a mask",
         extraInfo = "?l = Lowercase, ?u = Uppercase, ?d = Digit, ?f = Uppercase + Lowercase, ?s = Symbol, ?h = Hex (Lowercase), ?H = Hex (Uppercase), ?m = Upper + Digits, ?n = Lower + Digits, ?i = Lower + Upper + Digits, ?a = Any, ?c = Custom. Append {N} to repeat a token, e.g. ?h{10}")]
-    public static string RandomString(BotData data, string input, string customCharset = "0123456789")
+    public static string RandomString(
+        BotData data,
+        [BlockParam("Mask", "Mask string that mixes literal characters with tokens like ?l, ?u, ?d, ?a, or ?c. Append {N} after a token to repeat it, for example ?h{10}.")]
+        string input,
+        [BlockParam("Custom Charset", "Character set used only when the mask contains the ?c token.")]
+        string customCharset = "0123456789")
     {
         data.Logger.LogHeader();
 
