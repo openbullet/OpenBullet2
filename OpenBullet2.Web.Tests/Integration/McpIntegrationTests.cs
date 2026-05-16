@@ -37,6 +37,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
         Assert.Contains(tools, tool => tool.Name == "get_config_settings");
         Assert.Contains(tools, tool => tool.Name == "update_config_settings");
+        Assert.Contains(tools, tool => tool.Name == "get_config_metadata");
     }
 
     [Fact]
@@ -370,6 +371,50 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsError ?? false);
         Assert.Contains("SuggestedBots must be greater than or equal to 0.", text);
         Assert.Contains("AllowedWordlistTypes must contain at least one value.", text);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsConfigMetadata()
+    {
+        var configRepo = GetRequiredService<IConfigRepository>();
+        var configService = GetRequiredService<ConfigService>();
+
+        var config = await configRepo.CreateAsync();
+        config.Metadata.Name = "MCP Metadata Test";
+        config.Metadata.Author = "Codex";
+        config.Metadata.Category = "Tests";
+        await configRepo.SaveAsync(config);
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_config_metadata",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id
+            },
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = System.Text.Json.JsonDocument.Parse(text);
+        var root = json.RootElement;
+
+        Assert.False(result.IsError ?? false);
+        Assert.Equal(config.Metadata.Name, root.GetProperty("name").GetString());
+        Assert.Equal(config.Metadata.Author, root.GetProperty("author").GetString());
+        Assert.Equal(config.Metadata.Category, root.GetProperty("category").GetString());
+        Assert.Equal(config.Metadata.LastModified, root.GetProperty("lastModified").GetDateTime());
+        Assert.False(root.TryGetProperty("base64Image", out _));
     }
 
     [Fact]

@@ -82,6 +82,27 @@ public sealed class ConfigMcpTools
     }
 
     /// <summary>
+    /// Gets the metadata of a config.
+    /// </summary>
+    [McpServerTool(Name = "get_config_metadata"),
+     Description("Gets the metadata of a config as a read-only JSON object without the base64 image.")]
+    public string GetConfigMetadata(
+        string configId,
+        ConfigService configService)
+    {
+        var config = GetConfig(configService, configId);
+        var dto = new ConfigMetadataResult(
+            config.Metadata.Name,
+            config.Metadata.Category,
+            config.Metadata.Author,
+            config.Metadata.CreationDate,
+            config.Metadata.LastModified,
+            config.Metadata.Plugins);
+
+        return JsonSerializer.Serialize(dto, JsonSerializerOptions);
+    }
+
+    /// <summary>
     /// Gets the settings of a config.
     /// </summary>
     [McpServerTool(Name = "get_config_settings"),
@@ -145,4 +166,12 @@ public sealed class ConfigMcpTools
         DateTime LastUpdated);
 
     private sealed record UpdateResult(bool Updated);
+
+    private sealed record ConfigMetadataResult(
+        string Name,
+        string Category,
+        string Author,
+        DateTime CreationDate,
+        DateTime LastModified,
+        List<string> Plugins);
 }
