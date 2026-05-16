@@ -6,6 +6,8 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
+using OpenBullet2.Web.Dtos.Settings;
+using RuriLib.Services;
 using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -34,6 +36,8 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_environment");
         Assert.Contains(tools, tool => tool.Name == "create_config");
         Assert.Contains(tools, tool => tool.Name == "list_configs");
+        Assert.Contains(tools, tool => tool.Name == "get_settings");
+        Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
         Assert.Contains(tools, tool => tool.Name == "update_config_readme");
         Assert.Contains(tools, tool => tool.Name == "get_config_settings");
@@ -166,6 +170,69 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(createdConfig);
         Assert.Equal(settingsService.Settings.GeneralSettings.DefaultAuthor, createdConfig.Metadata.Author);
         Assert.Contains(configService.Configs, c => c.Id == configId);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsOpenBulletSettings()
+    {
+        var settingsService = GetRequiredService<OpenBulletSettingsService>();
+        settingsService.Settings.GeneralSettings.DefaultAuthor = "MCP Settings Test Author";
+        settingsService.Settings.GeneralSettings.WarnConfigNotSaved = false;
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_settings",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        var dto = System.Text.Json.JsonSerializer.Deserialize<OpenBulletSettingsDto>(
+            text, JsonSerializerOptions);
+
+        Assert.False(result.IsError ?? false);
+        Assert.NotNull(dto);
+        Assert.Equal("MCP Settings Test Author", dto.GeneralSettings.DefaultAuthor);
+        Assert.False(dto.GeneralSettings.WarnConfigNotSaved);
+    }
+
+    [Fact]
+    public async Task McpEndpoint_GetsRuriLibSettings()
+    {
+        var settingsService = GetRequiredService<RuriLibSettingsService>();
+        settingsService.RuriLibSettings.GeneralSettings.VerboseMode = true;
+        settingsService.RuriLibSettings.GeneralSettings.RestrictBlocksToCWD = false;
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var result = await client.CallToolAsync(
+            "get_rurilib_settings",
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = System.Text.Json.JsonDocument.Parse(text);
+        var root = json.RootElement;
+
+        Assert.False(result.IsError ?? false);
+        Assert.True(root.GetProperty("generalSettings").GetProperty("verboseMode").GetBoolean());
+        Assert.False(root.GetProperty("generalSettings").GetProperty("restrictBlocksToCWD").GetBoolean());
     }
 
     [Fact]
