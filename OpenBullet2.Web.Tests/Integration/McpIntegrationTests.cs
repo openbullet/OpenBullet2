@@ -1,4 +1,5 @@
 using ModelContextProtocol.Client;
+using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
@@ -9,6 +10,9 @@ using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Settings;
 using RuriLib.Services;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Configs.Settings;
+using System.Collections.Concurrent;
+using System.Text.Json;
 using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -40,6 +44,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains(tools, tool => tool.Name == "get_settings");
         Assert.Contains(tools, tool => tool.Name == "get_rurilib_settings");
         Assert.Contains(tools, tool => tool.Name == "convert_lolicode_to_csharp");
+        Assert.Contains(tools, tool => tool.Name == "debug_config");
         Assert.Contains(tools, tool => tool.Name == "get_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "update_config_lolicode");
         Assert.Contains(tools, tool => tool.Name == "get_config_readme");
@@ -280,6 +285,79 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(root.GetProperty("converted").GetBoolean());
         Assert.Contains("data.Logger.LogObject(\"Hello, world!\");", root.GetProperty("cSharpScript").GetString());
         Assert.Contains("data.Logger.LogObject(\"Startup\");", root.GetProperty("startupCSharpScript").GetString());
+    }
+
+    [Fact]
+    public async Task McpEndpoint_DebugsConfig_AndStreamsProgressLogs()
+    {
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata(),
+            Settings = new ConfigSettings
+            {
+                DataSettings = new DataSettings
+                {
+                    AllowedWordlistTypes = ["Default"]
+                }
+            },
+            IsRemote = false,
+            Mode = ConfigMode.LoliCode,
+            LoliCodeScript = "LOG \"Hello, World!\"\nSET VAR \"TEST\" @input.DATA"
+        };
+        configService.Configs.Add(config);
+
+        using var httpClient = Factory.CreateClient();
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(httpClient.BaseAddress!, "/mcp"),
+                TransportMode = HttpTransportMode.StreamableHttp
+            },
+            httpClient);
+
+        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+
+        var progressMessages = new ConcurrentQueue<string>();
+        var progress = new Progress<ProgressNotificationValue>(value =>
+        {
+            if (!string.IsNullOrWhiteSpace(value.Message))
+            {
+                progressMessages.Enqueue(value.Message);
+            }
+        });
+
+        var result = await client.CallToolAsync(
+            "debug_config",
+            new Dictionary<string, object?>
+            {
+                ["configId"] = config.Id,
+                ["debug"] = new Dictionary<string, object?>
+                {
+                    ["testData"] = "Test data",
+                    ["wordlistType"] = "Default",
+                    ["testProxy"] = null,
+                    ["proxyType"] = "Http"
+                }
+            },
+            progress: progress,
+            cancellationToken: TestCancellationToken);
+
+        var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
+        using var json = JsonDocument.Parse(text);
+        var root = json.RootElement;
+        var variables = root.GetProperty("variables").EnumerateArray().ToList();
+        var log = root.GetProperty("log").EnumerateArray().Select(e => e.GetString()).ToList();
+
+        Assert.False(result.IsError ?? false);
+        Assert.True(root.GetProperty("success").GetBoolean());
+        Assert.Contains(progressMessages, message => message.Contains("Hello, World!"));
+        Assert.Contains(log, entry => entry!.Contains("Hello, World!"));
+        Assert.Contains(variables, variable =>
+            variable.GetProperty("name").GetString() == "TEST"
+            && variable.GetProperty("value").GetString() == "Test data");
+        Assert.True(root.GetProperty("error").ValueKind is JsonValueKind.Null);
     }
 
     [Fact]
