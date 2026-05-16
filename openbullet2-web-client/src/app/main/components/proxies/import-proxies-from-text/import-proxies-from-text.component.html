@@ -10,7 +10,7 @@
                     spellcheck="false"
                     [ngStyle]="{ minHeight: '150px' }"
                     [(ngModel)]="proxies"
-                    [placeholder]="'127.0.0.1:8080\nmyproxy.com:1234\n127.0.0.1:8080:myusername:mypassword\n(http)127.0.0.1:8080\n(socks5)myproxy.com:5134:myusername:mypassword'">
+                    [placeholder]="'http://127.0.0.1:8080\nsocks5://myusername:mypassword&#64;myproxy.com:5134\n127.0.0.1:8080\n127.0.0.1:8080:myusername:mypassword\n(socks5)myproxy.com:5134:myusername:mypassword'">
                 </textarea>
             </div>
             <app-proxy-syntax-info />
@@ -33,7 +33,7 @@
             </p-dropdown>
             <br />
             <span class="text-small color-inactive">
-                If the proxy type is specified by a custom syntax for a given proxy, this value will be ignored.
+                If the proxy type is specified by the proxy string itself, this value will be ignored.
             </span>
         </div>
     </div>
