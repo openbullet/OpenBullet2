@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using System.IO;
 
 namespace OpenBullet2.Native.Tests;
 
@@ -29,6 +30,19 @@ public sealed class DependencyInjectionTests(WpfAppFixture fixture)
             Assert.NotNull(updateService);
             Assert.NotNull(announcementService);
             Assert.NotNull(jobsViewModel);
+        });
+    }
+
+    [Fact]
+    public async Task ResolveServices_UserDataDirectoryProvider_IsRegistered()
+    {
+        await fixture.InvokeAsync(services =>
+        {
+            var userDataDirectory = services.GetRequiredService<UserDataDirectoryProvider>();
+
+            Assert.NotNull(userDataDirectory);
+            Assert.True(Path.IsPathRooted(userDataDirectory.RootPath));
+            Assert.Equal(Path.Combine(userDataDirectory.RootPath, "Logs"), userDataDirectory.GetPath("Logs"));
         });
     }
 }

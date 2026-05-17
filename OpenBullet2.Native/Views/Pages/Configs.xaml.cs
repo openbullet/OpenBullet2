@@ -33,6 +33,7 @@ public partial class Configs : Page
     private readonly ConfigService configService;
     private readonly ConfigsViewModel vm;
     private readonly VolatileSettingsService volatileSettings;
+    private readonly UserDataDirectoryProvider userDataDirectory;
     private GridViewColumnHeader? listViewSortCol;
     private SortAdorner? listViewSortAdorner;
 
@@ -58,7 +59,8 @@ public partial class Configs : Page
         OpenBulletSettingsService obSettingsService,
         ConfigService configService,
         VolatileSettingsService volatileSettings,
-        ConfigsViewModel vm)
+        ConfigsViewModel vm,
+        UserDataDirectoryProvider userDataDirectory)
     {
         this.logger = logger;
         this.uiFactory = uiFactory;
@@ -68,6 +70,7 @@ public partial class Configs : Page
         this.configService = configService;
         this.volatileSettings = volatileSettings;
         this.vm = vm;
+        this.userDataDirectory = userDataDirectory;
         DataContext = vm;
 
         InitializeComponent();
@@ -134,7 +137,7 @@ public partial class Configs : Page
     {
         try
         {
-            Process.Start("explorer.exe", Path.Combine(Directory.GetCurrentDirectory(), "UserData\\Configs"));
+            Process.Start("explorer.exe", userDataDirectory.GetPath("Configs"));
         }
         catch (Exception ex)
         {

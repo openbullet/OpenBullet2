@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Wordlist;
@@ -10,7 +11,6 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
-using OpenBullet2.Web.Services;
 using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 

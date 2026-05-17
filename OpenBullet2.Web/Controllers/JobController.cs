@@ -19,7 +19,6 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
-using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
 using RuriLib.Models.Data.DataPools;

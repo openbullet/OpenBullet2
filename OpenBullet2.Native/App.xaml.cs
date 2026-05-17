@@ -3,7 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenBullet2.Core;
+using OpenBullet2.Core.Options;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Logging;
@@ -19,6 +21,7 @@ using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +41,6 @@ namespace OpenBullet2.Native;
 /// </summary>
 public partial class App : Application
 {
-    private const string LogsDirectoryPath = "UserData/Logs";
     private const string NativeTestModeEnvironmentVariable = "OB2_NATIVE_TEST_MODE";
     private readonly IConfiguration config;
     public static IHost Host { get; private set; } = null!;
@@ -49,12 +51,27 @@ public partial class App : Application
         TaskScheduler.UnobservedTaskException += OnTaskException;
 
         Directory.SetCurrentDirectory(AppContext.BaseDirectory);
-        Directory.CreateDirectory("UserData");
-        Directory.CreateDirectory(LogsDirectoryPath);
 
-        config = new ConfigurationBuilder()
+        var bootstrapConfig = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        var bootstrapSettings = bootstrapConfig.GetSection(UserDataSettingsOptions.SectionName)
+            .Get<UserDataSettingsOptions>() ?? new UserDataSettingsOptions();
+        var userDataDirectory = new UserDataDirectoryProvider(Options.Create(bootstrapSettings));
+
+        Directory.CreateDirectory(userDataDirectory.RootPath);
+        Directory.CreateDirectory(userDataDirectory.GetPath("Logs"));
+
+        config = new ConfigurationBuilder()
+            .AddConfiguration(bootstrapConfig)
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:DefaultConnection"] = $"Data Source={userDataDirectory.GetPath("OpenBullet.db")};",
+                ["Serilog:WriteTo:0:Args:path"] = userDataDirectory.GetPath("Logs", "log-.txt")
+            })
             .Build();
 
         var workerThreads = config.GetSection("Resources").GetValue("WorkerThreads", 1000);
@@ -90,6 +107,10 @@ public partial class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
+        services.AddOptions<UserDataSettingsOptions>()
+            .Bind(config.GetSection(UserDataSettingsOptions.SectionName));
+        services.AddSingleton<UserDataDirectoryProvider>();
+
         // Windows and pages
         services.AddSingleton<IUiFactory, UiFactory>();
         services.AddSingleton<MainWindow>();
@@ -107,12 +128,14 @@ public partial class App : Application
         services.AddScoped<IJobRepository, DbJobRepository>();
         services.AddScoped<IRecordRepository, DbRecordRepository>();
         services.AddSingleton<IConfigRepository>(service =>
-            new DiskConfigRepository(service.GetRequiredService<RuriLibSettingsService>(),
-            "UserData/Configs",
-            service.GetRequiredService<ILogger<DiskConfigRepository>>()));
+            new DiskConfigRepository(
+                service.GetRequiredService<RuriLibSettingsService>(),
+                service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Configs"),
+                service.GetRequiredService<ILogger<DiskConfigRepository>>()));
         services.AddScoped<IWordlistRepository>(service =>
-            new HybridWordlistRepository(service.GetRequiredService<ApplicationDbContext>(),
-            "UserData/Wordlists"));
+            new HybridWordlistRepository(
+                service.GetRequiredService<ApplicationDbContext>(),
+                service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Wordlists")));
 
         // Singletons
         services.AddSingleton<VolatileSettingsService>();
@@ -128,16 +151,19 @@ public partial class App : Application
         services.AddSingleton<HitStorageService>();
         services.AddSingleton<DataPoolFactoryService>();
         services.AddSingleton<ProxySourceFactoryService>();
-        services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
-        services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));
-        services.AddSingleton(service => new PluginRepository("UserData/Plugins",
+        services.AddSingleton(service =>
+            new RuriLibSettingsService(service.GetRequiredService<UserDataDirectoryProvider>().RootPath));
+        services.AddSingleton(service =>
+            new OpenBulletSettingsService(service.GetRequiredService<UserDataDirectoryProvider>().RootPath));
+        services.AddSingleton(service => new PluginRepository(
+            service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Plugins"),
             service.GetRequiredService<ILogger<PluginRepository>>()));
         services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
         services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
         services.AddSingleton<MemoryJobLogger>();
         services.AddSingleton<IJobLogger>(service =>
             new FileJobLogger(service.GetRequiredService<RuriLibSettingsService>(),
-            "UserData/Logs/Jobs"));
+                service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Logs", "Jobs")));
 
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<JobsViewModel>();

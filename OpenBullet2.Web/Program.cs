@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
+using OpenBullet2.Core.Options;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web;
@@ -40,8 +41,11 @@ using Serilog.Sinks.SystemConsole;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddOptions<UserDataSettingsOptions>()
+    .Bind(builder.Configuration.GetSection(UserDataSettingsOptions.SectionName));
+builder.Services
     .AddOptions<WebSettingsOptions>()
-    .Bind(builder.Configuration.GetSection(WebSettingsOptions.SectionName));
+    .Bind(builder.Configuration.GetSection(UserDataSettingsOptions.SectionName));
 builder.Services.AddSingleton<UserDataDirectoryProvider>();
 
 // Configuration tweaks

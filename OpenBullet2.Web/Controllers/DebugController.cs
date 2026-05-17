@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Debugging;
 using OpenBullet2.Web.Exceptions;
-using OpenBullet2.Web.Services;
 
 namespace OpenBullet2.Web.Controllers;
 

@@ -21,6 +21,7 @@ public class ConfigsViewModel : ViewModelBase
     private readonly ILogger<ConfigsViewModel> logger;
     private readonly ConfigService configService;
     private readonly IConfigRepository configRepo;
+    private readonly UserDataDirectoryProvider userDataDirectory;
 
     private ObservableCollection<ConfigViewModel> configsCollection = [];
     public ObservableCollection<ConfigViewModel> ConfigsCollection
@@ -84,13 +85,15 @@ public class ConfigsViewModel : ViewModelBase
     public ConfigsViewModel(
         ILogger<ConfigsViewModel> logger,
         ConfigService configService,
-        IConfigRepository configRepo)
+        IConfigRepository configRepo,
+        UserDataDirectoryProvider userDataDirectory)
     {
         this.logger = logger;
         this.configService = configService;
         configService.OnRemotesLoaded += (s, e) => CreateCollection();
 
         this.configRepo = configRepo;
+        this.userDataDirectory = userDataDirectory;
         CreateCollection();
     }
 
@@ -98,7 +101,7 @@ public class ConfigsViewModel : ViewModelBase
     {
         // Create it in the repo
         var fileName = FileUtils.ReplaceInvalidFileNameChars($"{dto.Name}.opk");
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserData/Configs", fileName);
+        var filePath = userDataDirectory.GetPath("Configs", fileName);
 
         if (File.Exists(filePath))
         {

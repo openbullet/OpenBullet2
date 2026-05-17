@@ -1,5 +1,6 @@
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -8,15 +9,21 @@ namespace OpenBullet2.Native.Tests;
 public sealed class WpfAppFixture : IDisposable
 {
     private const string NativeTestModeEnvironmentVariable = "OB2_NATIVE_TEST_MODE";
+    private const string NativeUserDataFolderEnvironmentVariable = "Settings__UserDataFolder";
     private readonly Thread thread;
     private readonly Dispatcher dispatcher;
     private readonly string? previousNativeTestModeValue;
+    private readonly string? previousUserDataFolderValue;
+    private readonly string userDataFolder;
 
     public WpfAppFixture()
     {
         Alert.SuppressDialogs = true;
         previousNativeTestModeValue = Environment.GetEnvironmentVariable(NativeTestModeEnvironmentVariable);
+        previousUserDataFolderValue = Environment.GetEnvironmentVariable(NativeUserDataFolderEnvironmentVariable);
+        userDataFolder = Path.Combine(Path.GetTempPath(), $"OB2_Native_UserData_{Guid.NewGuid():N}");
         Environment.SetEnvironmentVariable(NativeTestModeEnvironmentVariable, "1");
+        Environment.SetEnvironmentVariable(NativeUserDataFolderEnvironmentVariable, userDataFolder);
 
         using var ready = new ManualResetEventSlim();
         Exception? startupException = null;
@@ -113,6 +120,18 @@ public sealed class WpfAppFixture : IDisposable
         dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         thread.Join();
         Environment.SetEnvironmentVariable(NativeTestModeEnvironmentVariable, previousNativeTestModeValue);
+        Environment.SetEnvironmentVariable(NativeUserDataFolderEnvironmentVariable, previousUserDataFolderValue);
         Alert.SuppressDialogs = false;
+
+        try
+        {
+            if (Directory.Exists(userDataFolder))
+            {
+                Directory.Delete(userDataFolder, true);
+            }
+        }
+        catch
+        {
+        }
     }
 }

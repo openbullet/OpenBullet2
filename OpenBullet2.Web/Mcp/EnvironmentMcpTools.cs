@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using OpenBullet2.Web.Services;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Web.Mcp;
 
