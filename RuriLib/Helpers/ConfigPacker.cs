@@ -129,7 +129,7 @@ public static class ConfigPacker
             }
             catch
             {
-                Console.WriteLine($"Could not read readme.md in config with id {config.Id}");
+                // README is optional.
             }
 
             // metadata.json

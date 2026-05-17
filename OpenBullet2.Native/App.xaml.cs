@@ -130,7 +130,8 @@ public partial class App : Application
         services.AddSingleton<ProxySourceFactoryService>();
         services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
         services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));
-        services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
+        services.AddSingleton(service => new PluginRepository("UserData/Plugins",
+            service.GetRequiredService<ILogger<PluginRepository>>()));
         services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
         services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
         services.AddSingleton<MemoryJobLogger>();

@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using RuriLib.Helpers.Blocks;
 
 namespace RuriLib.Services;
@@ -16,6 +18,7 @@ public class PluginRepository
     // AppDomains other than AppDomain.CurrentDomain aren't supported in .NET core
     private readonly AppDomain _domain = AppDomain.CurrentDomain;
     private readonly List<string> _toDelete = [];
+    private readonly ILogger<PluginRepository> logger;
     private string BaseFolder { get; init; }
     private string ToDeleteFile => Path.Combine(BaseFolder, ".toDelete");
 
@@ -23,8 +26,10 @@ public class PluginRepository
     /// Creates a repository rooted at the given base folder.
     /// </summary>
     /// <param name="baseFolder">The folder that contains plugin assemblies and dependencies.</param>
-    public PluginRepository(string baseFolder)
+    /// <param name="logger">The optional logger.</param>
+    public PluginRepository(string baseFolder, ILogger<PluginRepository>? logger = null)
     {
+        this.logger = logger ?? NullLogger<PluginRepository>.Instance;
         BaseFolder = baseFolder;
         Directory.CreateDirectory(baseFolder);
 
@@ -183,7 +188,7 @@ public class PluginRepository
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"ERROR: Couldn't load required dependency {asm.FullName} ({ex.Message})");
+                    logger.LogWarning(ex, "Couldn't load required dependency {AssemblyFullName}", asm.FullName);
                 }
 
                 // Load its dependencies recursively

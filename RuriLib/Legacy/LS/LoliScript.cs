@@ -487,7 +487,8 @@ public class LoliScript
                 case ScriptingLanguage.JavaScript:
 
                     // Redefine log() function
-                    var jsengine = new Engine().SetValue("log", new Action<object>(Console.WriteLine));
+                    var jsengine = new Engine().SetValue("log", new Action<object>(
+                        message => data.Logger.Log(message?.ToString() ?? string.Empty)));
 
                     // Add in all the variables
                     foreach (var variable in variableList.Variables)

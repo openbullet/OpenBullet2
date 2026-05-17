@@ -60,6 +60,8 @@ Feel free to contribute to the versatility of this project by adding the missing
     {
         options = opts;
         completed = false;
+        var rlSettings = new RuriLibSettingsService("UserData");
+        rlSettings.RuriLibSettings.GeneralSettings.VerboseMode = opts.Verbose;
 
         var validationErrors = ConsoleRunPlanner.Validate(opts);
         if (validationErrors.Count > 0)
@@ -73,7 +75,6 @@ Feel free to contribute to the versatility of this project by adding the missing
             return 1;
         }
 
-        var rlSettings = new RuriLibSettingsService("UserData");
         var pluginRepo = new PluginRepository("UserData/Plugins");
 
         using var fs = new FileStream(opts.ConfigFile, FileMode.Open);
@@ -133,7 +134,7 @@ Feel free to contribute to the versatility of this project by adding the missing
             config.Settings.GeneralSettings.SuggestedBots);
         var dataPool = BuildDataPool(opts);
 
-        job = new MultiRunJob(rlSettings, pluginRepo)
+        job = new MultiRunJob(rlSettings, pluginRepo, opts.Verbose ? new ConsoleJobLogger() : null)
         {
             Config = config,
             CreationTime = DateTime.Now,

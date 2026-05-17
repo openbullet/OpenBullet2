@@ -600,7 +600,8 @@ public class MultiRunJob : Job
 
                 var proxyPoolOptions =
                     new ProxyPoolOptions { AllowedTypes = config.Settings.ProxySettings.AllowedProxyTypes };
-                proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
+                proxyPool = new ProxyPool(ProxySources, proxyPoolOptions,
+                    logger is null ? null : new JobLoggerAdapter<ProxyPool>(logger, Id));
                 try
                 {
                     await asyncLocker
@@ -1187,7 +1188,7 @@ public class MultiRunJob : Job
     {
         if (Providers?.GeneralSettings.VerboseMode == true)
         {
-            Console.WriteLine($"[{DateTime.Now}] {message}");
+            logger?.LogInfo(Id, $"[{DateTime.Now}] {message}");
         }
     }
 

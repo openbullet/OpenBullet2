@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
@@ -176,7 +177,8 @@ builder.Services.AddSingleton(service =>
 builder.Services.AddSingleton<HitStorageService>();
 builder.Services.AddSingleton(_ => new RuriLibSettingsService(Globals.UserDataFolder));
 builder.Services.AddSingleton(_ => new OpenBulletSettingsService(Globals.UserDataFolder));
-builder.Services.AddSingleton(_ => new PluginRepository($"{Globals.UserDataFolder}/Plugins"));
+builder.Services.AddSingleton(service => new PluginRepository($"{Globals.UserDataFolder}/Plugins",
+    service.GetRequiredService<ILogger<PluginRepository>>()));
 builder.Services.AddSingleton(_ => new ThemeService($"{Globals.UserDataFolder}/Themes"));
 builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));

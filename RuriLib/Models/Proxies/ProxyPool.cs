@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace RuriLib.Models.Proxies;
 
@@ -48,18 +50,22 @@ public class ProxyPool : IDisposable
     private readonly int minBackoff = 5000;
     private readonly int maxReloadTries = 10;
     private AsyncLocker? asyncLocker;
+    private readonly ILogger<ProxyPool> logger;
 
     /// <summary>
     /// Initializes the proxy pool given the proxy sources.
     /// </summary>
     /// <param name="sources">The proxy sources to load from.</param>
     /// <param name="options">Optional pool behavior settings.</param>
-    public ProxyPool(IEnumerable<ProxySource> sources, ProxyPoolOptions? options = null)
+    /// <param name="logger">The optional logger.</param>
+    public ProxyPool(IEnumerable<ProxySource> sources, ProxyPoolOptions? options = null,
+        ILogger<ProxyPool>? logger = null)
     {
         ArgumentNullException.ThrowIfNull(sources);
 
         this.sources = sources.ToList();
         this.options = options ?? new ProxyPoolOptions();
+        this.logger = logger ?? NullLogger<ProxyPool>.Instance;
         asyncLocker = new();
     }
 
@@ -227,7 +233,7 @@ public class ProxyPool : IDisposable
                 }
 
                 // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
-                Console.WriteLine($"Failed to reload, no proxies found. Waiting {currentBackoff} ms and trying again...");
+                logger.LogWarning("Failed to reload proxies, no proxies found. Waiting {BackoffMs} ms before retrying", currentBackoff);
                 await Task.Delay(currentBackoff, cancellationToken).ConfigureAwait(false);
 
                 currentTry++;
@@ -249,20 +255,20 @@ public class ProxyPool : IDisposable
             {
                 return await source.GetAllAsync(cancellationToken).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
                 switch (source)
                 {
                     case FileProxySource x:
-                        Console.WriteLine($"Could not reload proxies from source {x.FileName}");
+                        logger.LogWarning(ex, "Could not reload proxies from file source {FileName}", x.FileName);
                         break;
 
                     case RemoteProxySource x:
-                        Console.WriteLine($"Could not reload proxies from source {x.Url}");
+                        logger.LogWarning(ex, "Could not reload proxies from remote source {Url}", x.Url);
                         break;
 
                     default:
-                        Console.WriteLine("Could not reload proxies from unknown source");
+                        logger.LogWarning(ex, "Could not reload proxies from an unknown source");
                         break;
                 }
 
