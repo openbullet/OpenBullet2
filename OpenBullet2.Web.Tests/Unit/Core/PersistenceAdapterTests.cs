@@ -88,6 +88,7 @@ public class PersistenceAdapterTests
             Country = "Italy",
             LastChecked = checkedAt,
             Ping = 123,
+            Quality = ProxyQuality.Anonymous,
             WorkingStatus = ProxyWorkingStatus.Working
         };
 
@@ -97,6 +98,7 @@ public class PersistenceAdapterTests
         Assert.Equal("Italy", entity.Country);
         Assert.Equal(checkedAt, entity.LastChecked);
         Assert.Equal(123, entity.Ping);
+        Assert.Equal(ProxyQuality.Anonymous, entity.Quality);
         Assert.Equal(ProxyWorkingStatus.Working, entity.Status);
     }
 

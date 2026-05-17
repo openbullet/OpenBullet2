@@ -55,6 +55,7 @@ export interface GeneralRLSettings {
   enableBotLogging: boolean;
   verboseMode: boolean;
   logAllResults: boolean;
+  proxyJudgeUrls: string[];
   userAgents: string[];
 }
 

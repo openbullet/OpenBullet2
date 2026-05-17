@@ -44,6 +44,11 @@ public class CreateProxyCheckJobDto
     public int TimeoutMilliseconds { get; set; } = 10000;
 
     /// <summary>
+    /// Whether to use a proxy judge in addition to the target site check.
+    /// </summary>
+    public bool UseProxyJudge { get; set; } = true;
+
+    /// <summary>
     /// The options for the output of a proxy check.
     /// </summary>
     public JsonElement? CheckOutput { get; set; }

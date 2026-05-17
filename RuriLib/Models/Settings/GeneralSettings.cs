@@ -22,6 +22,13 @@ public class GeneralSettings
     public bool VerboseMode { get; set; }
     /// <summary>Gets or sets a value indicating whether all results should be logged.</summary>
     public bool LogAllResults { get; set; }
+    /// <summary>Gets or sets the list of proxy judge URLs used to determine proxy anonymity.</summary>
+    public List<string> ProxyJudgeUrls { get; set; } =
+    [
+        "http://azenv.net/",
+        "http://proxyjudge.us/",
+        "http://httpheader.net/azenv.php"
+    ];
     /// <summary>Gets or sets the configured User-Agent list.</summary>
     public List<string> UserAgents { get; set; } = [];
 }

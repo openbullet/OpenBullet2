@@ -161,6 +161,9 @@
                         <th style="min-width:10rem">
                             Status
                         </th>
+                        <th style="min-width:10rem">
+                            Quality
+                        </th>
                         <th style="min-width:7rem" pSortableColumn="ping">
                             <div class="d-flex align-items-center">
                                 Ping <p-sortIcon field="ping" />
@@ -208,6 +211,7 @@
                         
                         <td [class]="proxy.country === 'Unknown' ? 'color-inactive' : ''">{{ proxy.country }}</td>
                         <td [class]="getWorkingClass(proxy.status)">{{ proxy.status | pascalcase : true }}</td>
+                        <td [class]="proxy.quality === 'unknown' ? 'color-inactive' : ''">{{ proxy.quality | pascalcase : true }}</td>
                         <td [class]="proxy.ping === 0 ? 'color-inactive' : ''">{{ proxy.ping }} ms</td>
 
                         <!-- Last checked -->

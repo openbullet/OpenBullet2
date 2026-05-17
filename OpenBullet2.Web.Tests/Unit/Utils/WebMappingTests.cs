@@ -132,6 +132,7 @@ public class WebMappingTests
         Assert.Equal(3, proxyDto.GroupId);
         Assert.Equal("Group", proxyDto.GroupName);
         Assert.Null(proxyDto.LastChecked);
+        Assert.Equal(ProxyQuality.Unknown, proxyDto.Quality);
 
         var wordlistDto = mapper.Map<WordlistDto>(new WordlistEntity
         {
@@ -197,6 +198,7 @@ public class WebMappingTests
             GroupId = 9,
             CheckOnlyUntested = false,
             TimeoutMilliseconds = 2500,
+            UseProxyJudge = false,
             Target = new ProxyCheckTargetDto
             {
                 Url = "https://example.com",
@@ -213,6 +215,7 @@ public class WebMappingTests
 
         Assert.Equal("Proxy Check", options.Name);
         Assert.Equal(5, options.Bots);
+        Assert.False(options.UseProxyJudge);
         Assert.IsType<RelativeTimeStartCondition>(options.StartCondition);
         Assert.IsType<DatabaseProxyCheckOutputOptions>(options.CheckOutput);
 
@@ -220,6 +223,7 @@ public class WebMappingTests
 
         var startConditionDto = Assert.IsType<RelativeTimeStartConditionDto>(dto.StartCondition);
         Assert.Equal(TimeSpan.FromMinutes(5), startConditionDto.StartAfter);
+        Assert.False(dto.UseProxyJudge);
 
         var checkOutputDto = Assert.IsType<DatabaseProxyCheckOutputOptionsDto>(dto.CheckOutput);
         Assert.Equal("databaseProxyCheckOutput", checkOutputDto.PolyTypeName);

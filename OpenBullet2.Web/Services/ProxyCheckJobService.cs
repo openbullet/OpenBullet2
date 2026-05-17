@@ -302,7 +302,8 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
             ProxyPort = e.Result.Port,
             WorkingStatus = e.Result.WorkingStatus,
             Ping = e.Result.Ping,
-            Country = e.Result.Country
+            Country = e.Result.Country,
+            Quality = e.Result.Quality
         };
 
         await NotifyClientsAsync(sender, message, ProxyCheckJobMethods.NewResult);

@@ -915,6 +915,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
                 Url = job.Url ?? string.Empty,
                 SuccessKey = job.SuccessKey ?? string.Empty
             },
+            UseProxyJudge = pcjJobOptions.UseProxyJudge,
             CheckOutput = checkOutput,
             Tested = job.Tested,
             Working = job.Working,

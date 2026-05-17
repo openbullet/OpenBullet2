@@ -31,4 +31,9 @@ public class PcjNewResultMessage
     /// The detected country of the proxy, if any.
     /// </summary>
     public string? Country { get; set; } = null;
+
+    /// <summary>
+    /// The anonymity quality reported by a proxy judge, if available.
+    /// </summary>
+    public ProxyQuality Quality { get; set; } = ProxyQuality.Unknown;
 }

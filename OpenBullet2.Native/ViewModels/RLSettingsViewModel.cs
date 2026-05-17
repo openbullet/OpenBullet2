@@ -104,6 +104,16 @@ public class RLSettingsViewModel : ViewModelBase
         }
     }
 
+    public List<string> ProxyJudgeUrls
+    {
+        get => General.ProxyJudgeUrls;
+        set
+        {
+            General.ProxyJudgeUrls = value;
+            OnPropertyChanged();
+        }
+    }
+
     public int ProxyConnectTimeoutMilliseconds
     {
         get => Proxy.ProxyConnectTimeoutMilliseconds;

@@ -57,6 +57,16 @@ public class ProxyCheckJob : Job
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 
     /// <summary>
+    /// Gets or sets a value indicating whether to use a proxy judge.
+    /// </summary>
+    public bool UseProxyJudge { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the proxy judge used to determine proxy quality.
+    /// </summary>
+    public IProxyJudge ProxyJudge { get; set; } = new AzenvProxyJudge();
+
+    /// <summary>
     /// Gets or sets the timer tick interval.
     /// </summary>
     public TimeSpan TickInterval = TimeSpan.FromSeconds(1);
@@ -213,7 +223,12 @@ public class ProxyCheckJob : Job
             finally
             {
                 input.Proxy.LastChecked = DateTime.Now;
-                http.Dispose();
+            }
+
+            if (input.UseProxyJudge)
+            {
+                input.Proxy.Quality = await input.ProxyJudge.DetermineQualityAsync(
+                    http, input.JudgeUrls, input.Timeout, token);
             }
 
             // Geolocation
@@ -284,7 +299,13 @@ public class ProxyCheckJob : Job
             Status = JobStatus.Starting;
             OnStatusChanged?.Invoke(this, Status);
 
-            var workItems = proxies.Select(p => new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider));
+            var judgeUrls = settings.RuriLibSettings.GeneralSettings.ProxyJudgeUrls
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            var workItems = proxies.Select(p =>
+                new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider, UseProxyJudge,
+                    judgeUrls, ProxyJudge));
             parallelizer = ParallelizerFactory<ProxyCheckInput, Proxy>
                 .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems,
                 workFunction, Bots, proxies.Count, 0, BotLimit);
@@ -589,6 +610,7 @@ public class ProxyCheckJob : Job
         disposed = true;
         base.Dispose(disposing);
     }
+
     #endregion
 }
 
@@ -623,6 +645,21 @@ public struct ProxyCheckInput
     public IProxyGeolocationProvider? GeoProvider { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to use a proxy judge.
+    /// </summary>
+    public bool UseProxyJudge { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of proxy judge URLs to try in order.
+    /// </summary>
+    public IReadOnlyList<string> JudgeUrls { get; set; }
+
+    /// <summary>
+    /// Gets or sets the proxy judge implementation.
+    /// </summary>
+    public IProxyJudge ProxyJudge { get; set; }
+
+    /// <summary>
     /// Creates a proxy-check input payload.
     /// </summary>
     /// <param name="proxy">The proxy to check.</param>
@@ -630,13 +667,20 @@ public struct ProxyCheckInput
     /// <param name="successKey">The success marker expected in the response.</param>
     /// <param name="timeout">The timeout for the check.</param>
     /// <param name="geoProvider">The optional geolocation provider.</param>
+    /// <param name="useProxyJudge">Whether proxy quality should be determined through a proxy judge.</param>
+    /// <param name="judgeUrls">The judge URLs to try in order.</param>
+    /// <param name="proxyJudge">The proxy judge implementation.</param>
     public ProxyCheckInput(Proxy proxy, string url, string successKey,
-        TimeSpan timeout, IProxyGeolocationProvider? geoProvider)
+        TimeSpan timeout, IProxyGeolocationProvider? geoProvider, bool useProxyJudge,
+        IReadOnlyList<string> judgeUrls, IProxyJudge proxyJudge)
     {
         Proxy = proxy;
         Url = url;
         SuccessKey = successKey;
         Timeout = timeout;
         GeoProvider = geoProvider;
+        UseProxyJudge = useProxyJudge;
+        JudgeUrls = judgeUrls;
+        ProxyJudge = proxyJudge;
     }
 }

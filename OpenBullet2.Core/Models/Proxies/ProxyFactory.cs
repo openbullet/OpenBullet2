@@ -18,6 +18,7 @@ public class ProxyFactory
             Country = entity.Country ?? "Unknown",
             WorkingStatus = entity.Status,
             LastChecked = entity.LastChecked,
-            Ping = entity.Ping
+            Ping = entity.Ping,
+            Quality = entity.Quality
         };
 }

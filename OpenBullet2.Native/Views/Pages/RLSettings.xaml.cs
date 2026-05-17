@@ -30,6 +30,9 @@ public partial class RLSettings : Page
     private void CustomUserAgentsChanged(object sender, TextChangedEventArgs e)
         => vm.UserAgents = customUserAgentsListTextBox.Text.Split(Environment.NewLine).ToList();
 
+    private void ProxyJudgeUrlsChanged(object sender, TextChangedEventArgs e)
+        => vm.ProxyJudgeUrls = proxyJudgeUrlsTextBox.Text.Split(Environment.NewLine).ToList();
+
     private void GlobalBanKeysChanged(object sender, TextChangedEventArgs e)
         => vm.GlobalBanKeys = globalBanKeysTextBox.Text.Split(Environment.NewLine).ToList();
 
@@ -78,6 +81,7 @@ public partial class RLSettings : Page
     private void SetMultiLineTextBoxContents()
     {
         customUserAgentsListTextBox.Text = string.Join(Environment.NewLine, vm.UserAgents);
+        proxyJudgeUrlsTextBox.Text = string.Join(Environment.NewLine, vm.ProxyJudgeUrls);
         globalBanKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalBanKeys);
         globalRetryKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalRetryKeys);
     }

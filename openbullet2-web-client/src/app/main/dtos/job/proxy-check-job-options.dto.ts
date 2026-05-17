@@ -9,6 +9,7 @@ export interface ProxyCheckJobOptionsDto {
   checkOnlyUntested: boolean;
   target: ProxyCheckTargetDto | null;
   timeoutMilliseconds: number;
+  useProxyJudge: boolean;
   checkOutput: DatabaseProxyCheckOutput;
 }
 

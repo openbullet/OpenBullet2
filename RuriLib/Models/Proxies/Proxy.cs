@@ -70,6 +70,11 @@ public class Proxy
     public int Ping { get; set; } = 0;
 
     /// <summary>
+    /// The anonymity quality reported by a proxy judge.
+    /// </summary>
+    public ProxyQuality Quality { get; set; } = ProxyQuality.Unknown;
+
+    /// <summary>
     /// The last time the proxy was used.
     /// </summary>
     public DateTime? LastUsed { get; set; }

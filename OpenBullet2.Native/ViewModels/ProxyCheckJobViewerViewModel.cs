@@ -114,7 +114,7 @@ public class ProxyCheckJobViewerViewModel : ViewModelBase, IDisposable
     {
         var proxy = details.Result;
 
-        var message = $"Proxy checked ({proxy}) with ping {proxy.Ping} ms and country {proxy.Country}";
+        var message = $"Proxy checked ({proxy}) with ping {proxy.Ping} ms, country {proxy.Country} and quality {proxy.Quality}";
         var color = proxy.WorkingStatus == ProxyWorkingStatus.Working ? Colors.YellowGreen : Colors.Tomato;
 
         NewMessage?.Invoke(this, message, color);

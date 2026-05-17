@@ -103,6 +103,7 @@ internal static class WebMappingMethods
         Password = entity.Password,
         Type = entity.Type,
         Ping = entity.Ping,
+        Quality = entity.Quality,
         Country = entity.Country,
         Status = entity.Status,
         GroupId = entity.Group?.Id ?? -1,
@@ -121,6 +122,7 @@ internal static class WebMappingMethods
             CheckOnlyUntested = dto.CheckOnlyUntested,
             Target = dto.Target?.Adapt<ProxyCheckTarget>(config) ?? new ProxyCheckTarget(),
             TimeoutMilliseconds = dto.TimeoutMilliseconds,
+            UseProxyJudge = dto.UseProxyJudge,
             CheckOutput = PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
             (JsonElement)dto.CheckOutput!, config)!
         };
@@ -136,6 +138,7 @@ internal static class WebMappingMethods
             CheckOnlyUntested = dto.CheckOnlyUntested,
             Target = dto.Target?.Adapt<ProxyCheckTarget>(config) ?? new ProxyCheckTarget(),
             TimeoutMilliseconds = dto.TimeoutMilliseconds,
+            UseProxyJudge = dto.UseProxyJudge,
             CheckOutput = PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
             (JsonElement)dto.CheckOutput!, config)!
         };
@@ -202,6 +205,7 @@ internal static class WebMappingMethods
             CheckOnlyUntested = options.CheckOnlyUntested,
             Target = options.Target.Adapt<ProxyCheckTargetDto>(config),
             TimeoutMilliseconds = options.TimeoutMilliseconds,
+            UseProxyJudge = options.UseProxyJudge,
             CheckOutput = PolyMapper.MapFrom(options.CheckOutput, config)!
         };
 

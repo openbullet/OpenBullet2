@@ -230,6 +230,16 @@ public class ProxyCheckJobOptionsViewModel : ViewModelBase
         }
     }
 
+    public bool UseProxyJudge
+    {
+        get => Options.UseProxyJudge;
+        set
+        {
+            Options.UseProxyJudge = value;
+            OnPropertyChanged();
+        }
+    }
+
     private List<ProxyCheckTarget> targets = [];
     public IEnumerable<ProxyCheckTarget> Targets
     {

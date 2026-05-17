@@ -228,6 +228,11 @@
                             <GridViewColumnHeader Tag="Status" Click="ColumnHeaderClicked">Status</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Quality}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Quality" Click="ColumnHeaderClicked">Quality</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Ping}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Ping" Click="ColumnHeaderClicked">Ping</GridViewColumnHeader>

@@ -67,6 +67,17 @@
                              AcceptsReturn="True"
                              TextChanged="CustomUserAgentsChanged">
                 </TextBox>
+                <Label>Proxy judge URLs (one per line)</Label>
+                <TextBox x:Name="proxyJudgeUrlsTextBox"
+                             Background="{DynamicResource BackgroundSecondary}"
+                             Foreground="{DynamicResource ForegroundMain}"
+                             FontFamily="Consolas"
+                             Margin="5"
+                             Height="100"
+                             VerticalContentAlignment="Top"
+                             AcceptsReturn="True"
+                             TextChanged="ProxyJudgeUrlsChanged">
+                </TextBox>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Proxies</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">

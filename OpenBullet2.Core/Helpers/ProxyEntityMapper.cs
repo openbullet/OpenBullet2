@@ -17,6 +17,7 @@ public static class ProxyEntityMapper
         Username = proxy.Username,
         Password = proxy.Password,
         Ping = proxy.Ping,
+        Quality = proxy.Quality,
         Status = proxy.WorkingStatus,
         Type = proxy.Type
     };

@@ -27,6 +27,7 @@ public class JobOptionsFactoryTests
 
         Assert.IsType<RelativeTimeStartCondition>(options.StartCondition);
         Assert.IsType<DatabaseProxyCheckOutputOptions>(options.CheckOutput);
+        Assert.True(options.UseProxyJudge);
     }
 
     [Fact]
@@ -58,5 +59,6 @@ public class JobOptionsFactoryTests
         Assert.NotSame(options, clone);
         Assert.Equal("proxy check", clone.Name);
         Assert.Equal(10, clone.Bots);
+        Assert.True(clone.UseProxyJudge);
     }
 }

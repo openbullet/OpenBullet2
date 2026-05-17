@@ -236,7 +236,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   onNewResult(result: PCJNewResultMessage) {
     const logMessage =
       result.workingStatus === ProxyWorkingStatus.Working
-        ? `Proxy ${result.proxyHost}:${result.proxyPort} is working with ping ${result.ping} ms and country ${result.country}`
+        ? `Proxy ${result.proxyHost}:${result.proxyPort} is working with ping ${result.ping} ms, country ${result.country} and quality ${result.quality}`
         : `Proxy ${result.proxyHost}:${result.proxyPort} is not working`;
 
     this.writeLog({

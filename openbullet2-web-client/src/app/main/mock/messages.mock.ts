@@ -1,6 +1,7 @@
 import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
 import { MRJNewResultMessage } from '../dtos/job/messages/multi-run/new-result.dto';
 import { PCJNewResultMessage } from '../dtos/job/messages/proxy-check/new-result.dto';
+import { ProxyQuality } from '../enums/proxy-quality';
 import { ProxyType } from '../enums/proxy-type';
 import { ProxyWorkingStatus } from '../enums/proxy-working-status';
 
@@ -27,6 +28,9 @@ export function getMockedProxyCheckJobNewResultMessage(): PCJNewResultMessage {
     workingStatus: Math.floor(Math.random() * 2) === 1 ? ProxyWorkingStatus.Working : ProxyWorkingStatus.NotWorking,
     ping: Math.floor(Math.random() * 1000),
     country: countries[Math.floor(Math.random() * countries.length)],
+    quality: [ProxyQuality.Unknown, ProxyQuality.Transparent, ProxyQuality.Anonymous, ProxyQuality.Elite][
+      Math.floor(Math.random() * 4)
+    ],
   };
 }
 

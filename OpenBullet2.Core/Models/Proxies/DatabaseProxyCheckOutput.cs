@@ -49,6 +49,7 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
                 entity.Country = proxy.Country;
                 entity.LastChecked = proxy.LastChecked ?? default;
                 entity.Ping = proxy.Ping;
+                entity.Quality = proxy.Quality;
                 entity.Status = proxy.WorkingStatus;
 
                 await proxyRepo.UpdateAsync(entity);

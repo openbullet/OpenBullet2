@@ -143,6 +143,15 @@
                 label="Check only untested proxies" />
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                (onChange)="touched = true" ngDefaultControl
+                [(ngModel)]="options.useProxyJudge"
+                [binary]="true" inputId="useProxyJudge"
+                label="Use proxy judge for anonymity detection" />
+        </div>
+    </div>
     <div class="row mt-4 mb-2">
         <div class="col-12">
             <h5>Target Website</h5>

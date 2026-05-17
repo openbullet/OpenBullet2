@@ -53,6 +53,11 @@ public class ProxyDto
     public int Ping { get; set; }
 
     /// <summary>
+    /// The anonymity quality reported by a proxy judge.
+    /// </summary>
+    public ProxyQuality Quality { get; set; } = ProxyQuality.Unknown;
+
+    /// <summary>
     /// The last time the proxy was checked, if it was checked at all.
     /// </summary>
     public DateTime? LastChecked { get; set; }

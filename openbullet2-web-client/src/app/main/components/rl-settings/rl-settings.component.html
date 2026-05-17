@@ -100,6 +100,17 @@
                 placeholder="Mozilla/5.0 ..." />
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Proxy judge URLs</span>
+            <app-input-list key="proxyJudgeUrls"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(list)]="settings.generalSettings.proxyJudgeUrls"
+                placeholder="http://azenv.net/" />
+        </div>
+    </div>
     <div class="row mt-5">
         <div class="col-12">
             <h3>Proxies</h3>

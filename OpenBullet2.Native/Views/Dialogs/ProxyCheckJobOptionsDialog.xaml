@@ -82,6 +82,10 @@
                 Margin="5 5 0 0"
                 Content="Check only untested"
                 IsChecked="{Binding CheckOnlyUntested}" />
+            <CheckBox
+                Margin="5 5 0 0"
+                Content="Use proxy judge for anonymity detection"
+                IsChecked="{Binding UseProxyJudge}" />
             <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
                 <Label>Check on website</Label>
                 <ComboBox

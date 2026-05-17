@@ -25,6 +25,7 @@ public class ProxyCheckJobTests
         Assert.Null(job.ProxyOutput);
         Assert.Null(job.GeoProvider);
         Assert.Equal(TimeSpan.FromSeconds(10), job.Timeout);
+        Assert.True(job.UseProxyJudge);
     }
 
     [Fact]
@@ -57,6 +58,53 @@ public class ProxyCheckJobTests
         await job.ChangeBots(5);
 
         Assert.Equal(5, job.Bots);
+    }
+
+    [Fact]
+    public void AzenvProxyJudge_Transparent_WhenForwardedIpIsPresent()
+    {
+        var judge = new AzenvProxyJudge();
+        const string content = """
+            HTTP_X_FORWARDED_FOR = 198.51.100.10
+            HTTP_VIA = 1.1 proxy
+            REMOTE_ADDR = 203.0.113.5
+            """;
+
+        var success = judge.TryClassify(content, out var quality);
+
+        Assert.True(success);
+        Assert.Equal(ProxyQuality.Transparent, quality);
+    }
+
+    [Fact]
+    public void AzenvProxyJudge_Anonymous_WhenViaIsPresentWithoutIpLeak()
+    {
+        var judge = new AzenvProxyJudge();
+        const string content = """
+            HTTP_VIA = 1.1 proxy
+            REMOTE_ADDR = 203.0.113.5
+            """;
+
+        var success = judge.TryClassify(content, out var quality);
+
+        Assert.True(success);
+        Assert.Equal(ProxyQuality.Anonymous, quality);
+    }
+
+    [Fact]
+    public void AzenvProxyJudge_Elite_WhenOnlyRemoteAddrIsPresent()
+    {
+        var judge = new AzenvProxyJudge();
+        const string content = """
+            HTTP_HOST = azenv.net
+            REMOTE_ADDR = 203.0.113.5
+            REQUEST_METHOD = GET
+            """;
+
+        var success = judge.TryClassify(content, out var quality);
+
+        Assert.True(success);
+        Assert.Equal(ProxyQuality.Elite, quality);
     }
 
     private static ProxyCheckJob CreateJob()

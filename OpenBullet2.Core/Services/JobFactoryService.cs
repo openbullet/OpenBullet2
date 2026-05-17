@@ -135,6 +135,8 @@ public class JobFactoryService
             Url = options.Target.Url,
             SuccessKey = options.Target.SuccessKey,
             Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds),
+            UseProxyJudge = options.UseProxyJudge,
+            ProxyJudge = new AzenvProxyJudge(),
             GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb")
         };
 
