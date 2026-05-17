@@ -1,5 +1,6 @@
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Native.DTOs;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
@@ -24,6 +25,7 @@ namespace OpenBullet2.Native.Views.Pages;
 /// </summary>
 public partial class Configs : Page
 {
+    private readonly ILogger<Configs> logger;
     private readonly IUiFactory uiFactory;
     private readonly MainWindow mainWindow;
     private readonly DebuggerViewModel debuggerViewModel;
@@ -49,6 +51,7 @@ public partial class Configs : Page
     }
 
     public Configs(
+        ILogger<Configs> logger,
         IUiFactory uiFactory,
         MainWindow mainWindow,
         DebuggerViewModel debuggerViewModel,
@@ -57,6 +60,7 @@ public partial class Configs : Page
         VolatileSettingsService volatileSettings,
         ConfigsViewModel vm)
     {
+        this.logger = logger;
         this.uiFactory = uiFactory;
         this.mainWindow = mainWindow;
         this.debuggerViewModel = debuggerViewModel;
@@ -104,6 +108,7 @@ public partial class Configs : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to save selected config from Native configs page");
             Alert.Exception(ex);
         }
     }
@@ -134,6 +139,7 @@ public partial class Configs : Page
         catch (Exception ex)
         {
             // This happens on access denied
+            logger.LogError(ex, "Failed to open configs folder");
             Alert.Exception(ex);
         }
     }
@@ -217,6 +223,7 @@ public partial class Configs : Page
 
         if (HoveredItem.Config.IsRemote)
         {
+            logger.LogWarning("Attempted to edit remote config {ConfigId}", HoveredItem.Id);
             Alert.Error("Remote", "You cannot edit remote configs!");
             return;
         }
@@ -232,6 +239,7 @@ public partial class Configs : Page
         }
 
         vm.SelectedConfig = HoveredItem;
+        logger.LogInformation("Selected config {ConfigId} ({ConfigName}) for editing", HoveredItem.Id, HoveredItem.Name);
 
         if (obSettingsService.Settings.GeneralSettings.WarnDangerousConfig
             && HoveredItem.Config.HasCSharpCode())

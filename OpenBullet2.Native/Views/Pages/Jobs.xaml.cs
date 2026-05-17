@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
@@ -20,14 +21,21 @@ namespace OpenBullet2.Native.Views.Pages;
 /// </summary>
 public partial class Jobs : Page
 {
+    private readonly ILogger<Jobs> logger;
     private readonly IUiFactory uiFactory;
     private readonly MainWindow mainWindow;
     private readonly JobsViewModel vm;
     private readonly IServiceScopeFactory scopeFactory;
     private static readonly JsonSerializerSettings JsonSettings = new() { TypeNameHandling = TypeNameHandling.Auto };
 
-    public Jobs(IUiFactory uiFactory, MainWindow mainWindow, JobsViewModel vm, IServiceScopeFactory scopeFactory)
+    public Jobs(
+        ILogger<Jobs> logger,
+        IUiFactory uiFactory,
+        MainWindow mainWindow,
+        JobsViewModel vm,
+        IServiceScopeFactory scopeFactory)
     {
+        this.logger = logger;
         this.uiFactory = uiFactory;
         this.mainWindow = mainWindow;
         this.vm = vm;
@@ -48,6 +56,7 @@ public partial class Jobs : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to remove all jobs from Native jobs page");
             Alert.Exception(ex);
         }
     }
@@ -63,6 +72,7 @@ public partial class Jobs : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to edit job from Native jobs page");
             Alert.Exception(ex);
         }
     }
@@ -133,6 +143,7 @@ public partial class Jobs : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to remove job from Native jobs page");
             Alert.Exception(ex);
         }
     }

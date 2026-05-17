@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Jobs;
@@ -18,6 +19,7 @@ namespace OpenBullet2.Native.ViewModels;
 
 public class JobsViewModel : ViewModelBase
 {
+    private readonly ILogger<JobsViewModel> logger;
     private readonly JobManagerService jobManager;
     private readonly JobFactoryService jobFactory;
     private readonly IServiceScopeFactory scopeFactory;
@@ -34,8 +36,13 @@ public class JobsViewModel : ViewModelBase
         }
     }
 
-    public JobsViewModel(JobManagerService jobManager, JobFactoryService jobFactory, IServiceScopeFactory scopeFactory)
+    public JobsViewModel(
+        ILogger<JobsViewModel> logger,
+        JobManagerService jobManager,
+        JobFactoryService jobFactory,
+        IServiceScopeFactory scopeFactory)
     {
+        this.logger = logger;
         this.jobManager = jobManager;
         this.jobFactory = jobFactory;
         this.scopeFactory = scopeFactory;
@@ -81,6 +88,7 @@ public class JobsViewModel : ViewModelBase
         jobManager.AddJob(job);
         JobsCollection.Add(jobVM);
         SortCollection();
+        logger.LogInformation("Created Native job {JobId} of type {JobType}", job.Id, entity.JobType);
 
         return jobVM;
     }
@@ -91,6 +99,7 @@ public class JobsViewModel : ViewModelBase
 
         if (oldJob.Status != JobStatus.Idle)
         {
+            logger.LogWarning("Attempted to edit job {JobId} while it was {JobStatus}", oldJob.Id, oldJob.Status);
             throw new InvalidOperationException("Stop or abort the job before editing it.");
         }
 
@@ -106,6 +115,7 @@ public class JobsViewModel : ViewModelBase
         jobManager.AddJob(newJob);
 
         CreateCollection();
+        logger.LogInformation("Edited Native job {JobId} of type {JobType}", newJob.Id, entity.JobType);
 
         return JobsCollection.First(j => j.Id == newJob.Id);
     }
@@ -135,6 +145,7 @@ public class JobsViewModel : ViewModelBase
 
         JobsCollection.Add(jobVM);
         SortCollection();
+        logger.LogInformation("Cloned Native job {SourceJobType} into new job {JobId}", type, job.Id);
 
         return jobVM;
     }
@@ -145,6 +156,8 @@ public class JobsViewModel : ViewModelBase
 
         if (notIdleJobs.Any())
         {
+            logger.LogWarning("Attempted to remove all jobs while job {JobId} was {JobStatus}",
+                notIdleJobs.First().Id, notIdleJobs.First().Status);
             throw new Exception($"The job #{notIdleJobs.First().Id} is not idle, please stop/abort the job first!");
         }
 
@@ -153,12 +166,14 @@ public class JobsViewModel : ViewModelBase
         scope.ServiceProvider.GetRequiredService<IJobRepository>().Purge();
         jobManager.Clear();
         JobsCollection.Clear();
+        logger.LogInformation("Removed all Native jobs");
     }
 
     public async Task RemoveJobAsync(JobViewModel jobVM)
     {
         if (jobVM.Job.Status != JobStatus.Idle)
         {
+            logger.LogWarning("Attempted to remove job {JobId} while it was {JobStatus}", jobVM.Id, jobVM.Job.Status);
             throw new Exception("The job is not idle, please stop/abort the job first!");
         }
 
@@ -170,6 +185,7 @@ public class JobsViewModel : ViewModelBase
         jobManager.RemoveJob(jobVM.Job);
         JobsCollection.Remove(jobVM);
         SortCollection();
+        logger.LogInformation("Removed Native job {JobId}", jobVM.Id);
     }
 
     private async Task WithRepositoryAsync(Func<IJobRepository, Task> action)

@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Native.DTOs;
 using OpenBullet2.Native.Extensions;
@@ -25,6 +26,7 @@ namespace OpenBullet2.Native.Views.Pages;
 /// </summary>
 public partial class Proxies : Page
 {
+    private readonly ILogger<Proxies> logger;
     private readonly IUiFactory uiFactory;
     private readonly ProxiesViewModel vm;
     private GridViewColumnHeader? listViewSortCol;
@@ -32,8 +34,9 @@ public partial class Proxies : Page
 
     private IEnumerable<ProxyEntity> SelectedProxies => proxiesListView.SelectedItems.Cast<ProxyEntity>().ToList();
 
-    public Proxies(IUiFactory uiFactory, ProxiesViewModel vm)
+    public Proxies(ILogger<Proxies> logger, IUiFactory uiFactory, ProxiesViewModel vm)
     {
+        this.logger = logger;
         this.uiFactory = uiFactory;
         this.vm = vm;
         DataContext = vm;
@@ -70,6 +73,7 @@ public partial class Proxies : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to delete selected proxy group from Native proxies page");
             Alert.Exception(ex);
         }
     }
@@ -83,6 +87,7 @@ public partial class Proxies : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to delete not working proxies from Native proxies page");
             Alert.Exception(ex);
         }
     }
@@ -96,6 +101,7 @@ public partial class Proxies : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to delete untested proxies from Native proxies page");
             Alert.Exception(ex);
         }
     }
@@ -155,6 +161,7 @@ public partial class Proxies : Page
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to delete selected proxies from Native proxies page");
             Alert.Exception(ex);
         }
     }

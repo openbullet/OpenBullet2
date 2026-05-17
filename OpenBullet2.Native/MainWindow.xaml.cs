@@ -1,5 +1,6 @@
 using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
@@ -27,6 +28,7 @@ namespace OpenBullet2.Native;
 /// </summary>
 public partial class MainWindow : MetroWindow
 {
+    private readonly ILogger<MainWindow> logger;
     private readonly IUiFactory uiFactory;
     private readonly UpdateService updateService;
     private readonly MainWindowViewModel vm;
@@ -58,11 +60,13 @@ public partial class MainWindow : MetroWindow
     public Page? CurrentPage { get; private set; }
 
     public MainWindow(
+        ILogger<MainWindow> logger,
         IUiFactory uiFactory,
         MainWindowViewModel vm,
         UpdateService updateService,
         OpenBulletSettingsService obSettingsService)
     {
+        this.logger = logger;
         this.uiFactory = uiFactory;
         this.vm = vm;
         this.updateService = updateService;
@@ -105,14 +109,18 @@ public partial class MainWindow : MetroWindow
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         Loaded -= OnLoaded;
+        logger.LogDebug("Main window loaded");
 
         // Preload heavier pages after the window is fully constructed to avoid circular resolution
         // when those pages depend back on MainWindow.
         configsPage ??= uiFactory.Create<Configs>();
+        logger.LogDebug("Preloaded configs page");
     }
 
     public void NavigateTo(MainWindowPage page)
     {
+        logger.LogDebug("Navigating to Native page {Page}", page);
+
         // Needed to save the content of the LoliCode editor when changing page
         if (CurrentPage == configEditorPage)
         {
@@ -260,6 +268,8 @@ public partial class MainWindow : MetroWindow
 
     public void DisplayJob(JobViewModel jobVM)
     {
+        logger.LogDebug("Displaying job {JobId} in Native viewer", jobVM.Id);
+
         switch (jobVM)
         {
             case MultiRunJobViewModel mrj:
@@ -287,6 +297,7 @@ public partial class MainWindow : MetroWindow
 
     public void ShowToast(AlertType type, string title, string message)
     {
+        logger.LogDebug("Showing toast {AlertType} with title {Title}", type, title);
         Dispatcher.Invoke(() =>
         {
             toastTimer.Stop();
@@ -451,6 +462,7 @@ public partial class MainWindow : MetroWindow
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private readonly ILogger<MainWindowViewModel> logger;
     private readonly OpenBulletSettingsService obSettingsService;
     private readonly JobManagerService jobManagerService;
     private readonly ConfigService configService;
@@ -460,10 +472,12 @@ public class MainWindowViewModel : ViewModelBase
     public bool IsConfigSelected => Config != null;
 
     public MainWindowViewModel(
+        ILogger<MainWindowViewModel> logger,
         OpenBulletSettingsService obSettingsService,
         JobManagerService jobManagerService,
         ConfigService configService)
     {
+        this.logger = logger;
         this.obSettingsService = obSettingsService;
         this.jobManagerService = jobManagerService;
         this.configService = configService;
@@ -479,6 +493,8 @@ public class MainWindowViewModel : ViewModelBase
         // Check if the config was saved
         if (obSettingsService.Settings.GeneralSettings.WarnConfigNotSaved && Config != null && Config.HasUnsavedChanges())
         {
+            logger.LogInformation("Prompting before closing Native window because config {ConfigId} has unsaved changes",
+                Config.Id);
             e.Cancel = !Alert.Choice("Config not saved", $"The config you are editing ({Config.Metadata.Name}) has unsaved changes, are you sure you want to quit?");
         }
 
@@ -491,6 +507,8 @@ public class MainWindowViewModel : ViewModelBase
         // Check if there are running jobs
         if (jobManagerService.Jobs.Any(j => j.Status != JobStatus.Idle))
         {
+            logger.LogInformation("Prompting before closing Native window because {RunningJobs} job(s) are still running",
+                jobManagerService.Jobs.Count(j => j.Status != JobStatus.Idle));
             e.Cancel = !Alert.Choice("Job(s) running", "One or more jobs are still running, are you sure you want to quit?");
         }
     }

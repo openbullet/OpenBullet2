@@ -1,5 +1,6 @@
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Services;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
@@ -34,12 +35,13 @@ public partial class Monitor : Page
     public Monitor(
         IUiFactory uiFactory,
         MainWindow mainWindow,
+        ILogger<MonitorViewModel> logger,
         JobMonitorService jobMonitorService,
         JobManagerService jobManagerService)
     {
         this.uiFactory = uiFactory;
         this.mainWindow = mainWindow;
-        vm = new MonitorViewModel(jobMonitorService, jobManagerService);
+        vm = new MonitorViewModel(logger, jobMonitorService, jobManagerService);
         DataContext = vm;
         InitializeComponent();
     }
@@ -194,6 +196,7 @@ public partial class Monitor : Page
 
 public class MonitorViewModel : ViewModelBase
 {
+    private readonly ILogger<MonitorViewModel> logger;
     private readonly JobMonitorService jobMonitorService;
     private readonly JobManagerService jobManagerService;
     private readonly Timer timer;
@@ -214,8 +217,12 @@ public class MonitorViewModel : ViewModelBase
     public bool HasTriggeredActions => TriggeredActionsCollection.Count > 0;
     public bool HasNoTriggeredActions => !HasTriggeredActions;
 
-    public MonitorViewModel(JobMonitorService jobMonitorService, JobManagerService jobManagerService)
+    public MonitorViewModel(
+        ILogger<MonitorViewModel> logger,
+        JobMonitorService jobMonitorService,
+        JobManagerService jobManagerService)
     {
+        this.logger = logger;
         this.jobMonitorService = jobMonitorService;
         this.jobManagerService = jobManagerService;
         Reload();
@@ -227,6 +234,7 @@ public class MonitorViewModel : ViewModelBase
     {
         TriggeredActionsCollection = new ObservableCollection<TriggeredActionItemViewModel>(
             jobMonitorService.TriggeredActions.Select(a => new TriggeredActionItemViewModel(a, jobManagerService)));
+        logger.LogDebug("Reloaded {TriggeredActionCount} triggered action(s)", TriggeredActionsCollection.Count);
     }
 
     public void Create(TriggeredAction action)
@@ -234,6 +242,7 @@ public class MonitorViewModel : ViewModelBase
         jobMonitorService.TriggeredActions.Add(action);
         jobMonitorService.SaveStateIfChanged();
         Reload();
+        logger.LogInformation("Created triggered action {TriggeredActionId} for job {JobId}", action.Id, action.JobId);
     }
 
     public void Update(string originalId, TriggeredAction action)
@@ -248,6 +257,7 @@ public class MonitorViewModel : ViewModelBase
         jobMonitorService.TriggeredActions[index] = action;
         jobMonitorService.SaveStateIfChanged();
         Reload();
+        logger.LogInformation("Updated triggered action {TriggeredActionId} for job {JobId}", action.Id, action.JobId);
     }
 
     public void Delete(string id)
@@ -256,20 +266,25 @@ public class MonitorViewModel : ViewModelBase
         jobMonitorService.TriggeredActions.Remove(action);
         jobMonitorService.SaveStateIfChanged();
         Reload();
+        logger.LogInformation("Deleted triggered action {TriggeredActionId} for job {JobId}", action.Id, action.JobId);
     }
 
     public void Reset(string id)
     {
-        GetAction(id).Reset();
+        var action = GetAction(id);
+        action.Reset();
         jobMonitorService.SaveStateIfChanged();
         RefreshItems();
+        logger.LogInformation("Reset triggered action {TriggeredActionId}", action.Id);
     }
 
     public void SetActive(string id, bool active)
     {
-        GetAction(id).IsActive = active;
+        var action = GetAction(id);
+        action.IsActive = active;
         jobMonitorService.SaveStateIfChanged();
         RefreshItems();
+        logger.LogInformation("Set triggered action {TriggeredActionId} active state to {IsActive}", action.Id, active);
     }
 
     public Job? GetJob(int id) => jobManagerService.Jobs.FirstOrDefault(j => j.Id == id);

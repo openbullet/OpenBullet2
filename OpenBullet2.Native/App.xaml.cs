@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -26,9 +25,10 @@ using System.Windows;
 using System.Windows.Threading;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
-using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+using Serilog.Settings.Configuration;
+using Serilog.Sinks.File;
 
 namespace OpenBullet2.Native;
 
@@ -37,7 +37,7 @@ namespace OpenBullet2.Native;
 /// </summary>
 public partial class App : Application
 {
-    private const string LogsPath = "UserData/Logs/log-.txt";
+    private const string LogsDirectoryPath = "UserData/Logs";
     private const string NativeTestModeEnvironmentVariable = "OB2_NATIVE_TEST_MODE";
     private readonly IConfiguration config;
     public static IHost Host { get; private set; } = null!;
@@ -49,6 +49,7 @@ public partial class App : Application
 
         Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         Directory.CreateDirectory("UserData");
+        Directory.CreateDirectory(LogsDirectoryPath);
 
         config = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -60,7 +61,19 @@ public partial class App : Application
 
         ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(
+                config,
+                new ConfigurationReaderOptions(
+                    typeof(FileLoggerConfigurationExtensions).Assembly,
+                    typeof(LoggerEnrichmentConfigurationExtensions).Assembly,
+                    typeof(CompactJsonFormatter).Assembly))
+            .CreateLogger();
+
+        Log.Debug("Initializing Native host");
+
         Host = new HostBuilder()
+            .UseSerilog(Log.Logger, dispose: true)
             .ConfigureServices((_, services) =>
             {
                 services.AddSingleton(config);
@@ -76,26 +89,6 @@ public partial class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(LogsPath) ?? "UserData/Logs");
-
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .Enrich.FromLogContext()
-            .Enrich.WithExceptionDetails()
-            .WriteTo.File(new CompactJsonFormatter(), LogsPath,
-                rollingInterval: RollingInterval.Day,
-                rollOnFileSizeLimit: true,
-                fileSizeLimitBytes: 1_000_000)
-            .CreateLogger();
-
-        services.AddLogging(builder =>
-        {
-            builder.ClearProviders();
-            builder.AddSerilog(Log.Logger, dispose: true);
-        });
-
         // Windows and pages
         services.AddSingleton<IUiFactory, UiFactory>();
         services.AddSingleton<MainWindow>();
@@ -178,33 +171,43 @@ public partial class App : Application
     {
         try
         {
+            Log.Information("Starting Native host");
             await Host.StartAsync();
+            Log.Information("Native host started");
 
             if (Environment.GetEnvironmentVariable(NativeTestModeEnvironmentVariable) == "1")
             {
+                Log.Information("Native app started in test mode, skipping runtime initialization");
                 return;
             }
 
             using (var serviceScope = Host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                Log.Information("Applying database migrations");
                 context.Database.Migrate();
+                Log.Information("Database migrations completed");
             }
 
             var configService = Host.Services.GetRequiredService<ConfigService>();
+            Log.Information("Reloading configs");
             await configService.ReloadConfigsAsync();
+            Log.Information("Reloaded {ConfigCount} configs", configService.Configs.Count);
 
             AutocompletionProvider.Init(Host.Services.GetRequiredService<OpenBulletSettingsService>());
             Suggestions.Init(
                 Host.Services.GetRequiredService<DebuggerViewModel>(),
                 Host.Services.GetRequiredService<RuriLibSettingsService>(),
                 Host.Services.GetRequiredService<ConfigService>());
+            Log.Debug("Initialized Native providers and suggestions");
 
             _ = Host.Services.GetRequiredService<JobMonitorService>();
+            Log.Debug("Job monitor service initialized");
 
             var mainWindow = Host.Services.GetRequiredService<MainWindow>();
             mainWindow.NavigateTo(MainWindowPage.Home);
             mainWindow.Show();
+            Log.Debug("Main window displayed");
         }
         catch (Exception ex)
         {
@@ -215,7 +218,9 @@ public partial class App : Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
+        Log.Information("Stopping Native host");
         await Host.StopAsync();
+        Log.Information("Native host stopped");
         Host.Dispose();
         Log.CloseAndFlush();
         base.OnExit(e);
@@ -228,7 +233,7 @@ public partial class App : Application
     }
 
     private void OnTaskException(object? sender, UnobservedTaskExceptionEventArgs e) =>
-        e.SetObserved(); // Comment this line to close the app on task exception.
+        HandleUnobservedTaskException(e);
 
     // I decided to disable the code below since usually task exceptions
     // are not critical to the application.
@@ -258,5 +263,11 @@ public partial class App : Application
         Alert.Error("Unhandled exception", $"An unhandled exception was thrown, the application will try to continue running." +
             " A crash log was written next to the executable." +
             $" A few details about the exception: {ex.Message}", copyText);
+    }
+
+    private static void HandleUnobservedTaskException(UnobservedTaskExceptionEventArgs e)
+    {
+        Log.Warning(e.Exception, "Observed unhandled task exception");
+        e.SetObserved(); // Comment this line to close the app on task exception.
     }
 }

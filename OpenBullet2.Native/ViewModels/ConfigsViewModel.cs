@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.DTOs;
@@ -17,6 +18,7 @@ namespace OpenBullet2.Native.ViewModels;
 
 public class ConfigsViewModel : ViewModelBase
 {
+    private readonly ILogger<ConfigsViewModel> logger;
     private readonly ConfigService configService;
     private readonly IConfigRepository configRepo;
 
@@ -79,8 +81,12 @@ public class ConfigsViewModel : ViewModelBase
 
     public int Total => ConfigsCollection.Count;
 
-    public ConfigsViewModel(ConfigService configService, IConfigRepository configRepo)
+    public ConfigsViewModel(
+        ILogger<ConfigsViewModel> logger,
+        ConfigService configService,
+        IConfigRepository configRepo)
     {
+        this.logger = logger;
         this.configService = configService;
         configService.OnRemotesLoaded += (s, e) => CreateCollection();
 
@@ -103,6 +109,7 @@ public class ConfigsViewModel : ViewModelBase
         newConfig.Metadata.Name = dto.Name;
         newConfig.Metadata.Category = dto.Category;
         newConfig.Metadata.Author = dto.Author;
+        logger.LogInformation("Created config {ConfigId} at {FilePath}", newConfig.Id, filePath);
 
         var newConfigVM = new ConfigViewModel(newConfig);
         await Save(newConfigVM);
@@ -122,6 +129,7 @@ public class ConfigsViewModel : ViewModelBase
             SelectedConfig = null;
         }
 
+        logger.LogInformation("Deleting config {ConfigId} ({ConfigName})", vm.Id, vm.Name);
         configRepo.Delete(vm.Config);
         ConfigsCollection.Remove(vm);
     }
@@ -130,18 +138,22 @@ public class ConfigsViewModel : ViewModelBase
     {
         if (vm.IsRemote)
         {
+            logger.LogWarning("Attempted to save remote config {ConfigId}", vm.Id);
             throw new Exception("You cannot save remote configs");
         }
 
+        logger.LogInformation("Saving config {ConfigId} ({ConfigName})", vm.Id, vm.Name);
         return configRepo.SaveAsync(vm.Config);
     }
 
     public async Task RescanAsync()
     {
+        logger.LogInformation("Rescanning configs");
         SelectedConfig = null;
         HoveredConfig = null;
         await configService.ReloadConfigsAsync();
         CreateCollection();
+        logger.LogInformation("Rescanned configs, {ConfigCount} config(s) available", ConfigsCollection.Count);
     }
 
     public override void UpdateViewModel()
@@ -154,6 +166,7 @@ public class ConfigsViewModel : ViewModelBase
     {
         var viewModels = configService.Configs.Select(c => new ConfigViewModel(c));
         ConfigsCollection = new ObservableCollection<ConfigViewModel>(viewModels);
+        logger.LogDebug("Rebuilt configs collection with {ConfigCount} item(s)", ConfigsCollection.Count);
         Application.Current.Dispatcher.Invoke(() => HookFilters());
     }
 

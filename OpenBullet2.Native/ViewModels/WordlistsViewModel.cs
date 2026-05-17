@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using System;
@@ -13,6 +14,7 @@ namespace OpenBullet2.Native.ViewModels;
 
 public class WordlistsViewModel : ViewModelBase
 {
+    private readonly ILogger<WordlistsViewModel> logger;
     private readonly IServiceScopeFactory scopeFactory;
     private bool initialized;
 
@@ -42,8 +44,9 @@ public class WordlistsViewModel : ViewModelBase
         }
     }
 
-    public WordlistsViewModel(IServiceScopeFactory scopeFactory)
+    public WordlistsViewModel(ILogger<WordlistsViewModel> logger, IServiceScopeFactory scopeFactory)
     {
+        this.logger = logger;
         this.scopeFactory = scopeFactory;
         WordlistsCollection = [];
     }
@@ -73,10 +76,12 @@ public class WordlistsViewModel : ViewModelBase
     {
         if (WordlistsCollection.Any(w => w.FileName == wordlist.FileName))
         {
+            logger.LogWarning("Attempted to add duplicate wordlist {FileName}", wordlist.FileName);
             throw new Exception($"Wordlist already present: {wordlist.FileName}");
         }
 
         WordlistsCollection.Add(wordlist);
+        logger.LogInformation("Added wordlist {WordlistName} from {FileName}", wordlist.Name, wordlist.FileName);
         return WithRepositoryAsync(repo => repo.AddAsync(wordlist));
     }
 
@@ -85,15 +90,21 @@ public class WordlistsViewModel : ViewModelBase
         var items = await WithRepositoryAsync(repo => repo.GetAll().ToListAsync());
         WordlistsCollection = new ObservableCollection<WordlistEntity>(items);
         HookFilters();
+        logger.LogDebug("Loaded {WordlistCount} wordlists", WordlistsCollection.Count);
     }
 
-    public async Task UpdateAsync(WordlistEntity wordlist) => await WithRepositoryAsync(repo => repo.UpdateAsync(wordlist));
+    public async Task UpdateAsync(WordlistEntity wordlist)
+    {
+        await WithRepositoryAsync(repo => repo.UpdateAsync(wordlist));
+        logger.LogInformation("Updated wordlist {WordlistId} ({WordlistName})", wordlist.Id, wordlist.Name);
+    }
 
     public async Task DeleteAsync(WordlistEntity wordlist)
     {
         WordlistsCollection.Remove(wordlist);
         await WithRepositoryAsync(repo => repo.DeleteAsync(wordlist, false));
         OnPropertyChanged(nameof(Total));
+        logger.LogInformation("Deleted wordlist reference {WordlistId} ({WordlistName})", wordlist.Id, wordlist.Name);
     }
 
     public void DeleteAll()
@@ -102,6 +113,7 @@ public class WordlistsViewModel : ViewModelBase
         using var scope = scopeFactory.CreateScope();
         scope.ServiceProvider.GetRequiredService<IWordlistRepository>().Purge();
         OnPropertyChanged(nameof(Total));
+        logger.LogInformation("Deleted all wordlist references from the Native client");
     }
 
     public async Task<int> DeleteNotFoundAsync()
@@ -120,6 +132,7 @@ public class WordlistsViewModel : ViewModelBase
             }
         }
 
+        logger.LogInformation("Deleted {DeletedCount} unresolved wordlist reference(s)", deleted);
         return deleted;
     }
 

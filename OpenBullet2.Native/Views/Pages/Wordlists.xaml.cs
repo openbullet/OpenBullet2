@@ -1,4 +1,5 @@
 using OpenBullet2.Core.Entities;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
@@ -22,6 +23,7 @@ namespace OpenBullet2.Native.Views.Pages;
 /// </summary>
 public partial class Wordlists : Page
 {
+    private readonly ILogger<Wordlists> logger;
     private readonly IUiFactory uiFactory;
     private readonly WordlistsViewModel vm;
     private readonly EnvironmentSettings env;
@@ -31,8 +33,14 @@ public partial class Wordlists : Page
 
     private IEnumerable<WordlistEntity> SelectedWordlists => wordlistListView.SelectedItems.Cast<WordlistEntity>().ToList();
 
-    public Wordlists(IUiFactory uiFactory, WordlistsViewModel vm, MainWindow window, RuriLibSettingsService rlSettingsService)
+    public Wordlists(
+        ILogger<Wordlists> logger,
+        IUiFactory uiFactory,
+        WordlistsViewModel vm,
+        MainWindow window,
+        RuriLibSettingsService rlSettingsService)
     {
+        this.logger = logger;
         this.uiFactory = uiFactory;
         this.vm = vm;
         this.window = window;
@@ -143,7 +151,7 @@ public partial class Wordlists : Page
                 }
                 catch
                 {
-
+                    logger.LogWarning("Failed to import dropped wordlist file {FileName}", file);
                 }
             }
         }
