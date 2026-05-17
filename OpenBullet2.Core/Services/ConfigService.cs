@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Scripting.Utils;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Repositories;
@@ -19,10 +21,11 @@ namespace OpenBullet2.Core.Services;
 /// <summary>
 /// Manages the list of available configs.
 /// </summary>
-public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsService openBulletSettingsService)
+public class ConfigService
 {
     private readonly object configsLock = new();
     private int reloadVersion;
+    private readonly ILogger<ConfigService> logger;
 
     /// <summary>
     /// The list of available configs.
@@ -40,8 +43,18 @@ public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsServi
     public event EventHandler? OnRemotesLoaded;
 
     private Config selectedConfig = null!;
-    private readonly IConfigRepository configRepo = configRepo;
-    private readonly OpenBulletSettingsService openBulletSettingsService = openBulletSettingsService;
+    private readonly IConfigRepository configRepo;
+    private readonly OpenBulletSettingsService openBulletSettingsService;
+
+    public ConfigService(
+        IConfigRepository configRepo,
+        OpenBulletSettingsService openBulletSettingsService,
+        ILogger<ConfigService>? logger = null)
+    {
+        this.configRepo = configRepo;
+        this.openBulletSettingsService = openBulletSettingsService;
+        this.logger = logger ?? NullLogger<ConfigService>.Instance;
+    }
 
     /// <summary>
     /// The currently selected config.
@@ -68,6 +81,7 @@ public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsServi
     public async Task ReloadConfigsAsync(CancellationToken cancellationToken)
     {
         var currentReloadVersion = Interlocked.Increment(ref reloadVersion);
+        logger.LogDebug("Reloading configs using reload version {ReloadVersion}", currentReloadVersion);
 
         // Load from the main repository
         var localConfigs = (await configRepo.GetAllAsync()).ToList();
@@ -133,16 +147,17 @@ public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsServi
                             remoteConfigs.Add(config);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        logger.LogDebug(ex, "Skipped invalid remote config entry {EntryName} from endpoint {EndpointUrl}",
+                            entry.Name, endpoint.Url);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[{endpoint.Url}] Failed to pull configs from endpoint: {ex.Message}");
+                logger.LogWarning(ex, "Failed to pull configs from remote endpoint {EndpointUrl}", endpoint.Url);
             }
         });
 
@@ -156,6 +171,8 @@ public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsServi
             return;
         }
 
+        logger.LogDebug("Loaded {RemoteConfigCount} remote config(s) for reload version {ReloadVersion}",
+            remoteConfigs.Count, currentReloadVersion);
         OnRemotesLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -172,6 +189,8 @@ public class ConfigService(IConfigRepository configRepo, OpenBulletSettingsServi
             selectedConfig = null!;
         }
 
+        logger.LogDebug("Published {LocalConfigCount} local config(s) for reload version {ReloadVersion}",
+            localConfigs.Count, currentReloadVersion);
         OnConfigSelected?.Invoke(this, selectedConfig);
         return true;
     }

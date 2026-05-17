@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Data;
@@ -18,11 +20,16 @@ public class DataPoolFactoryService
 {
     private readonly RuriLibSettingsService _ruriLibSettings;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<DataPoolFactoryService> _logger;
 
-    public DataPoolFactoryService(IServiceScopeFactory scopeFactory, RuriLibSettingsService ruriLibSettings)
+    public DataPoolFactoryService(
+        IServiceScopeFactory scopeFactory,
+        RuriLibSettingsService ruriLibSettings,
+        ILogger<DataPoolFactoryService>? logger = null)
     {
         _scopeFactory = scopeFactory;
         _ruriLibSettings = ruriLibSettings;
+        _logger = logger ?? NullLogger<DataPoolFactoryService>.Instance;
     }
 
     /// <summary>
@@ -44,7 +51,8 @@ public class DataPoolFactoryService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Exception while loading data pool. {ex.Message}");
+            _logger.LogWarning(ex, "Failed to load data pool from options type {OptionsType}, falling back to InfiniteDataPool",
+                options.GetType().Name);
             return new InfiniteDataPool();
         }
     }

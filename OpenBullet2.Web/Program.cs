@@ -156,7 +156,8 @@ builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetRequiredService<RuriLibSettingsService>(),
-        $"{Globals.UserDataFolder}/Configs"));
+        $"{Globals.UserDataFolder}/Configs",
+        service.GetRequiredService<ILogger<DiskConfigRepository>>()));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),

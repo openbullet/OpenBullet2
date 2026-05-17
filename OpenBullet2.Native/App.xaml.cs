@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -107,7 +108,8 @@ public partial class App : Application
         services.AddScoped<IRecordRepository, DbRecordRepository>();
         services.AddSingleton<IConfigRepository>(service =>
             new DiskConfigRepository(service.GetRequiredService<RuriLibSettingsService>(),
-            "UserData/Configs"));
+            "UserData/Configs",
+            service.GetRequiredService<ILogger<DiskConfigRepository>>()));
         services.AddScoped<IWordlistRepository>(service =>
             new HybridWordlistRepository(service.GetRequiredService<ApplicationDbContext>(),
             "UserData/Wordlists"));

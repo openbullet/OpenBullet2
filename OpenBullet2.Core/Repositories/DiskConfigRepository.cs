@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using RuriLib.Models.Configs;
 using RuriLib.Helpers;
 using System.Collections.Generic;
@@ -19,12 +21,17 @@ namespace OpenBullet2.Core.Repositories;
 public class DiskConfigRepository : IConfigRepository
 {
     private readonly RuriLibSettingsService _rlSettings;
+    private readonly ILogger<DiskConfigRepository> _logger;
 
     private string BaseFolder { get; init; }
 
-    public DiskConfigRepository(RuriLibSettingsService rlSettings, string baseFolder)
+    public DiskConfigRepository(
+        RuriLibSettingsService rlSettings,
+        string baseFolder,
+        ILogger<DiskConfigRepository>? logger = null)
     {
         _rlSettings = rlSettings;
+        _logger = logger ?? NullLogger<DiskConfigRepository>.Instance;
         BaseFolder = baseFolder;
         Directory.CreateDirectory(baseFolder);
     }
@@ -41,11 +48,11 @@ public class DiskConfigRepository : IConfigRepository
                 var converted = ConfigConverter.Convert(File.ReadAllText(file), id);
                 await SaveAsync(converted);
                 File.Delete(file);
-                Console.WriteLine($"Converted legacy .loli config ({file}) to the new .opk format");
+                _logger.LogInformation("Converted legacy .loli config {ConfigFile} to the new .opk format", file);
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine($"Could not convert legacy .loli config ({file}) to the new .opk format");
+                _logger.LogWarning(ex, "Could not convert legacy .loli config {ConfigFile} to the new .opk format", file);
             }
         }
 
@@ -58,7 +65,7 @@ public class DiskConfigRepository : IConfigRepository
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not unpack {file} properly: {ex.Message}");
+                    _logger.LogWarning(ex, "Could not unpack config file {ConfigFile}", file);
                     return null;
                 }
             });
@@ -165,9 +172,9 @@ public class DiskConfigRepository : IConfigRepository
                     .Distinct()
                     .ToList();
             }
-            catch
+            catch (Exception ex)
             {
-                // Don't do anything, it's not the end of the world if we don't write some metadata ^_^
+                _logger.LogDebug(ex, "Could not derive plugin metadata for config {ConfigId}", config.Id);
             }
         }
 

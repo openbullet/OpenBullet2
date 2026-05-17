@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -29,9 +31,14 @@ public class JobManagerService : IDisposable
     private readonly SemaphoreSlim _jobSemaphore = new(1, 1);
     private readonly SemaphoreSlim _recordSemaphore = new(1, 1);
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<JobManagerService> _logger;
 
-    public JobManagerService(IServiceScopeFactory scopeFactory, JobFactoryService jobFactory)
+    public JobManagerService(
+        IServiceScopeFactory scopeFactory,
+        JobFactoryService jobFactory,
+        ILogger<JobManagerService>? logger = null)
     {
+        _logger = logger ?? NullLogger<JobManagerService>.Instance;
         using var scope = scopeFactory.CreateScope();
         var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
 
@@ -70,7 +77,7 @@ public class JobManagerService : IDisposable
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Skipped restoring job {entity.Id}: {ex.Message}");
+                _logger.LogWarning(ex, "Skipped restoring job {JobId}", entity.Id);
             }
         }
 
@@ -80,6 +87,7 @@ public class JobManagerService : IDisposable
     public void AddJob(Job job)
     {
         _jobs.Add(job);
+        _logger.LogDebug("Added job {JobId} of type {JobType} to JobManagerService", job.Id, job.GetType().Name);
 
         if (job is MultiRunJob mrj)
         {
@@ -100,10 +108,12 @@ public class JobManagerService : IDisposable
         {
             job.Dispose();
         }
-        catch
+        catch (Exception ex)
         {
-            // ignored
+            _logger.LogDebug(ex, "Failed to dispose removed job {JobId}", job.Id);
         }
+
+        _logger.LogDebug("Removed job {JobId} of type {JobType} from JobManagerService", job.Id, job.GetType().Name);
     }
 
     public void Clear()
@@ -162,9 +172,9 @@ public class JobManagerService : IDisposable
                 await recordRepo.UpdateAsync(record);
             }
         }
-        catch
+        catch (Exception ex)
         {
-
+            _logger.LogDebug(ex, "Failed to save record for multirun job {JobId}", job.Id);
         }
         finally
         {
@@ -196,7 +206,8 @@ public class JobManagerService : IDisposable
 
             if (entity == null || entity.JobOptions == null)
             {
-                Console.WriteLine("Skipped job options save because Job (or JobOptions) was null");
+                _logger.LogDebug("Skipped job options save for job {JobId} because the entity or job options were null",
+                    job.Id);
                 return;
             }
 
@@ -205,20 +216,20 @@ public class JobManagerService : IDisposable
             var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, settings);
             if (wrapper?.Options is not MultiRunJobOptions options)
             {
-                Console.WriteLine("Skipped job options save because deserialization failed");
+                _logger.LogDebug("Skipped job options save for job {JobId} because deserialization failed", job.Id);
                 return;
             }
 
             // Check if it's valid
             if (string.IsNullOrEmpty(options.ConfigId))
             {
-                Console.WriteLine("Skipped job options save because ConfigId was null");
+                _logger.LogDebug("Skipped job options save for job {JobId} because ConfigId was null", job.Id);
                 return;
             }
 
             if (options.DataPool is WordlistDataPoolOptions x && x.WordlistId == -1)
             {
-                Console.WriteLine("Skipped job options save because WordlistId was -1");
+                _logger.LogDebug("Skipped job options save for job {JobId} because WordlistId was -1", job.Id);
                 return;
             }
 
@@ -236,9 +247,9 @@ public class JobManagerService : IDisposable
             // Update the job
             await jobRepo.UpdateAsync(entity);
         }
-        catch
+        catch (Exception ex)
         {
-
+            _logger.LogDebug(ex, "Failed to save multirun job options for job {JobId}", job.Id);
         }
         finally
         {
@@ -258,9 +269,9 @@ public class JobManagerService : IDisposable
                 mrj.OnTimerTick -= SaveMultiRunJobOptionsAsync;
                 mrj.OnBotsChanged -= SaveMultiRunJobOptionsAsync;
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.LogDebug(ex, "Failed to unbind events for job {JobId}", mrj.Id);
             }
         }
     }
