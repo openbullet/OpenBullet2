@@ -10,13 +10,15 @@ namespace OpenBullet2.Web.Services;
 /// <summary>
 /// Service that monitors the system's performance.
 /// </summary>
-public class PerformanceMonitorService : IHostedService
+public sealed class PerformanceMonitorService : IHostedService, IDisposable
 {
     private readonly List<string> _connections = new();
+    private readonly Process _currentProcess = Process.GetCurrentProcess();
     private readonly IHubContext<SystemPerformanceHub> _hub;
     private readonly ILogger<PerformanceMonitorService> _logger;
     private readonly SemaphoreSlim _semaphore = new(1);
     private CancellationTokenSource _cts = new();
+    private bool _disposed;
 
     /// <summary></summary>
     public PerformanceMonitorService(ILogger<PerformanceMonitorService> logger,
@@ -53,6 +55,26 @@ public class PerformanceMonitorService : IHostedService
         _cts.Cancel();
 
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed || !disposing)
+        {
+            return;
+        }
+
+        _cts.Dispose();
+        _semaphore.Dispose();
+        _currentProcess.Dispose();
+        _disposed = true;
     }
 
     /// <summary>
@@ -95,8 +117,9 @@ public class PerformanceMonitorService : IHostedService
 
         do
         {
-            var memory = Process.GetCurrentProcess().WorkingSet64;
-            var cpu = await ReadCpuUsageAsync(cancellationToken);
+            _currentProcess.Refresh();
+            var memory = _currentProcess.WorkingSet64;
+            var cpu = await ReadCpuUsageAsync(_currentProcess, cancellationToken);
             var (upload, download) = await ReadNetworkUsage(cancellationToken);
 
             var metrics = new PerformanceMetrics
@@ -123,17 +146,19 @@ public class PerformanceMonitorService : IHostedService
         } while (await timer.WaitForNextTickAsync(cancellationToken));
     }
 
-    private static async Task<double> ReadCpuUsageAsync(CancellationToken cancellationToken)
+    private static async Task<double> ReadCpuUsageAsync(Process currentProcess, CancellationToken cancellationToken)
     {
         var sw = new Stopwatch();
 
         sw.Start();
-        var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+        currentProcess.Refresh();
+        var startCpuUsage = currentProcess.TotalProcessorTime;
 
         await Task.Delay(100, cancellationToken);
 
         sw.Stop();
-        var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+        currentProcess.Refresh();
+        var endCpuUsage = currentProcess.TotalProcessorTime;
 
         var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
         var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * sw.ElapsedMilliseconds);
