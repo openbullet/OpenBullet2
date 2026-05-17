@@ -46,7 +46,7 @@ public class ProxyClientTests
         var proxy = new HttpProxyClient(settings);
 
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        await Assert.ThrowsAsync<ProxyException>(async () => await proxy.ConnectAsync("example.com", 80, null, cts.Token));
+        await Assert.ThrowsAsync<BadProxyException>(async () => await proxy.ConnectAsync("example.com", 80, null, cts.Token));
     }
 
     private static async Task<string> GetResponseAsync(TcpClient client, string request,

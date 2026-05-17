@@ -155,6 +155,7 @@ internal static class WebMappingMethods
             ProxyBanTimeSeconds = dto.ProxyBanTimeSeconds,
             MarkAsToCheckOnAbort = dto.MarkAsToCheckOnAbort,
             NeverBanProxies = dto.NeverBanProxies,
+            NeverMarkProxiesAsBad = dto.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = dto.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = dto.PeriodicReloadIntervalSeconds,
             DataPool = PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
@@ -180,6 +181,7 @@ internal static class WebMappingMethods
             ProxyBanTimeSeconds = dto.ProxyBanTimeSeconds,
             MarkAsToCheckOnAbort = dto.MarkAsToCheckOnAbort,
             NeverBanProxies = dto.NeverBanProxies,
+            NeverMarkProxiesAsBad = dto.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = dto.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = dto.PeriodicReloadIntervalSeconds,
             DataPool = PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
@@ -217,6 +219,7 @@ internal static class WebMappingMethods
             ProxyBanTimeSeconds = options.ProxyBanTimeSeconds,
             MarkAsToCheckOnAbort = options.MarkAsToCheckOnAbort,
             NeverBanProxies = options.NeverBanProxies,
+            NeverMarkProxiesAsBad = options.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = options.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = options.PeriodicReloadIntervalSeconds,
             DataPool = PolyMapper.MapFrom(options.DataPool, config)!,

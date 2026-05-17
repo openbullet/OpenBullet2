@@ -70,7 +70,7 @@ public class ProxyPool : IDisposable
     }
 
     /// <summary>
-    /// Sets all the BANNED and BAD proxies status to AVAILABLE and resets their Uses.
+    /// Sets all the BANNED proxies status to AVAILABLE and resets their Uses.
     /// </summary>
     /// <param name="minimumBanTime">The minimum ban duration that must have elapsed before a proxy can be unbanned.</param>
     public void UnbanAll(TimeSpan minimumBanTime)
@@ -80,7 +80,7 @@ public class ProxyPool : IDisposable
         {
             proxies.Where(p => now > p.LastBanned + minimumBanTime).ToList().ForEach(p =>
             {
-                if (p.ProxyStatus is ProxyStatus.Banned or ProxyStatus.Bad)
+                if (p.ProxyStatus == ProxyStatus.Banned)
                 {
                     p.ProxyStatus = ProxyStatus.Available;
                     p.BeingUsedBy = 0;
@@ -159,6 +159,14 @@ public class ProxyPool : IDisposable
     /// <param name="proxy">The proxy to release.</param>
     /// <param name="ban">Whether the proxy should be marked as banned.</param>
     public void ReleaseProxy(Proxy proxy, bool ban = false)
+        => ReleaseProxy(proxy, ban ? ProxyStatus.Banned : ProxyStatus.Available);
+
+    /// <summary>
+    /// Releases a proxy that was being used and assigns its resulting status.
+    /// </summary>
+    /// <param name="proxy">The proxy to release.</param>
+    /// <param name="status">The status to assign after the proxy is released.</param>
+    public void ReleaseProxy(Proxy proxy, ProxyStatus status)
     {
         ArgumentNullException.ThrowIfNull(proxy);
 
@@ -167,14 +175,19 @@ public class ProxyPool : IDisposable
             proxy.TotalUses++;
             proxy.BeingUsedBy--;
 
-            if (ban)
+            if (status == ProxyStatus.Busy)
+            {
+                throw new ArgumentException("Cannot release a proxy as busy", nameof(status));
+            }
+
+            if (status == ProxyStatus.Banned)
             {
                 proxy.ProxyStatus = ProxyStatus.Banned;
                 proxy.LastBanned = DateTime.Now;
             }
             else
             {
-                proxy.ProxyStatus = ProxyStatus.Available;
+                proxy.ProxyStatus = status;
             }
         }
     }

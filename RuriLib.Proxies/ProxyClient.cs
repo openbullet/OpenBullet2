@@ -68,7 +68,9 @@ public abstract class ProxyClient
 
             if (ex is SocketException or SecurityException)
             {
-                throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}", ex);
+                throw this is NoProxyClient
+                    ? new ProxyException("Failed to connect to server", ex)
+                    : new BadProxyException("Failed to connect to proxy-server", ex);
             }
 
             throw;
@@ -135,9 +137,16 @@ public abstract class ProxyClient
         }
         catch (Exception ex)
         {
+            if (this is not NoProxyClient && ex is ProxyException)
+            {
+                throw new BadProxyException("Failed to connect to proxy-server", ex);
+            }
+
             if (ex is SocketException or SecurityException)
             {
-                throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}", ex);
+                throw this is NoProxyClient
+                    ? new ProxyException("Failed to connect to server", ex)
+                    : new BadProxyException("Failed to connect to proxy-server", ex);
             }
 
             throw;

@@ -2,7 +2,10 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
+using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies.ProxySources;
 using RuriLib.Logging;
+using RuriLib.Proxies.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +19,7 @@ namespace RuriLib.Tests.Models.Jobs;
 public class MultiRunJobTests
 {
     private static CancellationToken TestCancellationToken => TestContext.Current.CancellationToken;
+    private static readonly AsyncLocal<CancellationTokenSource?> currentWorkerCancellationSource = new();
 
     [Fact]
     public void Defaults_AreSafe()
@@ -134,6 +138,113 @@ public class MultiRunJobTests
     }
 
     [Fact]
+    public async Task WorkFunction_WhenBadProxyExceptionIsThrown_MarksProxyAsBad()
+    {
+        var settings = CreateSettingsService();
+        var proxy = new Proxy("127.0.0.1", 8000);
+        var job = new MultiRunJob(settings, CreatePluginRepository());
+        var pool = new ProxyPool([new ListProxySource([proxy])]);
+        await pool.ReloadAllAsync(false, TestCancellationToken);
+
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        currentWorkerCancellationSource.Value = cts;
+
+        try
+        {
+            var input = new MultiRunInput
+            {
+                Job = job,
+                ProxyPool = pool,
+                BotData = new global::RuriLib.Models.Bots.BotData(
+                    new global::RuriLib.Models.Bots.Providers(settings),
+                    configSettings,
+                    new BotLogger(),
+                    new DataLine("data", settings.Environment.WordlistTypes[0]),
+                    null,
+                    useProxy: true)
+                {
+                    CancellationToken = cts.Token
+                },
+                Globals = new System.Dynamic.ExpandoObject(),
+                IsDLL = true,
+                DLLMethod = typeof(MultiRunJobTests).GetMethod(nameof(ThrowBadProxyAndCancelAsync),
+                    BindingFlags.Static | BindingFlags.NonPublic)
+            };
+
+            var workFunction = (Func<MultiRunInput, CancellationToken, Task<CheckResult>>)typeof(MultiRunJob)
+                .GetField("workFunction", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .GetValue(job)!;
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() => workFunction(input, cts.Token));
+            Assert.Equal(ProxyStatus.Bad, proxy.ProxyStatus);
+        }
+        finally
+        {
+            currentWorkerCancellationSource.Value = null;
+            cts.Dispose();
+            pool.Dispose();
+        }
+    }
+
+    [Fact]
+    public async Task WorkFunction_WhenBadProxyExceptionIsThrown_AndNeverMarkProxiesAsBad_BansProxy()
+    {
+        var settings = CreateSettingsService();
+        var proxy = new Proxy("127.0.0.1", 8000);
+        var job = new MultiRunJob(settings, CreatePluginRepository())
+        {
+            NeverMarkProxiesAsBad = true
+        };
+        var pool = new ProxyPool([new ListProxySource([proxy])]);
+        await pool.ReloadAllAsync(false, TestCancellationToken);
+
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        currentWorkerCancellationSource.Value = cts;
+
+        try
+        {
+            var input = new MultiRunInput
+            {
+                Job = job,
+                ProxyPool = pool,
+                BotData = new global::RuriLib.Models.Bots.BotData(
+                    new global::RuriLib.Models.Bots.Providers(settings),
+                    configSettings,
+                    new BotLogger(),
+                    new DataLine("data", settings.Environment.WordlistTypes[0]),
+                    null,
+                    useProxy: true)
+                {
+                    CancellationToken = cts.Token
+                },
+                Globals = new System.Dynamic.ExpandoObject(),
+                IsDLL = true,
+                DLLMethod = typeof(MultiRunJobTests).GetMethod(nameof(ThrowBadProxyAndCancelAsync),
+                    BindingFlags.Static | BindingFlags.NonPublic)
+            };
+
+            var workFunction = (Func<MultiRunInput, CancellationToken, Task<CheckResult>>)typeof(MultiRunJob)
+                .GetField("workFunction", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .GetValue(job)!;
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() => workFunction(input, cts.Token));
+            Assert.Equal(ProxyStatus.Banned, proxy.ProxyStatus);
+        }
+        finally
+        {
+            currentWorkerCancellationSource.Value = null;
+            cts.Dispose();
+            pool.Dispose();
+        }
+    }
+
+    [Fact]
     public void ResetStats_AlsoResetsInvalidCount()
     {
         var job = CreateJob();
@@ -247,11 +358,51 @@ public class MultiRunJobTests
     private static global::RuriLib.Services.PluginRepository CreatePluginRepository()
         => new(Path.Combine(Path.GetTempPath(), $"ob2-multirun-plugins-{Guid.NewGuid():N}"));
 
+    private static async Task ThrowBadProxyAndCancelAsync(global::RuriLib.Models.Bots.BotData data,
+        dynamic input, dynamic globals, Dictionary<string, object> outputVariables, CancellationToken cancellationToken)
+    {
+        if (currentWorkerCancellationSource.Value is not null)
+        {
+            await currentWorkerCancellationSource.Value.CancelAsync();
+        }
+
+        throw new BadProxyException("bad proxy");
+    }
+
     private static async Task WaitUntilIdleAsync(MultiRunJob job)
     {
-        for (var i = 0; i < 50 && job.Status != JobStatus.Idle; i++)
+        if (job.Status == JobStatus.Idle)
         {
-            await Task.Delay(20, TestCancellationToken);
+            return;
+        }
+
+        var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        void OnStatusChanged(object? _, JobStatus status)
+        {
+            if (status == JobStatus.Idle)
+            {
+                tcs.TrySetResult();
+            }
+        }
+
+        job.OnStatusChanged += OnStatusChanged;
+
+        if (job.Status == JobStatus.Idle)
+        {
+            job.OnStatusChanged -= OnStatusChanged;
+            return;
+        }
+
+        using var registration = TestCancellationToken.Register(() => tcs.TrySetCanceled(TestCancellationToken));
+
+        try
+        {
+            await tcs.Task;
+        }
+        finally
+        {
+            job.OnStatusChanged -= OnStatusChanged;
         }
 
         Assert.Equal(JobStatus.Idle, job.Status);

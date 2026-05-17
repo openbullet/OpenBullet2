@@ -97,6 +97,7 @@ public class JobFactoryService
             ShuffleProxies = options.ShuffleProxies,
             NoValidProxyBehaviour = options.NoValidProxyBehaviour,
             NeverBanProxies = options.NeverBanProxies,
+            NeverMarkProxiesAsBad = options.NeverMarkProxiesAsBad,
             MarkAsToCheckOnAbort = options.MarkAsToCheckOnAbort,
             ProxyBanTime = TimeSpan.FromSeconds(options.ProxyBanTimeSeconds),
             ConcurrentProxyMode = options.ConcurrentProxyMode,

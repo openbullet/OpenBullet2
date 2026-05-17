@@ -17,6 +17,7 @@ public class JobOptionsFactoryTests
         var source = Assert.Single(options.ProxySources);
         var groupSource = Assert.IsType<GroupProxySourceOptions>(source);
         Assert.Equal(-1, groupSource.GroupId);
+        Assert.False(options.NeverMarkProxiesAsBad);
     }
 
     [Fact]

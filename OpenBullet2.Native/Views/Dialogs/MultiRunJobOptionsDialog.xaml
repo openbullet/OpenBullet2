@@ -147,6 +147,10 @@
                 IsChecked="{Binding NeverBanProxies}" />
                         <CheckBox
                 Margin="5 5 0 0"
+                Content="Never mark proxies as bad"
+                IsChecked="{Binding NeverMarkProxiesAsBad}" />
+                        <CheckBox
+                Margin="5 5 0 0"
                 Content="Concurrent mode (tick when using rotating proxy services)"
                 IsChecked="{Binding ConcurrentProxyMode}" />
                         <StackPanel Orientation="Horizontal" Margin="0 5 0 0">

@@ -79,7 +79,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
 
             if (ex is IOException or SocketException)
             {
-                throw new ProxyException("Error while working with proxy", ex);
+                throw new BadProxyException("Error while working with proxy", ex);
             }
 
             throw;
@@ -171,7 +171,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
 
         if (reply != CommandReplySucceeded)
         {
-            throw new ProxyException("Unable to authenticate proxy-server");
+            throw new BadProxyException("Unable to authenticate proxy-server");
         }
     }
 
@@ -213,7 +213,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
             AddressTypeIPV4 => 4,
             AddressTypeIPV6 => 16,
             AddressTypeDomainName => await ReadDomainLengthAsync(nStream, cancellationToken).ConfigureAwait(false),
-            _ => throw new ProxyException("The proxy server did not respond correctly")
+            _ => throw new BadProxyException("The proxy server did not respond correctly")
         };
 
         var addressAndPort = new byte[addressLength + 2];
@@ -238,7 +238,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
         {
             AddressFamily.InterNetwork => AddressTypeIPV4,
             AddressFamily.InterNetworkV6 => AddressTypeIPV6,
-            _ => throw new ProxyException($"Not supported address type {host}")
+            _ => throw new BadProxyException($"Not supported address type {host}")
         };
     }
 
@@ -258,7 +258,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
             _ => "Unknown socks error"
         };
 
-        throw new ProxyException(errorMessage);
+        throw new BadProxyException(errorMessage);
     }
 
     private static byte[] GetHostAddressBytes(byte addressType, string host)
@@ -278,7 +278,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
                 return bytes;
 
             default:
-                throw new ProxyException($"Not supported address type {host}");
+                throw new BadProxyException($"Not supported address type {host}");
         }
     }
 
@@ -302,7 +302,7 @@ public class Socks5ProxyClient(ProxySettings settings) : ProxyClient(settings)
 
             if (read == 0)
             {
-                throw new ProxyException("The proxy server did not respond correctly");
+                throw new BadProxyException("The proxy server did not respond correctly");
             }
 
             bytesRead += read;

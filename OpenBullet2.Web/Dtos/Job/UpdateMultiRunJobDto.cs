@@ -74,6 +74,11 @@ public class UpdateMultiRunJobDto
     public bool NeverBanProxies { get; set; } = false;
 
     /// <summary>
+    /// Whether bad proxy connection failures should keep the legacy ban behavior instead of marking proxies as bad.
+    /// </summary>
+    public bool NeverMarkProxiesAsBad { get; set; } = false;
+
+    /// <summary>
     /// Whether to allow multiple bots to use the same proxy. Use this for rotating proxy services.
     /// </summary>
     public bool ConcurrentProxyMode { get; set; } = false;

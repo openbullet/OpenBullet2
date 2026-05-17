@@ -1,5 +1,6 @@
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -214,6 +215,24 @@ public class ProxyPoolTests
         Assert.Equal(ProxyStatus.Banned, proxy.ProxyStatus);
         Assert.NotNull(proxy.LastBanned);
         Assert.Equal(1, proxy.TotalUses);
+    }
+
+    [Fact]
+    public async Task UnbanAll_BadProxy_RemainsBad()
+    {
+        var proxy = new Proxy("127.0.0.1", 8000)
+        {
+            ProxyStatus = ProxyStatus.Bad,
+            LastBanned = DateTime.Now.Subtract(TimeSpan.FromMinutes(5))
+        };
+        ListProxySource source = new([proxy]);
+
+        using var pool = new ProxyPool([source]);
+
+        await pool.ReloadAllAsync(false, TestCancellationToken);
+        pool.UnbanAll(TimeSpan.Zero);
+
+        Assert.Equal(ProxyStatus.Bad, proxy.ProxyStatus);
     }
 
     [Fact(Timeout = 10000)]

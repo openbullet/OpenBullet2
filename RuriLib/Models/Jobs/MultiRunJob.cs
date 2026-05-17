@@ -33,6 +33,7 @@ using RuriLib.Models.Captchas;
 using RuriLib.Legacy.Models;
 using RuriLib.Legacy.LS;
 using RuriLib.Models.Variables;
+using RuriLib.Proxies.Exceptions;
 
 namespace RuriLib.Models.Jobs;
 
@@ -66,6 +67,8 @@ public class MultiRunJob : Job
     public bool MarkAsToCheckOnAbort { get; set; }
     /// <summary>Gets or sets a value indicating whether proxies should never be banned.</summary>
     public bool NeverBanProxies { get; set; }
+    /// <summary>Gets or sets a value indicating whether bad proxy failures should keep the legacy ban behavior.</summary>
+    public bool NeverMarkProxiesAsBad { get; set; }
     /// <summary>Gets or sets a value indicating whether busy proxies may be reused concurrently.</summary>
     public bool ConcurrentProxyMode { get; set; }
     /// <summary>Gets or sets the periodic proxy reload interval.</summary>
@@ -291,6 +294,7 @@ public class MultiRunJob : Job
             START:
             token.ThrowIfCancellationRequested();
             botData.ResetState();
+            var badProxyFailure = false;
 
             try
             {
@@ -405,6 +409,7 @@ public class MultiRunJob : Job
             }
             catch (Exception ex)
             {
+                badProxyFailure = IsBadProxyFailure(ex);
                 botData.STATUS = "ERROR";
                 botData.Logger.Log($"[{botData.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
                 Interlocked.Increment(ref input.Job.dataErrors);
@@ -435,8 +440,12 @@ public class MultiRunJob : Job
 
             if (botData.Proxy != null)
             {
+                if (badProxyFailure && !input.Job.NeverMarkProxiesAsBad)
+                {
+                    input.ProxyPool?.ReleaseProxy(botData.Proxy, ProxyStatus.Bad);
+                }
                 // If a ban status occurred, ban the proxy
-                if (input.BotData.ConfigSettings.ProxySettings.BanProxyStatuses.Contains(botData.STATUS))
+                else if (input.BotData.ConfigSettings.ProxySettings.BanProxyStatuses.Contains(botData.STATUS))
                     input.ProxyPool?.ReleaseProxy(botData.Proxy, !input.Job.NeverBanProxies);
 
                 // Otherwise set it to available
@@ -1183,6 +1192,19 @@ public class MultiRunJob : Job
     }
 
     private bool IsHitStatus(string status) => !badStatuses.Contains(status);
+
+    private static bool IsBadProxyFailure(Exception exception)
+    {
+        for (var current = exception; current is not null; current = current.InnerException)
+        {
+            if (current is BadProxyException)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private void DebugLog(string message)
     {

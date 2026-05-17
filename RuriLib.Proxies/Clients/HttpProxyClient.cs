@@ -61,7 +61,7 @@ public partial class HttpProxyClient : ProxyClient
 
             if (ex is IOException or SocketException)
             {
-                throw new ProxyException("Error while working with proxy", ex);
+                throw new BadProxyException("Error while working with proxy", ex);
             }
 
             throw;
@@ -70,7 +70,7 @@ public partial class HttpProxyClient : ProxyClient
         if (statusCode != HttpStatusCode.OK)
         {
             client.Close();
-            throw new ProxyException("The proxy didn't reply with 200 OK");
+            throw new BadProxyException("The proxy didn't reply with 200 OK");
         }
     }
 
@@ -136,7 +136,7 @@ public partial class HttpProxyClient : ProxyClient
             // Throw a custom exception if we timed out
             if (waitCts.Token.IsCancellationRequested)
             {
-                throw new ProxyException("Timed out while waiting for data from proxy");
+                throw new BadProxyException("Timed out while waiting for data from proxy");
             }
 
             await Task.Delay(100, cancellationToken).ConfigureAwait(false);
@@ -153,7 +153,7 @@ public partial class HttpProxyClient : ProxyClient
 
         if (response.Length == 0)
         {
-            throw new ProxyException("Received empty response");
+            throw new BadProxyException("Received empty response");
         }
 
         // Check if the response is a correct HTTP response
@@ -161,12 +161,12 @@ public partial class HttpProxyClient : ProxyClient
 
         if (!match.Success)
         {
-            throw new ProxyException("Received wrong HTTP response from proxy");
+            throw new BadProxyException("Received wrong HTTP response from proxy");
         }
 
         if (!Enum.TryParse(match.Groups[1].Value, out HttpStatusCode statusCode))
         {
-            throw new ProxyException("Invalid HTTP status code");
+            throw new BadProxyException("Invalid HTTP status code");
         }
 
         return statusCode;

@@ -58,7 +58,7 @@ public class Socks4ProxyClient(ProxySettings settings) : ProxyClient(settings)
 
             if (ex is IOException or SocketException)
             {
-                throw new ProxyException("Error while working with proxy", ex);
+                throw new BadProxyException("Error while working with proxy", ex);
             }
 
             throw;
@@ -128,7 +128,7 @@ public class Socks4ProxyClient(ProxySettings settings) : ProxyClient(settings)
             _ => "Unknown socks error"
         };
 
-        throw new ProxyException(errorMessage);
+        throw new BadProxyException(errorMessage);
     }
 
     private protected static async Task ReadExactlyAsync(NetworkStream nStream, byte[] buffer,
@@ -144,7 +144,7 @@ public class Socks4ProxyClient(ProxySettings settings) : ProxyClient(settings)
 
             if (read == 0)
             {
-                throw new ProxyException("The proxy server did not respond correctly");
+                throw new BadProxyException("The proxy server did not respond correctly");
             }
 
             bytesRead += read;

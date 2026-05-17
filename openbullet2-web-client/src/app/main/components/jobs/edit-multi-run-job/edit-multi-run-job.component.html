@@ -178,6 +178,16 @@
                 <div class="row my-3">
                     <div class="col-12">
                         <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl
+                            pTooltip="When enabled, bad proxy connection failures follow the previous ERROR-ban behavior instead of marking the proxy as bad"
+                            [(ngModel)]="options.neverMarkProxiesAsBad"
+                            [binary]="true" inputId="neverMarkProxiesAsBad"
+                            label="Never mark proxies as bad" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
                             (onChange)="touched = true" ngDefaultControl 
                             pTooltip="When enabled, proxies can be used by multiple bots at the same time. Use this for rotating proxies"
                             [(ngModel)]="options.concurrentProxyMode"

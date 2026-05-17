@@ -414,6 +414,16 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
         }
     }
 
+    public bool NeverMarkProxiesAsBad
+    {
+        get => Options.NeverMarkProxiesAsBad;
+        set
+        {
+            Options.NeverMarkProxiesAsBad = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool ConcurrentProxyMode
     {
         get => Options.ConcurrentProxyMode;
