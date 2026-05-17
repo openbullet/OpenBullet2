@@ -151,7 +151,7 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
         var sampleTimestamp = Stopwatch.GetTimestamp();
         _currentProcess.Refresh();
 
-        var memory = _currentProcess.WorkingSet64;
+        var memory = _currentProcess.PrivateMemorySize64;
         var cpuTime = _currentProcess.TotalProcessorTime;
         var (uploadBytes, downloadBytes) = ReadCurrentNetworkTotals();
         var cpuUsage = 0d;
@@ -244,7 +244,7 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
 public struct PerformanceMetrics
 {
     /// <summary>
-    /// The memory usage for this process, in bytes.
+    /// The private memory usage for this process, in bytes.
     /// </summary>
     public long MemoryUsage { get; set; }
 
