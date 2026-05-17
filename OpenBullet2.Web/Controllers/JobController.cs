@@ -19,6 +19,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
+using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
 using RuriLib.Models.Data.DataPools;
@@ -38,7 +39,8 @@ namespace OpenBullet2.Web.Controllers;
 public class JobController(IJobRepository jobRepo, ILogger<JobController> logger,
     IGuestRepository guestRepo, IObjectMapper mapper, JobManagerService jobManager,
     JobFactoryService jobFactory, IProxyGroupRepository proxyGroupRepo,
-    IRecordRepository recordRepo) : ApiController
+    IRecordRepository recordRepo,
+    UserDataDirectoryProvider userDataDirectory) : ApiController
 {
     private readonly IGuestRepository _guestRepo = guestRepo;
     private readonly JobFactoryService _jobFactory = jobFactory;
@@ -48,6 +50,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
     private readonly IObjectMapper _mapper = mapper;
     private readonly IProxyGroupRepository _proxyGroupRepo = proxyGroupRepo;
     private readonly IRecordRepository _recordRepo = recordRepo;
+    private readonly UserDataDirectoryProvider _userDataDirectory = userDataDirectory;
     private static readonly string[] ScriptExtensions = [".bat", ".ps1", ".sh"];
 
     /// <summary>
@@ -1096,19 +1099,21 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             _ => throw new NotImplementedException()
         };
 
-    private static void ValidateGuestLocalFileUsage(ApiUser apiUser, MultiRunJobOptions jobOptions)
+    private void ValidateGuestLocalFileUsage(ApiUser apiUser, MultiRunJobOptions jobOptions)
     {
         if (apiUser.Role is not UserRole.Guest)
         {
             return;
         }
 
+        var userDataFolder = _userDataDirectory.RootPath;
+
         if (jobOptions.DataPool is FileDataPoolOptions fileDataPool
-            && !fileDataPool.FileName.IsSubPathOf(Globals.UserDataFolder))
+            && !fileDataPool.FileName.IsSubPathOf(userDataFolder))
         {
             throw new ForbiddenException(
                 ErrorCode.FileOutsideAllowedPath,
-                $"Guest users cannot access files outside of the {Globals.UserDataFolder} folder");
+                $"Guest users cannot access files outside of the {userDataFolder} folder");
         }
 
         if (jobOptions.ProxySources.OfType<FileProxySourceOptions>().Any(ps =>

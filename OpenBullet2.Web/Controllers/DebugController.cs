@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Debugging;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Services;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -10,8 +11,10 @@ namespace OpenBullet2.Web.Controllers;
 /// </summary>
 [TypeFilter<AdminFilter>]
 [ApiVersion("1.0")]
-public class DebugController : ApiController
+public class DebugController(UserDataDirectoryProvider userDataDirectory) : ApiController
 {
+    private readonly UserDataDirectoryProvider _userDataDirectory = userDataDirectory;
+
     /// <summary>
     /// Trigger the garbage collector.
     /// </summary>
@@ -34,7 +37,7 @@ public class DebugController : ApiController
     public ActionResult GetServerLogs()
     {
         // This is only supported for the default Serilog configuration
-        var logsFolder = Path.Combine(Globals.UserDataFolder, "Logs");
+        var logsFolder = _userDataDirectory.GetPath("Logs");
         var latestLog = Directory.GetFiles(logsFolder, "log-*.txt").MaxBy(f => f);
 
         if (latestLog is null)

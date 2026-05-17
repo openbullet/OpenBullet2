@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
@@ -13,6 +14,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Mcp;
 using OpenBullet2.Web.Middleware;
+using OpenBullet2.Web.Options;
 using OpenBullet2.Web.Services;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
@@ -37,8 +39,10 @@ using Serilog.Sinks.SystemConsole;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Globals.UserDataFolder = builder.Configuration.GetSection("Settings")
-    .GetValue<string>("UserDataFolder") ?? "UserData";
+builder.Services
+    .AddOptions<WebSettingsOptions>()
+    .Bind(builder.Configuration.GetSection(WebSettingsOptions.SectionName));
+builder.Services.AddSingleton<UserDataDirectoryProvider>();
 
 // Configuration tweaks
 var workerThreads = builder.Configuration.GetSection("Resources").GetValue("WorkerThreads", 1000);
@@ -144,8 +148,9 @@ builder.Services.AddScoped<IJobRepository, DbJobRepository>();
 builder.Services.AddScoped<IGuestRepository, DbGuestRepository>();
 builder.Services.AddScoped<IRecordRepository, DbRecordRepository>();
 builder.Services.AddScoped<IWordlistRepository>(service =>
-    new HybridWordlistRepository(service.GetRequiredService<ApplicationDbContext>(),
-        $"{Globals.UserDataFolder}/Wordlists"));
+    new HybridWordlistRepository(
+        service.GetRequiredService<ApplicationDbContext>(),
+        service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Wordlists")));
 
 builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
@@ -156,14 +161,15 @@ builder.Services.AddSingleton<IAnnouncementService, AnnouncementService>();
 builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
-    new DiskConfigRepository(service.GetRequiredService<RuriLibSettingsService>(),
-        $"{Globals.UserDataFolder}/Configs",
+    new DiskConfigRepository(
+        service.GetRequiredService<RuriLibSettingsService>(),
+        service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Configs"),
         service.GetRequiredService<ILogger<DiskConfigRepository>>()));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
         service.GetRequiredService<ILogger<ConfigSharingService>>(),
-        Globals.UserDataFolder));
+        service.GetRequiredService<UserDataDirectoryProvider>().RootPath));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<ProxyCheckOutputFactory>();
@@ -173,19 +179,23 @@ builder.Services.AddSingleton(service =>
     new JobMonitorService(service.GetRequiredService<JobManagerService>(),
         service.GetRequiredService<TriggeredActionExecutor>(),
         service.GetRequiredService<ILogger<JobMonitorService>>(),
-        $"{Globals.UserDataFolder}/triggeredActions.json", false));
+        service.GetRequiredService<UserDataDirectoryProvider>().GetPath("triggeredActions.json"), false));
 builder.Services.AddSingleton<HitStorageService>();
-builder.Services.AddSingleton(_ => new RuriLibSettingsService(Globals.UserDataFolder));
-builder.Services.AddSingleton(_ => new OpenBulletSettingsService(Globals.UserDataFolder));
-builder.Services.AddSingleton(service => new PluginRepository($"{Globals.UserDataFolder}/Plugins",
+builder.Services.AddSingleton(service =>
+    new RuriLibSettingsService(service.GetRequiredService<UserDataDirectoryProvider>().RootPath));
+builder.Services.AddSingleton(service =>
+    new OpenBulletSettingsService(service.GetRequiredService<UserDataDirectoryProvider>().RootPath));
+builder.Services.AddSingleton(service => new PluginRepository(
+    service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Plugins"),
     service.GetRequiredService<ILogger<PluginRepository>>()));
-builder.Services.AddSingleton(_ => new ThemeService($"{Globals.UserDataFolder}/Themes"));
+builder.Services.AddSingleton(service =>
+    new ThemeService(service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Themes")));
 builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetRequiredService<RuriLibSettingsService>(),
-        $"{Globals.UserDataFolder}/Logs/Jobs"));
+        service.GetRequiredService<UserDataDirectoryProvider>().GetPath("Logs", "Jobs")));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();
@@ -214,6 +224,7 @@ builder.Services.AddHostedService(
 var app = builder.Build();
 
 var versionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+var webSettings = app.Services.GetRequiredService<IOptions<WebSettingsOptions>>().Value;
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -227,14 +238,11 @@ app.UseSwaggerUI(options =>
     }
 });
 
-var allowedOrigin = app.Configuration.GetSection("Settings")
-    .GetValue<string>("AllowedOrigin") ?? "http://localhost:4200";
-
 app.UseCors(o => o
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
-    .WithOrigins(allowedOrigin)
+    .WithOrigins(webSettings.AllowedOrigin)
     .WithExposedHeaders("Content-Disposition", "X-Application-Warning", "X-New-Jwt")
 );
 

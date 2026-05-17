@@ -19,6 +19,15 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
     : IntegrationTests(testOutputHelper)
 {
     [Fact]
+    public void UserDataDirectoryProvider_UsesConfiguredFolder()
+    {
+        var provider = GetRequiredService<UserDataDirectoryProvider>();
+
+        Assert.Equal(UserDataFolder, provider.RootPath);
+        Assert.Equal(Path.Combine(UserDataFolder, "Themes"), provider.GetPath("Themes"));
+    }
+
+    [Fact]
     public async Task GetEnvironmentSettings()
     {
         // Arrange

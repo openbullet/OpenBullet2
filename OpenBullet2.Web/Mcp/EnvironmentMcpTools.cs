@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
+using OpenBullet2.Web.Services;
 
 namespace OpenBullet2.Web.Mcp;
 
@@ -14,9 +15,9 @@ public sealed class EnvironmentMcpTools
     /// </summary>
     [McpServerTool(Name = "get_environment"),
      Description("Returns the current read-only contents of Environment.ini from the active OpenBullet 2 user data folder.")]
-    public string GetOpenBulletEnvironment()
+    public string GetOpenBulletEnvironment(UserDataDirectoryProvider userDataDirectory)
     {
-        var environmentFile = Path.Combine(Globals.UserDataFolder, "Environment.ini");
+        var environmentFile = userDataDirectory.GetPath("Environment.ini");
         var environmentContent = File.ReadAllText(environmentFile);
 
         return $$"""

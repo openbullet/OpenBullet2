@@ -17,11 +17,6 @@ internal static class Globals
     public static DateTime StartTime { get; set; }
 
     /// <summary>
-    /// The folder where user data is stored.
-    /// </summary>
-    public static string UserDataFolder { get; set; } = "UserData";
-
-    /// <summary>
     /// An updated Win11 + Chrome user-agent to use for http calls.
     /// </summary>
     public static string UserAgent =>

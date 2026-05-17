@@ -10,6 +10,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
+using OpenBullet2.Web.Services;
 using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 
@@ -23,11 +24,13 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class WordlistController(IWordlistRepository wordlistRepo,
     IGuestRepository guestRepo, IObjectMapper mapper,
-    ILogger<WordlistController> logger) : ApiController
+    ILogger<WordlistController> logger,
+    UserDataDirectoryProvider userDataDirectory) : ApiController
 {
     private readonly IGuestRepository _guestRepo = guestRepo;
     private readonly ILogger<WordlistController> _logger = logger;
     private readonly IObjectMapper _mapper = mapper;
+    private readonly UserDataDirectoryProvider _userDataDirectory = userDataDirectory;
     private readonly IWordlistRepository _wordlistRepo = wordlistRepo;
     private static readonly string[] ScriptExtensions = [".bat", ".ps1", ".sh"];
 
@@ -112,14 +115,14 @@ public class WordlistController(IWordlistRepository wordlistRepo,
 
         // If the user is a guest, make sure they are not accessing
         // anything outside the UserData folder.
-        if (apiUser.Role is UserRole.Guest && !dto.FilePath.IsSubPathOf(Globals.UserDataFolder))
+        if (apiUser.Role is UserRole.Guest && !dto.FilePath.IsSubPathOf(_userDataDirectory.RootPath))
         {
             _logger.LogWarning(
                 "Guest user {Username} tried to access a file outside of the allowed directory while creating a wordlist at {FilePath}",
                 apiUser.Username, dto.FilePath);
 
             throw new ForbiddenException(ErrorCode.FileOutsideAllowedPath,
-                $"Guest users cannot access files outside of the {Globals.UserDataFolder} folder");
+                $"Guest users cannot access files outside of the {_userDataDirectory.RootPath} folder");
         }
 
         // Make sure the file exists
@@ -160,7 +163,7 @@ public class WordlistController(IWordlistRepository wordlistRepo,
     }
 
     /// <summary>
-    /// Upload a file to the "UserData/Wordlists" folder. This can then be
+    /// Upload a file to the user data Wordlists folder. This can then be
     /// used to create a wordlist. Returns the relative file path.
     /// </summary>
     [TypeFilter<GuestFilter>]
@@ -186,7 +189,7 @@ public class WordlistController(IWordlistRepository wordlistRepo,
         }
 
         var safeFileName = FileUtils.ReplaceInvalidFileNameChars(uploadedFileName);
-        var wordlistsDir = Path.Combine(Globals.UserDataFolder, "Wordlists");
+        var wordlistsDir = _userDataDirectory.GetPath("Wordlists");
         Directory.CreateDirectory(wordlistsDir);
 
         var path = FileUtils.GetFirstAvailableFileName(

@@ -2,6 +2,7 @@ using System.ComponentModel;
 using ModelContextProtocol.Server;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Services;
 
 namespace OpenBullet2.Web.Mcp;
 
@@ -18,10 +19,11 @@ public sealed class ServerInfoMcpTools
      Description("Returns basic read-only information about the running OpenBullet 2 web server.")]
     public string GetOpenBulletServerInfo(
         IUpdateService updateService,
-        OpenBulletSettingsService settingsService)
+        OpenBulletSettingsService settingsService,
+        UserDataDirectoryProvider userDataDirectory)
     {
         var uptime = DateTime.UtcNow - Globals.StartTime;
-        var userDataFolder = Path.GetFullPath(Globals.UserDataFolder);
+        var userDataFolder = Path.GetFullPath(userDataDirectory.RootPath);
 
         return $$"""
                  OpenBullet 2 server info
