@@ -205,3 +205,40 @@ jobs:
       with:
         ## If no one connects after 5 minutes, shut down server.
         wait-timeout-minutes: 5
+
+  docker:
+    name: Build and Push Docker image to Docker Hub
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Get commit number
+      run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+
+    - name: Read version
+      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt).${{ env.COMMIT_NUMBER }}" >> $GITHUB_ENV
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        file: ./Dockerfile.remote
+        build-args: RELEASE_TAG=${{ env.VERSION }}
+        platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
+        tags: openbullet/openbullet2:staging,openbullet/openbullet2:${{ env.VERSION }}

@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
 
+ARG RELEASE_TAG=latest
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install basic dependencies
@@ -41,8 +43,12 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Download and unpack the latest OpenBullet2.Web release
-RUN wget https://github.com/openbullet/openbullet2/releases/latest/download/OpenBullet2.Web.zip \
+# Download and unpack the requested OpenBullet2.Web release
+RUN if [ "$RELEASE_TAG" = "latest" ]; then \
+        wget https://github.com/openbullet/openbullet2/releases/latest/download/OpenBullet2.Web.zip; \
+    else \
+        wget "https://github.com/openbullet/openbullet2/releases/download/${RELEASE_TAG}/OpenBullet2.Web.zip"; \
+    fi \
     && unzip OpenBullet2.Web.zip \
     && rm OpenBullet2.Web.zip
 

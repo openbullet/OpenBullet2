@@ -210,5 +210,6 @@ jobs:
       with:
         push: true
         file: ./Dockerfile.remote
+        build-args: RELEASE_TAG=${{ env.VERSION }}
         platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
         tags: openbullet/openbullet2:latest,openbullet/openbullet2:${{ env.VERSION }}
