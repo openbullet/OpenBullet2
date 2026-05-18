@@ -24,6 +24,8 @@ public sealed class PageCreationTests(WpfAppFixture fixture)
 
             Assert.NotNull(uiFactory.Create<Home>());
             Assert.NotNull(uiFactory.Create<Proxies>());
+            Assert.NotNull(uiFactory.Create<MultiRunJobViewer>());
+            Assert.NotNull(uiFactory.Create<ProxyCheckJobViewer>());
             Assert.NotNull(uiFactory.Create<ConfigMetadata>());
             Assert.NotNull(uiFactory.Create<ConfigReadme>());
             Assert.NotNull(uiFactory.Create<ConfigSettings>());

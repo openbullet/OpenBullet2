@@ -29,6 +29,7 @@ public class ProxyCheckJobViewerViewModel : ViewModelBase, IDisposable
     #endregion
 
     #region Properties that need to be updated when the status changes
+    public bool CanChangeOptions => ProxyCheckJob.Status is JobStatus.Idle;
     public bool CanStart => ProxyCheckJob.Status is JobStatus.Idle;
     public bool CanSkipWait => ProxyCheckJob.Status is JobStatus.Waiting;
     public bool CanPause => ProxyCheckJob.Status is JobStatus.Running;
@@ -93,6 +94,7 @@ public class ProxyCheckJobViewerViewModel : ViewModelBase, IDisposable
 
         NewMessage?.Invoke(this, $"Status changed to {status}", Colors.SkyBlue);
 
+        OnPropertyChanged(nameof(CanChangeOptions));
         OnPropertyChanged(nameof(CanStart));
         OnPropertyChanged(nameof(CanSkipWait));
         OnPropertyChanged(nameof(CanResume));

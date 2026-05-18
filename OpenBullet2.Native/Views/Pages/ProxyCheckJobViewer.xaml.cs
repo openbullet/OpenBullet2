@@ -19,14 +19,19 @@ namespace OpenBullet2.Native.Views.Pages;
 public partial class ProxyCheckJobViewer : Page
 {
     private readonly IUiFactory uiFactory;
+    private readonly MainWindow mainWindow;
     private readonly OpenBulletSettingsService obSettingsService;
     private ProxyCheckJobViewerViewModel? vm;
     private ProxyCheckJobViewerViewModel ViewModel => vm
         ?? throw new InvalidOperationException("The job viewer has not been bound yet");
 
-    public ProxyCheckJobViewer(IUiFactory uiFactory, OpenBulletSettingsService obSettingsService)
+    public ProxyCheckJobViewer(
+        IUiFactory uiFactory,
+        MainWindow mainWindow,
+        OpenBulletSettingsService obSettingsService)
     {
         this.uiFactory = uiFactory;
+        this.mainWindow = mainWindow;
         this.obSettingsService = obSettingsService;
         InitializeComponent();
     }
@@ -119,6 +124,18 @@ public partial class ProxyCheckJobViewer : Page
         try
         {
             ViewModel.SkipWait();
+        }
+        catch (Exception ex)
+        {
+            Alert.Exception(ex);
+        }
+    }
+
+    private async void ChangeOptions(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await mainWindow.EditJobAsync(ViewModel.Job);
         }
         catch (Exception ex)
         {
