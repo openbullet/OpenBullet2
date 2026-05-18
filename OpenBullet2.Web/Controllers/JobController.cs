@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
@@ -367,6 +368,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
+        await _jobManager.SaveMultiRunJobOptionsAsync(newJob);
 
         _logger.LogInformation("Updated the multi run job with id {Id}", dto.Id);
 
@@ -449,14 +451,19 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
     /// </summary>
     [HttpPatch("multi-run/custom-inputs")]
     [MapToApiVersion("1.0")]
-    public ActionResult SetCustomInputs(CustomInputsDto dto)
+    public async Task<ActionResult> SetCustomInputs(CustomInputsDto dto)
     {
         var job = GetJob<MultiRunJob>(dto.JobId);
 
+        var updatedAnswers = CustomInputAnswerHelper.FilterAnswers(job.Config, job.CustomInputsAnswers);
+
         foreach (var input in dto.Answers)
         {
-            job.CustomInputsAnswers[input.VariableName] = input.Answer;
+            updatedAnswers[input.VariableName] = input.Answer;
         }
+
+        job.CustomInputsAnswers = CustomInputAnswerHelper.FilterAnswers(job.Config, updatedAnswers);
+        await _jobManager.SaveMultiRunJobOptionsAsync(job);
 
         _logger.LogInformation("Set custom inputs for job {Id}", dto.JobId);
 
@@ -1075,7 +1082,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             return;
         }
 
-        newJob.CustomInputsAnswers = oldJob.CustomInputsAnswers.ToDictionary();
+        newJob.CustomInputsAnswers = CustomInputAnswerHelper.FilterAnswers(newJob.Config, oldJob.CustomInputsAnswers);
     }
 
     private static JobOptionsWrapper DeserializeJobOptions(JobEntity entity)

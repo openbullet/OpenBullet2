@@ -442,7 +442,7 @@ public class MultiRunJobViewerViewModel : ViewModelBase, IDisposable
         {
             startCTS = new CancellationTokenSource();
             HitsCollection = [];
-            AskCustomInputs();
+            await AskCustomInputsAsync();
             OnPropertyChanged(nameof(CustomInputsInfo));
             await MultiRunJob.Start(startCTS.Token);
             UpdateBots();
@@ -481,19 +481,29 @@ public class MultiRunJobViewerViewModel : ViewModelBase, IDisposable
     #endregion
 
     #region Utils
-    private void AskCustomInputs()
+    private async Task AskCustomInputsAsync()
     {
         if (MultiRunJob.Config is null)
         {
             return;
         }
 
-        MultiRunJob.CustomInputsAnswers.Clear();
+        var answers = new Dictionary<string, string>();
 
         foreach (var input in MultiRunJob.Config.Settings.InputSettings.CustomInputs)
         {
-            MultiRunJob.CustomInputsAnswers[input.VariableName] = Alert.CustomInput(input.Description, input.DefaultAnswer);
+            var defaultAnswer = MultiRunJob.CustomInputsAnswers.TryGetValue(input.VariableName, out var currentAnswer)
+                ? currentAnswer
+                : input.DefaultAnswer;
+
+            answers[input.VariableName] = Alert.CustomInput(input.Description, defaultAnswer);
         }
+
+        MultiRunJob.CustomInputsAnswers = answers;
+
+        using var scope = scopeFactory.CreateScope();
+        var jobManager = scope.ServiceProvider.GetRequiredService<JobManagerService>();
+        await jobManager.SaveMultiRunJobOptionsAsync(MultiRunJob);
     }
 
     private string GetProxyGroupName(int id)

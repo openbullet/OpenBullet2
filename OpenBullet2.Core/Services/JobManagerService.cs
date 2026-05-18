@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
@@ -239,6 +240,7 @@ public class JobManagerService : IDisposable
                 : job.Skip + job.DataTested;
 
             options.Bots = job.Bots;
+            options.CustomInputsAnswers = CustomInputAnswerHelper.FilterAnswers(job.Config, job.CustomInputsAnswers);
 
             // Wrap and serialize again
             var newWrapper = new JobOptionsWrapper { Options = options };

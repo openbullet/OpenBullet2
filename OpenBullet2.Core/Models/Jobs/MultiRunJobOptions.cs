@@ -90,4 +90,9 @@ public class MultiRunJobOptions : JobOptions
     /// The options for the outputs where hits will be stored.
     /// </summary>
     public List<HitOutputOptions> HitOutputs { get; set; } = [];
+
+    /// <summary>
+    /// The answers provided for the config custom inputs.
+    /// </summary>
+    public Dictionary<string, string> CustomInputsAnswers { get; set; } = [];
 }

@@ -11,6 +11,7 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Jobs;
 using RuriLib.Services;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -59,6 +60,62 @@ public sealed class JobManagerServiceTests
         var options = Assert.IsType<MultiRunJobOptions>(wrapper!.Options);
 
         Assert.Equal(0, options.Skip);
+    }
+
+    [Fact]
+    public async Task SaveMultiRunJobOptionsAsync_PersistsOnlyConfiguredCustomInputsAnswers()
+    {
+        using var database = new TestDatabase();
+        var manager = new JobManagerService(
+            database.Services.GetRequiredService<IServiceScopeFactory>(),
+            (JobFactoryService)RuntimeHelpers.GetUninitializedObject(typeof(JobFactoryService)));
+
+        var entity = await database.AddJobEntityAsync(new MultiRunJobOptions
+        {
+            ConfigId = "cfg",
+            DataPool = new RangeDataPoolOptions()
+        });
+
+        var settings = CreateSettingsService();
+        var job = new MultiRunJob(settings, CreatePluginRepository())
+        {
+            Id = entity.Id,
+            Config = new Config
+            {
+                Id = "cfg",
+                Settings = new ConfigSettings
+                {
+                    InputSettings = new()
+                    {
+                        CustomInputs =
+                        [
+                            new()
+                            {
+                                VariableName = "TEST",
+                                Description = "Test input",
+                                DefaultAnswer = "default"
+                            }
+                        ]
+                    }
+                }
+            },
+            DataPool = new TestDataPool(["one", "two", "three"], settings.Environment.WordlistTypes[0].Name),
+            CustomInputsAnswers = new Dictionary<string, string>
+            {
+                ["TEST"] = "saved value",
+                ["STALE"] = "old value"
+            }
+        };
+
+        await manager.SaveMultiRunJobOptionsAsync(job);
+
+        var saved = await database.GetJobEntityAsync(entity.Id);
+        var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(
+            saved.JobOptions!, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+        var options = Assert.IsType<MultiRunJobOptions>(wrapper!.Options);
+
+        Assert.Equal("saved value", options.CustomInputsAnswers["TEST"]);
+        Assert.False(options.CustomInputsAnswers.ContainsKey("STALE"));
     }
 
     [Fact]

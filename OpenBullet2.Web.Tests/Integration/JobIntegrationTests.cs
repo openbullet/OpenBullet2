@@ -1356,6 +1356,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             }
         };
         await configRepository.SaveAsync(config);
+        var configService = GetRequiredService<ConfigService>();
+        configService.Configs.Add(config);
 
         // Act
         var dto = new UpdateMultiRunJobDto
@@ -1393,6 +1395,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
 
         var updatedJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
         Assert.Equal("saved value", updatedJob.CustomInputsAnswers["TEST"]);
+        Assert.False(updatedJob.CustomInputsAnswers.ContainsKey("STALE"));
     }
 
     // Admin cannot update a multi run job that is not idle
@@ -2142,6 +2145,84 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.Null(error);
         Assert.Equal(dto.Answers.First().Answer, mrJob.CustomInputsAnswers["TEST"]);
+    }
+
+    [Fact]
+    public async Task SetMultiRunJobCustomInputs_Admin_PersistsAnswersImmediately()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.CustomInputsAnswers = new Dictionary<string, string>
+        {
+            ["TEST"] = "old value",
+            ["STALE"] = "stale value"
+        };
+        mrJob.Config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Settings = new ConfigSettings
+            {
+                InputSettings = new InputSettings
+                {
+                    CustomInputs =
+                    [
+                        new CustomInput
+                        {
+                            VariableName = "TEST",
+                            Description = "Test input",
+                            DefaultAnswer = "default"
+                        }
+                    ]
+                }
+            }
+        };
+        jobManager.AddJob(mrJob);
+
+        var jobEntity = CreateMultiRunJobEntity(mrJob, new MultiRunJobOptions
+        {
+            ConfigId = mrJob.Config.Id,
+            DataPool = new InfiniteDataPoolOptions()
+        });
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var dto = new CustomInputsDto
+        {
+            JobId = mrJob.Id,
+            Answers =
+            [
+                new CustomInputAnswerDto
+                {
+                    VariableName = "TEST",
+                    Answer = "saved value"
+                }
+            ]
+        };
+        var error = await PatchAsync(
+            client, "/api/v1/job/multi-run/custom-inputs", dto);
+
+        // Assert
+        Assert.Null(error);
+
+        await dbContext.Entry(jobEntity).ReloadAsync(TestCancellationToken);
+        var savedEntity = jobEntity;
+        var wrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<JobOptionsWrapper>(
+            savedEntity.JobOptions!,
+            new Newtonsoft.Json.JsonSerializerSettings
+            {
+                TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+            });
+        var options = Assert.IsType<MultiRunJobOptions>(wrapper!.Options);
+
+        Assert.Equal("saved value", options.CustomInputsAnswers["TEST"]);
+        Assert.False(options.CustomInputsAnswers.ContainsKey("STALE"));
     }
 
     // Guest cannot set the custom inputs for a multi run job not owned by them

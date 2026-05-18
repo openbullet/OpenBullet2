@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
@@ -86,12 +87,13 @@ public class JobFactoryService
         using var scope = _scopeFactory.CreateScope();
         var proxySourceFactory = scope.ServiceProvider.GetRequiredService<ProxySourceFactoryService>();
         var dataPoolFactory = scope.ServiceProvider.GetRequiredService<DataPoolFactoryService>();
+        var config = _configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId);
 
         var hitOutputsFactory = new HitOutputFactory(_hitStorage);
 
         var job = new MultiRunJob(_settingsService, _pluginRepo, _logger)
         {
-            Config = _configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
+            Config = config,
             CreationTime = DateTime.Now,
             ProxyMode = options.ProxyMode,
             ShuffleProxies = options.ShuffleProxies,
@@ -109,6 +111,7 @@ public class JobFactoryService
             CurrentBotDatas = new BotData[BotLimit],
             Skip = options.Skip,
             HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
+            CustomInputsAnswers = CustomInputAnswerHelper.FilterAnswers(config, options.CustomInputsAnswers),
             ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
             Providers = new(_settingsService)
             {
