@@ -172,8 +172,8 @@
                             </button>
                             <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
                                 <button class="button button-transparent" *ngIf="showJobActions"
-                                    pTooltip="Start" tooltipPosition="bottom"
-                                    (click)="startJob(mrj, $event)">
+                                    [pTooltip]="getStartActionLabel(mrj)" tooltipPosition="bottom"
+                                    (click)="startOrResumeJob(mrj, $event)">
                                     <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                                 </button>
                                 <button class="button button-transparent" *ngIf="showJobActions"
@@ -314,8 +314,8 @@
                             </button>
                             <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
                                 <button class="button button-transparent" *ngIf="showJobActions"
-                                    pTooltip="Start" tooltipPosition="bottom"
-                                    (click)="startJob(pcj, $event)">
+                                    [pTooltip]="getStartActionLabel(pcj)" tooltipPosition="bottom"
+                                    (click)="startOrResumeJob(pcj, $event)">
                                     <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                                 </button>
                                 <button class="button button-transparent" *ngIf="showJobActions"

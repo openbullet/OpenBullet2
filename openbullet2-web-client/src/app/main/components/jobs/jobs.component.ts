@@ -174,20 +174,37 @@ export class JobsComponent implements OnInit, OnDestroy {
     this.showJobActions = !this.showJobActions;
   }
 
-  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
+  getStartActionLabel(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+    return job.status === JobStatus.PAUSED ? 'Resume' : 'Start';
+  }
+
+  startOrResumeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
+
+    if (job.status === JobStatus.PAUSED) {
+      this.jobService.resume(job.id).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Resumed',
+          detail: `Job #${job.id} was resumed`,
+        });
+        this.refreshJobs();
+      });
+
+      return;
+    }
 
     // If the status is not idle, we can't start it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Not idle',
-        detail: 'The job you are trying to start is not idle, please ' + 'stop it or abort it first',
+        summary: 'Cannot start',
+        detail: 'The job you are trying to start is neither idle nor paused',
       });
       return;
     }
 
-    this.jobService.start(job.id).subscribe((resp) => {
+    this.jobService.start(job.id).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: 'Started',
