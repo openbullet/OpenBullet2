@@ -54,7 +54,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   targetSiteUrl = 'https://example.com';
   targetSiteSuccessKey = 'Example Domain';
 
-  startConditionMode: StartConditionMode = StartConditionMode.Absolute;
+  startConditionMode: StartConditionMode = StartConditionMode.Immediate;
   startAfter: TimeSpan = new TimeSpan(0);
   startAt: Date = moment().add(1, 'days').toDate();
   botLimit = 200;
@@ -159,7 +159,9 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
       if (options.startCondition._polyTypeName === StartConditionType.Relative) {
         this.startAfter = parseTimeSpan(options.startCondition.startAfter);
-        this.startConditionMode = StartConditionMode.Relative;
+        this.startConditionMode = this.startAfter.totalMilliseconds === 0
+          ? StartConditionMode.Immediate
+          : StartConditionMode.Relative;
       } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
         this.startAt = moment(options.startCondition.startAt).toDate();
         this.startConditionMode = StartConditionMode.Absolute;
@@ -188,16 +190,22 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   onStartConditionModeChange(mode: StartConditionMode) {
     this.startConditionMode = mode;
     this.touched = true;
+
+    if (mode === StartConditionMode.Immediate) {
+      this.startAfter = TimeSpan.zero;
+      this.setRelativeStartCondition(this.startAfter);
+    } else if (mode === StartConditionMode.Relative) {
+      this.setRelativeStartCondition(this.startAfter);
+    } else if (mode === StartConditionMode.Absolute) {
+      this.setAbsoluteStartCondition(this.startAt);
+    }
   }
 
   onStartAfterChange(timeSpan: TimeSpan) {
     this.startAfter = timeSpan;
 
     if (this.startConditionMode === StartConditionMode.Relative) {
-      this.options!.startCondition = {
-        _polyTypeName: StartConditionType.Relative,
-        startAfter: this.startAfter.toString(),
-      };
+      this.setRelativeStartCondition(this.startAfter);
     }
   }
 
@@ -207,11 +215,22 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     this.touched = true;
 
     if (this.startConditionMode === StartConditionMode.Absolute) {
-      this.options!.startCondition = {
-        _polyTypeName: StartConditionType.Absolute,
-        startAt: this.startAt.toISOString(),
-      };
+      this.setAbsoluteStartCondition(this.startAt);
     }
+  }
+
+  private setRelativeStartCondition(startAfter: TimeSpan) {
+    this.options!.startCondition = {
+      _polyTypeName: StartConditionType.Relative,
+      startAfter: startAfter.toString(),
+    };
+  }
+
+  private setAbsoluteStartCondition(startAt: Date) {
+    this.options!.startCondition = {
+      _polyTypeName: StartConditionType.Absolute,
+      startAt: startAt.toISOString(),
+    };
   }
 
   // Can accept if touched and every field is valid

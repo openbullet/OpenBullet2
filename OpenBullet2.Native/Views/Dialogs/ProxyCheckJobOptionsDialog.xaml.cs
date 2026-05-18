@@ -41,12 +41,20 @@ public partial class ProxyCheckJobOptionsDialog : Page
         vm.Initialize(options);
         DataContext = vm;
 
-        vm.StartConditionModeChanged += mode => startConditionTabControl.SelectedIndex = (int)mode;
+        vm.StartConditionModeChanged += mode => startConditionTabControl.SelectedIndex = GetStartConditionTabIndex(mode);
 
         InitializeComponent();
 
-        startConditionTabControl.SelectedIndex = (int)vm.StartConditionMode;
+        startConditionTabControl.SelectedIndex = GetStartConditionTabIndex(vm.StartConditionMode);
     }
+
+    private static int GetStartConditionTabIndex(StartConditionMode mode) => mode switch
+    {
+        StartConditionMode.Immediate => 0,
+        StartConditionMode.Relative => 1,
+        StartConditionMode.Absolute => 2,
+        _ => throw new NotImplementedException()
+    };
 
     private async void Accept(object sender, RoutedEventArgs e)
     {
@@ -71,6 +79,7 @@ public class ProxyCheckJobOptionsViewModel : ViewModelBase
     private readonly IServiceScopeFactory scopeFactory;
     private readonly JobFactoryService jobFactory;
     private readonly OpenBulletSettingsService obSettingsService;
+    private StartConditionMode startConditionMode;
     public ProxyCheckJobOptions Options { get; private set; }
 
     #region Start Condition
@@ -78,25 +87,40 @@ public class ProxyCheckJobOptionsViewModel : ViewModelBase
 
     public StartConditionMode StartConditionMode
     {
-        get => Options.StartCondition switch
-        {
-            RelativeTimeStartCondition => StartConditionMode.Relative,
-            AbsoluteTimeStartCondition => StartConditionMode.Absolute,
-            _ => throw new NotImplementedException()
-        };
+        get => startConditionMode;
         set
         {
+            startConditionMode = value;
             Options.StartCondition = value switch
             {
+                StartConditionMode.Immediate => new RelativeTimeStartCondition
+                {
+                    StartAfter = TimeSpan.Zero
+                },
                 StartConditionMode.Relative => new RelativeTimeStartCondition(),
                 StartConditionMode.Absolute => new AbsoluteTimeStartCondition(),
                 _ => throw new NotImplementedException()
             };
 
             OnPropertyChanged();
+            OnPropertyChanged(nameof(StartImmediatelyMode));
             OnPropertyChanged(nameof(StartInMode));
             OnPropertyChanged(nameof(StartAtMode));
-            StartConditionModeChanged?.Invoke(StartConditionMode);
+            StartConditionModeChanged?.Invoke(value);
+        }
+    }
+
+    public bool StartImmediatelyMode
+    {
+        get => StartConditionMode is StartConditionMode.Immediate;
+        set
+        {
+            if (value)
+            {
+                StartConditionMode = StartConditionMode.Immediate;
+            }
+
+            OnPropertyChanged();
         }
     }
 
@@ -172,6 +196,13 @@ public class ProxyCheckJobOptionsViewModel : ViewModelBase
     {
         Options = options ?? (JobOptionsFactory.CreateNew(JobType.ProxyCheck) as ProxyCheckJobOptions
             ?? throw new InvalidOperationException("Failed to create proxy check job options"));
+        startConditionMode = Options.StartCondition switch
+        {
+            RelativeTimeStartCondition rel when rel.StartAfter == TimeSpan.Zero => StartConditionMode.Immediate,
+            RelativeTimeStartCondition => StartConditionMode.Relative,
+            AbsoluteTimeStartCondition => StartConditionMode.Absolute,
+            _ => throw new NotImplementedException()
+        };
 
         using var scope = scopeFactory.CreateScope();
         proxyGroups = scope.ServiceProvider.GetRequiredService<IProxyGroupRepository>().GetAll().ToList();

@@ -61,12 +61,20 @@ public partial class MultiRunJobOptionsDialog : Page
         vm.Initialize(options);
         DataContext = this.vm;
 
-        this.vm.StartConditionModeChanged += mode => startConditionTabControl.SelectedIndex = (int)mode;
+        this.vm.StartConditionModeChanged += mode => startConditionTabControl.SelectedIndex = GetStartConditionTabIndex(mode);
 
         InitializeComponent();
 
-        startConditionTabControl.SelectedIndex = (int)this.vm.StartConditionMode;
+        startConditionTabControl.SelectedIndex = GetStartConditionTabIndex(this.vm.StartConditionMode);
     }
+
+    private static int GetStartConditionTabIndex(StartConditionMode mode) => mode switch
+    {
+        StartConditionMode.Immediate => 0,
+        StartConditionMode.Relative => 1,
+        StartConditionMode.Absolute => 2,
+        _ => throw new NotImplementedException()
+    };
 
     private void AddGroupProxySource(object sender, RoutedEventArgs e) => vm.AddGroupProxySource();
     private void AddFileProxySource(object sender, RoutedEventArgs e) => vm.AddFileProxySource();
@@ -194,6 +202,7 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
     private readonly ConfigService configService;
     private readonly JobFactoryService jobFactory;
     private readonly IServiceScopeFactory scopeFactory;
+    private StartConditionMode startConditionMode;
     public MultiRunJobOptions Options { get; private set; }
 
     #region Start Condition
@@ -201,25 +210,40 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
 
     public StartConditionMode StartConditionMode
     {
-        get => Options.StartCondition switch
-        {
-            RelativeTimeStartCondition => StartConditionMode.Relative,
-            AbsoluteTimeStartCondition => StartConditionMode.Absolute,
-            _ => throw new NotImplementedException()
-        };
+        get => startConditionMode;
         set
         {
+            startConditionMode = value;
             Options.StartCondition = value switch
             {
+                StartConditionMode.Immediate => new RelativeTimeStartCondition
+                {
+                    StartAfter = TimeSpan.Zero
+                },
                 StartConditionMode.Relative => new RelativeTimeStartCondition(),
                 StartConditionMode.Absolute => new AbsoluteTimeStartCondition(),
                 _ => throw new NotImplementedException()
             };
 
             OnPropertyChanged();
+            OnPropertyChanged(nameof(StartImmediatelyMode));
             OnPropertyChanged(nameof(StartInMode));
             OnPropertyChanged(nameof(StartAtMode));
-            StartConditionModeChanged?.Invoke(StartConditionMode);
+            StartConditionModeChanged?.Invoke(value);
+        }
+    }
+
+    public bool StartImmediatelyMode
+    {
+        get => StartConditionMode is StartConditionMode.Immediate;
+        set
+        {
+            if (value)
+            {
+                StartConditionMode = StartConditionMode.Immediate;
+            }
+
+            OnPropertyChanged();
         }
     }
 
@@ -472,6 +496,13 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
     {
         Options = options ?? (JobOptionsFactory.CreateNew(JobType.MultiRun) as MultiRunJobOptions
             ?? throw new InvalidOperationException("Failed to create multi run job options"));
+        startConditionMode = Options.StartCondition switch
+        {
+            RelativeTimeStartCondition rel when rel.StartAfter == TimeSpan.Zero => StartConditionMode.Immediate,
+            RelativeTimeStartCondition => StartConditionMode.Relative,
+            AbsoluteTimeStartCondition => StartConditionMode.Absolute,
+            _ => throw new NotImplementedException()
+        };
 
         SetConfigData();
 
@@ -708,7 +739,8 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
 public enum StartConditionMode
 {
     Relative,
-    Absolute
+    Absolute,
+    Immediate
 }
 
 #region Data Pool ViewModels

@@ -21,6 +21,12 @@
             <Label Content="Start condition" Foreground="{DynamicResource ForegroundCustom}" />
             <StackPanel Orientation="Horizontal" Background="Transparent">
                 <RadioButton 
+                Content="Start immediately"
+                x:Name="startImmediatelyButton"
+                IsChecked="{Binding StartImmediatelyMode}"
+                Background="Transparent"
+                Margin="5 0"/>
+                <RadioButton 
                 Content="Start in"
                 x:Name="startInButton"
                 IsChecked="{Binding StartInMode}"
@@ -40,6 +46,9 @@
                         <Setter Property="Visibility" Value="Collapsed"/>
                     </Style>
                 </TabControl.ItemContainerStyle>
+                <TabItem>
+                    <TextBlock Text="The job will start as soon as you run it." />
+                </TabItem>
                 <TabItem>
                     <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
                 </TabItem>
