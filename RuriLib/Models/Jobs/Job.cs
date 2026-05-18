@@ -21,6 +21,8 @@ public abstract class Job : IDisposable
     public int OwnerId { get; set; }
     /// <summary>Gets the current job status.</summary>
     public JobStatus Status { get; protected set; } = JobStatus.Idle;
+    /// <summary>Gets the outcome of the most recent run.</summary>
+    public JobLastRunOutcome LastRunOutcome { get; protected set; } = JobLastRunOutcome.None;
     /// <summary>Gets or sets the creation timestamp.</summary>
     public DateTime CreationTime { get; set; } = DateTime.Now;
     /// <summary>Gets or sets the start timestamp.</summary>

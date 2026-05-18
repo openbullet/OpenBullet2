@@ -47,10 +47,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 2;
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         var pcJob = CreateProxyCheckJob();
         pcJob.Name = "Test PCJ";
         pcJob.Id = 1;
         pcJob.OwnerId = 1;
+        SetLastRunOutcome(pcJob, JobLastRunOutcome.Stopped);
         jobManager.AddJob(mrJob);
         jobManager.AddJob(pcJob);
 
@@ -67,6 +69,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(pcJob.Name, j.Name);
                 Assert.Equal(1, j.OwnerId);
                 Assert.Equal(JobType.ProxyCheck, j.Type);
+                Assert.Equal(JobLastRunOutcome.Stopped, j.LastRunOutcome);
             },
             j =>
             {
@@ -74,6 +77,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob.Name, j.Name);
                 Assert.Equal(0, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
+                Assert.Equal(JobLastRunOutcome.Completed, j.LastRunOutcome);
             });
     }
 
@@ -335,6 +339,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.DataPool = new CombinationsDataPool("abc", 3);
         mrJob.Bots = 10;
         mrJob.ProxyMode = JobProxyMode.On;
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         jobManager.AddJob(mrJob);
 
         // Act
@@ -362,6 +367,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("Combinations", result.Value.DataPoolInfo);
         Assert.Equal(mrJob.Bots, result.Value.Bots);
         Assert.Equal(mrJob.ProxyMode, result.Value.ProxyMode);
+        Assert.Equal(JobLastRunOutcome.Completed, result.Value.LastRunOutcome);
         Assert.NotNull(result.Value.DataStats);
         Assert.NotNull(result.Value.ProxyStats);
     }
@@ -502,6 +508,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.SuccessKey = "<title>Example</title>";
         pcJob.Timeout = TimeSpan.FromSeconds(10);
         pcJob.ProxyOutput = proxyCheckOutputFactory.FromOptions(new DatabaseProxyCheckOutputOptions());
+        SetLastRunOutcome(pcJob, JobLastRunOutcome.Failed);
         var jobEntity = CreateProxyCheckJobEntity(pcJob);
         jobEntity.Id = pcJob.Id;
         dbContext.Jobs.Add(jobEntity);
@@ -525,6 +532,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(pcJob.SuccessKey, result.Value.Target!.SuccessKey);
         Assert.Equal(pcJob.Timeout.TotalMilliseconds, result.Value.TimeoutMilliseconds);
         Assert.Contains("database", result.Value.CheckOutput.ToLower());
+        Assert.Equal(JobLastRunOutcome.Failed, result.Value.LastRunOutcome);
     }
 
     /// <summary>
@@ -2852,6 +2860,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var pluginRepository = GetRequiredService<PluginRepository>();
         return new ProxyCheckJob(ruriLibSettingsService, pluginRepository, logger);
     }
+
+    private static void SetLastRunOutcome(Job job, JobLastRunOutcome outcome)
+        => typeof(Job).GetProperty(nameof(Job.LastRunOutcome))!
+            .GetSetMethod(nonPublic: true)!
+            .Invoke(job, [outcome]);
 
     private TestCommandJob CreateCommandTestJob()
     {

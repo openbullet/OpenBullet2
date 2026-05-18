@@ -73,6 +73,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             OwnerId = job.OwnerId,
             Type = GetJobType(job),
             Status = job.Status,
+            LastRunOutcome = job.LastRunOutcome,
             Name = job.Name
         })
             .ToList();
@@ -116,6 +117,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
                 OwnerId = job.OwnerId,
                 Type = JobType.MultiRun,
                 Status = job.Status,
+                LastRunOutcome = job.LastRunOutcome,
                 Name = job.Name,
                 ConfigName = job.Config?.Metadata.Name,
                 UseProxies = job.ShouldUseProxies(),
@@ -913,6 +915,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             OwnerId = job.OwnerId,
             Type = GetJobType(job),
             Status = job.Status,
+            LastRunOutcome = job.LastRunOutcome,
             Bots = job.Bots,
             GroupId = pcjJobOptions.GroupId,
             GroupName = groupName,
@@ -1003,6 +1006,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             OwnerId = job.OwnerId,
             Type = GetJobType(job),
             Status = job.Status,
+            LastRunOutcome = job.LastRunOutcome,
             Config =
                 job.Config is not null
                     ? new JobConfigDto

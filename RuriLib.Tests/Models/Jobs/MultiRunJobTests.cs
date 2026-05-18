@@ -5,6 +5,7 @@ using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
 using RuriLib.Logging;
+using RuriLib.Parallelization;
 using RuriLib.Proxies.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,7 @@ public class MultiRunJobTests
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => job.Start(TestCancellationToken));
 
         Assert.Equal("The Providers cannot be null", exception.Message);
+        Assert.Equal(JobLastRunOutcome.Failed, job.LastRunOutcome);
     }
 
     [Fact]
@@ -293,12 +295,56 @@ public class MultiRunJobTests
         await job.Start(TestCancellationToken);
         await WaitUntilIdleAsync(job);
         Assert.Equal(0, job.Skip);
+        Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
 
         var exception = await Record.ExceptionAsync(() => job.Start(TestCancellationToken));
         await WaitUntilIdleAsync(job);
 
         Assert.Null(exception);
         Assert.Equal(0, job.Skip);
+        Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
+    }
+
+    [Fact]
+    public void PropagateCompleted_DoesNotOverrideOutcome_WhenProgressIsNotComplete()
+    {
+        var job = CreateJob();
+
+        typeof(MultiRunJob)
+            .GetField("parallelizer", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(job, new FakeMultiRunParallelizer(processed: 1, total: 2));
+
+        typeof(Job)
+            .GetProperty(nameof(Job.LastRunOutcome))!
+            .GetSetMethod(nonPublic: true)!
+            .Invoke(job, [JobLastRunOutcome.Stopped]);
+
+        typeof(MultiRunJob)
+            .GetMethod("PropagateCompleted", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(job, [null, EventArgs.Empty]);
+
+        Assert.Equal(JobLastRunOutcome.Stopped, job.LastRunOutcome);
+    }
+
+    [Fact]
+    public void StatusChanged_ToIdle_SetsStoppedOutcome_WhenPendingOutcomeExists()
+    {
+        var job = CreateJob();
+
+        typeof(MultiRunJob)
+            .GetField("parallelizer", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(job, new FakeMultiRunParallelizer(processed: 1, total: 2));
+
+        typeof(MultiRunJob)
+            .GetField("pendingLastRunOutcome", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(job, JobLastRunOutcome.Stopped);
+
+        typeof(MultiRunJob)
+            .GetMethod("StatusChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(job, [null, ParallelizerStatus.Idle]);
+
+        Assert.Equal(JobStatus.Idle, job.Status);
+        Assert.Equal(JobLastRunOutcome.Stopped, job.LastRunOutcome);
     }
 
     [Fact]
@@ -450,5 +496,19 @@ public class MultiRunJobTests
     private sealed class ImmediateStartCondition : StartCondition
     {
         public override bool Verify(Job job) => true;
+    }
+
+    private sealed class FakeMultiRunParallelizer
+        : global::RuriLib.Parallelization.Parallelizer<MultiRunInput, CheckResult>
+    {
+        public FakeMultiRunParallelizer(int processed, long total)
+            : base(
+                Array.Empty<MultiRunInput>(),
+                static (_, _) => Task.FromResult(default(CheckResult)),
+                degreeOfParallelism: 1,
+                totalAmount: total)
+        {
+            Processed = processed;
+        }
     }
 }

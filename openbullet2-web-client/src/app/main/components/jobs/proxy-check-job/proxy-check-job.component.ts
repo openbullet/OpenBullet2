@@ -13,6 +13,8 @@ import {
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { JobLastRunOutcome } from 'src/app/main/dtos/job/job-last-run-outcome';
+import { getJobDisplayColor, getJobDisplayLabel } from 'src/app/main/dtos/job/job-display';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { PCJNewResultMessage } from 'src/app/main/dtos/job/messages/proxy-check/new-result.dto';
 import { ProxyCheckJobDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
@@ -49,17 +51,6 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   Math = Math;
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
-
-  statusColor: Record<JobStatus, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   status: JobStatus = JobStatus.IDLE;
   bots = 0;
@@ -253,6 +244,10 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
       this.startTime = moment();
     }
 
+    if (status === JobStatus.IDLE) {
+      this.getJobData();
+    }
+
     const logMessage = `Status changed to ${status}`;
 
     this.writeLog({
@@ -338,6 +333,20 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   skipWait() {
     this.jobService.skipWait(this.jobId!).subscribe();
+  }
+
+  getDisplayStatusLabel() {
+    return getJobDisplayLabel({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
+  }
+
+  getDisplayStatusColor() {
+    return getJobDisplayColor({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
   }
 
   showEditBotsInput() {

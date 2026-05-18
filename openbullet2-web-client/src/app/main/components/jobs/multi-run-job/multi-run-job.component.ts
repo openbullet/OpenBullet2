@@ -17,6 +17,8 @@ import {
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { JobLastRunOutcome } from 'src/app/main/dtos/job/job-last-run-outcome';
+import { getJobDisplayColor, getJobDisplayLabel } from 'src/app/main/dtos/job/job-display';
 import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { MRJNewHitMessage } from 'src/app/main/dtos/job/messages/multi-run/hit.dto';
@@ -79,17 +81,6 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
   settings: SafeOBSettingsDto | null = null;
   customInputs: CustomInputQuestionDto[] | null = null;
-
-  statusColor: Record<JobStatus, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   customStatuses: string[] = ['CUSTOM'];
   botLimit = 200;
@@ -448,6 +439,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       this.startTime = moment();
     }
 
+    if (status === JobStatus.IDLE) {
+      this.getJobData();
+    }
+
     const logMessage = `Status changed to ${status}`;
 
     this.writeLog({
@@ -551,6 +546,20 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
   canSkipWait() {
     return this.status === JobStatus.WAITING;
+  }
+
+  getDisplayStatusLabel() {
+    return getJobDisplayLabel({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
+  }
+
+  getDisplayStatusColor() {
+    return getJobDisplayColor({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
   }
 
   skipWait() {

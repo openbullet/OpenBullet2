@@ -13,8 +13,8 @@
 </div>
 
 <div class="container-fluid d-flex flex-row px-0" *ngIf="job !== null">
-    <div [class]="'job-chip bg-' + statusColor[status]">
-        {{ status | uppercase }}
+    <div [class]="'job-chip bg-' + getDisplayStatusColor()">
+        {{ getDisplayStatusLabel() | uppercase }}
     </div>
     <h2 class="job-name">
         <span>{{job.name}}</span>

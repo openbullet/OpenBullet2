@@ -109,6 +109,7 @@ public class MultiRunJob : Job
     private AsyncLocker? asyncLocker;
     private Timer? proxyReloadTimer;
     private CancellationTokenSource? startCts;
+    private JobLastRunOutcome pendingLastRunOutcome = JobLastRunOutcome.None;
 
     // Instance properties and stats
     /// <summary>Gets the hits collected during the current run.</summary>
@@ -574,6 +575,8 @@ public class MultiRunJob : Job
 
         try
         {
+            LastRunOutcome = JobLastRunOutcome.None;
+            pendingLastRunOutcome = JobLastRunOutcome.None;
             ResetForNewRun();
             startCts = new CancellationTokenSource();
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
@@ -813,6 +816,11 @@ public class MultiRunJob : Job
         }
         catch (Exception ex)
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Failed;
+            }
+
             OnError?.Invoke(this, ex);
             throw;
         }
@@ -833,6 +841,8 @@ public class MultiRunJob : Job
     /// <inheritdoc />
     public override async Task Stop()
     {
+        pendingLastRunOutcome = JobLastRunOutcome.Stopped;
+
         try
         {
             if (parallelizer is not null)
@@ -847,6 +857,11 @@ public class MultiRunJob : Job
         }
         finally
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Stopped;
+            }
+
             StopTimers();
             logger?.LogInfo(Id, "Execution stopped");
             DisposeRunResources();
@@ -856,6 +871,8 @@ public class MultiRunJob : Job
     /// <inheritdoc />
     public override async Task Abort()
     {
+        pendingLastRunOutcome = JobLastRunOutcome.Aborted;
+
         try
         {
             if (parallelizer is not null)
@@ -875,6 +892,11 @@ public class MultiRunJob : Job
         }
         finally
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Aborted;
+            }
+
             StopTimers();
             logger?.LogInfo(Id, "Execution aborted");
             DisposeRunResources();
@@ -1001,6 +1023,11 @@ public class MultiRunJob : Job
 
     private void PropagateCompleted(object? _, EventArgs e)
     {
+        if (LastRunOutcome == JobLastRunOutcome.None && Progress >= 1f)
+        {
+            LastRunOutcome = JobLastRunOutcome.Completed;
+        }
+
         StopTimers();
         OnCompleted?.Invoke(this, e);
         logger?.LogInfo(Id, "Execution completed");
@@ -1081,6 +1108,23 @@ public class MultiRunJob : Job
             ParallelizerStatus.Resuming => JobStatus.Resuming,
             _ => throw new NotImplementedException()
         };
+
+        if (Status == JobStatus.Idle && LastRunOutcome == JobLastRunOutcome.None)
+        {
+            if (Progress >= 1f)
+            {
+                LastRunOutcome = JobLastRunOutcome.Completed;
+            }
+            else if (pendingLastRunOutcome != JobLastRunOutcome.None)
+            {
+                LastRunOutcome = pendingLastRunOutcome;
+            }
+        }
+
+        if (Status == JobStatus.Idle)
+        {
+            pendingLastRunOutcome = JobLastRunOutcome.None;
+        }
 
         OnStatusChanged?.Invoke(this, Status);
     }

@@ -37,7 +37,7 @@ public class JobFinishedTrigger : Trigger
 {
     /// <inheritdoc />
     public override bool CheckStatus(Job job)
-        => job.Status == JobStatus.Idle && job.Progress == 1f;
+        => job.Status == JobStatus.Idle && job.LastRunOutcome == JobLastRunOutcome.Completed;
 }
 
 /// <summary>

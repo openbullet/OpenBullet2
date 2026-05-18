@@ -221,7 +221,10 @@ public class JobViewModel(Job job) : ViewModelBase
 {
     public Job Job { get; init; } = job;
 
-    public string IdAndStatus => $"#{Id} [{Status}]";
+    public string DisplayStatus => Status == JobStatus.Idle && Job.LastRunOutcome != JobLastRunOutcome.None
+        ? Job.LastRunOutcome.ToString()
+        : Status.ToString();
+    public string IdAndStatus => $"#{Id} [{DisplayStatus}]";
     public int Id => Job.Id;
     public JobStatus Status => Job.Status;
 }

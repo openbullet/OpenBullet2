@@ -145,8 +145,8 @@
                         </td>
                         <td>{{ mrj.name }}</td>
                         <td>
-                            <div [class]="'job-chip bg-' + statusColor[mrj.status]">
-                                {{ mrj.status | uppercase }}
+                            <div [class]="'job-chip bg-' + getDisplayStatusColor(mrj)">
+                                {{ getDisplayStatusLabel(mrj) | uppercase }}
                             </div>
                         </td>
                         <td>{{ mrj.configName }}</td>
@@ -295,9 +295,9 @@
                         </td>
                         <td>{{ pcj.name }}</td>
                         <td>
-                            <div [class]="'job-chip bg-' + statusColor[pcj.status]">
+                            <div [class]="'job-chip bg-' + getDisplayStatusColor(pcj)">
                                 <span class="px-auto">
-                                    {{ pcj.status | uppercase }}
+                                    {{ getDisplayStatusLabel(pcj) | uppercase }}
                                 </span>
                             </div>
                         </td>

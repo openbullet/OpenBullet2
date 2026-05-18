@@ -99,6 +99,7 @@ public class ProxyCheckJob : Job
     private Parallelizer<ProxyCheckInput, Proxy>? parallelizer;
     private Timer? tickTimer;
     private CancellationTokenSource? startCts;
+    private JobLastRunOutcome pendingLastRunOutcome = JobLastRunOutcome.None;
 
     // Stats
     /// <summary>
@@ -257,6 +258,8 @@ public class ProxyCheckJob : Job
 
         try
         {
+            LastRunOutcome = JobLastRunOutcome.None;
+            pendingLastRunOutcome = JobLastRunOutcome.None;
             ResetForNewRun();
             startCts = new CancellationTokenSource();
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
@@ -329,6 +332,11 @@ public class ProxyCheckJob : Job
         }
         catch (Exception ex)
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Failed;
+            }
+
             OnError?.Invoke(this, ex);
             throw;
         }
@@ -349,6 +357,8 @@ public class ProxyCheckJob : Job
     /// <inheritdoc />
     public override async Task Stop()
     {
+        pendingLastRunOutcome = JobLastRunOutcome.Stopped;
+
         try
         {
             if (parallelizer is not null)
@@ -363,6 +373,11 @@ public class ProxyCheckJob : Job
         }
         finally
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Stopped;
+            }
+
             StopTimer();
             logger?.LogInfo(Id, "Execution stopped");
         }
@@ -371,6 +386,8 @@ public class ProxyCheckJob : Job
     /// <inheritdoc />
     public override async Task Abort()
     {
+        pendingLastRunOutcome = JobLastRunOutcome.Aborted;
+
         try
         {
             if (parallelizer is not null)
@@ -390,6 +407,11 @@ public class ProxyCheckJob : Job
         }
         finally
         {
+            if (LastRunOutcome == JobLastRunOutcome.None)
+            {
+                LastRunOutcome = JobLastRunOutcome.Aborted;
+            }
+
             StopTimer();
             logger?.LogInfo(Id, "Execution aborted");
         }
@@ -484,6 +506,11 @@ public class ProxyCheckJob : Job
 
     private void PropagateCompleted(object? _, EventArgs e)
     {
+        if (LastRunOutcome == JobLastRunOutcome.None && Progress >= 1f)
+        {
+            LastRunOutcome = JobLastRunOutcome.Completed;
+        }
+
         StopTimer();
         OnCompleted?.Invoke(this, e);
         logger?.LogInfo(Id, "Execution completed");
@@ -523,6 +550,23 @@ public class ProxyCheckJob : Job
             ParallelizerStatus.Resuming => JobStatus.Resuming,
             _ => throw new NotImplementedException()
         };
+
+        if (Status == JobStatus.Idle && LastRunOutcome == JobLastRunOutcome.None)
+        {
+            if (Progress >= 1f)
+            {
+                LastRunOutcome = JobLastRunOutcome.Completed;
+            }
+            else if (pendingLastRunOutcome != JobLastRunOutcome.None)
+            {
+                LastRunOutcome = pendingLastRunOutcome;
+            }
+        }
+
+        if (Status == JobStatus.Idle)
+        {
+            pendingLastRunOutcome = JobLastRunOutcome.None;
+        }
 
         OnStatusChanged?.Invoke(this, Status);
     }

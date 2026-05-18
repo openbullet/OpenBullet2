@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleLeft, faAngleRight, faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { getJobDisplayColor, getJobDisplayLabel } from '../../dtos/job/job-display';
+import { JobOverviewDto } from '../../dtos/job/job.dto';
 import { JobStatus } from '../../dtos/job/job-status';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
@@ -35,17 +37,6 @@ export class JobsComponent implements OnInit, OnDestroy {
   showMoreMultiRunJobs = false;
   showMoreProxyCheckJobs = false;
   createJobModalVisible = false;
-
-  statusColor: Record<string, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   usernames: Map<number, string> = new Map();
 
@@ -306,5 +297,13 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
 
     return mrj.useProxies ? 'bg-good' : 'bg-bad';
+  }
+
+  getDisplayStatusLabel(job: { status: JobStatus; lastRunOutcome: JobOverviewDto['lastRunOutcome'] }) {
+    return getJobDisplayLabel(job);
+  }
+
+  getDisplayStatusColor(job: { status: JobStatus; lastRunOutcome: JobOverviewDto['lastRunOutcome'] }) {
+    return getJobDisplayColor(job);
   }
 }
