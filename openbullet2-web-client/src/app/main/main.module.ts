@@ -101,6 +101,7 @@ import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/u
 import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.component';
 import { PluginsComponent } from './components/plugins/plugins.component';
 import { CreateProxyGroupComponent } from './components/proxies/create-proxy-group/create-proxy-group.component';
+import { DeleteLowQualityProxiesComponent } from './components/proxies/delete-low-quality-proxies/delete-low-quality-proxies.component';
 import { DeleteSlowProxiesComponent } from './components/proxies/delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromFileComponent } from './components/proxies/import-proxies-from-file/import-proxies-from-file.component';
 import { ImportProxiesFromRemoteComponent } from './components/proxies/import-proxies-from-remote/import-proxies-from-remote.component';
@@ -151,6 +152,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ProxiesComponent,
     CreateProxyGroupComponent,
     UpdateProxyGroupComponent,
+    DeleteLowQualityProxiesComponent,
     DeleteSlowProxiesComponent,
     ImportProxiesFromTextComponent,
     ProxySyntaxInfoComponent,

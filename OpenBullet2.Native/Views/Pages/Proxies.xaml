@@ -82,6 +82,12 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Untested</TextBlock>
                 </StackPanel>
             </Button>
+            <Button x:Name="deleteLowQualityButton" Click="DeleteLowQuality" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes proxies with the selected low-quality buckets.">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Low-Quality</TextBlock>
+                </StackPanel>
+            </Button>
             <TextBlock FontWeight="Bold" VerticalAlignment="Center" Margin="10 0 0 0">Total:</TextBlock>
             <TextBlock Text="{Binding Total}" VerticalAlignment="Center" Margin="5 0 0 0" />
             <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" Margin="10 0 0 0">Working:</TextBlock>

@@ -106,6 +106,10 @@ public partial class Proxies : Page
         }
     }
 
+    private void DeleteLowQuality(object sender, RoutedEventArgs e)
+        => new MainDialog(uiFactory.Create<DeleteLowQualityProxiesDialog>(this),
+            "Delete low-quality proxies").ShowDialog();
+
     private void Import(object sender, RoutedEventArgs e)
     {
         if (!vm.GroupIsValid)
@@ -151,6 +155,12 @@ public partial class Proxies : Page
         => SelectedProxies.CopyToClipboard(p => p.ToString());
 
     public Task AddProxiesAsync(ProxiesForImportDto dto) => vm.AddProxiesAsync(dto);
+
+    public async Task DeleteLowQualityAsync(DeleteLowQualityProxiesDto dto)
+    {
+        await vm.DeleteLowQualityAsync(dto);
+        Alert.Success("Done", "Successfully deleted the selected low-quality proxies from the group");
+    }
 
     private async void DeleteSelected(object sender, RoutedEventArgs e)
     {

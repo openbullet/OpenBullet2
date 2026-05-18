@@ -5,6 +5,7 @@ import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { PagedList } from '../dtos/common/paged-list.dto';
 import { AddProxiesFromListDto } from '../dtos/proxy/add-proxies-from-list.dto';
 import { AddProxiesFromRemoteDto } from '../dtos/proxy/add-proxies-from-remote.dto';
+import { DeleteLowQualityProxiesDto } from '../dtos/proxy/delete-low-quality-proxies.dto';
 import { MoveProxiesDto } from '../dtos/proxy/move-proxies.dto';
 import { ProxyFiltersDto } from '../dtos/proxy/proxy-filters.dto';
 import { ProxyDto } from '../dtos/proxy/proxy.dto';
@@ -60,6 +61,13 @@ export class ProxyService {
         proxyGroupId,
         maxPing,
       },
+    });
+  }
+
+  deleteLowQualityProxies(params: DeleteLowQualityProxiesDto) {
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/proxy/low-quality`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
+      params: <any>Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null)),
     });
   }
 }

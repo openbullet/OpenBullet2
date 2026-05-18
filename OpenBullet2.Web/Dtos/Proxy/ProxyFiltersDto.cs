@@ -30,6 +30,11 @@ public class ProxyFiltersDto : PaginationDto
     public ProxyWorkingStatus? Status { get; set; } = null;
 
     /// <summary>
+    /// The proxy quality filter, if any.
+    /// </summary>
+    public ProxyQuality? Quality { get; set; } = null;
+
+    /// <summary>
     /// The field to sort proxies by, if any.
     /// </summary>
     public ProxySortField? SortBy { get; set; } = null;

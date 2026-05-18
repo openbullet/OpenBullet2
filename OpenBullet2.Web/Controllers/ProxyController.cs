@@ -192,6 +192,51 @@ public class ProxyController(IProxyRepository proxyRepo,
     }
 
     /// <summary>
+    /// Delete all proxies that match the selected low-quality buckets in a group.
+    /// Returns the number of deleted proxies.
+    /// </summary>
+    [HttpDelete("low-quality")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<AffectedEntriesDto>> DeleteLowQuality(
+        [FromQuery] DeleteLowQualityProxiesDto dto, CancellationToken cancellationToken = default)
+    {
+        var selectedQualities = new List<ProxyQuality>();
+
+        if (dto.DeleteUnknown)
+        {
+            selectedQualities.Add(ProxyQuality.Unknown);
+        }
+
+        if (dto.DeleteTransparent)
+        {
+            selectedQualities.Add(ProxyQuality.Transparent);
+        }
+
+        if (dto.DeleteAnonymous)
+        {
+            selectedQualities.Add(ProxyQuality.Anonymous);
+        }
+
+        if (selectedQualities.Count == 0)
+        {
+            return new AffectedEntriesDto { Count = 0 };
+        }
+
+        var query = FilteredQuery(new ProxyFiltersDto
+        {
+            ProxyGroupId = dto.ProxyGroupId
+        }).Where(p => selectedQualities.Contains(p.Quality));
+
+        var toDelete = await query.ToListAsync(cancellationToken);
+
+        await _proxyRepo.DeleteAsync(toDelete, cancellationToken);
+
+        _logger.LogInformation("Deleted {ProxyCount} low-quality proxies", toDelete.Count);
+
+        return new AffectedEntriesDto { Count = toDelete.Count };
+    }
+
+    /// <summary>
     /// Delete all working proxies with ping above a given threshold in a group.
     /// Returns the number of deleted proxies.
     /// </summary>
@@ -271,6 +316,11 @@ public class ProxyController(IProxyRepository proxyRepo,
         if (dto.Status is not null)
         {
             query = query.Where(p => p.Status == dto.Status);
+        }
+
+        if (dto.Quality is not null)
+        {
+            query = query.Where(p => p.Quality == dto.Quality);
         }
 
         if (dto.ProxyGroupId != -1)

@@ -245,6 +245,32 @@ public class ProxiesViewModel : ViewModelBase
             toRemove.Count, selectedGroup.Name);
     }
 
+    public async Task DeleteLowQualityAsync(DeleteLowQualityProxiesDto dto)
+    {
+        var qualities = new List<ProxyQuality>();
+
+        if (dto.DeleteUnknown)
+        {
+            qualities.Add(ProxyQuality.Unknown);
+        }
+
+        if (dto.DeleteTransparent)
+        {
+            qualities.Add(ProxyQuality.Transparent);
+        }
+
+        if (dto.DeleteAnonymous)
+        {
+            qualities.Add(ProxyQuality.Anonymous);
+        }
+
+        var toRemove = ProxiesCollection.Where(p => qualities.Contains(p.Quality)).ToList();
+        await WithProxyRepositoryAsync(repo => repo.DeleteAsync(toRemove));
+        await RefreshListAsync();
+        logger.LogInformation("Deleted {ProxyCount} low-quality proxies from group {GroupName}",
+            toRemove.Count, selectedGroup.Name);
+    }
+
     public override void UpdateViewModel()
     {
         _ = RefreshListAsync();

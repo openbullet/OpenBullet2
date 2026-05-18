@@ -86,6 +86,18 @@
                     <span>{{item | pascalcase : true}}</span>
                 </ng-template>
             </p-dropdown>
+            <p-dropdown
+                class="ml-2"
+                [(ngModel)]="proxyQuality"
+                (ngModelChange)="refreshProxies()"
+                [options]="proxyQualities">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
         </div>
         <div class="col-4 pr-0 text-right">
             <button class="button button-secondary mr-2" [style]="{ height: '41px'}"
@@ -257,6 +269,21 @@
     <app-update-proxy-group
         [proxyGroup]="selectedProxyGroup"
         (confirm)="updateProxyGroup($event)" />
+</p-dialog>
+
+<p-dialog 
+    #deleteLowQualityProxiesModal
+    [header]="'Delete low-quality proxies in group ' + selectedProxyGroup.name" 
+    [(visible)]="deleteLowQualityProxiesModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-delete-low-quality-proxies
+        [proxyGroup]="selectedProxyGroup"
+        (confirm)="deleteLowQualityProxies($event)" />
 </p-dialog>
 
 <p-dialog 

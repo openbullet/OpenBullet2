@@ -19,11 +19,13 @@ import { ProxyGroupDto } from '../../dtos/proxy-group/proxy-group.dto';
 import { UpdateProxyGroupDto } from '../../dtos/proxy-group/update-proxy-group.dto';
 import { ProxyFiltersDto, ProxySortField } from '../../dtos/proxy/proxy-filters.dto';
 import { ProxyDto } from '../../dtos/proxy/proxy.dto';
+import { ProxyQuality } from '../../enums/proxy-quality';
 import { ProxyType } from '../../enums/proxy-type';
 import { ProxyWorkingStatus } from '../../enums/proxy-working-status';
 import { ProxyGroupService } from '../../services/proxy-group.service';
 import { ProxyService } from '../../services/proxy.service';
 import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
+import { DeleteLowQualityProxiesParams } from './delete-low-quality-proxies/delete-low-quality-proxies.component';
 import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
 import {
@@ -77,6 +79,7 @@ export class ProxiesComponent implements OnInit {
 
   createProxyGroupModalVisible = false;
   updateProxyGroupModalVisible = false;
+  deleteLowQualityProxiesModalVisible = false;
   deleteSlowProxiesModalVisible = false;
   importProxiesFromTextModalVisible = false;
   importProxiesFromFileModalVisible = false;
@@ -97,6 +100,14 @@ export class ProxiesComponent implements OnInit {
     ProxyType.Socks4,
     ProxyType.Socks4a,
     ProxyType.Socks5,
+  ];
+  proxyQuality: 'anyQuality' | ProxyQuality = 'anyQuality';
+  proxyQualities: ('anyQuality' | ProxyQuality)[] = [
+    'anyQuality',
+    ProxyQuality.Unknown,
+    ProxyQuality.Transparent,
+    ProxyQuality.Anonymous,
+    ProxyQuality.Elite,
   ];
   sortBy: ProxySortField = ProxySortField.LastChecked;
   sortDescending = true;
@@ -188,6 +199,12 @@ export class ProxiesComponent implements OnInit {
           icon: 'pi pi-fw pi-trash color-bad',
           command: (e) => this.openDeleteSlowProxiesModal(),
         },
+        {
+          id: 'delete-low-quality-proxies',
+          label: 'Low-quality proxies',
+          icon: 'pi pi-fw pi-trash color-bad',
+          command: (e) => this.openDeleteLowQualityProxiesModal(),
+        },
       ],
     },
   ];
@@ -206,6 +223,7 @@ export class ProxiesComponent implements OnInit {
       this.searchTerm = params['searchTerm'] ?? '';
       this.proxyWorkingStatus = params['proxyWorkingStatus'] ?? 'anyStatus';
       this.proxyType = params['proxyType'] ?? 'anyType';
+      this.proxyQuality = params['proxyQuality'] ?? 'anyQuality';
       this.sortBy = params['sortBy'];
       this.sortDescending = params['sortDescending'] === 'true';
       this.refreshProxyGroups();
@@ -269,6 +287,7 @@ export class ProxiesComponent implements OnInit {
             searchTerm: this.searchTerm || null,
             proxyWorkingStatus: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
             proxyType: this.proxyType === 'anyType' ? null : this.proxyType,
+            proxyQuality: this.proxyQuality === 'anyQuality' ? null : this.proxyQuality,
             sortBy: sortBy,
             sortDescending: sortDescending ? 'true' : null,
           },
@@ -283,6 +302,7 @@ export class ProxiesComponent implements OnInit {
         searchTerm: this.searchTerm,
         type: this.proxyType === 'anyType' ? null : this.proxyType,
         status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+        quality: this.proxyQuality === 'anyQuality' ? null : this.proxyQuality,
         sortBy: sortBy,
         sortDescending: sortDescending,
       })
@@ -305,6 +325,7 @@ export class ProxiesComponent implements OnInit {
     this.searchTerm = '';
     this.proxyWorkingStatus = 'anyStatus';
     this.proxyType = 'anyType';
+    this.proxyQuality = 'anyQuality';
     this.refreshProxies();
   }
 
@@ -432,6 +453,7 @@ export class ProxiesComponent implements OnInit {
       searchTerm: this.searchTerm,
       type: this.proxyType === 'anyType' ? null : this.proxyType,
       status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+      quality: this.proxyQuality === 'anyQuality' ? null : this.proxyQuality,
       sortBy: null,
       sortDescending: false,
     });
@@ -445,6 +467,7 @@ export class ProxiesComponent implements OnInit {
       searchTerm: null,
       type: null,
       status: ProxyWorkingStatus.NotWorking,
+      quality: null,
       sortBy: null,
       sortDescending: false,
     });
@@ -458,8 +481,25 @@ export class ProxiesComponent implements OnInit {
       searchTerm: null,
       type: null,
       status: ProxyWorkingStatus.Untested,
+      quality: null,
       sortBy: null,
       sortDescending: false,
+    });
+  }
+
+  openDeleteLowQualityProxiesModal() {
+    this.deleteLowQualityProxiesModalVisible = true;
+  }
+
+  deleteLowQualityProxies(params: DeleteLowQualityProxiesParams) {
+    this.proxyService.deleteLowQualityProxies(params).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `${resp.count} low-quality proxies were deleted from proxy group ${this.selectedProxyGroup.name}`,
+      });
+      this.deleteLowQualityProxiesModalVisible = false;
+      this.refreshProxies();
     });
   }
 
@@ -494,6 +534,7 @@ export class ProxiesComponent implements OnInit {
           searchTerm: null,
           type: null,
           status: null,
+          quality: null,
           sortBy: null,
           sortDescending: false,
         }),
@@ -572,6 +613,7 @@ export class ProxiesComponent implements OnInit {
         searchTerm: this.searchTerm,
         type: this.proxyType === 'anyType' ? null : this.proxyType,
         status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+        quality: this.proxyQuality === 'anyQuality' ? null : this.proxyQuality,
       })
       .subscribe((resp) => {
         this.messageService.add({
@@ -592,6 +634,7 @@ export class ProxiesComponent implements OnInit {
         searchTerm: this.searchTerm,
         type: this.proxyType === 'anyType' ? null : this.proxyType,
         status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+        quality: this.proxyQuality === 'anyQuality' ? null : this.proxyQuality,
         sortBy: null,
         sortDescending: false,
       })

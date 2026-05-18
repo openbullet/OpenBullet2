@@ -189,6 +189,40 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public async Task GetAll_FilteredByQuality_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        dbContext.Proxies.AddRange(
+            new ProxyEntity { Host = "1.1.1.1", Port = 8080, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.2", Port = 8081, Quality = ProxyQuality.Anonymous, Group = group },
+            new ProxyEntity { Host = "1.1.1.3", Port = 8082, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.4", Port = 8083, Quality = ProxyQuality.Transparent, Group = group }
+        );
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var filters = new ProxyFiltersDto
+        {
+            PageNumber = 0,
+            PageSize = 25,
+            ProxyGroupId = group.Id,
+            Quality = ProxyQuality.Elite
+        };
+        var result = await GetJsonAsync<PagedList<ProxyDto>>(
+            client, "/api/v1/proxy/all".ToUri(filters));
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Items.Count);
+        Assert.Equal(2, result.Value.TotalCount);
+        Assert.All(result.Value.Items, p => Assert.Equal(ProxyQuality.Elite, p.Quality));
+    }
+
+    [Fact]
     public async Task Add_FromList_Success()
     {
         // Arrange
@@ -583,6 +617,45 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
             .CountAsync(TestCancellationToken);
 
         Assert.Equal(2, remaining);
+    }
+
+    [Fact]
+    public async Task DeleteLowQuality_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        dbContext.Proxies.AddRange(
+            new ProxyEntity { Host = "1.1.1.1", Port = 8080, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.2", Port = 8081, Quality = ProxyQuality.Unknown, Group = group },
+            new ProxyEntity { Host = "1.1.1.3", Port = 8082, Quality = ProxyQuality.Anonymous, Group = group },
+            new ProxyEntity { Host = "1.1.1.4", Port = 8083, Quality = ProxyQuality.Transparent, Group = group }
+        );
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var queryParams = new
+        {
+            proxyGroupId = group.Id,
+            deleteUnknown = true,
+            deleteTransparent = true,
+            deleteAnonymous = true
+        };
+        var result = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/low-quality".ToUri(queryParams));
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.Count);
+
+        var remaining = await dbContext.Proxies
+            .Where(p => p.Group != null && p.Group.Id == group.Id)
+            .ToListAsync(TestCancellationToken);
+
+        Assert.Single(remaining);
+        Assert.Equal(ProxyQuality.Elite, remaining[0].Quality);
     }
 
     [Fact]

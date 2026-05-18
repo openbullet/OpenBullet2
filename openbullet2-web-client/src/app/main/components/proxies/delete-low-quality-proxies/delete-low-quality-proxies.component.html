@@ -1,0 +1,36 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-2">
+                <p-checkbox
+                    inputId="deleteUnknown"
+                    binary="true"
+                    [(ngModel)]="deleteUnknown" />
+                <label class="ml-2" for="deleteUnknown">Unknown</label>
+            </div>
+            <div class="mb-2">
+                <p-checkbox
+                    inputId="deleteTransparent"
+                    binary="true"
+                    [(ngModel)]="deleteTransparent" />
+                <label class="ml-2" for="deleteTransparent">Transparent</label>
+            </div>
+            <div>
+                <p-checkbox
+                    inputId="deleteAnonymous"
+                    binary="true"
+                    [(ngModel)]="deleteAnonymous" />
+                <label class="ml-2" for="deleteAnonymous">Anonymous</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-bad float-right"
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
