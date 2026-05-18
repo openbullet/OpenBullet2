@@ -140,13 +140,20 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Id = Guid.NewGuid().ToString(),
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
-        mrJob.DataPool = new CombinationsDataPool("abc", 3);
+        mrJob.DataPool = new RangeDataPool(1, 10);
         mrJob.Bots = 10;
         mrJob.ProxyMode = JobProxyMode.On;
+        mrJob.Skip = 0;
+        SetDataTested(mrJob, 10);
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         var mrJob2 = CreateMultiRunJob();
         mrJob2.Name = "Test MRJ2";
         mrJob2.Id = 2;
         mrJob2.OwnerId = 1;
+        mrJob2.DataPool = new RangeDataPool(1, 10);
+        mrJob2.Skip = 6;
+        SetDataTested(mrJob2, 6);
+        SetLastRunOutcome(mrJob2, JobLastRunOutcome.Stopped);
         var pcJob = CreateProxyCheckJob();
         pcJob.Name = "Test PCJ";
         pcJob.Id = 1;
@@ -167,6 +174,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob2.Name, j.Name);
                 Assert.Equal(1, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
+                Assert.Equal(6, j.DataTested);
             },
             j =>
             {
@@ -175,9 +183,10 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(0, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
                 Assert.Equal(mrJob.Config.Metadata.Name, j.ConfigName);
-                Assert.Contains("Combinations", j.DataPoolInfo);
+                Assert.Contains("Range", j.DataPoolInfo);
                 Assert.Equal(mrJob.Bots, j.Bots);
                 Assert.Equal(mrJob.ShouldUseProxies(), j.UseProxies);
+                Assert.Equal(10, j.DataTested);
             });
     }
 
@@ -2865,6 +2874,10 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         => typeof(Job).GetProperty(nameof(Job.LastRunOutcome))!
             .GetSetMethod(nonPublic: true)!
             .Invoke(job, [outcome]);
+
+    private static void SetDataTested(MultiRunJob job, int dataTested)
+        => typeof(MultiRunJob).GetField("dataTested", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(job, dataTested);
 
     private TestCommandJob CreateCommandTestJob()
     {

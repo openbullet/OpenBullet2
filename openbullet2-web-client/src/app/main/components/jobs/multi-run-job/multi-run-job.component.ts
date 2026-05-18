@@ -659,7 +659,17 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   getTestedCount() {
-    return this.Math.min(this.dataStats.tested + this.job!.skip, this.dataStats.total);
+    if (!this.job) {
+      return 0;
+    }
+
+    if (this.status === JobStatus.IDLE) {
+      return this.job.lastRunOutcome === JobLastRunOutcome.COMPLETED
+        ? this.dataStats.total
+        : this.job.skip;
+    }
+
+    return this.Math.min(this.dataStats.tested + this.job.skip, this.dataStats.total);
   }
 
   chooseHitType(type: HitType) {

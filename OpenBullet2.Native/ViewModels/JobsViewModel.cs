@@ -271,8 +271,15 @@ public class MultiRunJobViewModel(MultiRunJob job) : JobViewModel(job)
     {
         get
         {
-            var tested = MultiRunJob.Status == JobStatus.Idle ? Skip : DataTested + Skip;
-            return $"{tested} / {MultiRunJob.DataPool?.Size ?? 0} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
+            var total = MultiRunJob.DataPool?.Size ?? 0;
+            var tested = MultiRunJob.Status switch
+            {
+                JobStatus.Idle when MultiRunJob.LastRunOutcome == JobLastRunOutcome.Completed => total,
+                JobStatus.Idle => Skip,
+                _ => Math.Min((long)DataTested + Skip, total)
+            };
+
+            return $"{tested} / {total} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
         }
     }
 
