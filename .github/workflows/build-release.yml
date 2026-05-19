@@ -184,6 +184,9 @@ jobs:
   docker:
     name: Build and Push Docker image to Docker Hub
     needs: build
+    if: |
+      always() &&
+      needs.build.result == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
