@@ -219,7 +219,7 @@ public static class Methods
     /// <summary>
     /// Executes a Python script with CPython via CSnakes and returns the normalized JSON result.
     /// </summary>
-    public static JsonElement InvokePython(
+    public static async Task<JsonElement> InvokePythonAsync(
         BotData data,
         string script,
         string scriptHash,
@@ -246,6 +246,8 @@ public static class Methods
             data.SetObject("pythonRuntime", runtime);
         }
 
-        return runtime.Invoke(data, script, scriptHash, inputNames, inputValues, outputNames, pythonVersion);
+        return await runtime
+            .InvokeAsync(data, script, scriptHash, inputNames, inputValues, outputNames, pythonVersion)
+            .ConfigureAwait(false);
     }
 }

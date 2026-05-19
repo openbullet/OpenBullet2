@@ -169,7 +169,7 @@ public class ScriptBlockInstanceTests
 
         AssertSyntax(CreatePythonBlock(), [],
             ["result"],
-            "InvokePython(data,",
+            "await InvokePythonAsync(data,",
             "\"result = DATA + x\"",
             "new string[] { \"DATA\", \"x\" }",
             "new object[] { input.DATA, x }",

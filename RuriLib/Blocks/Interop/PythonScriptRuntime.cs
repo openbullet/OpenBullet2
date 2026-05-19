@@ -1,26 +1,27 @@
 using CSnakes.Runtime;
-using CSnakes.Runtime.Python;
 using Microsoft.Extensions.DependencyInjection;
 using RuriLib.Exceptions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Interop;
 
 internal sealed class PythonScriptRuntime : IDisposable
 {
-    private const string BridgeModuleName = "__ob2_python_bridge__";
+    private const string BridgeModuleFileName = "ob2_python_bridge.py";
+    private const string BridgeModuleResourceName = "RuriLib.Blocks.Interop.ob2_python_bridge.py";
     private readonly object syncObject = new();
     private readonly string scriptsPath;
 
     private ServiceProvider? serviceProvider;
     private IPythonEnvironment? environment;
-    private PyObject? bridgeModule;
     private string? actualPythonVersion;
 
     public PythonScriptRuntime(string scriptsPath)
@@ -29,7 +30,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         this.scriptsPath = Path.GetFullPath(scriptsPath);
     }
 
-    public JsonElement Invoke(
+    public async Task<JsonElement> InvokeAsync(
         BotData data,
         string script,
         string scriptHash,
@@ -49,27 +50,20 @@ internal sealed class PythonScriptRuntime : IDisposable
         InitializeIfNeeded(pythonVersion);
         data.CancellationToken.ThrowIfCancellationRequested();
 
-        using (GIL.Acquire())
-        {
-            using var runFunction = bridgeModule!.GetAttr("run");
-            using PyObject scriptHashObject = PyObject.From(scriptHash);
-            using PyObject scriptObject = PyObject.From(script);
-            using PyObject inputNamesObject = PyObject.From(inputNames);
-            using PyObject inputValuesObject = PyObject.From(inputValues);
-            using PyObject outputNamesObject = PyObject.From(outputNames);
-            using var result = runFunction.Call(
-                scriptHashObject,
-                scriptObject,
-                inputNamesObject,
-                inputValuesObject,
-                outputNamesObject);
+        var json = await environment!
+            .Ob2PythonBridge()
+            .Run(
+                scriptHash,
+                script,
+                JsonSerializer.Serialize(SerializeInputs(inputNames, inputValues)),
+                JsonSerializer.Serialize(outputNames),
+                data.CancellationToken)
+            .ConfigureAwait(false);
 
-            var json = result.As<string>();
-            data.Logger.Log($"Executed Python script with result: {json}", LogColors.PaleChestnut);
+        data.Logger.Log($"Executed Python script with result: {json}", LogColors.PaleChestnut);
 
-            using var document = JsonDocument.Parse(json);
-            return document.RootElement.Clone();
-        }
+        using var document = JsonDocument.Parse(json);
+        return document.RootElement.Clone();
     }
 
     private void InitializeIfNeeded(string requestedPythonVersion)
@@ -83,7 +77,9 @@ internal sealed class PythonScriptRuntime : IDisposable
             }
 
             Directory.CreateDirectory(scriptsPath);
-            WriteBridgeModule();
+            // The source-generated wrapper imports the bridge by module name, so make sure a
+            // concrete file exists in the Scripts root used by the resolved interpreter.
+            EnsureBridgeModuleFile();
 
             var venvPath = Path.Combine(scriptsPath, ".venv");
             var normalizedPythonVersion = NormalizePythonVersion(requestedPythonVersion);
@@ -108,43 +104,10 @@ internal sealed class PythonScriptRuntime : IDisposable
             serviceProvider = services.BuildServiceProvider();
             environment = serviceProvider.GetRequiredService<IPythonEnvironment>();
 
-            using (GIL.Acquire())
-            {
-                EnsureScriptsPathOnSysPath();
-                bridgeModule = Import.ImportModule(BridgeModuleName);
-                actualPythonVersion = GetPythonVersion();
-            }
+            actualPythonVersion = ExtractMajorMinorVersion(environment.Version.ToString());
 
             EnsureVersionMatches(requestedPythonVersion);
         }
-    }
-
-    private void EnsureScriptsPathOnSysPath()
-    {
-        using var importlib = Import.ImportModule("importlib");
-        using var invalidateCaches = importlib.GetAttr("invalidate_caches");
-        invalidateCaches.Call();
-
-        using var sys = Import.ImportModule("sys");
-        using var path = sys.GetAttr("path");
-        using var append = path.GetAttr("append");
-        using PyObject scriptsPathObject = PyObject.From(scriptsPath);
-        append.Call(scriptsPathObject);
-    }
-
-    private string GetPythonVersion()
-    {
-        using var sys = Import.ImportModule("sys");
-        using var version = sys.GetAttr("version");
-        var text = version.ToString();
-        var match = Regex.Match(text, @"^(\d+\.\d+)");
-
-        if (!match.Success)
-        {
-            throw new BlockExecutionException($"Could not determine the Python version from '{text}'");
-        }
-
-        return match.Groups[1].Value;
     }
 
     private void EnsureVersionMatches(string requestedPythonVersion)
@@ -169,6 +132,18 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         return trimmed;
+    }
+
+    private static string ExtractMajorMinorVersion(string value)
+    {
+        var match = Regex.Match(value, @"^(\d+\.\d+)");
+
+        if (!match.Success)
+        {
+            throw new BlockExecutionException($"Could not determine the Python version from '{value}'");
+        }
+
+        return match.Groups[1].Value;
     }
 
     private static string GetVirtualEnvironmentBaseHome(string venvPath)
@@ -201,80 +176,49 @@ internal sealed class PythonScriptRuntime : IDisposable
         return baseHome;
     }
 
-    private void WriteBridgeModule()
+    private void EnsureBridgeModuleFile()
     {
-        var bridgePath = Path.Combine(scriptsPath, $"{BridgeModuleName}.py");
+        var bridgePath = Path.Combine(scriptsPath, BridgeModuleFileName);
+        using var stream = typeof(PythonScriptRuntime).Assembly.GetManifestResourceStream(BridgeModuleResourceName)
+            ?? throw new BlockExecutionException(
+                $"Could not find the embedded Python bridge resource '{BridgeModuleResourceName}'");
+        using var reader = new StreamReader(stream);
+        File.WriteAllText(bridgePath, reader.ReadToEnd());
+    }
 
-        if (File.Exists(bridgePath))
+    private static IEnumerable<InputValueDto> SerializeInputs(string[] inputNames, object[] inputValues)
+    {
+        if (inputNames.Length != inputValues.Length)
         {
-            return;
+            throw new BlockExecutionException(
+                $"The Python script expected {inputNames.Length} inputs but received {inputValues.Length} values");
         }
 
-        File.WriteAllText(bridgePath, """
-import asyncio
-import base64
-import json
-
-_CACHE = {}
-
-def _indent(script_source):
-    lines = script_source.splitlines()
-    if not lines:
-        return "    pass"
-
-    return "\n".join(("    " + line) if line else "" for line in lines)
-
-def _make_return_block(output_names):
-    if not output_names:
-        return "    return {}"
-
-    lines = ["    return {"]
-    for name in output_names:
-        lines.append(f"        {name!r}: {name},")
-    lines.append("    }")
-    return "\n".join(lines)
-
-def _normalize(value):
-    if value is None or isinstance(value, (str, int, float, bool)):
-        return value
-
-    if isinstance(value, (bytes, bytearray, memoryview)):
-        return base64.b64encode(bytes(value)).decode("ascii")
-
-    if isinstance(value, dict):
-        return {str(k): _normalize(v) for k, v in value.items()}
-
-    if isinstance(value, (list, tuple, set)):
-        return [_normalize(v) for v in value]
-
-    return value
-
-def run(script_hash, script_source, input_names, input_values, output_names):
-    fn = _CACHE.get(script_hash)
-
-    if fn is None:
-        args = ", ".join(input_names)
-        wrapper = "\n".join([
-            f"async def __ob2_entry__({args}):",
-            _indent(script_source),
-            _make_return_block(output_names)
-        ])
-
-        namespace = {}
-        exec(compile(wrapper, f"<ob2:{script_hash}>", "exec"), namespace, namespace)
-        fn = namespace["__ob2_entry__"]
-        _CACHE[script_hash] = fn
-
-    kwargs = dict(zip(input_names, input_values))
-    result = asyncio.run(fn(**kwargs))
-    return json.dumps(_normalize(result))
-""");
+        for (var i = 0; i < inputNames.Length; i++)
+        {
+            yield return new InputValueDto(inputNames[i], SerializeValue(inputValues[i]));
+        }
     }
+
+    private static object? SerializeValue(object? value)
+        => value switch
+        {
+            null => null,
+            bool or byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal or string => value,
+            // JSON cannot represent raw bytes, so tag them and let the Python bridge decode them.
+            byte[] bytes => new TaggedValueDto("bytes", Convert.ToBase64String(bytes)),
+            IEnumerable<string> list => list.ToArray(),
+            IDictionary<string, string> dictionary => dictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+            _ => throw new BlockExecutionException(
+                $"The Python script input type '{value.GetType()}' is not supported for CSnakes bridge serialization")
+        };
+
+    private sealed record InputValueDto(string Name, object? Value);
+
+    private sealed record TaggedValueDto(string __ob2_type__, string value);
 
     public void Dispose()
     {
-        bridgeModule?.Dispose();
-        bridgeModule = null;
         serviceProvider?.Dispose();
         serviceProvider = null;
         environment = null;

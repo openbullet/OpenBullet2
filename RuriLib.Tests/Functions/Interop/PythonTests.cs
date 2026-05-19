@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RuriLib.Tests.Functions.Interop;
@@ -48,41 +50,41 @@ public class PythonTests
     }
 
     [Fact]
-    public void InvokePython_StringOutputsFromSyncCode_ReturnsJson()
+    public async Task InvokePython_StringOutputsFromSyncCode_ReturnsJson()
     {
         var script = "result = DATA + suffix";
-        var data = CreateBotData();
+        var data = CreateBotData(TestContext.Current.CancellationToken);
 
-        var result = Methods.InvokePython(
+        var result = await Methods.InvokePythonAsync(
             data,
             script,
             GetScriptHash(script),
             ["DATA", "suffix"],
             ["hello", "_world"],
             ["result"],
-            "3.12");
+            "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("hello_world", result.GetProperty("result").GetString());
     }
 
     [Fact]
-    public void InvokePython_ListDictionaryAndBytesOutputs_ReturnsNormalizedJson()
+    public async Task InvokePython_ListDictionaryAndBytesOutputs_ReturnsNormalizedJson()
     {
         var script = """
 result = ["a", "b"]
 mapping = {"x": "1", "y": "2"}
 payload = b"hello"
 """;
-        var data = CreateBotData();
+        var data = CreateBotData(TestContext.Current.CancellationToken);
 
-        var result = Methods.InvokePython(
+        var result = await Methods.InvokePythonAsync(
             data,
             script,
             GetScriptHash(script),
             [],
             [],
             ["result", "mapping", "payload"],
-            "3.12");
+            "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("a", result.GetProperty("result")[0].GetString());
         Assert.Equal("2", result.GetProperty("mapping").GetProperty("y").GetString());
@@ -90,7 +92,7 @@ payload = b"hello"
     }
 
     [Fact]
-    public void InvokePython_AsyncCode_ReturnsJson()
+    public async Task InvokePython_AsyncCode_ReturnsJson()
     {
         var script = """
 import asyncio
@@ -98,27 +100,81 @@ import asyncio
 await asyncio.sleep(0)
 result = DATA + "_async"
 """;
-        var data = CreateBotData();
+        var data = CreateBotData(TestContext.Current.CancellationToken);
 
-        var result = Methods.InvokePython(
+        var result = await Methods.InvokePythonAsync(
             data,
             script,
             GetScriptHash(script),
             ["DATA"],
             ["hello"],
             ["result"],
-            "3.12");
+            "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("hello_async", result.GetProperty("result").GetString());
     }
 
-    private static BotData CreateBotData()
+    [Fact]
+    public async Task InvokePython_AsyncCode_PropagatesCancellationIntoPython()
+    {
+        var markerPath = Path.Combine(TempRoot, $"{Guid.NewGuid():N}.txt");
+        var script = """
+import asyncio
+
+try:
+    await asyncio.sleep(30)
+    result = "completed"
+except asyncio.CancelledError:
+    with open(marker_path, "w", encoding="utf-8") as handle:
+        handle.write("cancelled")
+    raise
+""";
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        cts.CancelAfter(TimeSpan.FromMilliseconds(100));
+        var data = CreateBotData(cts.Token);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => Methods.InvokePythonAsync(
+            data,
+            script,
+            GetScriptHash(script),
+            ["marker_path"],
+            [markerPath],
+            ["result"],
+            "3.12").WaitAsync(TestContext.Current.CancellationToken));
+
+        Assert.True(
+            await WaitForConditionAsync(() => File.Exists(markerPath), TimeSpan.FromSeconds(3)),
+            "Expected the Python coroutine to observe cancellation and write the marker file");
+    }
+
+    private static BotData CreateBotData(CancellationToken cancellationToken = default)
         => new(
             new BotProviders(null!),
             new ConfigSettings(),
             new BotLogger(),
-            new DataLine("hello", new WordlistType()));
+            new DataLine("hello", new WordlistType()))
+        {
+            CancellationToken = cancellationToken
+        };
 
     private static string GetScriptHash(string script)
         => Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(script))).ToLowerInvariant();
+
+    private static async Task<bool> WaitForConditionAsync(Func<bool> predicate, TimeSpan timeout)
+    {
+        var start = Stopwatch.StartNew();
+
+        while (start.Elapsed < timeout)
+        {
+            if (predicate())
+            {
+                return true;
+            }
+
+            await Task.Delay(50, TestContext.Current.CancellationToken);
+        }
+
+        return predicate();
+    }
 }

@@ -341,14 +341,14 @@ public class ScriptBlockInstance : BlockInstance
                 statements.Add(BlockSyntaxFactory.CreateVariableDeclaration(
                     "var",
                     resultName,
-                    Id("InvokePython").Call(
+                    Id("InvokePythonAsync").Call(
                         Id("data"),
                         Lit(Script),
                         Lit(GetScriptHash(Script)),
                         BuildSanitizedInputArrayExpression(),
                         BuildInputArrayExpression(),
                         BuildOutputNameArrayExpression(),
-                        Lit(PythonVersion))));
+                        Lit(PythonVersion)).Await()));
 
                 foreach (var output in OutputVariables)
                 {

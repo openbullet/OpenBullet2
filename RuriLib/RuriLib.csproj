@@ -6,6 +6,7 @@
     <Description>The library that powers OpenBullet.</Description>
     <Copyright>Ruri 2024</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <EmbedPythonSources>true</EmbedPythonSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +47,11 @@
     <ProjectReference Include="..\RuriLib.Http\RuriLib.Http.csproj" />
     <ProjectReference Include="..\RuriLib.Parallelization\RuriLib.Parallelization.csproj" />
     <ProjectReference Include="..\RuriLib.Proxies\RuriLib.Proxies.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Blocks\Interop\ob2_python_bridge.py" SourceItemType="Python" />
+    <EmbeddedResource Include="Blocks\Interop\ob2_python_bridge.py" />
   </ItemGroup>
 
 </Project>
