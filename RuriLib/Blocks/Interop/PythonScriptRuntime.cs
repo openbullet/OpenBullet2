@@ -56,6 +56,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         await InitializeIfNeededAsync(data.Logger, data.CancellationToken).ConfigureAwait(false);
         data.CancellationToken.ThrowIfCancellationRequested();
 
+        var invocationId = Guid.NewGuid().ToString("N");
         var inputs = BuildInputDictionary(inputNames, inputValues);
 
         try
@@ -63,6 +64,7 @@ internal sealed class PythonScriptRuntime : IDisposable
             var result = await environment!
                 .Ob2PythonBridge()
                 .Run(
+                    invocationId,
                     scriptHash,
                     script,
                     inputs,
@@ -70,16 +72,19 @@ internal sealed class PythonScriptRuntime : IDisposable
                     data.CancellationToken)
                 .ConfigureAwait(false);
 
+            LogCapturedOutput(data.Logger, invocationId);
             var convertedResult = ConvertOutputs(result, outputNames, outputTypes);
             data.Logger.Log($"Executed Python script with result: {FormatResultForLog(convertedResult)}", LogColors.PaleChestnut);
             return convertedResult;
         }
         catch (OperationCanceledException)
         {
+            LogCapturedOutput(data.Logger, invocationId);
             throw;
         }
         catch (Exception ex)
         {
+            LogCapturedOutput(data.Logger, invocationId);
             data.Logger.Log($"Python script failed: {ex.Message}", LogColors.Tomato);
             throw;
         }
@@ -272,6 +277,34 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         return ExtractMajorMinorVersion(versionLine.Split('=', 2)[1].Trim());
+    }
+
+    private void LogCapturedOutput(IBotLogger logger, string invocationId)
+    {
+        if (environment is null)
+        {
+            return;
+        }
+
+        var (stdout, stderr) = environment.Ob2PythonBridge().TakeLogs(invocationId);
+        LogCapturedStream(logger, stdout, "[Python stdout] ", LogColors.PaleChestnut);
+        LogCapturedStream(logger, stderr, "[Python stderr] ", LogColors.Tomato);
+    }
+
+    private static void LogCapturedStream(IBotLogger logger, string text, string prefix, string color)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        foreach (var line in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        {
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                logger.Log(prefix + line, color);
+            }
+        }
     }
 
     private void EnsureBridgeModuleFile()

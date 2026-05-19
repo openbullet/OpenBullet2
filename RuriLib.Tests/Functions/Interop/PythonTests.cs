@@ -190,6 +190,61 @@ raise ValueError("boom")
     }
 
     [Fact]
+    public async Task InvokePython_PrintsToStdout_LogsToBotLogger()
+    {
+        var script = """
+print("hello from python")
+result = "done"
+""";
+        var logger = new BotLogger();
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken, logger);
+
+        var result = await Methods.InvokePythonAsync(
+            data,
+            script,
+            GetScriptHash(script),
+            [],
+            [],
+            ["result"],
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal("done", result["result"]);
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.PaleChestnut
+            && entry.Message.Contains("[Python stdout] hello from python", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task InvokePython_PrintsBeforeFailure_LogsCapturedOutput()
+    {
+        var script = """
+import sys
+
+print("before boom")
+print("stderr boom", file=sys.stderr)
+raise ValueError("boom")
+""";
+        var logger = new BotLogger();
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken, logger);
+
+        await Assert.ThrowsAnyAsync<Exception>(() => Methods.InvokePythonAsync(
+            data,
+            script,
+            GetScriptHash(script),
+            [],
+            [],
+            ["result"],
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken));
+
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.PaleChestnut
+            && entry.Message.Contains("[Python stdout] before boom", StringComparison.Ordinal));
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.Tomato
+            && entry.Message.Contains("[Python stderr] stderr boom", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task InvokePython_MissingModule_FailsOnRepeatedCallsWithSharedRuntime()
     {
         var script = """
