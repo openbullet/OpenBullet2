@@ -1,13 +1,14 @@
 using CSnakes.Runtime;
+using CSnakes.Runtime.Python;
 using Microsoft.Extensions.DependencyInjection;
 using RuriLib.Exceptions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -30,13 +31,14 @@ internal sealed class PythonScriptRuntime : IDisposable
         this.scriptsPath = Path.GetFullPath(scriptsPath);
     }
 
-    public async Task<JsonElement> InvokeAsync(
+    public async Task<IReadOnlyDictionary<string, object>> InvokeAsync(
         BotData data,
         string script,
         string scriptHash,
         string[] inputNames,
         object[] inputValues,
         string[] outputNames,
+        VariableType[] outputTypes,
         string pythonVersion)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -46,24 +48,36 @@ internal sealed class PythonScriptRuntime : IDisposable
         ArgumentNullException.ThrowIfNull(inputNames);
         ArgumentNullException.ThrowIfNull(inputValues);
         ArgumentNullException.ThrowIfNull(outputNames);
+        ArgumentNullException.ThrowIfNull(outputTypes);
 
         InitializeIfNeeded(pythonVersion);
         data.CancellationToken.ThrowIfCancellationRequested();
 
-        var json = await environment!
-            .Ob2PythonBridge()
-            .Run(
-                scriptHash,
-                script,
-                JsonSerializer.Serialize(SerializeInputs(inputNames, inputValues)),
-                JsonSerializer.Serialize(outputNames),
-                data.CancellationToken)
-            .ConfigureAwait(false);
+        var inputs = BuildInputDictionary(inputNames, inputValues);
 
-        data.Logger.Log($"Executed Python script with result: {json}", LogColors.PaleChestnut);
+        try
+        {
+            var result = await environment!
+                .Ob2PythonBridge()
+                .Run(
+                    scriptHash,
+                    script,
+                    inputs,
+                    outputNames,
+                    data.CancellationToken)
+                .ConfigureAwait(false);
 
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
+            var convertedResult = ConvertOutputs(result, outputNames, outputTypes);
+            data.Logger.Log($"Executed Python script with result: {FormatResultForLog(convertedResult)}", LogColors.PaleChestnut);
+            return convertedResult;
+        }
+        finally
+        {
+            foreach (var value in inputs.Values)
+            {
+                value.Dispose();
+            }
+        }
     }
 
     private void InitializeIfNeeded(string requestedPythonVersion)
@@ -186,7 +200,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         File.WriteAllText(bridgePath, reader.ReadToEnd());
     }
 
-    private static IEnumerable<InputValueDto> SerializeInputs(string[] inputNames, object[] inputValues)
+    private static IReadOnlyDictionary<string, PyObject> BuildInputDictionary(string[] inputNames, object[] inputValues)
     {
         if (inputNames.Length != inputValues.Length)
         {
@@ -194,28 +208,106 @@ internal sealed class PythonScriptRuntime : IDisposable
                 $"The Python script expected {inputNames.Length} inputs but received {inputValues.Length} values");
         }
 
+        var dictionary = new Dictionary<string, PyObject>(inputNames.Length, StringComparer.Ordinal);
+
         for (var i = 0; i < inputNames.Length; i++)
         {
-            yield return new InputValueDto(inputNames[i], SerializeValue(inputValues[i]));
+            dictionary[inputNames[i]] = SerializeValue(inputValues[i]);
+        }
+
+        return dictionary;
+    }
+
+    private static PyObject SerializeValue(object? value)
+        => value switch
+        {
+            null => throw new BlockExecutionException("Python script inputs cannot be null"),
+            bool boolean => PyObject.From(boolean),
+            byte number => PyObject.From((long)number),
+            sbyte number => PyObject.From((long)number),
+            short number => PyObject.From((long)number),
+            ushort number => PyObject.From((long)number),
+            int number => PyObject.From((long)number),
+            uint number => PyObject.From((long)number),
+            long number => PyObject.From(number),
+            ulong number => PyObject.From((double)number),
+            float number => PyObject.From((double)number),
+            double number => PyObject.From(number),
+            decimal number => PyObject.From((double)number),
+            string text => PyObject.From(text),
+            byte[] bytes => PyObject.From(bytes),
+            IEnumerable<string> list => PyObject.From(list.ToArray()),
+            IDictionary<string, string> dictionary => PyObject.From(dictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value)),
+            _ => throw new BlockExecutionException(
+                $"The Python script input type '{value.GetType()}' is not supported. Serialize custom values to strings before passing them to Python.")
+        };
+
+    private static IReadOnlyDictionary<string, object> ConvertOutputs(
+        IReadOnlyDictionary<string, PyObject> result,
+        string[] outputNames,
+        VariableType[] outputTypes)
+    {
+        if (outputNames.Length != outputTypes.Length)
+        {
+            throw new BlockExecutionException(
+                $"The Python script returned {outputNames.Length} output names but {outputTypes.Length} output types were provided");
+        }
+
+        var converted = new Dictionary<string, object>(outputNames.Length, StringComparer.Ordinal);
+
+        try
+        {
+            for (var i = 0; i < outputNames.Length; i++)
+            {
+                var outputName = outputNames[i];
+
+                if (!result.TryGetValue(outputName, out var value))
+                {
+                    throw new BlockExecutionException($"Python output '{outputName}' is missing");
+                }
+
+                converted[outputName] = ConvertOutputValue(outputName, outputTypes[i], value);
+            }
+
+            return converted;
+        }
+        finally
+        {
+            foreach (var value in result.Values)
+            {
+                value.Dispose();
+            }
         }
     }
 
-    private static object? SerializeValue(object? value)
-        => value switch
+    private static object ConvertOutputValue(string outputName, VariableType outputType, PyObject value)
+        => outputType switch
         {
-            null => null,
-            bool or byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal or string => value,
-            // JSON cannot represent raw bytes, so tag them and let the Python bridge decode them.
-            byte[] bytes => new TaggedValueDto("bytes", Convert.ToBase64String(bytes)),
-            IEnumerable<string> list => list.ToArray(),
-            IDictionary<string, string> dictionary => dictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+            VariableType.Bool => value.As<bool>(),
+            VariableType.ByteArray => value.As<byte[]>(),
+            VariableType.Float => Convert.ToSingle(value.As<double>()),
+            VariableType.Int => Convert.ToInt32(value.As<long>()),
+            VariableType.String => value.As<string>(),
+            VariableType.ListOfStrings => value.As<IReadOnlyList<string>>().ToList(),
+            VariableType.DictionaryOfStrings => value.As<IReadOnlyDictionary<string, string>>()
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             _ => throw new BlockExecutionException(
-                $"The Python script input type '{value.GetType()}' is not supported for CSnakes bridge serialization")
+                $"Python output '{outputName}' uses unsupported OpenBullet type '{outputType}'")
         };
 
-    private sealed record InputValueDto(string Name, object? Value);
+    private static string FormatResultForLog(IReadOnlyDictionary<string, object> result)
+        => "{" + string.Join(", ", result.Select(kvp => $"{kvp.Key} = {FormatValueForLog(kvp.Value)}")) + "}";
 
-    private sealed record TaggedValueDto(string __ob2_type__, string value);
+    private static string FormatValueForLog(object? value)
+        => value switch
+        {
+            null => "null",
+            byte[] bytes => $"byte[{bytes.Length}]",
+            IEnumerable<string> strings => "[" + string.Join(", ", strings) + "]",
+            IReadOnlyDictionary<string, object> dictionary => "{" + string.Join(", ", dictionary.Select(kvp => $"{kvp.Key}: {FormatValueForLog(kvp.Value)}")) + "}",
+            IEnumerable<object> objects => "[" + string.Join(", ", objects.Select(FormatValueForLog)) + "]",
+            _ => value.ToString() ?? string.Empty
+        };
 
     public void Dispose()
     {

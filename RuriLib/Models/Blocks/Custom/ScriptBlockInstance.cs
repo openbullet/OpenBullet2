@@ -348,6 +348,7 @@ public class ScriptBlockInstance : BlockInstance
                         BuildSanitizedInputArrayExpression(),
                         BuildInputArrayExpression(),
                         BuildOutputNameArrayExpression(),
+                        BuildOutputTypeArrayExpression(),
                         Lit(PythonVersion)).Await()));
 
                 foreach (var output in OutputVariables)
@@ -410,7 +411,20 @@ public class ScriptBlockInstance : BlockInstance
         });
 
     private ExpressionSyntax BuildPythonOutputExpression(string resultName, OutputVariable output)
-        => Expr(GetJsonOutputAccessor(resultName, output));
+        => Expr(GetPythonOutputAccessor(resultName, output));
+
+    private string GetPythonOutputAccessor(string resultName, OutputVariable output)
+        => output.Type switch
+        {
+            VariableType.Bool => $"GetPythonBoolOutput({resultName}, \"{output.Name}\")",
+            VariableType.ByteArray => $"GetPythonByteArrayOutput({resultName}, \"{output.Name}\")",
+            VariableType.Float => $"GetPythonFloatOutput({resultName}, \"{output.Name}\")",
+            VariableType.Int => $"GetPythonIntOutput({resultName}, \"{output.Name}\")",
+            VariableType.String => $"GetPythonStringOutput({resultName}, \"{output.Name}\")",
+            VariableType.ListOfStrings => $"GetPythonListOfStringsOutput({resultName}, \"{output.Name}\")",
+            VariableType.DictionaryOfStrings => $"GetPythonDictionaryOfStringsOutput({resultName}, \"{output.Name}\")",
+            _ => throw new NotImplementedException()
+        };
 
     private string GetRuntimeTypeName(VariableType type)
         => type switch
@@ -480,6 +494,9 @@ public class ScriptBlockInstance : BlockInstance
 
     private ExpressionSyntax BuildOutputNameArrayExpression()
         => ArrayOf("string", OutputVariables.Select(o => Lit(o.Name)).ToArray());
+
+    private ExpressionSyntax BuildOutputTypeArrayExpression()
+        => ArrayOf("VariableType", OutputVariables.Select(o => Expr($"VariableType.{o.Type}")).ToArray());
 
     private StatementSyntax CreateOutputAssignmentStatement(
         List<string> definedVariables,

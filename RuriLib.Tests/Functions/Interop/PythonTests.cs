@@ -4,7 +4,9 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Environment;
+using RuriLib.Models.Variables;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
@@ -62,9 +64,10 @@ public class PythonTests
             ["DATA", "suffix"],
             ["hello", "_world"],
             ["result"],
+            [VariableType.String],
             "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal("hello_world", result.GetProperty("result").GetString());
+        Assert.Equal("hello_world", result["result"]);
     }
 
     [Fact]
@@ -84,11 +87,12 @@ payload = b"hello"
             [],
             [],
             ["result", "mapping", "payload"],
+            [VariableType.ListOfStrings, VariableType.DictionaryOfStrings, VariableType.ByteArray],
             "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal("a", result.GetProperty("result")[0].GetString());
-        Assert.Equal("2", result.GetProperty("mapping").GetProperty("y").GetString());
-        Assert.Equal(Convert.ToBase64String(Encoding.UTF8.GetBytes("hello")), result.GetProperty("payload").GetString());
+        Assert.Equal("a", Assert.IsAssignableFrom<IReadOnlyList<string>>(result["result"])[0]);
+        Assert.Equal("2", Assert.IsType<Dictionary<string, string>>(result["mapping"])["y"]);
+        Assert.Equal(Encoding.UTF8.GetBytes("hello"), Assert.IsType<byte[]>(result["payload"]));
     }
 
     [Fact]
@@ -109,9 +113,10 @@ result = DATA + "_async"
             ["DATA"],
             ["hello"],
             ["result"],
+            [VariableType.String],
             "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal("hello_async", result.GetProperty("result").GetString());
+        Assert.Equal("hello_async", result["result"]);
     }
 
     [Fact]
@@ -141,6 +146,7 @@ except asyncio.CancelledError:
             ["marker_path"],
             [markerPath],
             ["result"],
+            [VariableType.String],
             "3.12").WaitAsync(TestContext.Current.CancellationToken));
 
         Assert.True(

@@ -1,19 +1,9 @@
 import asyncio
-import base64
-import json
 from typing import Any
 
 # Cache compiled wrappers by script hash plus signature so repeated executions
 # skip the dynamic exec/compile step.
 _CACHE: dict[str, Any] = {}
-
-
-def _get(mapping: dict[str, Any], *names: str) -> Any:
-    for name in names:
-        if name in mapping:
-            return mapping[name]
-
-    raise KeyError(names[0])
 
 
 def _indent(script_source: str) -> str:
@@ -35,25 +25,12 @@ def _make_return_block(output_names: list[str]) -> str:
     return "\n".join(lines)
 
 
-def _decode_value(value: Any) -> Any:
-    if isinstance(value, dict):
-        if value.get("__ob2_type__") == "bytes":
-            return base64.b64decode(value["value"])
-
-        return {str(k): _decode_value(v) for k, v in value.items()}
-
-    if isinstance(value, list):
-        return [_decode_value(v) for v in value]
-
-    return value
-
-
 def _normalize(value: Any) -> Any:
     if value is None or isinstance(value, (str, int, float, bool)):
         return value
 
     if isinstance(value, (bytes, bytearray, memoryview)):
-        return base64.b64encode(bytes(value)).decode("ascii")
+        return bytes(value)
 
     if isinstance(value, dict):
         return {str(k): _normalize(v) for k, v in value.items()}
@@ -61,13 +38,20 @@ def _normalize(value: Any) -> Any:
     if isinstance(value, (list, tuple, set)):
         return [_normalize(v) for v in value]
 
-    return value
+    raise TypeError(
+        f"Unsupported Python output type {type(value).__name__}. "
+        "Serialize custom objects to strings if you need to pass them back to OpenBullet."
+    )
 
 
-async def run(script_hash: str, script_source: str, inputs_json: str, output_names_json: str) -> str:
-    decoded_inputs = json.loads(inputs_json)
-    input_names = [str(_get(item, "name", "Name")) for item in decoded_inputs]
-    output_names = [str(name) for name in json.loads(output_names_json)]
+async def run(
+    script_hash: str,
+    script_source: str,
+    inputs: dict[str, Any],
+    output_names: list[str],
+) -> dict[str, Any]:
+    input_names = [str(name) for name in inputs.keys()]
+    output_names = [str(name) for name in output_names]
     # The wrapper shape depends on both the script body and the declared IO shape.
     cache_key = f"{script_hash}|{','.join(input_names)}|{','.join(output_names)}"
     fn = _CACHE.get(cache_key)
@@ -87,10 +71,7 @@ async def run(script_hash: str, script_source: str, inputs_json: str, output_nam
         fn = namespace["__ob2_entry__"]
         _CACHE[cache_key] = fn
 
-    kwargs = {
-        str(_get(item, "name", "Name")): _decode_value(_get(item, "value", "Value"))
-        for item in decoded_inputs
-    }
+    kwargs = dict(inputs)
     # CSnakes awaits this coroutine from .NET, so asyncio cancellation can reach user code.
     result = await fn(**kwargs)
-    return json.dumps(_normalize(result))
+    return _normalize(result)
