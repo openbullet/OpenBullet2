@@ -496,7 +496,9 @@ public class ScriptBlockInstance : BlockInstance
         => ArrayOf("string", OutputVariables.Select(o => Lit(o.Name)).ToArray());
 
     private ExpressionSyntax BuildOutputTypeArrayExpression()
-        => ArrayOf("VariableType", OutputVariables.Select(o => Expr($"VariableType.{o.Type}")).ToArray());
+        => ArrayOf(
+            "global::RuriLib.Models.Variables.VariableType",
+            OutputVariables.Select(o => Expr($"global::RuriLib.Models.Variables.VariableType.{o.Type}")).ToArray());
 
     private StatementSyntax CreateOutputAssignmentStatement(
         List<string> definedVariables,

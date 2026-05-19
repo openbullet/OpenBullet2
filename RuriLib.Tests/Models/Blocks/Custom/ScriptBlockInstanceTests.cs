@@ -174,7 +174,7 @@ public class ScriptBlockInstanceTests
             "new string[] { \"DATA\", \"x\" }",
             "new object[] { input.DATA, x }",
             "new string[] { \"result\" }",
-            "new VariableType[] { VariableType.String }",
+            "new global::RuriLib.Models.Variables.VariableType[] { global::RuriLib.Models.Variables.VariableType.String }",
             "\"3.12\"",
             "string result = GetPythonStringOutput(tmp_");
     }
