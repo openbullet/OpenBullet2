@@ -20,6 +20,7 @@ internal sealed class PythonScriptRuntime : IDisposable
     private const string DefaultRedistributablePythonVersion = "3.14";
     private const string BridgeModuleFileName = "ob2_python_bridge.py";
     private const string BridgeModuleResourceName = "RuriLib.Blocks.Interop.ob2_python_bridge.py";
+    private static readonly Lazy<PythonScriptRuntime> sharedRuntime = new(() => new PythonScriptRuntime("Scripts"));
     private readonly SemaphoreSlim initializationSemaphore = new(1, 1);
     private readonly string scriptsPath;
 
@@ -32,6 +33,8 @@ internal sealed class PythonScriptRuntime : IDisposable
         ArgumentException.ThrowIfNullOrWhiteSpace(scriptsPath);
         this.scriptsPath = Path.GetFullPath(scriptsPath);
     }
+
+    public static PythonScriptRuntime GetShared() => sharedRuntime.Value;
 
     public async Task<IReadOnlyDictionary<string, object>> InvokeAsync(
         BotData data,
@@ -392,6 +395,11 @@ internal sealed class PythonScriptRuntime : IDisposable
 
     public void Dispose()
     {
+        if (sharedRuntime.IsValueCreated && ReferenceEquals(this, sharedRuntime.Value))
+        {
+            return;
+        }
+
         initializationSemaphore.Dispose();
         serviceProvider?.Dispose();
         serviceProvider = null;

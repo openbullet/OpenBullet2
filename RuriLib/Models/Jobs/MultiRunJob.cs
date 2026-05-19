@@ -727,7 +727,7 @@ public class MultiRunJob : Job
             var pyengine = runtime.GetEngine("py");
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
-            var pythonRuntime = new PythonScriptRuntime("Scripts");
+            var pythonRuntime = PythonScriptRuntime.GetShared();
 
             if (!string.IsNullOrWhiteSpace(config.StartupCSharpScript))
             {

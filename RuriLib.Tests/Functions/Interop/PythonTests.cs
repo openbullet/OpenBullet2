@@ -189,6 +189,46 @@ raise ValueError("boom")
             && entry.Message.Contains("Python script failed:", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task InvokePython_MissingModule_FailsOnRepeatedCallsWithSharedRuntime()
+    {
+        var script = """
+import definitely_missing_package_12345
+result = 1
+""";
+
+        var sharedRuntime = PythonScriptRuntime.GetShared();
+        var firstData = CreateBotData(TestContext.Current.CancellationToken);
+        firstData.SetObject("pythonRuntime", sharedRuntime, false);
+
+        var firstException = await Assert.ThrowsAnyAsync<Exception>(() => Methods.InvokePythonAsync(
+            firstData,
+            script,
+            GetScriptHash(script),
+            [],
+            [],
+            ["result"],
+            [VariableType.Int]).WaitAsync(TestContext.Current.CancellationToken));
+
+        var firstError = firstException.Message;
+
+        var secondData = CreateBotData(TestContext.Current.CancellationToken);
+        secondData.SetObject("pythonRuntime", sharedRuntime, false);
+
+        var secondException = await Assert.ThrowsAnyAsync<Exception>(() => Methods.InvokePythonAsync(
+            secondData,
+            script,
+            GetScriptHash(script),
+            [],
+            [],
+            ["result"],
+            [VariableType.Int]).WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+
+        var secondError = secondException.Message;
+        Assert.Equal(firstException.GetType(), secondException.GetType());
+        Assert.Equal(firstError, secondError);
+    }
+
     private static BotData CreateBotData(CancellationToken cancellationToken = default, BotLogger? logger = null)
         => new(
             new BotProviders(null!),

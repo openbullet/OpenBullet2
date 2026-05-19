@@ -244,8 +244,8 @@ public static class Methods
 
         if (runtime is null)
         {
-            runtime = new PythonScriptRuntime("Scripts");
-            data.SetObject("pythonRuntime", runtime);
+            runtime = PythonScriptRuntime.GetShared();
+            data.SetObject("pythonRuntime", runtime, false);
         }
 
         return await runtime
