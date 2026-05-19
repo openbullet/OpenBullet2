@@ -22,7 +22,6 @@ internal sealed class PythonScriptRuntime : IDisposable
     private readonly SemaphoreSlim initializationSemaphore = new(1, 1);
     private readonly string scriptsPath;
 
-    private Task? initializationTask;
     private ServiceProvider? serviceProvider;
     private IPythonEnvironment? environment;
     private string? actualPythonVersion;
@@ -99,8 +98,12 @@ internal sealed class PythonScriptRuntime : IDisposable
             return;
         }
 
-        Task initTask;
-        var createdTask = false;
+        var shouldLogWaiting = initializationSemaphore.CurrentCount == 0;
+
+        if (shouldLogWaiting)
+        {
+            logger.Log($"Waiting for shared Python runtime initialization ({NormalizePythonVersion(requestedPythonVersion)})", LogColors.PaleChestnut);
+        }
 
         await initializationSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -112,47 +115,14 @@ internal sealed class PythonScriptRuntime : IDisposable
                 return;
             }
 
-            // Initialization may download a redistributable and bootstrap CPython, so let
-            // concurrent callers await the same shared task instead of blocking a thread.
-            if (initializationTask is null)
-            {
-                initializationTask = Task.Run(() => InitializeCore(logger, requestedPythonVersion), CancellationToken.None);
-                createdTask = true;
-            }
-
-            initTask = initializationTask;
+            // CSnakes/CPython bootstrap is thread-sensitive, so initialize inline on the
+            // caller that won the semaphore instead of hopping to a worker thread.
+            cancellationToken.ThrowIfCancellationRequested();
+            InitializeCore(logger, requestedPythonVersion);
         }
         finally
         {
             initializationSemaphore.Release();
-        }
-
-        if (!createdTask && !initTask.IsCompleted)
-        {
-            logger.Log($"Waiting for shared Python runtime initialization ({NormalizePythonVersion(requestedPythonVersion)})", LogColors.PaleChestnut);
-        }
-
-        try
-        {
-            await initTask.WaitAsync(cancellationToken).ConfigureAwait(false);
-        }
-        catch when (initTask.IsFaulted || initTask.IsCanceled)
-        {
-            await initializationSemaphore.WaitAsync(CancellationToken.None).ConfigureAwait(false);
-
-            try
-            {
-                if (ReferenceEquals(initializationTask, initTask))
-                {
-                    initializationTask = null;
-                }
-            }
-            finally
-            {
-                initializationSemaphore.Release();
-            }
-
-            throw;
         }
 
         EnsureVersionMatches(requestedPythonVersion);
@@ -388,7 +358,6 @@ internal sealed class PythonScriptRuntime : IDisposable
     {
         initializationSemaphore.Dispose();
         serviceProvider?.Dispose();
-        initializationTask = null;
         serviceProvider = null;
         environment = null;
     }
