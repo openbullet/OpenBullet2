@@ -52,7 +52,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         ArgumentNullException.ThrowIfNull(outputNames);
         ArgumentNullException.ThrowIfNull(outputTypes);
 
-        await InitializeIfNeededAsync(pythonVersion, data.CancellationToken).ConfigureAwait(false);
+        await InitializeIfNeededAsync(data.Logger, pythonVersion, data.CancellationToken).ConfigureAwait(false);
         data.CancellationToken.ThrowIfCancellationRequested();
 
         var inputs = BuildInputDictionary(inputNames, inputValues);
@@ -91,7 +91,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
     }
 
-    private async Task InitializeIfNeededAsync(string requestedPythonVersion, CancellationToken cancellationToken)
+    private async Task InitializeIfNeededAsync(IBotLogger logger, string requestedPythonVersion, CancellationToken cancellationToken)
     {
         if (environment is not null)
         {
@@ -100,6 +100,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         Task initTask;
+        var createdTask = false;
 
         await initializationSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -113,12 +114,22 @@ internal sealed class PythonScriptRuntime : IDisposable
 
             // Initialization may download a redistributable and bootstrap CPython, so let
             // concurrent callers await the same shared task instead of blocking a thread.
-            initializationTask ??= Task.Run(() => InitializeCore(requestedPythonVersion), CancellationToken.None);
+            if (initializationTask is null)
+            {
+                initializationTask = Task.Run(() => InitializeCore(logger, requestedPythonVersion), CancellationToken.None);
+                createdTask = true;
+            }
+
             initTask = initializationTask;
         }
         finally
         {
             initializationSemaphore.Release();
+        }
+
+        if (!createdTask && !initTask.IsCompleted)
+        {
+            logger.Log($"Waiting for shared Python runtime initialization ({NormalizePythonVersion(requestedPythonVersion)})", LogColors.PaleChestnut);
         }
 
         try
@@ -147,7 +158,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         EnsureVersionMatches(requestedPythonVersion);
     }
 
-    private void InitializeCore(string requestedPythonVersion)
+    private void InitializeCore(IBotLogger logger, string requestedPythonVersion)
     {
         Directory.CreateDirectory(scriptsPath);
         // The source-generated wrapper imports the bridge by module name, so make sure a
@@ -156,13 +167,20 @@ internal sealed class PythonScriptRuntime : IDisposable
 
         var venvPath = Path.Combine(scriptsPath, ".venv");
         var normalizedPythonVersion = NormalizePythonVersion(requestedPythonVersion);
+        var hasVirtualEnvironment = Directory.Exists(venvPath);
+
+        logger.Log(
+            hasVirtualEnvironment
+                ? $"Initializing Python runtime {normalizedPythonVersion} from virtual environment at '{venvPath}'"
+                : $"Initializing Python runtime {normalizedPythonVersion} from redistributable. Python may be downloaded on first use."
+            , LogColors.PaleChestnut);
 
         var services = new ServiceCollection();
         var pythonBuilder = services
             .WithPython()
             .WithHome(scriptsPath);
 
-        if (Directory.Exists(venvPath))
+        if (hasVirtualEnvironment)
         {
             var basePythonHome = GetVirtualEnvironmentBaseHome(venvPath);
             pythonBuilder = pythonBuilder
@@ -178,6 +196,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         environment = serviceProvider.GetRequiredService<IPythonEnvironment>();
 
         actualPythonVersion = ExtractMajorMinorVersion(environment.Version.ToString());
+        logger.Log($"Python runtime ready: {actualPythonVersion}", LogColors.PaleChestnut);
     }
 
     private void EnsureVersionMatches(string requestedPythonVersion)

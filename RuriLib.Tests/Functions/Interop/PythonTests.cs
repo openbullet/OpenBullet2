@@ -55,7 +55,9 @@ public class PythonTests
     public async Task InvokePython_StringOutputsFromSyncCode_ReturnsJson()
     {
         var script = "result = DATA + suffix";
-        var data = CreateBotData(TestContext.Current.CancellationToken);
+        var logger = new BotLogger();
+        var data = CreateBotData(TestContext.Current.CancellationToken, logger);
+        data.SetObject("pythonRuntime", new PythonScriptRuntime(ScriptsPath));
 
         var result = await Methods.InvokePythonAsync(
             data,
@@ -68,6 +70,12 @@ public class PythonTests
             "3.12").WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("hello_world", result["result"]);
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.PaleChestnut
+            && entry.Message.Contains("Initializing Python runtime 3.12 from virtual environment", StringComparison.Ordinal));
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.PaleChestnut
+            && entry.Message.Contains("Python runtime ready: 3.12", StringComparison.Ordinal));
     }
 
     [Fact]
