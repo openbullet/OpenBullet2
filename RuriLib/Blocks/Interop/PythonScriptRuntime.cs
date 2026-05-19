@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Interop;
@@ -18,9 +19,10 @@ internal sealed class PythonScriptRuntime : IDisposable
 {
     private const string BridgeModuleFileName = "ob2_python_bridge.py";
     private const string BridgeModuleResourceName = "RuriLib.Blocks.Interop.ob2_python_bridge.py";
-    private readonly object syncObject = new();
+    private readonly SemaphoreSlim initializationSemaphore = new(1, 1);
     private readonly string scriptsPath;
 
+    private Task? initializationTask;
     private ServiceProvider? serviceProvider;
     private IPythonEnvironment? environment;
     private string? actualPythonVersion;
@@ -50,7 +52,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         ArgumentNullException.ThrowIfNull(outputNames);
         ArgumentNullException.ThrowIfNull(outputTypes);
 
-        InitializeIfNeeded(pythonVersion);
+        await InitializeIfNeededAsync(pythonVersion, data.CancellationToken).ConfigureAwait(false);
         data.CancellationToken.ThrowIfCancellationRequested();
 
         var inputs = BuildInputDictionary(inputNames, inputValues);
@@ -89,9 +91,19 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
     }
 
-    private void InitializeIfNeeded(string requestedPythonVersion)
+    private async Task InitializeIfNeededAsync(string requestedPythonVersion, CancellationToken cancellationToken)
     {
-        lock (syncObject)
+        if (environment is not null)
+        {
+            EnsureVersionMatches(requestedPythonVersion);
+            return;
+        }
+
+        Task initTask;
+
+        await initializationSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+        try
         {
             if (environment is not null)
             {
@@ -99,38 +111,73 @@ internal sealed class PythonScriptRuntime : IDisposable
                 return;
             }
 
-            Directory.CreateDirectory(scriptsPath);
-            // The source-generated wrapper imports the bridge by module name, so make sure a
-            // concrete file exists in the Scripts root used by the resolved interpreter.
-            EnsureBridgeModuleFile();
-
-            var venvPath = Path.Combine(scriptsPath, ".venv");
-            var normalizedPythonVersion = NormalizePythonVersion(requestedPythonVersion);
-
-            var services = new ServiceCollection();
-            var pythonBuilder = services
-                .WithPython()
-                .WithHome(scriptsPath);
-
-            if (Directory.Exists(venvPath))
-            {
-                var basePythonHome = GetVirtualEnvironmentBaseHome(venvPath);
-                pythonBuilder = pythonBuilder
-                    .FromFolder(basePythonHome, normalizedPythonVersion)
-                    .WithVirtualEnvironment(venvPath);
-            }
-            else
-            {
-                pythonBuilder = pythonBuilder.FromRedistributable(normalizedPythonVersion);
-            }
-
-            serviceProvider = services.BuildServiceProvider();
-            environment = serviceProvider.GetRequiredService<IPythonEnvironment>();
-
-            actualPythonVersion = ExtractMajorMinorVersion(environment.Version.ToString());
-
-            EnsureVersionMatches(requestedPythonVersion);
+            // Initialization may download a redistributable and bootstrap CPython, so let
+            // concurrent callers await the same shared task instead of blocking a thread.
+            initializationTask ??= Task.Run(() => InitializeCore(requestedPythonVersion), CancellationToken.None);
+            initTask = initializationTask;
         }
+        finally
+        {
+            initializationSemaphore.Release();
+        }
+
+        try
+        {
+            await initTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch when (initTask.IsFaulted || initTask.IsCanceled)
+        {
+            await initializationSemaphore.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+
+            try
+            {
+                if (ReferenceEquals(initializationTask, initTask))
+                {
+                    initializationTask = null;
+                }
+            }
+            finally
+            {
+                initializationSemaphore.Release();
+            }
+
+            throw;
+        }
+
+        EnsureVersionMatches(requestedPythonVersion);
+    }
+
+    private void InitializeCore(string requestedPythonVersion)
+    {
+        Directory.CreateDirectory(scriptsPath);
+        // The source-generated wrapper imports the bridge by module name, so make sure a
+        // concrete file exists in the Scripts root used by the resolved interpreter.
+        EnsureBridgeModuleFile();
+
+        var venvPath = Path.Combine(scriptsPath, ".venv");
+        var normalizedPythonVersion = NormalizePythonVersion(requestedPythonVersion);
+
+        var services = new ServiceCollection();
+        var pythonBuilder = services
+            .WithPython()
+            .WithHome(scriptsPath);
+
+        if (Directory.Exists(venvPath))
+        {
+            var basePythonHome = GetVirtualEnvironmentBaseHome(venvPath);
+            pythonBuilder = pythonBuilder
+                .FromFolder(basePythonHome, normalizedPythonVersion)
+                .WithVirtualEnvironment(venvPath);
+        }
+        else
+        {
+            pythonBuilder = pythonBuilder.FromRedistributable(normalizedPythonVersion);
+        }
+
+        serviceProvider = services.BuildServiceProvider();
+        environment = serviceProvider.GetRequiredService<IPythonEnvironment>();
+
+        actualPythonVersion = ExtractMajorMinorVersion(environment.Version.ToString());
     }
 
     private void EnsureVersionMatches(string requestedPythonVersion)
@@ -320,7 +367,9 @@ internal sealed class PythonScriptRuntime : IDisposable
 
     public void Dispose()
     {
+        initializationSemaphore.Dispose();
         serviceProvider?.Dispose();
+        initializationTask = null;
         serviceProvider = null;
         environment = null;
     }
