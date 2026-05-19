@@ -173,6 +173,7 @@ public static class Methods
     /// <summary>
     /// Executes a JavaScript file using Jint.
     /// </summary>
+    [Obsolete("Jint is planned for deprecation in a future release. Prefer NodeJS for new JavaScript-based configs.")]
     public static Engine InvokeJint(BotData data, Engine engine, string scriptFile)
     {
         data.Logger.LogHeader();
@@ -186,6 +187,7 @@ public static class Methods
     /// <summary>
     /// Creates a new IronPython scope from the configured engine.
     /// </summary>
+    [Obsolete("IronPython is planned for deprecation in a future release. Prefer Python for new configs.")]
     public static ScriptScope GetIronPyScope(BotData data)
     {
         data.Logger.LogHeader();
@@ -204,6 +206,7 @@ public static class Methods
     /// <summary>
     /// Executes an IronPython script file in the provided scope.
     /// </summary>
+    [Obsolete("IronPython is planned for deprecation in a future release. Prefer Python for new configs.")]
     public static void ExecuteIronPyScript(BotData data, ScriptScope scope, string scriptFile)
     {
         var engine = data.TryGetObject<ScriptEngine>("ironPyEngine");

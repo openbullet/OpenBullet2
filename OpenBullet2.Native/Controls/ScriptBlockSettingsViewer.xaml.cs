@@ -103,8 +103,19 @@ public class ScriptBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
         {
             ScriptBlock.Interpreter = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(InterpreterDeprecationWarning));
+            OnPropertyChanged(nameof(HasInterpreterDeprecationWarning));
         }
     }
+
+    public string InterpreterDeprecationWarning => Interpreter switch
+    {
+        Interpreter.Jint => "Jint is planned for deprecation in a future release. Prefer NodeJS for new JavaScript-based configs.",
+        Interpreter.IronPython => "IronPython is planned for deprecation in a future release. Prefer Python for new configs.",
+        _ => string.Empty
+    };
+
+    public bool HasInterpreterDeprecationWarning => !string.IsNullOrWhiteSpace(InterpreterDeprecationWarning);
 
     public IEnumerable<VariableType> VariableTypes => Enum.GetValues(typeof(VariableType)).Cast<VariableType>();
 

@@ -68,6 +68,19 @@
                 ItemsSource="{Binding Interpreters}"
                 SelectedValue="{Binding Interpreter}" />
         </StackPanel>
+        <Border
+            Margin="0 5 0 0"
+            Padding="10 8"
+            BorderBrush="#fec34d"
+            BorderThickness="1"
+            CornerRadius="6"
+            Background="#1f1a0a"
+            Visibility="{Binding HasInterpreterDeprecationWarning, Converter={StaticResource BoolToVis}}">
+            <TextBlock
+                Text="{Binding InterpreterDeprecationWarning}"
+                Foreground="#fec34d"
+                TextWrapping="Wrap" />
+        </Border>
 
         <Label Content="Output variables:" />
 

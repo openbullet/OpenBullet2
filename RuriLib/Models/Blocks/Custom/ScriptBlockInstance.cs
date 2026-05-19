@@ -50,7 +50,7 @@ public class ScriptBlockInstance : BlockInstance
     /// <summary>
     /// Gets or sets the interpreter used to run the script.
     /// </summary>
-    public Interpreter Interpreter { get; set; } = Interpreter.Jint;
+    public Interpreter Interpreter { get; set; } = Interpreter.NodeJS;
 
     /// <summary>
     /// Initializes a new <see cref="ScriptBlockInstance"/>.

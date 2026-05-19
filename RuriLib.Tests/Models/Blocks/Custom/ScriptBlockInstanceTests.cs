@@ -20,8 +20,16 @@ public class ScriptBlockInstanceTests
     {
         var block = CreateBlock();
 
-        var expected = $"INTERPRETER:Jint{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
+        var expected = $"INTERPRETER:NodeJS{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
         Assert.Equal(expected, block.ToLC());
+    }
+
+    [Fact]
+    public void NewBlock_DefaultsToNodeJs()
+    {
+        var block = CreateBlock();
+
+        Assert.Equal(Interpreter.NodeJS, block.Interpreter);
     }
 
     [Fact]

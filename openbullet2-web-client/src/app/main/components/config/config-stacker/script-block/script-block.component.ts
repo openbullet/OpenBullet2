@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, VariableType } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { Interpreter, ScriptBlockInstanceDto } from 'src/app/main/dtos/config/block-instance.dto';
 import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-editor.component';
@@ -17,6 +17,7 @@ export class ScriptBlockComponent implements OnChanges {
 
   faPlus = faPlus;
   faX = faX;
+  faExclamationTriangle = faExclamationTriangle;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
@@ -66,6 +67,19 @@ export class ScriptBlockComponent implements OnChanges {
 
       default:
         return 'lolicode';
+    }
+  }
+
+  getDeprecationWarning(interpreter: Interpreter): string | null {
+    switch (interpreter) {
+      case Interpreter.Jint:
+        return 'Jint is planned for deprecation in a future release. Prefer NodeJS for new JavaScript-based configs.';
+
+      case Interpreter.IronPython:
+        return 'IronPython is planned for deprecation in a future release. Prefer Python for new configs.';
+
+      default:
+        return null;
     }
   }
 
