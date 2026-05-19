@@ -84,12 +84,6 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
     this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
 
-    this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
-      // Request the current state
-      this.debuggerHubService.getState();
-    });
-
-    // When the state arrives, set current variables
     this.stateSubscription = this.debuggerHubService.state$.subscribe((msg) => {
       if (msg === null || msg === undefined) {
         return;
@@ -103,25 +97,9 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         ] : msg.variables;
       this.status = msg.status;
 
-      this.onNewState();
+      this.scrollToBottom();
     });
-  }
 
-  ngOnDestroy(): void {
-    this.debuggerHubService.stopHubConnection();
-
-    this.stateSubscription?.unsubscribe();
-    this.logsSubscription?.unsubscribe();
-    this.variablesSubscription?.unsubscribe();
-    this.statusSubscription?.unsubscribe();
-    this.errorSubscription?.unsubscribe();
-  }
-
-  onNewState() {
-    // When we get the debugger state, we can start listening to
-    // new messages
-    // TODO: Handle the case where other messages arrive before
-    // the state message
     this.logsSubscription = this.debuggerHubService.logs$.subscribe((msg) => {
       if (msg === null || msg === undefined) {
         return;
@@ -171,6 +149,21 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
       this.scrollToBottom();
     });
+
+    this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
+      // Request the current state
+      this.debuggerHubService.getState();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.debuggerHubService.stopHubConnection();
+
+    this.stateSubscription?.unsubscribe();
+    this.logsSubscription?.unsubscribe();
+    this.variablesSubscription?.unsubscribe();
+    this.statusSubscription?.unsubscribe();
+    this.errorSubscription?.unsubscribe();
   }
 
   start() {
