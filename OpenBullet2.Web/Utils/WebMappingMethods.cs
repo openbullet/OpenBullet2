@@ -446,6 +446,7 @@ internal static class WebMappingMethods
                 Script = x.Script,
                 InputVariables = x.InputVariables,
                 Interpreter = x.Interpreter,
+                PythonVersion = x.PythonVersion,
                 OutputVariables = x.OutputVariables
             },
             KeycheckBlockInstance x => new KeycheckBlockInstanceDto

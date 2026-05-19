@@ -33,6 +33,7 @@ export enum Interpreter {
   Jint = 'jint',
   NodeJS = 'nodeJS',
   IronPython = 'ironPython',
+  Python = 'python',
 }
 
 export enum KeychainMode {
@@ -149,6 +150,7 @@ export interface ScriptBlockInstanceDto extends BlockInstanceDto {
   script: string;
   inputVariables: string; // Comma separated list of input variables
   interpreter: Interpreter;
+  pythonVersion: string;
   outputVariables: OutputVariable[];
   type: BlockInstanceType.Script;
 }

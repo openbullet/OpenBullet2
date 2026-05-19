@@ -11,6 +11,7 @@ using RuriLib.Helpers.Transpilers;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
+using RuriLib.Blocks.Interop;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
@@ -234,6 +235,7 @@ public class ConfigDebugger : IDisposable
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
             data.SetObject("ironPyEngine", pyengine);
+            data.SetObject("pythonRuntime", new PythonScriptRuntime("Scripts"));
             data.AsyncLocker = new();
 
             dynamic globals = new ExpandoObject();

@@ -20,7 +20,7 @@ export class ScriptBlockComponent implements OnChanges {
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
-  interpreters: Interpreter[] = [Interpreter.Jint, Interpreter.NodeJS, Interpreter.IronPython];
+  interpreters: Interpreter[] = [Interpreter.Jint, Interpreter.NodeJS, Interpreter.IronPython, Interpreter.Python];
   variableTypes: VariableType[] = [
     VariableType.String,
     VariableType.Bool,
@@ -61,6 +61,7 @@ export class ScriptBlockComponent implements OnChanges {
         return 'javascript';
 
       case Interpreter.IronPython:
+      case Interpreter.Python:
         return 'python';
 
       default:
@@ -89,5 +90,9 @@ export class ScriptBlockComponent implements OnChanges {
     this.editor!.language = this.getLanguage(newInterpreter);
     this.editor!.resetLanguage();
     this.valueChanged();
+  }
+
+  isPythonInterpreter(interpreter: Interpreter): boolean {
+    return interpreter === Interpreter.Python;
   }
 }

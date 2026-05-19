@@ -33,6 +33,19 @@
             [ngModel]="block.interpreter" />
     </div>
 </div>
+<div class="row mt-2" *ngIf="isPythonInterpreter(block.interpreter)">
+    <div class="col-12 px-0">
+        <div class="mb-1">
+            <span class="text-small">Python version</span>
+        </div>
+        <app-input-text key="pythonVersion"
+            class="input-small w-100"
+            ngDefaultControl
+            (ngModelChange)="valueChanged()"
+            [(ngModel)]="block.pythonVersion"
+            pTooltip="CPython major.minor version to use when no Scripts/.venv is present, for example 3.12" />
+    </div>
+</div>
 <div class="row mt-2">
     <div class="w-100">
         <span class="text-small">Output variables</span>

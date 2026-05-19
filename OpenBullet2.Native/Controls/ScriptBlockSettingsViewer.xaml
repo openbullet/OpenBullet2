@@ -69,6 +69,15 @@
                 SelectedValue="{Binding Interpreter}" />
         </StackPanel>
 
+        <DockPanel Visibility="{Binding IsPythonInterpreter, Converter={StaticResource BoolToVis}}">
+            <Label
+                DockPanel.Dock="Left"
+                Content="Python version:" />
+            <TextBox
+                Text="{Binding PythonVersion}"
+                DockPanel.Dock="Left" />
+        </DockPanel>
+
         <Label Content="Output variables:" />
 
         <Button x:Name="addOutputVariableButton" Click="AddOutputVariable" Margin="5 5 5 5" 

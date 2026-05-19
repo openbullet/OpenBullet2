@@ -61,7 +61,7 @@ public partial class ScriptBlockSettingsViewer : UserControl
         var xshd = vm.Interpreter switch
         {
             Interpreter.Jint or Interpreter.NodeJS => "Highlighting/JavaScript.xshd",
-            Interpreter.IronPython => "Highlighting/Python.xshd",
+            Interpreter.IronPython or Interpreter.Python => "Highlighting/Python.xshd",
             _ => throw new NotImplementedException()
         };
 
@@ -102,6 +102,19 @@ public class ScriptBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
         set
         {
             ScriptBlock.Interpreter = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsPythonInterpreter));
+        }
+    }
+
+    public bool IsPythonInterpreter => Interpreter == Interpreter.Python;
+
+    public string PythonVersion
+    {
+        get => ScriptBlock.PythonVersion;
+        set
+        {
+            ScriptBlock.PythonVersion = value;
             OnPropertyChanged();
         }
     }

@@ -7,6 +7,7 @@ using RuriLib.Models.Bots;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using RuriLib.Exceptions;
@@ -213,5 +214,38 @@ public static class Methods
         var code = engine.CreateScriptSourceFromFile(scriptFile);
         var result = code.Execute(scope);
         data.Logger.Log($"Executed IronPython script with result {result}", LogColors.PaleChestnut);
+    }
+
+    /// <summary>
+    /// Executes a Python script with CPython via CSnakes and returns the normalized JSON result.
+    /// </summary>
+    public static JsonElement InvokePython(
+        BotData data,
+        string script,
+        string scriptHash,
+        string[] inputNames,
+        object[] inputValues,
+        string[] outputNames,
+        string pythonVersion)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentException.ThrowIfNullOrWhiteSpace(script);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scriptHash);
+        ArgumentException.ThrowIfNullOrWhiteSpace(pythonVersion);
+        ArgumentNullException.ThrowIfNull(inputNames);
+        ArgumentNullException.ThrowIfNull(inputValues);
+        ArgumentNullException.ThrowIfNull(outputNames);
+
+        data.Logger.LogHeader();
+
+        var runtime = data.TryGetObject<PythonScriptRuntime>("pythonRuntime");
+
+        if (runtime is null)
+        {
+            runtime = new PythonScriptRuntime("Scripts");
+            data.SetObject("pythonRuntime", runtime);
+        }
+
+        return runtime.Invoke(data, script, scriptHash, inputNames, inputValues, outputNames, pythonVersion);
     }
 }

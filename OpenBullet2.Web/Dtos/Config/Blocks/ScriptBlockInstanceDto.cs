@@ -24,6 +24,11 @@ public class ScriptBlockInstanceDto : BlockInstanceDto
     public Interpreter Interpreter { get; set; }
 
     /// <summary>
+    /// The Python major.minor version used by the CPython interpreter.
+    /// </summary>
+    public string PythonVersion { get; set; } = "3.12";
+
+    /// <summary>
     /// The variables that should be extracted from the script
     /// and added to the context of the bot.
     /// </summary>

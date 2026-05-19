@@ -25,6 +25,17 @@ public class ScriptBlockInstanceTests
     }
 
     [Fact]
+    public void ToLC_Python_WritesPythonVersion()
+    {
+        var block = CreateBlock();
+        block.Interpreter = Interpreter.Python;
+        block.PythonVersion = "3.11";
+
+        var expected = $"INTERPRETER:Python{_nl}PYTHONVERSION:3.11{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
+        Assert.Equal(expected, block.ToLC());
+    }
+
+    [Fact]
     public void FromLC_ParsesScriptBlockFormat()
     {
         var block = CreateBlock();
@@ -40,6 +51,22 @@ public class ScriptBlockInstanceTests
         Assert.Equal(VariableType.String, block.OutputVariables[0].Type);
         Assert.Equal("result", block.OutputVariables[0].Name);
         Assert.Equal(6, lineNumber);
+    }
+
+    [Fact]
+    public void FromLC_Python_ParsesPythonVersion()
+    {
+        var block = CreateBlock();
+        var script = $"INTERPRETER:Python{_nl}PYTHONVERSION:3.11{_nl}INPUT input.DATA{_nl}BEGIN SCRIPT{_nl}result = DATA{_nl}END SCRIPT{_nl}OUTPUT String @result";
+        var lineNumber = 0;
+
+        block.FromLC(ref script, ref lineNumber);
+
+        Assert.Equal(Interpreter.Python, block.Interpreter);
+        Assert.Equal("3.11", block.PythonVersion);
+        Assert.Equal("input.DATA", block.InputVariables);
+        Assert.Equal("result = DATA", block.Script);
+        Assert.Equal(7, lineNumber);
     }
 
     [Fact]
@@ -139,6 +166,16 @@ public class ScriptBlockInstanceTests
             "SetVariable(nameof(input.NAME), input.NAME);",
             "ExecuteIronPyScript(data,",
             "string message = ");
+
+        AssertSyntax(CreatePythonBlock(), [],
+            ["result"],
+            "InvokePython(data,",
+            "\"result = DATA + x\"",
+            "new string[] { \"DATA\", \"x\" }",
+            "new object[] { input.DATA, x }",
+            "new string[] { \"result\" }",
+            "\"3.12\"",
+            "string result = tmp_");
     }
 
     private static ScriptBlockInstance CreateBlock()
@@ -177,6 +214,19 @@ public class ScriptBlockInstanceTests
             OutputVariables =
             [
                 new OutputVariable { Name = "message", Type = VariableType.String }
+            ]
+        };
+
+    private static ScriptBlockInstance CreatePythonBlock()
+        => new(new ScriptBlockDescriptor())
+        {
+            Interpreter = Interpreter.Python,
+            PythonVersion = "3.12",
+            InputVariables = "input.DATA, x",
+            Script = "result = DATA + x",
+            OutputVariables =
+            [
+                new OutputVariable { Name = "result", Type = VariableType.String }
             ]
         };
 

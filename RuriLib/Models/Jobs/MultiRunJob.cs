@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Helpers;
+using RuriLib.Blocks.Interop;
 using IronPython.Compiler;
 using IronPython.Runtime;
 using RuriLib.Models.Captchas;
@@ -425,11 +426,11 @@ public class MultiRunJob : Job
                 if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                 {
                     await ClosePuppeteerBrowserIfOpen(botData).ConfigureAwait(false);
-                    botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
+                    botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine", "pythonRuntime" });
                 }
                 else
                 {
-                    botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
+                    botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine", "pythonRuntime" });
                 }
             }
 
@@ -726,6 +727,7 @@ public class MultiRunJob : Job
             var pyengine = runtime.GetEngine("py");
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
+            var pythonRuntime = new PythonScriptRuntime("Scripts");
 
             if (!string.IsNullOrWhiteSpace(config.StartupCSharpScript))
             {
@@ -782,6 +784,7 @@ public class MultiRunJob : Job
                                                config.Mode != ConfigMode.DLL;
                 input.BotData.SetObject("httpClient", httpClient); // Add the default HTTP client
                 input.BotData.SetObject("ironPyEngine", pyengine); // Add the IronPython engine
+                input.BotData.SetObject("pythonRuntime", pythonRuntime, false); // Add the CPython runtime
                 input.BotData.AsyncLocker = asyncLocker;
 
                 return input;
