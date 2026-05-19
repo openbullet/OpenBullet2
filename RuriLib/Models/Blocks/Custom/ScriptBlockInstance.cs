@@ -50,7 +50,7 @@ public class ScriptBlockInstance : BlockInstance
     /// <summary>
     /// Gets or sets the interpreter used to run the script.
     /// </summary>
-    public Interpreter Interpreter { get; set; } = Interpreter.Jint;
+    public Interpreter Interpreter { get; set; } = Interpreter.NodeJS;
 
     /// <summary>
     /// Initializes a new <see cref="ScriptBlockInstance"/>.
@@ -75,6 +75,7 @@ public class ScriptBlockInstance : BlockInstance
 
         using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
         writer.WriteLine($"INTERPRETER:{Interpreter}");
+
         writer.WriteLine($"INPUT {InputVariables}");
         writer.WriteLine("BEGIN SCRIPT");
         writer.WriteLine(TrimTrailingLineEndings(Script));
@@ -120,6 +121,12 @@ public class ScriptBlockInstance : BlockInstance
 
         var inputVariablesLine = reader.ReadLine();
         lineNumber++;
+
+        if (Interpreter == Interpreter.Python && inputVariablesLine?.StartsWith("PYTHONVERSION:", StringComparison.Ordinal) == true)
+        {
+            inputVariablesLine = reader.ReadLine();
+            lineNumber++;
+        }
 
         if (inputVariablesLine is null)
         {
@@ -298,6 +305,29 @@ public class ScriptBlockInstance : BlockInstance
                 }
 
                 break;
+
+            case Interpreter.Python:
+                statements.Add(BlockSyntaxFactory.CreateVariableDeclaration(
+                    "var",
+                    resultName,
+                    Id("InvokePythonAsync").Call(
+                        Id("data"),
+                        Lit(Script),
+                        Lit(GetScriptHash(Script)),
+                        BuildSanitizedInputArrayExpression(),
+                        BuildInputArrayExpression(),
+                        BuildOutputNameArrayExpression(),
+                        BuildOutputTypeArrayExpression()).Await()));
+
+                foreach (var output in OutputVariables)
+                {
+                    statements.Add(CreateOutputAssignmentStatement(
+                        context.DefinedVariables,
+                        output,
+                        BuildPythonOutputExpression(resultName, output)));
+                }
+
+                break;
         }
 
         foreach (var output in OutputVariables)
@@ -309,9 +339,9 @@ public class ScriptBlockInstance : BlockInstance
     }
 
     private ExpressionSyntax BuildNodeOutputExpression(string resultName, OutputVariable output)
-        => Expr(GetNodeMethod(resultName, output));
+        => Expr(GetJsonOutputAccessor(resultName, output));
 
-    private string GetNodeMethod(string resultName, OutputVariable output)
+    private string GetJsonOutputAccessor(string resultName, OutputVariable output)
         => output.Type switch
         {
             VariableType.Bool => $"{resultName}.GetProperty(\"{output.Name}\").GetBoolean()",
@@ -348,6 +378,22 @@ public class ScriptBlockInstance : BlockInstance
             _ => $"{scopeName}.GetVariable<{GetRuntimeTypeName(output.Type)}>(\"{output.Name}\")"
         });
 
+    private ExpressionSyntax BuildPythonOutputExpression(string resultName, OutputVariable output)
+        => Expr(GetPythonOutputAccessor(resultName, output));
+
+    private string GetPythonOutputAccessor(string resultName, OutputVariable output)
+        => output.Type switch
+        {
+            VariableType.Bool => $"GetPythonBoolOutput({resultName}, \"{output.Name}\")",
+            VariableType.ByteArray => $"GetPythonByteArrayOutput({resultName}, \"{output.Name}\")",
+            VariableType.Float => $"GetPythonFloatOutput({resultName}, \"{output.Name}\")",
+            VariableType.Int => $"GetPythonIntOutput({resultName}, \"{output.Name}\")",
+            VariableType.String => $"GetPythonStringOutput({resultName}, \"{output.Name}\")",
+            VariableType.ListOfStrings => $"GetPythonListOfStringsOutput({resultName}, \"{output.Name}\")",
+            VariableType.DictionaryOfStrings => $"GetPythonDictionaryOfStringsOutput({resultName}, \"{output.Name}\")",
+            _ => throw new NotImplementedException()
+        };
+
     private string GetRuntimeTypeName(VariableType type)
         => type switch
         {
@@ -363,6 +409,9 @@ public class ScriptBlockInstance : BlockInstance
 
     private string MakeNodeObject()
         => string.Join(global::System.Environment.NewLine, OutputVariables.Select(o => $"  '{o.Name}': {o.Name},"));
+
+    private static string GetScriptHash(string script)
+        => HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(script)));
 
     private static string TrimTrailingLineEndings(string value)
         => value.TrimEnd('\r', '\n');
@@ -383,7 +432,7 @@ public class ScriptBlockInstance : BlockInstance
 
     private static string EnsureScriptFile(string script, Interpreter interpreter)
     {
-        var scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(script)));
+        var scriptHash = GetScriptHash(script);
         var scriptPath = $"Scripts/{scriptHash}.{interpreter switch
         {
             Interpreter.Jint => "js",
@@ -407,6 +456,17 @@ public class ScriptBlockInstance : BlockInstance
 
     private ExpressionSyntax BuildInputArrayExpression()
         => ArrayOf("object", GetInputs().Select(Expr).ToArray());
+
+    private ExpressionSyntax BuildSanitizedInputArrayExpression()
+        => ArrayOf("string", GetInputs().Select(SanitizeInput).Select(Lit).ToArray());
+
+    private ExpressionSyntax BuildOutputNameArrayExpression()
+        => ArrayOf("string", OutputVariables.Select(o => Lit(o.Name)).ToArray());
+
+    private ExpressionSyntax BuildOutputTypeArrayExpression()
+        => ArrayOf(
+            "global::RuriLib.Models.Variables.VariableType",
+            OutputVariables.Select(o => Expr($"global::RuriLib.Models.Variables.VariableType.{o.Type}")).ToArray());
 
     private StatementSyntax CreateOutputAssignmentStatement(
         List<string> definedVariables,

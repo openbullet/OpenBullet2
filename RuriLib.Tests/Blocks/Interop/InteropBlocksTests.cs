@@ -52,7 +52,9 @@ public class InteropBlocksTests
         {
             File.WriteAllText(tempFile, "var result = 2 + 3;");
 
+#pragma warning disable CS0618
             var resultEngine = InteropMethods.InvokeJint(data, engine, tempFile);
+#pragma warning restore CS0618
 
             Assert.Equal(5, resultEngine.GetValue("result").AsNumber());
         }
@@ -67,7 +69,9 @@ public class InteropBlocksTests
     {
         var data = NewBotData();
 
+#pragma warning disable CS0618
         Assert.Throws<BlockExecutionException>(() => InteropMethods.GetIronPyScope(data));
+#pragma warning restore CS0618
     }
 
     [Fact]
@@ -77,7 +81,9 @@ public class InteropBlocksTests
         var engine = Python.CreateEngine();
         data.SetObject("ironPyEngine", engine);
 
+#pragma warning disable CS0618
         var scope = InteropMethods.GetIronPyScope(data);
+#pragma warning restore CS0618
 
         Assert.IsType<ScriptScope>(scope);
     }

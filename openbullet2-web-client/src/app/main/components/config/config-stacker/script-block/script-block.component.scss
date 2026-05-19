@@ -1,0 +1,10 @@
+.interpreter-warning {
+    padding: 10px 14px;
+    border: 1px solid var(--fg-custom);
+    border-radius: 10px;
+    color: var(--fg-custom);
+    background-color: color-mix(in srgb, var(--bg-main) 82%, var(--fg-custom) 18%);
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.4;
+}

@@ -11,6 +11,7 @@ using RuriLib.Helpers.Transpilers;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
+using RuriLib.Blocks.Interop;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
@@ -234,6 +235,7 @@ public class ConfigDebugger : IDisposable
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
             data.SetObject("ironPyEngine", pyengine);
+            data.SetObject("pythonRuntime", PythonScriptRuntime.GetShared(), false);
             data.AsyncLocker = new();
 
             dynamic globals = new ExpandoObject();
@@ -398,7 +400,7 @@ public class ConfigDebugger : IDisposable
                 lastSeleniumBrowser = data.TryGetObject<OpenQA.Selenium.WebDriver>("selenium");
 
                 // Dispose stuff in data.Objects
-                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "selenium" });
+                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "selenium", "pythonRuntime" });
                 data.AsyncLocker?.Dispose();
             }
             else

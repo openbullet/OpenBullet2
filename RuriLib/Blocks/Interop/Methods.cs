@@ -4,9 +4,12 @@ using Microsoft.Scripting.Hosting;
 using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Variables;
+using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RuriLib.Exceptions;
@@ -170,6 +173,7 @@ public static class Methods
     /// <summary>
     /// Executes a JavaScript file using Jint.
     /// </summary>
+    [Obsolete("Jint is planned for deprecation in a future release. Prefer NodeJS for new JavaScript-based configs.")]
     public static Engine InvokeJint(BotData data, Engine engine, string scriptFile)
     {
         data.Logger.LogHeader();
@@ -183,6 +187,7 @@ public static class Methods
     /// <summary>
     /// Creates a new IronPython scope from the configured engine.
     /// </summary>
+    [Obsolete("IronPython is planned for deprecation in a future release. Prefer Python for new configs.")]
     public static ScriptScope GetIronPyScope(BotData data)
     {
         data.Logger.LogHeader();
@@ -201,6 +206,7 @@ public static class Methods
     /// <summary>
     /// Executes an IronPython script file in the provided scope.
     /// </summary>
+    [Obsolete("IronPython is planned for deprecation in a future release. Prefer Python for new configs.")]
     public static void ExecuteIronPyScript(BotData data, ScriptScope scope, string scriptFile)
     {
         var engine = data.TryGetObject<ScriptEngine>("ironPyEngine");
@@ -214,4 +220,133 @@ public static class Methods
         var result = code.Execute(scope);
         data.Logger.Log($"Executed IronPython script with result {result}", LogColors.PaleChestnut);
     }
+
+    /// <summary>
+    /// Executes a Python script with CPython via CSnakes and returns the typed outputs.
+    /// </summary>
+    public static async Task<IReadOnlyDictionary<string, object>> InvokePythonAsync(
+        BotData data,
+        string script,
+        string scriptHash,
+        string[] inputNames,
+        object[] inputValues,
+        string[] outputNames,
+        VariableType[] outputTypes)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentException.ThrowIfNullOrWhiteSpace(script);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scriptHash);
+        ArgumentNullException.ThrowIfNull(inputNames);
+        ArgumentNullException.ThrowIfNull(inputValues);
+        ArgumentNullException.ThrowIfNull(outputNames);
+        ArgumentNullException.ThrowIfNull(outputTypes);
+
+        data.Logger.LogHeader();
+
+        var runtime = data.TryGetObject<PythonScriptRuntime>("pythonRuntime");
+
+        if (runtime is null)
+        {
+            runtime = PythonScriptRuntime.GetShared();
+            data.SetObject("pythonRuntime", runtime, false);
+        }
+
+        return await runtime
+            .InvokeAsync(data, script, scriptHash, inputNames, inputValues, outputNames, outputTypes)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets a boolean output value from a Python script result.
+    /// </summary>
+    public static bool GetPythonBoolOutput(IReadOnlyDictionary<string, object> result, string name)
+        => result.TryGetValue(name, out var value) && value is bool boolean
+            ? boolean
+            : throw new BlockExecutionException($"Python output '{name}' is missing or is not a boolean");
+
+    /// <summary>
+    /// Gets a byte-array output value from a Python script result.
+    /// </summary>
+    public static byte[] GetPythonByteArrayOutput(IReadOnlyDictionary<string, object> result, string name)
+        => result.TryGetValue(name, out var value) && value is byte[] bytes
+            ? bytes
+            : throw new BlockExecutionException($"Python output '{name}' is missing or is not a byte array");
+
+    /// <summary>
+    /// Gets a floating-point output value from a Python script result.
+    /// </summary>
+    public static float GetPythonFloatOutput(IReadOnlyDictionary<string, object> result, string name)
+    {
+        var value = GetRequiredPythonOutput(result, name);
+
+        return value switch
+        {
+            float single => single,
+            double number => Convert.ToSingle(number),
+            _ => throw new BlockExecutionException($"Python output '{name}' is not a floating-point number")
+        };
+    }
+
+    /// <summary>
+    /// Gets an integer output value from a Python script result.
+    /// </summary>
+    public static int GetPythonIntOutput(IReadOnlyDictionary<string, object> result, string name)
+    {
+        var value = GetRequiredPythonOutput(result, name);
+
+        return value switch
+        {
+            int number => number,
+            long number => Convert.ToInt32(number),
+            _ => throw new BlockExecutionException($"Python output '{name}' is not an integer")
+        };
+    }
+
+    /// <summary>
+    /// Gets a string output value from a Python script result.
+    /// </summary>
+    public static string GetPythonStringOutput(IReadOnlyDictionary<string, object> result, string name)
+        => result.TryGetValue(name, out var value) && value is string text
+            ? text
+            : throw new BlockExecutionException($"Python output '{name}' is missing or is not a string");
+
+    /// <summary>
+    /// Gets a list-of-strings output value from a Python script result.
+    /// </summary>
+    public static List<string> GetPythonListOfStringsOutput(IReadOnlyDictionary<string, object> result, string name)
+    {
+        var value = GetRequiredPythonOutput(result, name);
+
+        return value switch
+        {
+            IEnumerable<string> strings => strings.ToList(),
+            IEnumerable<object> objects => objects.Select(item => item as string
+                ?? throw new BlockExecutionException($"Python output '{name}' contains a non-string list item"))
+                .ToList(),
+            _ => throw new BlockExecutionException($"Python output '{name}' is not a list of strings")
+        };
+    }
+
+    /// <summary>
+    /// Gets a dictionary-of-strings output value from a Python script result.
+    /// </summary>
+    public static Dictionary<string, string> GetPythonDictionaryOfStringsOutput(IReadOnlyDictionary<string, object> result, string name)
+    {
+        var value = GetRequiredPythonOutput(result, name);
+
+        return value switch
+        {
+            IReadOnlyDictionary<string, string> strings => strings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+            IReadOnlyDictionary<string, object> objects => objects.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value as string
+                    ?? throw new BlockExecutionException($"Python output '{name}' contains a non-string dictionary value")),
+            _ => throw new BlockExecutionException($"Python output '{name}' is not a dictionary of strings")
+        };
+    }
+
+    private static object GetRequiredPythonOutput(IReadOnlyDictionary<string, object> result, string name)
+        => result.TryGetValue(name, out var value)
+            ? value
+            : throw new BlockExecutionException($"Python output '{name}' is missing");
 }

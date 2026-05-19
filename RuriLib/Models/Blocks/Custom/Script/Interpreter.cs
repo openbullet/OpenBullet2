@@ -16,5 +16,9 @@ public enum Interpreter
     /// <summary>
     /// Executes the script through IronPython.
     /// </summary>
-    IronPython
+    IronPython,
+    /// <summary>
+    /// Executes the script through CPython via CSnakes.
+    /// </summary>
+    Python
 }

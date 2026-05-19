@@ -20,7 +20,25 @@ public class ScriptBlockInstanceTests
     {
         var block = CreateBlock();
 
-        var expected = $"INTERPRETER:Jint{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
+        var expected = $"INTERPRETER:NodeJS{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
+        Assert.Equal(expected, block.ToLC());
+    }
+
+    [Fact]
+    public void NewBlock_DefaultsToNodeJs()
+    {
+        var block = CreateBlock();
+
+        Assert.Equal(Interpreter.NodeJS, block.Interpreter);
+    }
+
+    [Fact]
+    public void ToLC_Python_DoesNotWritePythonVersion()
+    {
+        var block = CreateBlock();
+        block.Interpreter = Interpreter.Python;
+
+        var expected = $"INTERPRETER:Python{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
         Assert.Equal(expected, block.ToLC());
     }
 
@@ -40,6 +58,21 @@ public class ScriptBlockInstanceTests
         Assert.Equal(VariableType.String, block.OutputVariables[0].Type);
         Assert.Equal("result", block.OutputVariables[0].Name);
         Assert.Equal(6, lineNumber);
+    }
+
+    [Fact]
+    public void FromLC_Python_IgnoresLegacyPythonVersionLine()
+    {
+        var block = CreateBlock();
+        var script = $"INTERPRETER:Python{_nl}PYTHONVERSION:3.11{_nl}INPUT input.DATA{_nl}BEGIN SCRIPT{_nl}result = DATA{_nl}END SCRIPT{_nl}OUTPUT String @result";
+        var lineNumber = 0;
+
+        block.FromLC(ref script, ref lineNumber);
+
+        Assert.Equal(Interpreter.Python, block.Interpreter);
+        Assert.Equal("input.DATA", block.InputVariables);
+        Assert.Equal("result = DATA", block.Script);
+        Assert.Equal(7, lineNumber);
     }
 
     [Fact]
@@ -139,6 +172,16 @@ public class ScriptBlockInstanceTests
             "SetVariable(nameof(input.NAME), input.NAME);",
             "ExecuteIronPyScript(data,",
             "string message = ");
+
+        AssertSyntax(CreatePythonBlock(), [],
+            ["result"],
+            "await InvokePythonAsync(data,",
+            "\"result = DATA + x\"",
+            "new string[] { \"DATA\", \"x\" }",
+            "new object[] { input.DATA, x }",
+            "new string[] { \"result\" }",
+            "new global::RuriLib.Models.Variables.VariableType[] { global::RuriLib.Models.Variables.VariableType.String }",
+            "string result = GetPythonStringOutput(tmp_");
     }
 
     private static ScriptBlockInstance CreateBlock()
@@ -177,6 +220,18 @@ public class ScriptBlockInstanceTests
             OutputVariables =
             [
                 new OutputVariable { Name = "message", Type = VariableType.String }
+            ]
+        };
+
+    private static ScriptBlockInstance CreatePythonBlock()
+        => new(new ScriptBlockDescriptor())
+        {
+            Interpreter = Interpreter.Python,
+            InputVariables = "input.DATA, x",
+            Script = "result = DATA + x",
+            OutputVariables =
+            [
+                new OutputVariable { Name = "result", Type = VariableType.String }
             ]
         };
 
