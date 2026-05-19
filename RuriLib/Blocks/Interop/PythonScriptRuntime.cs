@@ -17,6 +17,7 @@ namespace RuriLib.Blocks.Interop;
 
 internal sealed class PythonScriptRuntime : IDisposable
 {
+    private const string DefaultRedistributablePythonVersion = "3.14";
     private const string BridgeModuleFileName = "ob2_python_bridge.py";
     private const string BridgeModuleResourceName = "RuriLib.Blocks.Interop.ob2_python_bridge.py";
     private readonly SemaphoreSlim initializationSemaphore = new(1, 1);
@@ -39,19 +40,17 @@ internal sealed class PythonScriptRuntime : IDisposable
         string[] inputNames,
         object[] inputValues,
         string[] outputNames,
-        VariableType[] outputTypes,
-        string pythonVersion)
+        VariableType[] outputTypes)
     {
         ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(script);
         ArgumentException.ThrowIfNullOrWhiteSpace(scriptHash);
-        ArgumentException.ThrowIfNullOrWhiteSpace(pythonVersion);
         ArgumentNullException.ThrowIfNull(inputNames);
         ArgumentNullException.ThrowIfNull(inputValues);
         ArgumentNullException.ThrowIfNull(outputNames);
         ArgumentNullException.ThrowIfNull(outputTypes);
 
-        await InitializeIfNeededAsync(data.Logger, pythonVersion, data.CancellationToken).ConfigureAwait(false);
+        await InitializeIfNeededAsync(data.Logger, data.CancellationToken).ConfigureAwait(false);
         data.CancellationToken.ThrowIfCancellationRequested();
 
         var inputs = BuildInputDictionary(inputNames, inputValues);
@@ -90,11 +89,13 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
     }
 
-    private async Task InitializeIfNeededAsync(IBotLogger logger, string requestedPythonVersion, CancellationToken cancellationToken)
+    private async Task InitializeIfNeededAsync(IBotLogger logger, CancellationToken cancellationToken)
     {
+        var expectedPythonVersion = ResolveExpectedPythonVersion();
+
         if (environment is not null)
         {
-            EnsureVersionMatches(requestedPythonVersion);
+            EnsureVersionMatches(expectedPythonVersion);
             return;
         }
 
@@ -102,7 +103,7 @@ internal sealed class PythonScriptRuntime : IDisposable
 
         if (shouldLogWaiting)
         {
-            logger.Log($"Waiting for shared Python runtime initialization ({NormalizePythonVersion(requestedPythonVersion)})", LogColors.PaleChestnut);
+            logger.Log($"Waiting for shared Python runtime initialization ({expectedPythonVersion})", LogColors.PaleChestnut);
         }
 
         await initializationSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -111,24 +112,24 @@ internal sealed class PythonScriptRuntime : IDisposable
         {
             if (environment is not null)
             {
-                EnsureVersionMatches(requestedPythonVersion);
+                EnsureVersionMatches(expectedPythonVersion);
                 return;
             }
 
             // CSnakes/CPython bootstrap is thread-sensitive, so initialize inline on the
             // caller that won the semaphore instead of hopping to a worker thread.
             cancellationToken.ThrowIfCancellationRequested();
-            InitializeCore(logger, requestedPythonVersion);
+            InitializeCore(logger, expectedPythonVersion);
         }
         finally
         {
             initializationSemaphore.Release();
         }
 
-        EnsureVersionMatches(requestedPythonVersion);
+        EnsureVersionMatches(expectedPythonVersion);
     }
 
-    private void InitializeCore(IBotLogger logger, string requestedPythonVersion)
+    private void InitializeCore(IBotLogger logger, string expectedPythonVersion)
     {
         Directory.CreateDirectory(scriptsPath);
         // The source-generated wrapper imports the bridge by module name, so make sure a
@@ -136,13 +137,12 @@ internal sealed class PythonScriptRuntime : IDisposable
         EnsureBridgeModuleFile();
 
         var venvPath = Path.Combine(scriptsPath, ".venv");
-        var normalizedPythonVersion = NormalizePythonVersion(requestedPythonVersion);
         var hasVirtualEnvironment = Directory.Exists(venvPath);
 
         logger.Log(
             hasVirtualEnvironment
-                ? $"Initializing Python runtime {normalizedPythonVersion} from virtual environment at '{venvPath}'"
-                : $"Initializing Python runtime {normalizedPythonVersion} from redistributable. Python may be downloaded on first use."
+                ? $"Initializing Python runtime from virtual environment at '{venvPath}'"
+                : $"Initializing Python runtime {DefaultRedistributablePythonVersion} from redistributable. Python may be downloaded on first use."
             , LogColors.PaleChestnut);
 
         var services = new ServiceCollection();
@@ -154,12 +154,12 @@ internal sealed class PythonScriptRuntime : IDisposable
         {
             var basePythonHome = GetVirtualEnvironmentBaseHome(venvPath);
             pythonBuilder = pythonBuilder
-                .FromFolder(basePythonHome, normalizedPythonVersion)
+                .FromFolder(basePythonHome, expectedPythonVersion)
                 .WithVirtualEnvironment(venvPath);
         }
         else
         {
-            pythonBuilder = pythonBuilder.FromRedistributable(normalizedPythonVersion);
+            pythonBuilder = pythonBuilder.FromRedistributable(DefaultRedistributablePythonVersion);
         }
 
         serviceProvider = services.BuildServiceProvider();
@@ -167,6 +167,7 @@ internal sealed class PythonScriptRuntime : IDisposable
 
         actualPythonVersion = ExtractMajorMinorVersion(environment.Version.ToString());
         logger.Log($"Python runtime ready: {actualPythonVersion}", LogColors.PaleChestnut);
+        EnsureVersionMatches(expectedPythonVersion);
     }
 
     private void EnsureVersionMatches(string requestedPythonVersion)
@@ -176,7 +177,7 @@ internal sealed class PythonScriptRuntime : IDisposable
         if (!string.Equals(actualPythonVersion, normalizedRequestedVersion, StringComparison.Ordinal))
         {
             throw new BlockExecutionException(
-                $"The Python runtime resolved to version {actualPythonVersion}, but the block requested {normalizedRequestedVersion}");
+                $"The Python runtime resolved to version {actualPythonVersion}, but this OpenBullet2 process expects {normalizedRequestedVersion}. Restart OpenBullet2 before switching Python environments.");
         }
     }
 
@@ -203,6 +204,18 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         return match.Groups[1].Value;
+    }
+
+    private string ResolveExpectedPythonVersion()
+    {
+        var venvPath = Path.Combine(scriptsPath, ".venv");
+
+        if (!Directory.Exists(venvPath))
+        {
+            return DefaultRedistributablePythonVersion;
+        }
+
+        return GetVirtualEnvironmentVersion(venvPath);
     }
 
     private static string GetVirtualEnvironmentBaseHome(string venvPath)
@@ -233,6 +246,29 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         return baseHome;
+    }
+
+    private static string GetVirtualEnvironmentVersion(string venvPath)
+    {
+        var configPath = Path.Combine(venvPath, "pyvenv.cfg");
+
+        if (!File.Exists(configPath))
+        {
+            throw new BlockExecutionException(
+                $"The virtual environment at '{venvPath}' is missing pyvenv.cfg");
+        }
+
+        var versionLine = File.ReadLines(configPath)
+            .FirstOrDefault(line => line.StartsWith("version_info =", StringComparison.OrdinalIgnoreCase)
+                || line.StartsWith("version =", StringComparison.OrdinalIgnoreCase));
+
+        if (versionLine is null)
+        {
+            throw new BlockExecutionException(
+                $"The virtual environment at '{venvPath}' does not declare version_info or version");
+        }
+
+        return ExtractMajorMinorVersion(versionLine.Split('=', 2)[1].Trim());
     }
 
     private void EnsureBridgeModuleFile()

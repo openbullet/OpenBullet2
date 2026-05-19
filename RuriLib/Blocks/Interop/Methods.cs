@@ -219,7 +219,7 @@ public static class Methods
     }
 
     /// <summary>
-    /// Executes a Python script with CPython via CSnakes and returns the normalized JSON result.
+    /// Executes a Python script with CPython via CSnakes and returns the typed outputs.
     /// </summary>
     public static async Task<IReadOnlyDictionary<string, object>> InvokePythonAsync(
         BotData data,
@@ -228,13 +228,11 @@ public static class Methods
         string[] inputNames,
         object[] inputValues,
         string[] outputNames,
-        VariableType[] outputTypes,
-        string pythonVersion)
+        VariableType[] outputTypes)
     {
         ArgumentNullException.ThrowIfNull(data);
         ArgumentException.ThrowIfNullOrWhiteSpace(script);
         ArgumentException.ThrowIfNullOrWhiteSpace(scriptHash);
-        ArgumentException.ThrowIfNullOrWhiteSpace(pythonVersion);
         ArgumentNullException.ThrowIfNull(inputNames);
         ArgumentNullException.ThrowIfNull(inputValues);
         ArgumentNullException.ThrowIfNull(outputNames);
@@ -251,7 +249,7 @@ public static class Methods
         }
 
         return await runtime
-            .InvokeAsync(data, script, scriptHash, inputNames, inputValues, outputNames, outputTypes, pythonVersion)
+            .InvokeAsync(data, script, scriptHash, inputNames, inputValues, outputNames, outputTypes)
             .ConfigureAwait(false);
     }
 

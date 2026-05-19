@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -24,6 +25,7 @@ public class PythonTests
     private static readonly string TempRoot = Path.Combine(Path.GetTempPath(), $"{nameof(PythonTests)}-{Guid.NewGuid():N}");
     private static readonly string ScriptsPath = Path.Combine(TempRoot, "Scripts");
     private static readonly string VenvPath = Path.Combine(ScriptsPath, ".venv");
+    private static readonly string VenvPythonVersion;
 
     static PythonTests()
     {
@@ -49,15 +51,20 @@ public class PythonTests
                     $"Failed to create the test virtual environment. Stdout: {process.StandardOutput.ReadToEnd()} Stderr: {process.StandardError.ReadToEnd()}");
             }
         }
+
+        var versionLine = File.ReadLines(Path.Combine(VenvPath, "pyvenv.cfg"))
+            .First(line => line.StartsWith("version_info =", StringComparison.OrdinalIgnoreCase)
+                || line.StartsWith("version =", StringComparison.OrdinalIgnoreCase));
+        var versionParts = versionLine.Split('=', 2)[1].Trim().Split('.');
+        VenvPythonVersion = $"{versionParts[0]}.{versionParts[1]}";
     }
 
     [Fact]
-    public async Task InvokePython_StringOutputsFromSyncCode_ReturnsJson()
+    public async Task InvokePython_StringOutputsFromSyncCode_ReturnsTypedOutputs()
     {
         var script = "result = DATA + suffix";
         var logger = new BotLogger();
-        var data = CreateBotData(TestContext.Current.CancellationToken, logger);
-        data.SetObject("pythonRuntime", new PythonScriptRuntime(ScriptsPath));
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken, logger);
 
         var result = await Methods.InvokePythonAsync(
             data,
@@ -66,27 +73,26 @@ public class PythonTests
             ["DATA", "suffix"],
             ["hello", "_world"],
             ["result"],
-            [VariableType.String],
-            "3.12").WaitAsync(TestContext.Current.CancellationToken);
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("hello_world", result["result"]);
         Assert.Contains(logger.Entries, entry =>
             entry.Color == LogColors.PaleChestnut
-            && entry.Message.Contains("Initializing Python runtime 3.12 from virtual environment", StringComparison.Ordinal));
+            && entry.Message.Contains("Initializing Python runtime from virtual environment", StringComparison.Ordinal));
         Assert.Contains(logger.Entries, entry =>
             entry.Color == LogColors.PaleChestnut
-            && entry.Message.Contains("Python runtime ready: 3.12", StringComparison.Ordinal));
+            && entry.Message.Contains($"Python runtime ready: {VenvPythonVersion}", StringComparison.Ordinal));
     }
 
     [Fact]
-    public async Task InvokePython_ListDictionaryAndBytesOutputs_ReturnsNormalizedJson()
+    public async Task InvokePython_ListDictionaryAndBytesOutputs_ReturnsTypedOutputs()
     {
         var script = """
 result = ["a", "b"]
 mapping = {"x": "1", "y": "2"}
 payload = b"hello"
 """;
-        var data = CreateBotData(TestContext.Current.CancellationToken);
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken);
 
         var result = await Methods.InvokePythonAsync(
             data,
@@ -95,8 +101,7 @@ payload = b"hello"
             [],
             [],
             ["result", "mapping", "payload"],
-            [VariableType.ListOfStrings, VariableType.DictionaryOfStrings, VariableType.ByteArray],
-            "3.12").WaitAsync(TestContext.Current.CancellationToken);
+            [VariableType.ListOfStrings, VariableType.DictionaryOfStrings, VariableType.ByteArray]).WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("a", Assert.IsAssignableFrom<IReadOnlyList<string>>(result["result"])[0]);
         Assert.Equal("2", Assert.IsType<Dictionary<string, string>>(result["mapping"])["y"]);
@@ -104,7 +109,7 @@ payload = b"hello"
     }
 
     [Fact]
-    public async Task InvokePython_AsyncCode_ReturnsJson()
+    public async Task InvokePython_AsyncCode_ReturnsTypedOutputs()
     {
         var script = """
 import asyncio
@@ -112,7 +117,7 @@ import asyncio
 await asyncio.sleep(0)
 result = DATA + "_async"
 """;
-        var data = CreateBotData(TestContext.Current.CancellationToken);
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken);
 
         var result = await Methods.InvokePythonAsync(
             data,
@@ -121,8 +126,7 @@ result = DATA + "_async"
             ["DATA"],
             ["hello"],
             ["result"],
-            [VariableType.String],
-            "3.12").WaitAsync(TestContext.Current.CancellationToken);
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("hello_async", result["result"]);
     }
@@ -145,7 +149,7 @@ except asyncio.CancelledError:
 
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         cts.CancelAfter(TimeSpan.FromMilliseconds(100));
-        var data = CreateBotData(cts.Token);
+        var data = CreatePythonBotData(cts.Token);
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => Methods.InvokePythonAsync(
             data,
@@ -154,8 +158,7 @@ except asyncio.CancelledError:
             ["marker_path"],
             [markerPath],
             ["result"],
-            [VariableType.String],
-            "3.12").WaitAsync(TestContext.Current.CancellationToken));
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken));
 
         Assert.True(
             await WaitForConditionAsync(() => File.Exists(markerPath), TimeSpan.FromSeconds(3)),
@@ -169,7 +172,7 @@ except asyncio.CancelledError:
 raise ValueError("boom")
 """;
         var logger = new BotLogger();
-        var data = CreateBotData(TestContext.Current.CancellationToken, logger);
+        var data = CreatePythonBotData(TestContext.Current.CancellationToken, logger);
 
         var exception = await Assert.ThrowsAnyAsync<Exception>(() => Methods.InvokePythonAsync(
             data,
@@ -178,8 +181,7 @@ raise ValueError("boom")
             [],
             [],
             ["result"],
-            [VariableType.String],
-            "3.12").WaitAsync(TestContext.Current.CancellationToken));
+            [VariableType.String]).WaitAsync(TestContext.Current.CancellationToken));
 
         Assert.Contains("boom", exception.ToString(), StringComparison.Ordinal);
         Assert.Contains(logger.Entries, entry =>
@@ -196,6 +198,13 @@ raise ValueError("boom")
         {
             CancellationToken = cancellationToken
         };
+
+    private static BotData CreatePythonBotData(CancellationToken cancellationToken = default, BotLogger? logger = null)
+    {
+        var data = CreateBotData(cancellationToken, logger);
+        data.SetObject("pythonRuntime", new PythonScriptRuntime(ScriptsPath));
+        return data;
+    }
 
     private static string GetScriptHash(string script)
         => Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(script))).ToLowerInvariant();

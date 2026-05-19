@@ -103,19 +103,6 @@ public class ScriptBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
         {
             ScriptBlock.Interpreter = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(IsPythonInterpreter));
-        }
-    }
-
-    public bool IsPythonInterpreter => Interpreter == Interpreter.Python;
-
-    public string PythonVersion
-    {
-        get => ScriptBlock.PythonVersion;
-        set
-        {
-            ScriptBlock.PythonVersion = value;
-            OnPropertyChanged();
         }
     }
 

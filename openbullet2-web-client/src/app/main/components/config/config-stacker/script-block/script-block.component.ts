@@ -91,8 +91,4 @@ export class ScriptBlockComponent implements OnChanges {
     this.editor!.resetLanguage();
     this.valueChanged();
   }
-
-  isPythonInterpreter(interpreter: Interpreter): boolean {
-    return interpreter === Interpreter.Python;
-  }
 }

@@ -115,7 +115,6 @@ internal static class BlockMapper
         block.OutputVariables = dto.OutputVariables;
         block.InputVariables = dto.InputVariables;
         block.Interpreter = dto.Interpreter;
-        block.PythonVersion = dto.PythonVersion;
     }
 
     private static void MapBlock(LoliCodeBlockInstanceDto dto, LoliCodeBlockInstance block)

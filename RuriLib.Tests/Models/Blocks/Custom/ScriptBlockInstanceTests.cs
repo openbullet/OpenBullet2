@@ -25,13 +25,12 @@ public class ScriptBlockInstanceTests
     }
 
     [Fact]
-    public void ToLC_Python_WritesPythonVersion()
+    public void ToLC_Python_DoesNotWritePythonVersion()
     {
         var block = CreateBlock();
         block.Interpreter = Interpreter.Python;
-        block.PythonVersion = "3.11";
 
-        var expected = $"INTERPRETER:Python{_nl}PYTHONVERSION:3.11{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
+        var expected = $"INTERPRETER:Python{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}var result = x + y;{_nl}END SCRIPT{_nl}OUTPUT Int @result{_nl}";
         Assert.Equal(expected, block.ToLC());
     }
 
@@ -54,7 +53,7 @@ public class ScriptBlockInstanceTests
     }
 
     [Fact]
-    public void FromLC_Python_ParsesPythonVersion()
+    public void FromLC_Python_IgnoresLegacyPythonVersionLine()
     {
         var block = CreateBlock();
         var script = $"INTERPRETER:Python{_nl}PYTHONVERSION:3.11{_nl}INPUT input.DATA{_nl}BEGIN SCRIPT{_nl}result = DATA{_nl}END SCRIPT{_nl}OUTPUT String @result";
@@ -63,7 +62,6 @@ public class ScriptBlockInstanceTests
         block.FromLC(ref script, ref lineNumber);
 
         Assert.Equal(Interpreter.Python, block.Interpreter);
-        Assert.Equal("3.11", block.PythonVersion);
         Assert.Equal("input.DATA", block.InputVariables);
         Assert.Equal("result = DATA", block.Script);
         Assert.Equal(7, lineNumber);
@@ -175,7 +173,6 @@ public class ScriptBlockInstanceTests
             "new object[] { input.DATA, x }",
             "new string[] { \"result\" }",
             "new global::RuriLib.Models.Variables.VariableType[] { global::RuriLib.Models.Variables.VariableType.String }",
-            "\"3.12\"",
             "string result = GetPythonStringOutput(tmp_");
     }
 
@@ -222,7 +219,6 @@ public class ScriptBlockInstanceTests
         => new(new ScriptBlockDescriptor())
         {
             Interpreter = Interpreter.Python,
-            PythonVersion = "3.12",
             InputVariables = "input.DATA, x",
             Script = "result = DATA + x",
             OutputVariables =

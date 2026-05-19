@@ -53,11 +53,6 @@ public class ScriptBlockInstance : BlockInstance
     public Interpreter Interpreter { get; set; } = Interpreter.Jint;
 
     /// <summary>
-    /// Gets or sets the Python major.minor version used by the CPython interpreter.
-    /// </summary>
-    public string PythonVersion { get; set; } = "3.12";
-
-    /// <summary>
     /// Initializes a new <see cref="ScriptBlockInstance"/>.
     /// </summary>
     /// <param name="descriptor">The block descriptor.</param>
@@ -80,11 +75,6 @@ public class ScriptBlockInstance : BlockInstance
 
         using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
         writer.WriteLine($"INTERPRETER:{Interpreter}");
-
-        if (Interpreter == Interpreter.Python)
-        {
-            writer.WriteLine($"PYTHONVERSION:{PythonVersion}");
-        }
 
         writer.WriteLine($"INPUT {InputVariables}");
         writer.WriteLine("BEGIN SCRIPT");
@@ -129,31 +119,10 @@ public class ScriptBlockInstance : BlockInstance
                 $"Invalid interpreter definition: {interpreterLine.TruncatePretty(50)}");
         }
 
-        string? inputVariablesLine;
+        var inputVariablesLine = reader.ReadLine();
+        lineNumber++;
 
-        if (Interpreter == Interpreter.Python)
-        {
-            var pythonVersionLine = reader.ReadLine();
-            lineNumber++;
-
-            if (pythonVersionLine is null)
-            {
-                throw new LoliCodeParsingException(lineNumber, "Missing python version definition");
-            }
-
-            if (pythonVersionLine.StartsWith("PYTHONVERSION:", StringComparison.Ordinal))
-            {
-                PythonVersion = pythonVersionLine["PYTHONVERSION:".Length..];
-                inputVariablesLine = reader.ReadLine();
-                lineNumber++;
-            }
-            else
-            {
-                PythonVersion = "3.12";
-                inputVariablesLine = pythonVersionLine;
-            }
-        }
-        else
+        if (Interpreter == Interpreter.Python && inputVariablesLine?.StartsWith("PYTHONVERSION:", StringComparison.Ordinal) == true)
         {
             inputVariablesLine = reader.ReadLine();
             lineNumber++;
@@ -348,8 +317,7 @@ public class ScriptBlockInstance : BlockInstance
                         BuildSanitizedInputArrayExpression(),
                         BuildInputArrayExpression(),
                         BuildOutputNameArrayExpression(),
-                        BuildOutputTypeArrayExpression(),
-                        Lit(PythonVersion)).Await()));
+                        BuildOutputTypeArrayExpression()).Await()));
 
                 foreach (var output in OutputVariables)
                 {
