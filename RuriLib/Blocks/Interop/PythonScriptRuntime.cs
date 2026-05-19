@@ -71,6 +71,15 @@ internal sealed class PythonScriptRuntime : IDisposable
             data.Logger.Log($"Executed Python script with result: {FormatResultForLog(convertedResult)}", LogColors.PaleChestnut);
             return convertedResult;
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            data.Logger.Log($"Python script failed: {ex.Message}", LogColors.Tomato);
+            throw;
+        }
         finally
         {
             foreach (var value in inputs.Values)

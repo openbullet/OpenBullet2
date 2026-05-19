@@ -154,11 +154,36 @@ except asyncio.CancelledError:
             "Expected the Python coroutine to observe cancellation and write the marker file");
     }
 
-    private static BotData CreateBotData(CancellationToken cancellationToken = default)
+    [Fact]
+    public async Task InvokePython_WhenScriptFails_PropagatesExceptionAndLogsError()
+    {
+        var script = """
+raise ValueError("boom")
+""";
+        var logger = new BotLogger();
+        var data = CreateBotData(TestContext.Current.CancellationToken, logger);
+
+        var exception = await Assert.ThrowsAnyAsync<Exception>(() => Methods.InvokePythonAsync(
+            data,
+            script,
+            GetScriptHash(script),
+            [],
+            [],
+            ["result"],
+            [VariableType.String],
+            "3.12").WaitAsync(TestContext.Current.CancellationToken));
+
+        Assert.Contains("boom", exception.ToString(), StringComparison.Ordinal);
+        Assert.Contains(logger.Entries, entry =>
+            entry.Color == LogColors.Tomato
+            && entry.Message.Contains("Python script failed:", StringComparison.Ordinal));
+    }
+
+    private static BotData CreateBotData(CancellationToken cancellationToken = default, BotLogger? logger = null)
         => new(
             new BotProviders(null!),
             new ConfigSettings(),
-            new BotLogger(),
+            logger ?? new BotLogger(),
             new DataLine("hello", new WordlistType()))
         {
             CancellationToken = cancellationToken
