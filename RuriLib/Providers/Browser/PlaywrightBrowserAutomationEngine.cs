@@ -1198,7 +1198,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
                     return;
                 }
 
-                var exitCode = await Task.Run(() => Program.Main(["install", browserName]), cancellationToken);
+                var exitCode = await Task.Run(() => Microsoft.Playwright.Program.Main(["install", browserName]), cancellationToken);
 
                 if (exitCode != 0)
                 {
