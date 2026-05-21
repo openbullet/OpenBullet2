@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
+using RuntimeProxySettings = RuriLib.Models.Settings.ProxySettings;
 
 namespace RuriLib.Tests.Models.Bots;
 
@@ -86,7 +87,7 @@ public class DefaultProvidersTests
     [Fact]
     public void DefaultProxySettingsProvider_ReadsTimeoutsAndMatchesKeys() => WithSettingsService(settings =>
                                                                                    {
-                                                                                       settings.RuriLibSettings.ProxySettings = new ProxySettings
+                                                                                       settings.RuriLibSettings.ProxySettings = new RuntimeProxySettings
                                                                                        {
                                                                                            ProxyConnectTimeoutMilliseconds = 1234,
                                                                                            ProxyReadWriteTimeoutMilliseconds = 5678,
