@@ -14,6 +14,7 @@ public class ProvidersTests
         Assert.Null(providers.RandomUA);
         Assert.Null(providers.Captcha);
         Assert.Null(providers.EmailDomains);
+        Assert.NotNull(providers.BrowserAutomation);
         Assert.Null(providers.PuppeteerBrowser);
         Assert.Null(providers.SeleniumBrowser);
         Assert.Null(providers.GeneralSettings);

@@ -514,6 +514,17 @@
         </div>
     </div>
     <div class="row my-3">
+        <div class="col-12 col-lg-6">
+            <span class="d-block mb-2">Automation engine</span>
+            <app-input-dropdown key="browserAutomationEngine"
+                itemClass="input-small" optionClass="input-small"
+                ngDefaultControl
+                [options]="browserAutomationEngines"
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.engine" />
+        </div>
+    </div>
+    <div class="row my-3">
         <div class="col-12">
             <span class="mb-2 d-block">Quit the browser when the bot ends with one of these statuses</span>
             <app-multiple-selector

@@ -1,4 +1,5 @@
 using RuriLib.Exceptions;
+using RuriLib.Functions.Browser;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
@@ -8,6 +9,9 @@ using RuriLib.Tests.Utils.Mockup;
 using System.Threading.Tasks;
 using Xunit;
 using BotProviders = RuriLib.Models.Bots.Providers;
+using BrowserBrowserMethods = RuriLib.Blocks.Browser.Browser.Methods;
+using BrowserElementMethods = RuriLib.Blocks.Browser.Elements.Methods;
+using BrowserPageMethods = RuriLib.Blocks.Browser.Page.Methods;
 using FindElementBy = RuriLib.Functions.Puppeteer.FindElementBy;
 using PuppeteerBrowserMethods = RuriLib.Blocks.Puppeteer.Browser.Methods;
 using PuppeteerElementMethods = RuriLib.Blocks.Puppeteer.Elements.Methods;
@@ -58,12 +62,38 @@ public class BrowserBlocksTests
     }
 
     [Fact]
+    public async Task BrowserReload_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserBrowserMethods.BrowserReload(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
     public async Task PuppeteerGetWidth_WithoutBrowser_Throws()
     {
         var data = NewBotData();
 
         var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
             PuppeteerElementMethods.PuppeteerGetWidth(
+                data,
+                FindElementBy.Id,
+                "main",
+                0));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserGetWidth_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserElementMethods.BrowserGetWidth(
                 data,
                 FindElementBy.Id,
                 "main",
@@ -117,6 +147,17 @@ public class BrowserBlocksTests
     }
 
     [Fact]
+    public async Task BrowserNavigateTo_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserNavigateTo(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
     public void PuppeteerGetCurrentUrl_WithoutBrowser_Throws()
     {
         var data = NewBotData();
@@ -128,12 +169,34 @@ public class BrowserBlocksTests
     }
 
     [Fact]
+    public void BrowserGetCurrentUrl_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = Assert.Throws<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserGetCurrentUrl(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
     public async Task PuppeteerClickAtCoordinates_WithoutBrowser_Throws()
     {
         var data = NewBotData();
 
         var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
             PuppeteerPageMethods.PuppeteerClickAtCoordinates(data, 10, 20));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserClickAtCoordinates_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserClickAtCoordinates(data, 10, 20, BrowserMouseButton.Left));
 
         Assert.Equal("No pages open!", ex.Message);
     }

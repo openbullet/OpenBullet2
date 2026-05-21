@@ -23,7 +23,7 @@ public class ConfigSettingsViewModel : ViewModelBase
     private ProxySettings Proxy => Config.Settings.ProxySettings;
     private DataSettings Data => Config.Settings.DataSettings;
     private InputSettings Input => Config.Settings.InputSettings;
-    private BrowserSettings Puppeteer => Config.Settings.BrowserSettings;
+    private BrowserSettings Browser => Config.Settings.BrowserSettings;
 
     public int SuggestedBots
     {
@@ -229,67 +229,80 @@ public class ConfigSettingsViewModel : ViewModelBase
         set
         {
             quitBrowserStatuses = value;
-            Puppeteer.QuitBrowserStatuses = [.. quitBrowserStatuses];
+            Browser.QuitBrowserStatuses = [.. quitBrowserStatuses];
+            OnPropertyChanged();
+        }
+    }
+
+    public IEnumerable<BrowserAutomationEngine> BrowserAutomationEngines
+        => Enum.GetValues(typeof(BrowserAutomationEngine)).Cast<BrowserAutomationEngine>();
+
+    public BrowserAutomationEngine SelectedBrowserAutomationEngine
+    {
+        get => Browser.Engine;
+        set
+        {
+            Browser.Engine = value;
             OnPropertyChanged();
         }
     }
 
     public bool Headless
     {
-        get => Puppeteer.Headless;
+        get => Browser.Headless;
         set
         {
-            Puppeteer.Headless = value;
+            Browser.Headless = value;
             OnPropertyChanged();
         }
     }
 
     public bool IgnoreHttpsErrors
     {
-        get => Puppeteer.IgnoreHttpsErrors;
+        get => Browser.IgnoreHttpsErrors;
         set
         {
-            Puppeteer.IgnoreHttpsErrors = value;
+            Browser.IgnoreHttpsErrors = value;
             OnPropertyChanged();
         }
     }
 
     public bool LoadOnlyDocumentAndScript
     {
-        get => Puppeteer.LoadOnlyDocumentAndScript;
+        get => Browser.LoadOnlyDocumentAndScript;
         set
         {
-            Puppeteer.LoadOnlyDocumentAndScript = value;
+            Browser.LoadOnlyDocumentAndScript = value;
             OnPropertyChanged();
         }
     }
 
     public bool DismissDialogs
     {
-        get => Puppeteer.DismissDialogs;
+        get => Browser.DismissDialogs;
         set
         {
-            Puppeteer.DismissDialogs = value;
+            Browser.DismissDialogs = value;
             OnPropertyChanged();
         }
     }
 
     public string CommandLineArgs
     {
-        get => Puppeteer.CommandLineArgs;
+        get => Browser.CommandLineArgs;
         set
         {
-            Puppeteer.CommandLineArgs = value;
+            Browser.CommandLineArgs = value;
             OnPropertyChanged();
         }
     }
 
     public List<string> BlockedUrls
     {
-        get => Puppeteer.BlockedUrls;
+        get => Browser.BlockedUrls;
         set
         {
-            Puppeteer.BlockedUrls = value;
+            Browser.BlockedUrls = value;
             OnPropertyChanged();
         }
     }
@@ -377,7 +390,7 @@ public class ConfigSettingsViewModel : ViewModelBase
         ProxyBanStatuses = new ObservableCollection<string>(Proxy.BanProxyStatuses);
         AllowedProxyTypes = new ObservableCollection<string>(Proxy.AllowedProxyTypes.Select(t => t.ToString()));
         AllowedWordlistTypes = new ObservableCollection<string>(Data.AllowedWordlistTypes);
-        QuitBrowserStatuses = new ObservableCollection<string>(Puppeteer.QuitBrowserStatuses);
+        QuitBrowserStatuses = new ObservableCollection<string>(Browser.QuitBrowserStatuses);
 
         CustomInputsCollection = new ObservableCollection<CustomInput>(Input.CustomInputs);
         ResourcesCollection = new ObservableCollection<ConfigResourceOptions>(Data.Resources);

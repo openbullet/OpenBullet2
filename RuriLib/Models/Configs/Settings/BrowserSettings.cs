@@ -9,6 +9,11 @@ namespace RuriLib.Models.Configs.Settings;
 public class BrowserSettings
 {
     /// <summary>
+    /// The browser automation engine that should execute generic browser blocks.
+    /// </summary>
+    public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
+
+    /// <summary>
     /// Statuses that should force the browser to close.
     /// </summary>
     public string[] QuitBrowserStatuses { get; set; } = Array.Empty<string>();

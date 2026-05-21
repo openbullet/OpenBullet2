@@ -1,4 +1,5 @@
 using RuriLib.Providers.Captchas;
+using RuriLib.Providers.Browser;
 using RuriLib.Providers.Emails;
 using RuriLib.Providers.Proxies;
 using RuriLib.Providers.Puppeteer;
@@ -35,6 +36,11 @@ public class Providers
     /// Gets or sets the random number provider.
     /// </summary>
     public IRNGProvider RNG { get; set; }
+
+    /// <summary>
+    /// Gets or sets the browser automation engine resolver.
+    /// </summary>
+    public IBrowserAutomationEngineResolver BrowserAutomation { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the Puppeteer browser provider.
@@ -79,6 +85,7 @@ public class Providers
             Security = new DefaultSecurityProvider(settings);
         }
 
+        BrowserAutomation = new DefaultBrowserAutomationEngineResolver(PuppeteerBrowser);
         RNG = new DefaultRNGProvider();
     }
 }

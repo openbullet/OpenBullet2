@@ -1,5 +1,7 @@
+using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Settings;
 using RuriLib.Providers.Proxies;
+using RuriLib.Providers.Browser;
 using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.Security;
@@ -42,6 +44,15 @@ public class DefaultProvidersTests
 
                                                                               Assert.Equal("chrome-path", provider.ChromeBinaryLocation);
                                                                           });
+
+    [Fact]
+    public void DefaultBrowserAutomationEngineResolver_ResolvesPuppeteer() => WithSettingsService(settings =>
+                                                                                     {
+                                                                                         var provider = new DefaultPuppeteerBrowserProvider(settings);
+                                                                                         var resolver = new DefaultBrowserAutomationEngineResolver(provider);
+
+                                                                                         Assert.IsType<PuppeteerBrowserAutomationEngine>(resolver.Resolve(BrowserAutomationEngine.Puppeteer));
+                                                                                     });
 
     [Fact]
     public void DefaultSeleniumBrowserProvider_ReadsConfiguredValues() => WithSettingsService(settings =>

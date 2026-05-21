@@ -211,6 +211,10 @@ internal class ConfigBrowserSettingsDtoValidator : AbstractValidator<ConfigBrows
 {
     public ConfigBrowserSettingsDtoValidator()
     {
+        RuleFor(x => x.Engine)
+            .IsInEnum()
+            .WithMessage("Engine is invalid.");
+
         RuleFor(x => x.QuitBrowserStatuses)
             .NotNull()
             .WithMessage("QuitBrowserStatuses cannot be null.");

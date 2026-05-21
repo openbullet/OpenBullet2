@@ -3,6 +3,7 @@ import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-
 import { MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import {
+  BrowserAutomationEngine,
   ConfigDto,
   CustomInputDto,
   LinesFromFileResourceDto,
@@ -49,6 +50,7 @@ export class ConfigSettingsComponent implements OnInit {
 
   botStatuses: string[] = [];
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
+  browserAutomationEngines: BrowserAutomationEngine[] = [BrowserAutomationEngine.Puppeteer];
   wordlistTypes: string[] = [];
   stringRules: StringRule[] = [
     StringRule.EqualTo,

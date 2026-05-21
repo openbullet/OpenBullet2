@@ -1,3 +1,5 @@
+using RuriLib.Models.Configs.Settings;
+
 namespace OpenBullet2.Web.Dtos.Config.Settings;
 
 /// <summary>
@@ -5,6 +7,11 @@ namespace OpenBullet2.Web.Dtos.Config.Settings;
 /// </summary>
 public class ConfigBrowserSettingsDto
 {
+    /// <summary>
+    /// The browser automation engine that should execute generic browser blocks.
+    /// </summary>
+    public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
+
     /// <summary>
     /// The values of the status for which the browser should be closed
     /// when the bot ends its execution.

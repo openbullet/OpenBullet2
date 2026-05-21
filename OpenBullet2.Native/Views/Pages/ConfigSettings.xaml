@@ -358,7 +358,14 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
-                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Puppeteer</Label>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Browser</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Label>Automation engine</Label>
+                    <ComboBox ItemsSource="{Binding BrowserAutomationEngines}"
+                              SelectedValue="{Binding Path=SelectedBrowserAutomationEngine}"
+                              Margin="5 0 0 0"
+                              Width="180" />
+                </StackPanel>
                 <Label Margin="0 10 0 0" >
                     Quit the browser when the bot ends with one of these statuses
                 </Label>

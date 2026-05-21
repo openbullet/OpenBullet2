@@ -76,6 +76,14 @@ public class DescriptorsRepositoryTests
     }
 
     [Fact]
+    public void Aliases_PuppeteerBrowserAlias_MapsToGenericBrowserDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Equal("BrowserReload", repository.Aliases["PuppeteerReload"]);
+    }
+
+    [Fact]
     public void AsTree_ContainsAutoBlockDescriptors()
     {
         var repository = new DescriptorsRepository();

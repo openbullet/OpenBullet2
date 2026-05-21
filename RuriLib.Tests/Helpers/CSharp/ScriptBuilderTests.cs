@@ -52,6 +52,8 @@ public class ScriptBuilderTests
         Assert.Contains("System.Globalization", usings);
         Assert.Contains("System.Text.Json", usings);
         Assert.Contains("System.Text.RegularExpressions", usings);
+        Assert.Contains("RuriLib.Blocks.Puppeteer.Page.Methods", usings);
+        Assert.Contains("RuriLib.Blocks.Browser.Page.Methods", usings);
     }
 
     [Fact]
@@ -87,5 +89,16 @@ public class ScriptBuilderTests
         var state = await script.RunAsync(scriptGlobals, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("hello", state.ReturnValue);
+    }
+
+    [Fact]
+    public void Build_LegacyPuppeteerMethodCall_CompilesBecauseLegacyImportsArePreserved()
+    {
+        var script = new ScriptBuilder().Build(
+            "PuppeteerGetCurrentUrl(data); return 1;",
+            new ScriptSettings(),
+            null!);
+
+        Assert.Contains("RuriLib.Blocks.Puppeteer.Page.Methods", script.Options.Imports);
     }
 }

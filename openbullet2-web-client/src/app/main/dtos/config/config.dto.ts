@@ -12,6 +12,10 @@ export enum StringRule {
   EndsWith = 'endsWith',
 }
 
+export enum BrowserAutomationEngine {
+  Puppeteer = 'puppeteer',
+}
+
 export interface ConfigDto {
   id: string;
   isRemote: boolean;
@@ -117,6 +121,7 @@ export interface RandomLinesFromFileResourceDto {
 }
 
 export interface ConfigBrowserSettingsDto {
+  engine: BrowserAutomationEngine;
   quitBrowserStatuses: string[];
   headless: boolean;
   commandLineArgs: string;
