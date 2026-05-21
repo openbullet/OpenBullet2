@@ -155,7 +155,8 @@ public class DescriptorsRepository
                 {
                     Id = blockId,
                     MethodName = method.Name,
-                    Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
+                    Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute))
+                        || IsAsyncReturnType(method.ReturnType),
                     Name = attribute.name ?? GetReadableMethodName(method.Name),
                     Aliases = aliases,
                     Description = attribute.description ?? string.Empty,
@@ -278,6 +279,12 @@ public class DescriptorsRepository
         => methodName.EndsWith("Async", StringComparison.Ordinal)
             ? methodName[..^"Async".Length].ToReadableName()
             : methodName.ToReadableName();
+
+    private static bool IsAsyncReturnType(Type returnType)
+        => returnType == typeof(Task)
+           || (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+           || returnType == typeof(ValueTask)
+           || (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ValueTask<>));
 
     private static BlockParameter BuildBlockParameter(ParameterInfo info)
     {
