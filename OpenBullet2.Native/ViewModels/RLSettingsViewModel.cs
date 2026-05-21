@@ -16,6 +16,7 @@ public class RLSettingsViewModel : ViewModelBase
     private ProxySettings Proxy => _service.RuriLibSettings.ProxySettings;
     private CaptchaSettings Captcha => _service.RuriLibSettings.CaptchaSettings;
     private PuppeteerSettings Puppeteer => _service.RuriLibSettings.PuppeteerSettings;
+    private PlaywrightSettings Playwright => _service.RuriLibSettings.PlaywrightSettings;
     private SeleniumSettings Selenium => _service.RuriLibSettings.SeleniumSettings;
 
     public RLSettingsViewModel(RuriLibSettingsService service) => _service = service;
@@ -583,6 +584,40 @@ public class RLSettingsViewModel : ViewModelBase
         set
         {
             Puppeteer.ChromeBinaryLocation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IEnumerable<PlaywrightBrowserType> PlaywrightBrowserTypes => Enum.GetValues(typeof(PlaywrightBrowserType)).Cast<PlaywrightBrowserType>();
+
+    public PlaywrightBrowserType PlaywrightBrowserType
+    {
+        get => Playwright.BrowserType;
+        set
+        {
+            Playwright.BrowserType = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IEnumerable<PlaywrightBrowserSource> PlaywrightBrowserSources => Enum.GetValues(typeof(PlaywrightBrowserSource)).Cast<PlaywrightBrowserSource>();
+
+    public PlaywrightBrowserSource PlaywrightBrowserSource
+    {
+        get => Playwright.Source;
+        set
+        {
+            Playwright.Source = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string PlaywrightExecutablePath
+    {
+        get => Playwright.ExecutablePath;
+        set
+        {
+            Playwright.ExecutablePath = value;
             OnPropertyChanged();
         }
     }

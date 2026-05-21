@@ -28,6 +28,7 @@ public class LoggingAndSettingsTests
         Assert.NotNull(settings.CaptchaSettings);
         Assert.NotNull(settings.ProxySettings);
         Assert.NotNull(settings.PuppeteerSettings);
+        Assert.NotNull(settings.PlaywrightSettings);
         Assert.NotNull(settings.SeleniumSettings);
     }
 

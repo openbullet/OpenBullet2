@@ -1,5 +1,7 @@
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs.Settings;
+using RuriLib.Models.Settings;
+using RuriLib.Providers.Playwright;
 using RuriLib.Providers.Puppeteer;
 using System;
 
@@ -11,13 +13,16 @@ namespace RuriLib.Providers.Browser;
 public class DefaultBrowserAutomationEngineResolver : IBrowserAutomationEngineResolver
 {
     private readonly IBrowserAutomationEngine _puppeteer;
+    private readonly IBrowserAutomationEngine _playwright;
 
     /// <summary>
     /// Creates the resolver with the built-in engine implementations.
     /// </summary>
-    public DefaultBrowserAutomationEngineResolver(IPuppeteerBrowserProvider? puppeteerBrowserProvider)
+    public DefaultBrowserAutomationEngineResolver(IPuppeteerBrowserProvider? puppeteerBrowserProvider,
+        IPlaywrightBrowserProvider? playwrightBrowserProvider)
     {
         _puppeteer = new PuppeteerBrowserAutomationEngine(puppeteerBrowserProvider ?? new NullPuppeteerBrowserProvider());
+        _playwright = new PlaywrightBrowserAutomationEngine(playwrightBrowserProvider ?? new NullPlaywrightBrowserProvider());
     }
 
     /// <inheritdoc />
@@ -25,6 +30,7 @@ public class DefaultBrowserAutomationEngineResolver : IBrowserAutomationEngineRe
         => engine switch
         {
             BrowserAutomationEngine.Puppeteer => _puppeteer,
+            BrowserAutomationEngine.Playwright => _playwright,
             _ => throw new NotSupportedException($"Browser automation engine {engine} is not supported")
         };
 
@@ -35,5 +41,12 @@ public class DefaultBrowserAutomationEngineResolver : IBrowserAutomationEngineRe
     private class NullPuppeteerBrowserProvider : IPuppeteerBrowserProvider
     {
         public string ChromeBinaryLocation => string.Empty;
+    }
+
+    private class NullPlaywrightBrowserProvider : IPlaywrightBrowserProvider
+    {
+        public PlaywrightBrowserType BrowserType => PlaywrightBrowserType.Chromium;
+        public PlaywrightBrowserSource Source => PlaywrightBrowserSource.Managed;
+        public string ExecutablePath => string.Empty;
     }
 }

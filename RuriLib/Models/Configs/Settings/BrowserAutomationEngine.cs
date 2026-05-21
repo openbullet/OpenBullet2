@@ -8,5 +8,10 @@ public enum BrowserAutomationEngine
     /// <summary>
     /// Use PuppeteerSharp as the underlying browser automation engine.
     /// </summary>
-    Puppeteer
+    Puppeteer,
+
+    /// <summary>
+    /// Use Playwright as the underlying browser automation engine.
+    /// </summary>
+    Playwright
 }

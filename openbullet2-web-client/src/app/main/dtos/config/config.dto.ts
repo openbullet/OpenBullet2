@@ -14,6 +14,7 @@ export enum StringRule {
 
 export enum BrowserAutomationEngine {
   Puppeteer = 'puppeteer',
+  Playwright = 'playwright',
 }
 
 export interface ConfigDto {

@@ -13,6 +13,8 @@ public class GlobalSettings
     public ProxySettings ProxySettings { get; set; } = new();
     /// <summary>Gets or sets the Puppeteer settings.</summary>
     public PuppeteerSettings PuppeteerSettings { get; set; } = new();
+    /// <summary>Gets or sets the Playwright settings.</summary>
+    public PlaywrightSettings PlaywrightSettings { get; set; } = new();
     /// <summary>Gets or sets the Selenium settings.</summary>
     public SeleniumSettings SeleniumSettings { get; set; } = new();
 }

@@ -24,11 +24,14 @@ public class RuriLibSettingsServiceTests
                                                                      {
                                                                          var service = new RuriLibSettingsService(tempDirectory);
                                                                          service.RuriLibSettings.GeneralSettings.VerboseMode = true;
+                                                                         service.RuriLibSettings.PlaywrightSettings.BrowserType = RuriLib.Models.Settings.PlaywrightBrowserType.Firefox;
 
                                                                          await service.Save();
 
                                                                          var reloaded = new RuriLibSettingsService(tempDirectory);
                                                                          Assert.True(reloaded.RuriLibSettings.GeneralSettings.VerboseMode);
+                                                                         Assert.Equal(RuriLib.Models.Settings.PlaywrightBrowserType.Firefox,
+                                                                             reloaded.RuriLibSettings.PlaywrightSettings.BrowserType);
                                                                      });
 
     private static void WithTempDirectory(Action<string> action)

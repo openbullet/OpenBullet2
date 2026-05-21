@@ -426,11 +426,26 @@ public class MultiRunJob : Job
                 if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                 {
                     await ClosePuppeteerBrowserIfOpen(botData).ConfigureAwait(false);
+                    await ClosePlaywrightBrowserIfOpen(botData).ConfigureAwait(false);
                     botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine", "pythonRuntime" });
                 }
                 else
                 {
-                    botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine", "pythonRuntime" });
+                    botData.DisposeObjectsExcept(
+                    [
+                        "puppeteer",
+                        "puppeteerPage",
+                        "puppeteerFrame",
+                        "playwright",
+                        "playwrightBrowser",
+                        "playwrightContext",
+                        "playwrightPage",
+                        "playwrightFrame",
+                        "playwrightUserAgent",
+                        "httpClient",
+                        "ironPyEngine",
+                        "pythonRuntime"
+                    ]);
                 }
             }
 
@@ -1375,6 +1390,29 @@ public class MultiRunJob : Job
         }
 
         await botData.DisposeObjectAsync("puppeteer").ConfigureAwait(false);
+    }
+
+    private static async Task ClosePlaywrightBrowserIfOpen(BotData botData)
+    {
+        var browser = botData.TryGetObject<Microsoft.Playwright.IBrowser>("playwrightBrowser");
+
+        if (browser is not null)
+        {
+            try
+            {
+                if (browser.IsConnected)
+                {
+                    await browser.CloseAsync().ConfigureAwait(false);
+                }
+            }
+            catch
+            {
+                // ignored, the remaining tracked objects still need to be cleared
+            }
+        }
+
+        await botData.DisposeObjectAsync("playwrightBrowser").ConfigureAwait(false);
+        await botData.DisposeObjectAsync("playwright").ConfigureAwait(false);
     }
 
     /// <inheritdoc />

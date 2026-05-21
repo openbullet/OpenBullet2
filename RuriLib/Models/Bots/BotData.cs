@@ -242,7 +242,21 @@ public class BotData
 
         // We need to dispose of objects created in each retry, because jobs should
         // only dispose of them after the bot has completed its work
-        DisposeObjectsExcept(["puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine", "pythonRuntime"]);
+        DisposeObjectsExcept(
+        [
+            "puppeteer",
+            "puppeteerPage",
+            "puppeteerFrame",
+            "playwright",
+            "playwrightBrowser",
+            "playwrightContext",
+            "playwrightPage",
+            "playwrightFrame",
+            "playwrightUserAgent",
+            "httpClient",
+            "ironPyEngine",
+            "pythonRuntime"
+        ]);
     }
 
     /// <summary>

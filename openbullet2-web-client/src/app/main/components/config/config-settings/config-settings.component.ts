@@ -50,7 +50,7 @@ export class ConfigSettingsComponent implements OnInit {
 
   botStatuses: string[] = [];
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
-  browserAutomationEngines: BrowserAutomationEngine[] = [BrowserAutomationEngine.Puppeteer];
+  browserAutomationEngines: BrowserAutomationEngine[] = [BrowserAutomationEngine.Puppeteer, BrowserAutomationEngine.Playwright];
   wordlistTypes: string[] = [];
   stringRules: StringRule[] = [
     StringRule.EqualTo,

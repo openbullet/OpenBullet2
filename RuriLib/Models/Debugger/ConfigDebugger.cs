@@ -119,6 +119,8 @@ public class ConfigDebugger : IDisposable
     private Stepper? stepper;
     private CancellationTokenSource? cts;
     private Browser? lastPuppeteerBrowser;
+    private Microsoft.Playwright.IPlaywright? lastPlaywright;
+    private Microsoft.Playwright.IBrowser? lastPlaywrightBrowser;
     private OpenQA.Selenium.WebDriver? lastSeleniumBrowser;
 
     /// <summary>
@@ -182,6 +184,12 @@ public class ConfigDebugger : IDisposable
         {
             await lastPuppeteerBrowser.CloseAsync().ConfigureAwait(false);
             await lastPuppeteerBrowser.DisposeAsync();
+        }
+
+        if (lastPlaywrightBrowser != null)
+        {
+            await lastPlaywrightBrowser.CloseAsync().ConfigureAwait(false);
+            lastPlaywright?.Dispose();
         }
 
         if (lastSeleniumBrowser != null)
@@ -397,10 +405,25 @@ public class ConfigDebugger : IDisposable
 
                 // Save the browsers for later use
                 lastPuppeteerBrowser = data.TryGetObject<Browser>("puppeteer");
+                lastPlaywright = data.TryGetObject<Microsoft.Playwright.IPlaywright>("playwright");
+                lastPlaywrightBrowser = data.TryGetObject<Microsoft.Playwright.IBrowser>("playwrightBrowser");
                 lastSeleniumBrowser = data.TryGetObject<OpenQA.Selenium.WebDriver>("selenium");
 
                 // Dispose stuff in data.Objects
-                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "selenium", "pythonRuntime" });
+                data.DisposeObjectsExcept(
+                [
+                    "puppeteer",
+                    "puppeteerPage",
+                    "puppeteerFrame",
+                    "playwright",
+                    "playwrightBrowser",
+                    "playwrightContext",
+                    "playwrightPage",
+                    "playwrightFrame",
+                    "playwrightUserAgent",
+                    "selenium",
+                    "pythonRuntime"
+                ]);
                 data.AsyncLocker?.Dispose();
             }
             else
@@ -640,6 +663,7 @@ public class ConfigDebugger : IDisposable
         }
 
         lastPuppeteerBrowser?.Dispose();
+        lastPlaywright?.Dispose();
         lastSeleniumBrowser?.Dispose();
 
         GC.SuppressFinalize(this);

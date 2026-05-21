@@ -2,6 +2,7 @@ using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Settings;
 using RuriLib.Providers.Proxies;
 using RuriLib.Providers.Browser;
+using RuriLib.Providers.Playwright;
 using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.Security;
@@ -47,12 +48,40 @@ public class DefaultProvidersTests
                                                                           });
 
     [Fact]
+    public void DefaultPlaywrightBrowserProvider_ReadsConfiguredValues() => WithSettingsService(settings =>
+                                                                                {
+                                                                                    settings.RuriLibSettings.PlaywrightSettings = new PlaywrightSettings
+                                                                                    {
+                                                                                        BrowserType = PlaywrightBrowserType.Firefox,
+                                                                                        Source = PlaywrightBrowserSource.ExecutablePath,
+                                                                                        ExecutablePath = "firefox-path"
+                                                                                    };
+
+                                                                                    var provider = new DefaultPlaywrightBrowserProvider(settings);
+
+                                                                                    Assert.Equal(PlaywrightBrowserType.Firefox, provider.BrowserType);
+                                                                                    Assert.Equal(PlaywrightBrowserSource.ExecutablePath, provider.Source);
+                                                                                    Assert.Equal("firefox-path", provider.ExecutablePath);
+                                                                                });
+
+    [Fact]
     public void DefaultBrowserAutomationEngineResolver_ResolvesPuppeteer() => WithSettingsService(settings =>
                                                                                      {
-                                                                                         var provider = new DefaultPuppeteerBrowserProvider(settings);
-                                                                                         var resolver = new DefaultBrowserAutomationEngineResolver(provider);
+                                                                                         var puppeteer = new DefaultPuppeteerBrowserProvider(settings);
+                                                                                         var playwright = new DefaultPlaywrightBrowserProvider(settings);
+                                                                                         var resolver = new DefaultBrowserAutomationEngineResolver(puppeteer, playwright);
 
                                                                                          Assert.IsType<PuppeteerBrowserAutomationEngine>(resolver.Resolve(BrowserAutomationEngine.Puppeteer));
+                                                                                     });
+
+    [Fact]
+    public void DefaultBrowserAutomationEngineResolver_ResolvesPlaywright() => WithSettingsService(settings =>
+                                                                                     {
+                                                                                         var puppeteer = new DefaultPuppeteerBrowserProvider(settings);
+                                                                                         var playwright = new DefaultPlaywrightBrowserProvider(settings);
+                                                                                         var resolver = new DefaultBrowserAutomationEngineResolver(puppeteer, playwright);
+
+                                                                                         Assert.IsType<PlaywrightBrowserAutomationEngine>(resolver.Resolve(BrowserAutomationEngine.Playwright));
                                                                                      });
 
     [Fact]

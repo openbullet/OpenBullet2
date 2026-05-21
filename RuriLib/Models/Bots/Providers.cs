@@ -1,6 +1,7 @@
 using RuriLib.Providers.Captchas;
 using RuriLib.Providers.Browser;
 using RuriLib.Providers.Emails;
+using RuriLib.Providers.Playwright;
 using RuriLib.Providers.Proxies;
 using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
@@ -48,6 +49,11 @@ public class Providers
     public IPuppeteerBrowserProvider PuppeteerBrowser { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the Playwright browser provider.
+    /// </summary>
+    public IPlaywrightBrowserProvider PlaywrightBrowser { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the Selenium browser provider.
     /// </summary>
     public ISeleniumBrowserProvider SeleniumBrowser { get; set; } = null!;
@@ -79,13 +85,14 @@ public class Providers
             EmailDomains = new FileEmailDomainRepository();
             Captcha = new CaptchaSharpProvider(settings);
             PuppeteerBrowser = new DefaultPuppeteerBrowserProvider(settings);
+            PlaywrightBrowser = new DefaultPlaywrightBrowserProvider(settings);
             SeleniumBrowser = new DefaultSeleniumBrowserProvider(settings);
             GeneralSettings = new DefaultGeneralSettingsProvider(settings);
             ProxySettings = new DefaultProxySettingsProvider(settings);
             Security = new DefaultSecurityProvider(settings);
         }
 
-        BrowserAutomation = new DefaultBrowserAutomationEngineResolver(PuppeteerBrowser);
+        BrowserAutomation = new DefaultBrowserAutomationEngineResolver(PuppeteerBrowser, PlaywrightBrowser);
         RNG = new DefaultRNGProvider();
     }
 }
