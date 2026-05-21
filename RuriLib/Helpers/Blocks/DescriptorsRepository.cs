@@ -133,7 +133,7 @@ public class DescriptorsRepository
                     Id = blockId,
                     MethodName = method.Name,
                     Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
-                    Name = attribute.name ?? method.Name.ToReadableName(),
+                    Name = attribute.name ?? GetReadableMethodName(method.Name),
                     Description = attribute.description ?? string.Empty,
                     ExtraInfo = attribute.extraInfo ?? string.Empty,
                     AssemblyFullName = assembly.FullName ?? assembly.GetName().Name ?? string.Empty,
@@ -182,7 +182,7 @@ public class DescriptorsRepository
 
                 descriptor.Actions.Add(new BlockActionInfo
                 {
-                    Name = attribute.name ?? method.Name.ToReadableName(),
+                    Name = attribute.name ?? GetReadableMethodName(method.Name),
                     Description = attribute.description ?? string.Empty,
                     Delegate = method.CreateDelegate<BlockActionDelegate>()
                 });
@@ -207,6 +207,11 @@ public class DescriptorsRepository
             BackgroundColor = category.backgroundColor
         };
     }
+
+    private static string GetReadableMethodName(string methodName)
+        => methodName.EndsWith("Async", StringComparison.Ordinal)
+            ? methodName[..^"Async".Length].ToReadableName()
+            : methodName.ToReadableName();
 
     private static BlockParameter BuildBlockParameter(ParameterInfo info)
     {

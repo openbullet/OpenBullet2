@@ -48,6 +48,7 @@ public class DescriptorsRepositoryTests
 
         Assert.Equal("FileExists", descriptor.Id);
         Assert.Equal("FileExistsAsync", descriptor.MethodName);
+        Assert.Equal("File Exists", descriptor.Name);
         Assert.True(descriptor.Async);
     }
 
@@ -60,6 +61,7 @@ public class DescriptorsRepositoryTests
 
         Assert.Equal("DnsLookup", descriptor.Id);
         Assert.Equal("LookupDnsAsync", descriptor.MethodName);
+        Assert.Equal("DNS Lookup", descriptor.Name);
         Assert.True(descriptor.Async);
     }
 
