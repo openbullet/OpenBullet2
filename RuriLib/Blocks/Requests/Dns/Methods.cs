@@ -17,7 +17,8 @@ public static class Methods
     /// <summary>
     /// Queries DNS records for a given name.
     /// </summary>
-    [Block("Queries DNS records for a given name", name = "DNS Lookup", id = "DnsLookup")]
+    [Block("Queries DNS records for a given name", name = "DNS Lookup", id = "DnsLookup",
+        aliases = new[] { "LookupDns", "LookupDnsAsync" })]
     public static async Task<List<string>> LookupDnsAsync(
         BotData data,
         string query,

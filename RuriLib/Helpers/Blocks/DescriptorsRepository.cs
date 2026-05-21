@@ -41,11 +41,17 @@ public class DescriptorsRepository
     };
 
     private readonly Dictionary<string, BlockCategory> categoryDefinitions = [];
+    private readonly Dictionary<string, string> aliasMappings = [];
 
     /// <summary>
     /// The descriptors keyed by their unique id.
     /// </summary>
     public Dictionary<string, BlockDescriptor> Descriptors { get; set; } = [];
+
+    /// <summary>
+    /// The canonical block id keyed by alias.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> Aliases => aliasMappings;
 
     /// <summary>
     /// Initializes a <see cref="DescriptorsRepository"/> and imports blocks from the executing assembly.
@@ -62,6 +68,7 @@ public class DescriptorsRepository
     {
         Descriptors.Clear();
         categoryDefinitions.Clear();
+        aliasMappings.Clear();
 
         Descriptors["Keycheck"] = new KeycheckBlockDescriptor();
         Descriptors["HttpRequest"] = new HttpRequestBlockDescriptor();
@@ -91,6 +98,20 @@ public class DescriptorsRepository
         }
 
         throw new InvalidCastException($"Descriptor {id} cannot be cast to {typeof(T).Name}");
+    }
+
+    /// <summary>
+    /// Attempts to resolve a block id to its canonical id.
+    /// </summary>
+    public bool TryResolveDescriptorId(string id, out string canonicalId)
+    {
+        if (Descriptors.ContainsKey(id))
+        {
+            canonicalId = id;
+            return true;
+        }
+
+        return aliasMappings.TryGetValue(id, out canonicalId!);
     }
 
     /// <summary>
@@ -128,12 +149,15 @@ public class DescriptorsRepository
                     throw new Exception($"Duplicate descriptor id: {blockId}");
                 }
 
+                var aliases = GetAliases(attribute, blockId);
+
                 Descriptors[blockId] = new AutoBlockDescriptor
                 {
                     Id = blockId,
                     MethodName = method.Name,
                     Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
                     Name = attribute.name ?? GetReadableMethodName(method.Name),
+                    Aliases = aliases,
                     Description = attribute.description ?? string.Empty,
                     ExtraInfo = attribute.extraInfo ?? string.Empty,
                     AssemblyFullName = assembly.FullName ?? assembly.GetName().Name ?? string.Empty,
@@ -151,6 +175,11 @@ public class DescriptorsRepository
                             MaxHeight = a.maxHeight
                         })
                 };
+
+                foreach (var alias in aliases)
+                {
+                    RegisterAlias(alias, blockId);
+                }
             }
         }
 
@@ -162,6 +191,43 @@ public class DescriptorsRepository
         string typeNamespace,
         Attributes.BlockCategory category)
         => categoryDefinitions[typeNamespace] = CreateBlockCategory(type, typeNamespace, category);
+
+    private List<string> GetAliases(Attributes.Block attribute, string blockId)
+    {
+        var aliases = new List<string>();
+
+        foreach (var alias in attribute.aliases)
+        {
+            if (string.IsNullOrWhiteSpace(alias))
+            {
+                throw new Exception($"Descriptor {blockId} has an empty alias");
+            }
+
+            if (alias == blockId || aliases.Contains(alias))
+            {
+                continue;
+            }
+
+            aliases.Add(alias);
+        }
+
+        return aliases;
+    }
+
+    private void RegisterAlias(string alias, string blockId)
+    {
+        if (Descriptors.ContainsKey(alias))
+        {
+            throw new Exception($"Alias {alias} conflicts with an existing descriptor id");
+        }
+
+        if (aliasMappings.TryGetValue(alias, out var existingBlockId))
+        {
+            throw new Exception($"Alias {alias} is already assigned to descriptor {existingBlockId}");
+        }
+
+        aliasMappings[alias] = blockId;
+    }
 
     private void AddBlockActions(Assembly assembly)
     {

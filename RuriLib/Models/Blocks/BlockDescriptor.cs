@@ -21,6 +21,11 @@ public class BlockDescriptor
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// Additional ids that resolve to this block when parsing LoliCode.
+    /// </summary>
+    public List<string> Aliases { get; set; } = [];
+
+    /// <summary>
     /// The description shown to the user.
     /// </summary>
     public string Description { get; set; } = string.Empty;

@@ -13,6 +13,8 @@ public class BlockDescriptorTests
 
         Assert.Equal(string.Empty, descriptor.Id);
         Assert.Equal(string.Empty, descriptor.Name);
+        Assert.NotNull(descriptor.Aliases);
+        Assert.Empty(descriptor.Aliases);
         Assert.Equal(string.Empty, descriptor.Description);
         Assert.Equal(string.Empty, descriptor.ExtraInfo);
         Assert.Equal(string.Empty, descriptor.AssemblyFullName);

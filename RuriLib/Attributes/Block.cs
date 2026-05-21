@@ -22,6 +22,12 @@ public class Block : Attribute
     public string? id = null;
 
     /// <summary>
+    /// Additional ids that are only accepted when parsing LoliCode and resolve to the stable id.
+    /// </summary>
+    // ReSharper disable once InconsistentNaming
+    public string[] aliases = [];
+
+    /// <summary>
     /// The description of what the block does.
     /// </summary>
     // ReSharper disable once InconsistentNaming

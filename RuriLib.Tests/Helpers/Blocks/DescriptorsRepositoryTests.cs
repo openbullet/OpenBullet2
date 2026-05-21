@@ -62,7 +62,17 @@ public class DescriptorsRepositoryTests
         Assert.Equal("DnsLookup", descriptor.Id);
         Assert.Equal("LookupDnsAsync", descriptor.MethodName);
         Assert.Equal("DNS Lookup", descriptor.Name);
+        Assert.Equal(new[] { "LookupDns", "LookupDnsAsync" }, descriptor.Aliases);
         Assert.True(descriptor.Async);
+    }
+
+    [Fact]
+    public void Aliases_BlockAlias_MapsToCanonicalDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Equal("DnsLookup", repository.Aliases["LookupDns"]);
+        Assert.Equal("DnsLookup", repository.Aliases["LookupDnsAsync"]);
     }
 
     [Fact]

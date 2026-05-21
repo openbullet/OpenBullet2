@@ -50,9 +50,12 @@ public static class Loli2StackTranspiler
                     throw new LoliCodeParsingException(lineNumber, "Could not parse the block id");
 
                 var blockId = match.Groups[1].Value;
+                var canonicalBlockId = Globals.DescriptorsRepository.TryResolveDescriptorId(blockId, out var resolvedBlockId)
+                    ? resolvedBlockId
+                    : blockId;
 
                 // Create the block
-                var block = BlockFactory.GetBlock<BlockInstance>(blockId);
+                var block = BlockFactory.GetBlock<BlockInstance>(canonicalBlockId);
 
                 var sb = new StringBuilder();
 
