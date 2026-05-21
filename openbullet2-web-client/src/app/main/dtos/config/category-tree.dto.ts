@@ -13,7 +13,9 @@ export class CategoryTreeNode {
     this.parent = parent;
     this.subCategories = dto.subCategories.map((sub) => new CategoryTreeNode(sub, this, descriptors));
 
-    this.descriptors = dto.descriptorIds.map((id) => descriptors[id]);
+    this.descriptors = dto.descriptorIds
+      .map((id) => descriptors[id])
+      .filter((descriptor): descriptor is BlockDescriptorDto => descriptor !== undefined);
   }
 
   isRoot(): boolean {

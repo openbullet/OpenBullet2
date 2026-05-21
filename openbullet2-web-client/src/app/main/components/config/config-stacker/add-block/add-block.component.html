@@ -61,15 +61,15 @@
         <div class="col-12 px-0">
             <div class="blocks-grid">
                 <div class="block-item"
-                    *ngFor="let blockId of recentlyUsedBlockIds"
+                    *ngFor="let descriptor of recentlyUsedDescriptors"
                     [ngStyle]="{
-                        backgroundColor: descriptorsRepo![blockId].category?.backgroundColor,
-                        color: descriptorsRepo![blockId].category?.foregroundColor
+                        backgroundColor: descriptor.category?.backgroundColor,
+                        color: descriptor.category?.foregroundColor
                     }"
-                    [pTooltip]="descriptorsRepo![blockId].description"
+                    [pTooltip]="descriptor.description"
                     [tooltipDisabled]="tooltipDisabled"
-                    (click)="selectBlock(blockId)">
-                    {{descriptorsRepo![blockId].name}}
+                    (click)="selectBlock(descriptor.id)">
+                    {{descriptor.name}}
                 </div>
             </div>
         </div>
