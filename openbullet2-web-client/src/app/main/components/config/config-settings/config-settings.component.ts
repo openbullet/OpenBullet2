@@ -3,7 +3,10 @@ import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-
 import { MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import {
+  BrowserAutomationEngine,
+  BrowserMouseAutomationMode,
   ConfigDto,
+  ConfigGhostCursorSettingsDto,
   CustomInputDto,
   LinesFromFileResourceDto,
   RandomLinesFromFileResourceDto,
@@ -23,6 +26,19 @@ import { SettingsService } from 'src/app/main/services/settings.service';
   styleUrls: ['./config-settings.component.scss'],
 })
 export class ConfigSettingsComponent implements OnInit {
+  private static readonly defaultGhostCursorSettings: ConfigGhostCursorSettingsDto = {
+    moveSpeed: null,
+    moveDelay: null,
+    randomizeMoveDelay: false,
+    delayPerStep: null,
+    scrollSpeed: null,
+    scrollDelay: null,
+    hesitate: null,
+    waitForClick: null,
+    maxTries: null,
+    overshootThreshold: null,
+  };
+
   // Listen for CTRL+S on the page
   @HostListener('document:keydown.control.s', ['$event'])
   onKeydownHandler(event: KeyboardEvent) {
@@ -49,6 +65,8 @@ export class ConfigSettingsComponent implements OnInit {
 
   botStatuses: string[] = [];
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
+  browserAutomationEngines: BrowserAutomationEngine[] = [BrowserAutomationEngine.Puppeteer, BrowserAutomationEngine.Playwright];
+  browserMouseAutomationModes: BrowserMouseAutomationMode[] = [BrowserMouseAutomationMode.Native, BrowserMouseAutomationMode.GhostCursor];
   wordlistTypes: string[] = [];
   stringRules: StringRule[] = [
     StringRule.EqualTo,
@@ -72,6 +90,7 @@ export class ConfigSettingsComponent implements OnInit {
   ) {
     this.configService.selectedConfig$.subscribe((config) => {
       this.config = config;
+      this.ensureGhostCursorSettings();
       this.clearRuleTestResults();
       this.ensureRuleTestWordlistType();
     });
@@ -98,6 +117,43 @@ export class ConfigSettingsComponent implements OnInit {
     if (this.config !== null) {
       this.configService.saveLocalConfig(this.config);
     }
+  }
+
+  onBrowserMouseAutomationModeChanged(mode: BrowserMouseAutomationMode) {
+    if (this.config === null) {
+      return;
+    }
+
+    this.config.settings.browserSettings.mouseAutomationMode = mode;
+    this.ensureGhostCursorSettings();
+    this.localSave();
+  }
+
+  onGhostCursorRandomizeMoveDelayChanged(enabled: boolean) {
+    if (this.config === null) {
+      return;
+    }
+
+    this.ensureGhostCursorSettings();
+    this.config.settings.browserSettings.ghostCursor.randomizeMoveDelay = enabled;
+
+    if (enabled) {
+      this.config.settings.browserSettings.ghostCursor.moveDelay = null;
+    }
+
+    this.localSave();
+  }
+
+  private ensureGhostCursorSettings() {
+    if (this.config === null) {
+      return;
+    }
+
+    if (this.config.settings.browserSettings.ghostCursor !== undefined) {
+      return;
+    }
+
+    this.config.settings.browserSettings.ghostCursor = { ...ConfigSettingsComponent.defaultGhostCursorSettings };
   }
 
   createSimpleDataRule() {

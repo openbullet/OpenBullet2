@@ -514,6 +514,29 @@
         </div>
     </div>
     <div class="row my-3">
+        <div class="col-12 col-lg-6">
+            <span class="d-block mb-2">Automation engine</span>
+            <app-input-dropdown key="browserAutomationEngine"
+                itemClass="input-small" optionClass="input-small"
+                ngDefaultControl
+                [options]="browserAutomationEngines"
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.engine" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 col-lg-6">
+            <span class="d-block mb-2">Mouse automation</span>
+            <app-input-dropdown key="browserMouseAutomationMode"
+                itemClass="input-small" optionClass="input-small"
+                ngDefaultControl
+                [options]="browserMouseAutomationModes"
+                (ngModelChange)="onBrowserMouseAutomationModeChanged($event)"
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.mouseAutomationMode" />
+        </div>
+    </div>
+    <div class="row my-3">
         <div class="col-12">
             <span class="mb-2 d-block">Quit the browser when the bot ends with one of these statuses</span>
             <app-multiple-selector
@@ -579,5 +602,147 @@
                 [(list)]="config.settings.browserSettings.blockedUrls"
                 placeholder="example.com" />
         </div>
+    </div>
+    <div *ngIf="config.settings.browserSettings.mouseAutomationMode === 'ghostCursor' && config.settings.browserSettings.ghostCursor != null"
+        class="mt-4">
+        <ng-container *ngIf="config.settings.browserSettings.ghostCursor as ghostCursor">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-1">Ghost Cursor</h4>
+                <span class="text-small color-inactive">
+                    These settings affect generic browser clicks, cursor movement, and scrolling when Ghost Cursor is selected.
+                </span>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h6 class="font-weight-bold mb-0">Moving</h6>
+            </div>
+        </div>
+        <div class="row ghost-cursor-grid">
+            <div class="col-12 col-lg-4 mt-3 pr-2">
+                <span class="d-block mb-2">Move speed</span>
+                <app-input-number key="ghostCursorMoveSpeed" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.moveSpeed"
+                    placeholder="0 = auto" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Higher values produce denser and faster paths. <code>0</code> or empty uses GhostCursor's automatic speed.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 px-2">
+                <span class="d-block mb-2">Move delay (ms)</span>
+                <app-input-number key="ghostCursorMoveDelay" class="input-small w-100"
+                    ngDefaultControl
+                    [disabled]="ghostCursor.randomizeMoveDelay"
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.moveDelay"
+                    placeholder="Default" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Empty uses GhostCursor defaults. This field is disabled when randomization is enabled.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 pl-2">
+                <span class="d-block mb-2">&nbsp;</span>
+                <p-checkbox
+                    (onChange)="onGhostCursorRandomizeMoveDelayChanged($event.checked)" ngDefaultControl 
+                    [ngModel]="ghostCursor.randomizeMoveDelay"
+                    [binary]="true" inputId="ghostCursorRandomizeMoveDelay"
+                    label="Randomize move delay" />
+            </div>
+            <div class="col-12 col-lg-4 mt-3 pr-2">
+                <span class="d-block mb-2">Delay per step (ms)</span>
+                <app-input-number key="ghostCursorDelayPerStep" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.delayPerStep"
+                    placeholder="0" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Extra delay between generated points. Default: <code>0 ms</code>.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 px-2">
+                <span class="d-block mb-2">Max retries</span>
+                <app-input-number key="ghostCursorMaxTries" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.maxTries"
+                    placeholder="10" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Reacquire attempts if the target moves. Default: <code>10</code>.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 pl-2">
+                <span class="d-block mb-2">Overshoot threshold</span>
+                <app-input-number key="ghostCursorOvershootThreshold" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.overshootThreshold"
+                    placeholder="500" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Distance in pixels before overshoot correction kicks in. Default: <code>500</code>.
+                </span>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h6 class="font-weight-bold mb-0">Clicking</h6>
+            </div>
+        </div>
+        <div class="row ghost-cursor-grid">
+            <div class="col-12 col-lg-4 mt-3 pr-2">
+                <span class="d-block mb-2">Hesitate before click (ms)</span>
+                <app-input-number key="ghostCursorHesitate" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.hesitate"
+                    placeholder="0" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Delay before pressing the mouse button. Default: <code>0 ms</code>.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 px-2">
+                <span class="d-block mb-2">Wait for click (ms)</span>
+                <app-input-number key="ghostCursorWaitForClick" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.waitForClick"
+                    placeholder="0" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Delay between mouse down and mouse up. Default: <code>0 ms</code>.
+                </span>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h6 class="font-weight-bold mb-0">Scrolling</h6>
+            </div>
+        </div>
+        <div class="row ghost-cursor-grid">
+            <div class="col-12 col-lg-4 mt-3 pr-2">
+                <span class="d-block mb-2">Scroll speed</span>
+                <app-input-number key="ghostCursorScrollSpeed" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.scrollSpeed"
+                    placeholder="100" [min]="0" [max]="100" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Range: <code>0-100</code>. <code>100</code> is effectively instant and is also the default.
+                </span>
+            </div>
+            <div class="col-12 col-lg-4 mt-3 px-2">
+                <span class="d-block mb-2">Scroll delay (ms)</span>
+                <app-input-number key="ghostCursorScrollDelay" class="input-small w-100"
+                    ngDefaultControl
+                    (validityChange)="localSave()"
+                    [(ngModel)]="ghostCursor.scrollDelay"
+                    placeholder="0" [min]="0" />
+                <span class="d-block mt-1 text-small color-inactive">
+                    Delay after scroll actions. Default: <code>0 ms</code>.
+                </span>
+            </div>
+        </div>
+        </ng-container>
     </div>
 </div>

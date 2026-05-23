@@ -33,9 +33,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.3.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.59.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="PuppeteerSharp" Version="24.40.0" />
     <PackageReference Include="RestSharp" Version="114.0.0" />
+    <PackageReference Include="Ruri.GhostCursorSharp.Playwright" Version="0.3.0" />
+    <PackageReference Include="Ruri.GhostCursorSharp.Puppeteer" Version="0.3.0" />
     <PackageReference Include="Selenium.Support" Version="4.43.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.43.0" />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />

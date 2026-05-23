@@ -76,6 +76,26 @@ public class DescriptorsRepositoryTests
     }
 
     [Fact]
+    public void Aliases_PuppeteerBrowserAlias_MapsToGenericBrowserDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Equal("BrowserReload", repository.Aliases["PuppeteerReload"]);
+    }
+
+    [Fact]
+    public void GetAs_BrowserOpen_TaskReturningWrapper_IsMarkedAsync()
+    {
+        var repository = new DescriptorsRepository();
+
+        var descriptor = repository.GetAs<AutoBlockDescriptor>("BrowserOpen");
+
+        Assert.Equal("BrowserOpen", descriptor.Id);
+        Assert.Equal("BrowserOpen", descriptor.MethodName);
+        Assert.True(descriptor.Async);
+    }
+
+    [Fact]
     public void AsTree_ContainsAutoBlockDescriptors()
     {
         var repository = new DescriptorsRepository();

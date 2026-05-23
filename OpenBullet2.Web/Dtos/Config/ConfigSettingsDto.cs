@@ -211,6 +211,14 @@ internal class ConfigBrowserSettingsDtoValidator : AbstractValidator<ConfigBrows
 {
     public ConfigBrowserSettingsDtoValidator()
     {
+        RuleFor(x => x.Engine)
+            .IsInEnum()
+            .WithMessage("Engine is invalid.");
+
+        RuleFor(x => x.MouseAutomationMode)
+            .IsInEnum()
+            .WithMessage("MouseAutomationMode is invalid.");
+
         RuleFor(x => x.QuitBrowserStatuses)
             .NotNull()
             .WithMessage("QuitBrowserStatuses cannot be null.");
@@ -226,6 +234,62 @@ internal class ConfigBrowserSettingsDtoValidator : AbstractValidator<ConfigBrows
         RuleForEach(x => x.BlockedUrls)
             .NotEmpty()
             .WithMessage("BlockedUrls cannot contain empty values.");
+
+        RuleFor(x => x.GhostCursor)
+            .NotNull()
+            .WithMessage("GhostCursor settings are required.")
+            .SetValidator(new ConfigGhostCursorSettingsDtoValidator()!);
+    }
+}
+
+internal class ConfigGhostCursorSettingsDtoValidator : AbstractValidator<ConfigGhostCursorSettingsDto>
+{
+    public ConfigGhostCursorSettingsDtoValidator()
+    {
+        RuleFor(x => x.MoveSpeed)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MoveSpeed.HasValue)
+            .WithMessage("GhostCursor MoveSpeed must be greater than or equal to 0.");
+
+        RuleFor(x => x.MoveDelay)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MoveDelay.HasValue)
+            .WithMessage("GhostCursor MoveDelay must be greater than or equal to 0.");
+
+        RuleFor(x => x.DelayPerStep)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.DelayPerStep.HasValue)
+            .WithMessage("GhostCursor DelayPerStep must be greater than or equal to 0.");
+
+        RuleFor(x => x.ScrollSpeed)
+            .InclusiveBetween(0, 100)
+            .When(x => x.ScrollSpeed.HasValue)
+            .WithMessage("GhostCursor ScrollSpeed must be between 0 and 100.");
+
+        RuleFor(x => x.ScrollDelay)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.ScrollDelay.HasValue)
+            .WithMessage("GhostCursor ScrollDelay must be greater than or equal to 0.");
+
+        RuleFor(x => x.Hesitate)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.Hesitate.HasValue)
+            .WithMessage("GhostCursor Hesitate must be greater than or equal to 0.");
+
+        RuleFor(x => x.WaitForClick)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.WaitForClick.HasValue)
+            .WithMessage("GhostCursor WaitForClick must be greater than or equal to 0.");
+
+        RuleFor(x => x.MaxTries)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MaxTries.HasValue)
+            .WithMessage("GhostCursor MaxTries must be greater than or equal to 0.");
+
+        RuleFor(x => x.OvershootThreshold)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.OvershootThreshold.HasValue)
+            .WithMessage("GhostCursor OvershootThreshold must be greater than or equal to 0.");
     }
 }
 

@@ -23,7 +23,8 @@ public class ConfigSettingsViewModel : ViewModelBase
     private ProxySettings Proxy => Config.Settings.ProxySettings;
     private DataSettings Data => Config.Settings.DataSettings;
     private InputSettings Input => Config.Settings.InputSettings;
-    private BrowserSettings Puppeteer => Config.Settings.BrowserSettings;
+    private BrowserSettings Browser => Config.Settings.BrowserSettings;
+    private BrowserGhostCursorSettings GhostCursor => Browser.GhostCursor;
 
     public int SuggestedBots
     {
@@ -229,67 +230,205 @@ public class ConfigSettingsViewModel : ViewModelBase
         set
         {
             quitBrowserStatuses = value;
-            Puppeteer.QuitBrowserStatuses = [.. quitBrowserStatuses];
+            Browser.QuitBrowserStatuses = [.. quitBrowserStatuses];
             OnPropertyChanged();
         }
     }
 
-    public bool Headless
+    public IEnumerable<BrowserAutomationEngine> BrowserAutomationEngines
+        => Enum.GetValues(typeof(BrowserAutomationEngine)).Cast<BrowserAutomationEngine>();
+
+    public BrowserAutomationEngine SelectedBrowserAutomationEngine
     {
-        get => Puppeteer.Headless;
+        get => Browser.Engine;
         set
         {
-            Puppeteer.Headless = value;
+            Browser.Engine = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IEnumerable<BrowserMouseAutomationMode> BrowserMouseAutomationModes
+        => Enum.GetValues(typeof(BrowserMouseAutomationMode)).Cast<BrowserMouseAutomationMode>();
+
+    public BrowserMouseAutomationMode SelectedBrowserMouseAutomationMode
+    {
+        get => Browser.MouseAutomationMode;
+        set
+        {
+            Browser.MouseAutomationMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsGhostCursorMouseAutomationSelected));
+        }
+    }
+
+    public bool IsGhostCursorMouseAutomationSelected
+        => SelectedBrowserMouseAutomationMode == BrowserMouseAutomationMode.GhostCursor;
+
+    public bool Headless
+    {
+        get => Browser.Headless;
+        set
+        {
+            Browser.Headless = value;
             OnPropertyChanged();
         }
     }
 
     public bool IgnoreHttpsErrors
     {
-        get => Puppeteer.IgnoreHttpsErrors;
+        get => Browser.IgnoreHttpsErrors;
         set
         {
-            Puppeteer.IgnoreHttpsErrors = value;
+            Browser.IgnoreHttpsErrors = value;
             OnPropertyChanged();
         }
     }
 
     public bool LoadOnlyDocumentAndScript
     {
-        get => Puppeteer.LoadOnlyDocumentAndScript;
+        get => Browser.LoadOnlyDocumentAndScript;
         set
         {
-            Puppeteer.LoadOnlyDocumentAndScript = value;
+            Browser.LoadOnlyDocumentAndScript = value;
             OnPropertyChanged();
         }
     }
 
     public bool DismissDialogs
     {
-        get => Puppeteer.DismissDialogs;
+        get => Browser.DismissDialogs;
         set
         {
-            Puppeteer.DismissDialogs = value;
+            Browser.DismissDialogs = value;
             OnPropertyChanged();
         }
     }
 
     public string CommandLineArgs
     {
-        get => Puppeteer.CommandLineArgs;
+        get => Browser.CommandLineArgs;
         set
         {
-            Puppeteer.CommandLineArgs = value;
+            Browser.CommandLineArgs = value;
             OnPropertyChanged();
         }
     }
 
     public List<string> BlockedUrls
     {
-        get => Puppeteer.BlockedUrls;
+        get => Browser.BlockedUrls;
         set
         {
-            Puppeteer.BlockedUrls = value;
+            Browser.BlockedUrls = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorMoveSpeed
+    {
+        get => GhostCursor.MoveSpeed;
+        set
+        {
+            GhostCursor.MoveSpeed = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorMoveDelay
+    {
+        get => GhostCursor.MoveDelay;
+        set
+        {
+            GhostCursor.MoveDelay = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool GhostCursorRandomizeMoveDelay
+    {
+        get => GhostCursor.RandomizeMoveDelay;
+        set
+        {
+            GhostCursor.RandomizeMoveDelay = value;
+            if (value)
+            {
+                GhostCursor.MoveDelay = null;
+                OnPropertyChanged(nameof(GhostCursorMoveDelay));
+            }
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsGhostCursorMoveDelayEnabled));
+        }
+    }
+
+    public bool IsGhostCursorMoveDelayEnabled => !GhostCursorRandomizeMoveDelay;
+
+    public int? GhostCursorDelayPerStep
+    {
+        get => GhostCursor.DelayPerStep;
+        set
+        {
+            GhostCursor.DelayPerStep = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorScrollSpeed
+    {
+        get => GhostCursor.ScrollSpeed;
+        set
+        {
+            GhostCursor.ScrollSpeed = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorScrollDelay
+    {
+        get => GhostCursor.ScrollDelay;
+        set
+        {
+            GhostCursor.ScrollDelay = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorHesitate
+    {
+        get => GhostCursor.Hesitate;
+        set
+        {
+            GhostCursor.Hesitate = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorWaitForClick
+    {
+        get => GhostCursor.WaitForClick;
+        set
+        {
+            GhostCursor.WaitForClick = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorMaxTries
+    {
+        get => GhostCursor.MaxTries;
+        set
+        {
+            GhostCursor.MaxTries = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorOvershootThreshold
+    {
+        get => GhostCursor.OvershootThreshold;
+        set
+        {
+            GhostCursor.OvershootThreshold = value;
             OnPropertyChanged();
         }
     }
@@ -377,7 +516,7 @@ public class ConfigSettingsViewModel : ViewModelBase
         ProxyBanStatuses = new ObservableCollection<string>(Proxy.BanProxyStatuses);
         AllowedProxyTypes = new ObservableCollection<string>(Proxy.AllowedProxyTypes.Select(t => t.ToString()));
         AllowedWordlistTypes = new ObservableCollection<string>(Data.AllowedWordlistTypes);
-        QuitBrowserStatuses = new ObservableCollection<string>(Puppeteer.QuitBrowserStatuses);
+        QuitBrowserStatuses = new ObservableCollection<string>(Browser.QuitBrowserStatuses);
 
         CustomInputsCollection = new ObservableCollection<CustomInput>(Input.CustomInputs);
         ResourcesCollection = new ObservableCollection<ConfigResourceOptions>(Data.Resources);

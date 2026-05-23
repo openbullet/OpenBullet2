@@ -8,6 +8,18 @@ namespace RuriLib.Models.Configs.Settings;
 /// </summary>
 public class BrowserSettings
 {
+    private BrowserGhostCursorSettings ghostCursor = new();
+
+    /// <summary>
+    /// The browser automation engine that should execute generic browser blocks.
+    /// </summary>
+    public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
+
+    /// <summary>
+    /// Controls how generic browser blocks should move and click the mouse.
+    /// </summary>
+    public BrowserMouseAutomationMode MouseAutomationMode { get; set; } = BrowserMouseAutomationMode.Native;
+
     /// <summary>
     /// Statuses that should force the browser to close.
     /// </summary>
@@ -42,4 +54,13 @@ public class BrowserSettings
     /// URL patterns that should be blocked.
     /// </summary>
     public List<string> BlockedUrls { get; set; } = [];
+
+    /// <summary>
+    /// Configures GhostCursor behavior when mouse automation is enabled.
+    /// </summary>
+    public BrowserGhostCursorSettings GhostCursor
+    {
+        get => ghostCursor;
+        set => ghostCursor = value ?? new();
+    }
 }

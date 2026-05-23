@@ -528,6 +528,7 @@ internal static class WebMappingMethods
         mapper.Map(source.CaptchaSettings, destination.CaptchaSettings);
         mapper.Map(source.ProxySettings, destination.ProxySettings);
         mapper.Map(source.PuppeteerSettings, destination.PuppeteerSettings);
+        mapper.Map(source.PlaywrightSettings, destination.PlaywrightSettings);
         mapper.Map(source.SeleniumSettings, destination.SeleniumSettings);
     }
 

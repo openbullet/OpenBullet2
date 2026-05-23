@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { faArrowUp, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
@@ -11,12 +11,13 @@ import { VolatileSettingsService } from 'src/app/main/services/volatile-settings
   templateUrl: './add-block.component.html',
   styleUrls: ['./add-block.component.scss'],
 })
-export class AddBlockComponent {
+export class AddBlockComponent implements OnChanges {
   @Input() tree: CategoryTreeNode | null = null;
   @Input() descriptorsRepo: BlockDescriptors | null = null;
   @Output() blockSelected = new EventEmitter<BlockInstanceTypes>();
   currentCategory: CategoryTreeNode | null = null;
   recentlyUsedBlockIds: string[] = [];
+  recentlyUsedDescriptors: BlockDescriptorDto[] = [];
   searchFilter = '';
   subCategories: CategoryTreeNode[] = [];
   descriptors: BlockDescriptorDto[] = [];
@@ -32,6 +33,12 @@ export class AddBlockComponent {
     private volatileSettingsService: VolatileSettingsService,
   ) {
     this.recentlyUsedBlockIds = volatileSettingsService.recentlyUsedBlockIds;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['descriptorsRepo']) {
+      this.syncRecentlyUsedBlocks();
+    }
   }
 
   public resetCategory() {
@@ -50,8 +57,7 @@ export class AddBlockComponent {
   selectBlock(blockId: string) {
     this.configService.getBlockInstance(blockId).subscribe((block) => {
       this.recentlyUsedBlockIds = [blockId, ...this.recentlyUsedBlockIds.filter((id) => id !== blockId).slice(0, 5)];
-
-      this.volatileSettingsService.recentlyUsedBlockIds = this.recentlyUsedBlockIds;
+      this.syncRecentlyUsedBlocks();
 
       this.tooltipDisabled = true;
       this.blockSelected.emit(block);
@@ -112,5 +118,16 @@ export class AddBlockComponent {
       this.subCategories = [];
       this.descriptors = this.getFilteredDescriptors(this.currentCategory);
     }
+  }
+
+  private syncRecentlyUsedBlocks() {
+    if (this.descriptorsRepo === null) {
+      this.recentlyUsedDescriptors = [];
+      return;
+    }
+
+    this.recentlyUsedBlockIds = this.recentlyUsedBlockIds.filter((id) => this.descriptorsRepo?.[id] !== undefined);
+    this.recentlyUsedDescriptors = this.recentlyUsedBlockIds.map((id) => this.descriptorsRepo![id]);
+    this.volatileSettingsService.recentlyUsedBlockIds = this.recentlyUsedBlockIds;
   }
 }

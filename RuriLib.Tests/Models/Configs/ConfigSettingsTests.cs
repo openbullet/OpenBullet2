@@ -1,4 +1,5 @@
 using RuriLib.Models.Configs;
+using RuriLib.Models.Configs.Settings;
 using System.Text.Json;
 using Xunit;
 
@@ -23,7 +24,9 @@ public class ConfigSettingsTests
         Assert.Empty(settings.DataSettings.DataRules);
         Assert.Empty(settings.DataSettings.Resources);
         Assert.NotNull(settings.BrowserSettings);
+        Assert.Equal(BrowserAutomationEngine.Puppeteer, settings.BrowserSettings.Engine);
         Assert.Empty(settings.BrowserSettings.BlockedUrls);
+        Assert.NotNull(settings.BrowserSettings.GhostCursor);
         Assert.NotNull(settings.ScriptSettings);
     }
 
@@ -42,6 +45,7 @@ public class ConfigSettingsTests
         var settings = JsonSerializer.Deserialize<ConfigSettings>(json);
 
         Assert.NotNull(settings);
+        Assert.Equal(BrowserAutomationEngine.Puppeteer, settings.BrowserSettings.Engine);
         Assert.False(settings.BrowserSettings.Headless);
         Assert.Equal(new[] { "https://example.com" }, settings.BrowserSettings.BlockedUrls);
     }

@@ -529,6 +529,37 @@
                              Width="500"></TextBox>
                 </StackPanel>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Playwright</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                    <Label>Browser family that Playwright will control</Label>
+                    <ComboBox ItemsSource="{Binding PlaywrightBrowserTypes}"
+                              SelectedValue="{Binding Path=PlaywrightBrowserType}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                    <Label>Browser source</Label>
+                    <ComboBox ItemsSource="{Binding PlaywrightBrowserSources}"
+                              SelectedValue="{Binding Path=PlaywrightBrowserSource}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PlaywrightBrowserSource}" Value="ExecutablePath">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <Label>Path of the browser executable on disk</Label>
+                    <TextBox Text="{Binding PlaywrightExecutablePath}"
+                             Width="500"></TextBox>
+                </StackPanel>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Selenium</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
                     <Label>Browser that the Selenium webdriver will control</Label>

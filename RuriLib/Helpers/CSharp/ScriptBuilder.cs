@@ -77,7 +77,11 @@ public class ScriptBuilder
             "Jint",
             "System.Threading",
             "System.Threading.Tasks",
-            "System"
+            "System",
+            // Keep legacy Puppeteer symbols in scope for old C# configs even though those methods are no longer block descriptors.
+            "RuriLib.Blocks.Puppeteer.Browser.Methods",
+            "RuriLib.Blocks.Puppeteer.Page.Methods",
+            "RuriLib.Blocks.Puppeteer.Elements.Methods"
         };
 
         usings.AddRange(Globals.DescriptorsRepository.Descriptors.Values.Select(d => d.Category.Namespace).Distinct());

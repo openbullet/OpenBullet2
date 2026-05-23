@@ -39,11 +39,23 @@ export enum BrowserType {
   Firefox = 'firefox',
 }
 
+export enum PlaywrightBrowserType {
+  Chromium = 'chromium',
+  Firefox = 'firefox',
+  Webkit = 'webkit',
+}
+
+export enum PlaywrightBrowserSource {
+  Managed = 'managed',
+  ExecutablePath = 'executablePath',
+}
+
 export interface RLSettingsDto {
   generalSettings: GeneralRLSettings;
   captchaSettings: CaptchaRLSettings;
   proxySettings: ProxyRLSettings;
   puppeteerSettings: PuppeteerRLSettings;
+  playwrightSettings: PlaywrightRLSettings;
   seleniumSettings: SeleniumRLSettings;
 }
 
@@ -113,6 +125,12 @@ export interface ProxyRLSettings {
 
 export interface PuppeteerRLSettings {
   chromeBinaryLocation: string;
+}
+
+export interface PlaywrightRLSettings {
+  browserType: PlaywrightBrowserType;
+  source: PlaywrightBrowserSource;
+  executablePath: string;
 }
 
 export interface SeleniumRLSettings {

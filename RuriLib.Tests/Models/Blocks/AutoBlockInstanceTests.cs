@@ -139,6 +139,15 @@ public class AutoBlockInstanceTests
     }
 
     [Fact]
+    public void ToSyntax_TaskReturningWrapper_UsesAwait()
+    {
+        var block = BlockFactory.GetBlock<AutoBlockInstance>("BrowserOpen");
+
+        var expected = $"await BrowserOpen(data, \"\").ConfigureAwait(false);{_nl}";
+        Assert.Equal(expected, RenderSyntax(block, []));
+    }
+
+    [Fact]
     public void ToSyntax_SyncReturnValueAlreadyDeclared_OutputScript()
     {
         var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");

@@ -48,5 +48,19 @@ public class TranspilerTests
         Assert.Equal(canonical, aliased);
     }
 
+    [Fact]
+    public void Transpile_PuppeteerAliasStackLoliRoundTrip_UsesGenericBrowserBlock()
+    {
+        var nl = Environment.NewLine;
+        var script = $"BLOCK:PuppeteerReload{nl}ENDBLOCK{nl}";
+
+        var stack = Loli2StackTranspiler.Transpile(script);
+        var block = Assert.IsType<AutoBlockInstance>(Assert.Single(stack));
+        var newScript = Stack2LoliTranspiler.Transpile(stack);
+
+        Assert.Equal("BrowserReload", block.Id);
+        Assert.Equal($"BLOCK:BrowserReload{nl}ENDBLOCK{nl}", newScript);
+    }
+
     private static string NormalizeLineEndings(string value) => value.Replace("\r\n", "\n");
 }
