@@ -130,9 +130,9 @@ jobs:
         docker rm openbullet2-extract
         mkdir .release
         cd .web
-        zip -r ../.release/OpenBullet2.Web.zip ./*
+        zip -r ../.release/OpenBullet2.Web.zip .
         cd ../.native
-        zip -r ../.release/OpenBullet2.Native.zip ./*
+        zip -r ../.release/OpenBullet2.Native.zip .
         cd ..
 
     - name: Download updater artifacts
