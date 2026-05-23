@@ -19,7 +19,7 @@ const statusColor: Record<JobStatus, string> = {
 
 const outcomeColor: Record<JobLastRunOutcome, string> = {
   none: 'secondary',
-  completed: 'good',
+  completed: 'good-dark',
   stopped: 'custom',
   aborted: 'bad',
   failed: 'bad',
