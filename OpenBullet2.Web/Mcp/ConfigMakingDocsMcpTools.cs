@@ -65,7 +65,7 @@ public sealed class ConfigMakingDocsMcpTools
         new("runtime_outcomes_and_execution_model", "Runtime Outcomes And Execution Model", "How statuses, retries, hits, proxies, debugger behavior, and concurrency affect config design.", "topics/runtime-outcomes-and-execution-model.md"),
         new("globals_variable", "Globals Variable", "Shared cross-bot state and reserved global properties.", "topics/globals-variable.md"),
         new("startup_script", "Startup Script", "When startup runs, what variables exist there, and how to use it safely.", "topics/startup-script.md"),
-        new("csharp_interop_and_usings", "C# Interop And Usings", "When to embed C#, when to add usings, and how to mix both styles effectively.", "topics/csharp-interop-and-usings.md"),
+        new("csharp_interop_and_usings", "Interop And Usings", "When to use inline C#, Script block interpreters like Python or NodeJS, and custom usings effectively.", "topics/csharp-interop-and-usings.md"),
         new("external_libraries", "External Libraries", "How plugin DLLs are loaded and how external C# libraries become available to scripts.", "topics/external-libraries.md"),
         new("proxies_for_config_makers", "Proxies For Config Makers", "Proxy-related settings, statuses, and runtime proxy properties relevant to configs.", "topics/proxies-for-config-makers.md")
     ];
