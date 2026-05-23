@@ -56,12 +56,14 @@ COPY --from=backend /build/web .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
-# Create a text file with all the files and folders in the current directory, not recursive, to be used by the updater
-RUN ls -1 > build-files.txt
+# Create a text file with all top-level files and folders, including hidden ones like .playwright,
+# to be used by the updater
+RUN ls -1A > build-files.txt
 
 WORKDIR /app/native
 
 COPY --from=backend /build/native /app/native
 
-# Create a text file with all the files and folders in the current directory, not recursive, to be used by the updater
-RUN ls -1 > build-files.txt
+# Create a text file with all top-level files and folders, including hidden ones like .playwright,
+# to be used by the updater
+RUN ls -1A > build-files.txt
