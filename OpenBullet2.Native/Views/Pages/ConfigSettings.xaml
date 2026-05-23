@@ -14,6 +14,10 @@
       KeyDown="PageKeyDown"
       Title="Config Settings">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+
     <Grid>
         <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2" 
                       HorizontalAlignment="Stretch"
@@ -366,6 +370,13 @@
                               Margin="5 0 0 0"
                               Width="180" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Mouse automation</Label>
+                    <ComboBox ItemsSource="{Binding BrowserMouseAutomationModes}"
+                              SelectedValue="{Binding Path=SelectedBrowserMouseAutomationMode}"
+                              Margin="5 0 0 0"
+                              Width="180" />
+                </StackPanel>
                 <Label Margin="0 10 0 0" >
                     Quit the browser when the bot ends with one of these statuses
                 </Label>
@@ -403,6 +414,136 @@
                              AcceptsReturn="True"
                              TextChanged="BlockedUrlsChanged">
                 </TextBox>
+                <StackPanel Visibility="{Binding IsGhostCursorMouseAutomationSelected, Converter={StaticResource BoolToVis}}">
+                    <Label FontSize="18" FontWeight="SemiBold" Margin="0 20 0 5">Ghost Cursor</Label>
+                    <TextBlock Margin="0 0 0 10"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource ForegroundMain}">
+                        These settings affect generic browser clicks, cursor movement, and scrolling when Ghost Cursor is selected.
+                    </TextBlock>
+
+                    <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Moving</Label>
+                    <StackPanel Margin="0 5 0 0">
+                        <DockPanel Margin="0 5 0 0">
+                            <Label Width="220">Move speed</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorMoveSpeed}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Higher values produce denser and faster paths. Leave empty or use 0 for Ghost Cursor automatic speed.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Move delay (ms)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  IsEnabled="{Binding IsGhostCursorMoveDelayEnabled}"
+                                  Value="{Binding GhostCursorMoveDelay}"
+                                  Width="150"/>
+                            <CheckBox Content="Randomize move delay"
+                                      IsChecked="{Binding GhostCursorRandomizeMoveDelay}" 
+                                      VerticalContentAlignment="Center"
+                                      Margin="15 0 0 0"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Empty uses Ghost Cursor defaults. Move delay is disabled when randomization is enabled.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Delay per step (ms)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorDelayPerStep}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Extra delay between generated points. Default: 0 ms.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Max retries</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorMaxTries}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Reacquire attempts if the target moves. Default: 10.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Overshoot threshold</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorOvershootThreshold}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Distance in pixels before overshoot correction kicks in. Default: 500.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 15 0 0">Clicking</Label>
+                    <StackPanel Margin="0 5 0 0">
+                        <DockPanel Margin="0 5 0 0">
+                            <Label Width="220">Hesitate before click (ms)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorHesitate}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Delay before pressing the mouse button. Default: 0 ms.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Wait for click (ms)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorWaitForClick}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Delay between mouse down and mouse up. Default: 0 ms.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 15 0 0">Scrolling</Label>
+                    <StackPanel Margin="0 5 0 0">
+                        <DockPanel Margin="0 5 0 0">
+                            <Label Width="220">Scroll speed</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="100"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorScrollSpeed}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Range: 0-100. 100 is effectively instant and is also the default.
+                        </TextBlock>
+
+                        <DockPanel Margin="0 10 0 0">
+                            <Label Width="220">Scroll delay (ms)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                  Maximum="1000000"
+                                  Interval="1"
+                                  Value="{Binding GhostCursorScrollDelay}"
+                                  Width="150"/>
+                        </DockPanel>
+                        <TextBlock Margin="5 0 0 0" Foreground="{DynamicResource ForegroundMain}" TextWrapping="Wrap">
+                            Delay after scroll actions. Default: 0 ms.
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

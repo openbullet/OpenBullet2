@@ -46,6 +46,13 @@ public static class Methods
         => data.Providers.BrowserAutomation.Resolve(data).Click(data, findBy, identifier, index, mouseButton, clickCount, timeBetweenClicks);
 
     /// <summary>
+    /// Moves the cursor to an element without clicking it.
+    /// </summary>
+    [Block("Moves the cursor to an element without clicking it", name = "Move Cursor to Element")]
+    public static Task BrowserMoveCursorToElement(BotData data, FindElementBy findBy, string identifier, int index)
+        => data.Providers.BrowserAutomation.Resolve(data).MoveCursorToElement(data, findBy, identifier, index);
+
+    /// <summary>
     /// Submits the form that contains the element.
     /// </summary>
     [Block("Submits a form", name = "Submit", aliases = ["PuppeteerSubmit"])]

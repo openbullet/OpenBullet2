@@ -13,6 +13,11 @@ public class ConfigBrowserSettingsDto
     public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
 
     /// <summary>
+    /// Controls how generic browser blocks move and click the mouse.
+    /// </summary>
+    public BrowserMouseAutomationMode MouseAutomationMode { get; set; } = BrowserMouseAutomationMode.Native;
+
+    /// <summary>
     /// The values of the status for which the browser should be closed
     /// when the bot ends its execution.
     /// </summary>
@@ -51,4 +56,9 @@ public class ConfigBrowserSettingsDto
     /// perform requests towards them.
     /// </summary>
     public List<string> BlockedUrls { get; set; } = new();
+
+    /// <summary>
+    /// The GhostCursor-specific settings used when mouse automation is enabled.
+    /// </summary>
+    public ConfigGhostCursorSettingsDto GhostCursor { get; set; } = new();
 }

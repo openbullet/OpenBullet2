@@ -26,6 +26,7 @@ public class ConfigSettingsTests
         Assert.NotNull(settings.BrowserSettings);
         Assert.Equal(BrowserAutomationEngine.Puppeteer, settings.BrowserSettings.Engine);
         Assert.Empty(settings.BrowserSettings.BlockedUrls);
+        Assert.NotNull(settings.BrowserSettings.GhostCursor);
         Assert.NotNull(settings.ScriptSettings);
     }
 

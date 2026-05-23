@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using GhostCursorSharp;
 using Newtonsoft.Json;
 using RuriLib.Exceptions;
 using RuriLib.Functions.Browser;
@@ -7,6 +8,7 @@ using RuriLib.Functions.Puppeteer;
 using RuriLib.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Settings;
 using RuriLib.Providers.Playwright;
 using System;
@@ -14,6 +16,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -34,6 +37,8 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     private const string PageObject = "playwrightPage";
     private const string FrameObject = "playwrightFrame";
     private const string UserAgentObject = "playwrightUserAgent";
+    private const string GhostCursorObject = "playwrightGhostCursor";
+    private const string RandomMovesObject = "browserGhostCursorRandomMovesEnabled";
 
     private readonly IPlaywrightBrowserProvider _playwrightBrowserProvider;
 
@@ -103,6 +108,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         data.SetObject(BrowserObject, browser, false);
         data.SetObject(ContextObject, context, false);
         SetPageAndFrame(data, page);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log($"{(launchOptions.Headless is true ? "Headless " : "")}Browser opened successfully!", LogColors.DarkSalmon);
     }
@@ -112,6 +118,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: true);
         var browser = GetBrowser(data);
         await browser.CloseAsync();
         GetPlaywright(data).Dispose();
@@ -130,10 +137,12 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         data.Logger.LogHeader();
 
         var context = GetContext(data);
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         var page = await context.NewPageAsync();
         await SetPageLoadingOptions(data, page);
 
         SetPageAndFrame(data, page);
+        await EnsureGhostCursorReadyAsync(data);
         data.Logger.Log("Opened a new page", LogColors.DarkSalmon);
     }
 
@@ -145,6 +154,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         var context = GetContext(data);
         var page = GetPage(data);
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         await page.CloseAsync();
 
         page = context.Pages.FirstOrDefault(p => !p.IsClosed);
@@ -154,6 +164,8 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         {
             await page.BringToFrontAsync();
         }
+
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Closed the active page", LogColors.DarkSalmon);
     }
@@ -166,8 +178,10 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         var context = GetContext(data);
         var page = context.Pages[index];
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         await page.BringToFrontAsync();
         SetPageAndFrame(data, page);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log($"Switched to tab with index {index}", LogColors.DarkSalmon);
     }
@@ -180,6 +194,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         var page = GetPage(data);
         await page.ReloadAsync();
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Reloaded the page", LogColors.DarkSalmon);
     }
@@ -195,6 +210,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             WaitUntil = WaitUntilState.Load
         });
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Went back to the previously visited page", LogColors.DarkSalmon);
     }
@@ -210,6 +226,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             WaitUntil = WaitUntilState.Load
         });
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Went forward to the next visited page", LogColors.DarkSalmon);
     }
@@ -242,6 +259,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         }
 
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log($"Navigated to {url}", LogColors.DarkSalmon);
     }
@@ -261,6 +279,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         data.SOURCE = await page.ContentAsync();
         data.RAWSOURCE = Encoding.UTF8.GetBytes(data.SOURCE);
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Waited for navigation to complete", LogColors.DarkSalmon);
     }
@@ -317,17 +336,126 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
         var frame = GetFrame(data);
         var (clickX, clickY) = await ResolveClickPoint(frame, x, y);
-        await page.Mouse.ClickAsync(clickX, clickY, new MouseClickOptions
+
+        if (ShouldUseGhostCursor(data))
         {
-            Button = ToPlaywrightMouseButton(mouseButton),
-            ClickCount = clickCount,
-            Delay = timeBetweenClicks
-        });
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveToAsync(new Vector(clickX, clickY), GhostCursorOptionsBuilder.BuildMoveToOptions(data.ConfigSettings.BrowserSettings));
+            await cursor.ClickAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount, timeBetweenClicks));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.Mouse.ClickAsync(clickX, clickY, new MouseClickOptions
+            {
+                Button = ToPlaywrightMouseButton(mouseButton),
+                ClickCount = clickCount,
+                Delay = timeBetweenClicks
+            });
+        }
 
         data.Logger.Log($"Clicked {clickCount} time(s) with {mouseButton} button at ({x}, {y})", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MoveCursorToCoordinates(BotData data, int x, int y)
+    {
+        data.Logger.LogHeader();
+
+        var frame = GetFrame(data);
+        var (moveX, moveY) = await ResolveClickPoint(frame, x, y);
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveToAsync(new Vector(moveX, moveY), GhostCursorOptionsBuilder.BuildMoveToOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            await GetPage(data).Mouse.MoveAsync(moveX, moveY);
+        }
+
+        data.Logger.Log($"Moved the cursor to ({x}, {y})", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MouseDown(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+    {
+        data.Logger.LogHeader();
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MouseDownAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount));
+        }
+        else
+        {
+            await GetPage(data).Mouse.DownAsync(new MouseDownOptions
+            {
+                Button = ToPlaywrightMouseButton(mouseButton),
+                ClickCount = clickCount
+            });
+        }
+
+        data.Logger.Log($"Pressed the {mouseButton} mouse button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MouseUp(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+    {
+        data.Logger.LogHeader();
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MouseUpAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount));
+        }
+        else
+        {
+            await GetPage(data).Mouse.UpAsync(new MouseUpOptions
+            {
+                Button = ToPlaywrightMouseButton(mouseButton),
+                ClickCount = clickCount
+            });
+        }
+
+        data.Logger.Log($"Released the {mouseButton} mouse button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task ToggleRandomMouseMoves(BotData data, bool enabled)
+    {
+        data.Logger.LogHeader();
+
+        SetGhostCursorRandomMovesEnabled(data, enabled);
+
+        if (enabled)
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            cursor.ToggleRandomMove(true);
+        }
+        else
+        {
+            data.TryGetObject<PlaywrightGhostCursor>(GhostCursorObject)?.ToggleRandomMove(false);
+        }
+
+        data.Logger.Log(enabled
+            ? "Enabled random mouse movement"
+            : "Disabled random mouse movement",
+            LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task InjectMousePositionHelper(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var cursor = await GetOrCreateGhostCursorAsync(data);
+        await cursor.InstallMouseHelperAsync();
+
+        data.Logger.Log("Injected the mouse position helper into the current page", LogColors.DarkSalmon);
     }
 
     /// <inheritdoc />
@@ -392,8 +520,17 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateAsync("window.scrollTo(0, 0);");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollToAsync("top", GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateAsync("window.scrollTo(0, 0);");
+        }
+
         data.Logger.Log("Scrolled to the top of the page", LogColors.DarkSalmon);
     }
 
@@ -402,8 +539,17 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateAsync("window.scrollTo(0, document.body.scrollHeight);");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollToAsync("bottom", GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateAsync("window.scrollTo(0, document.body.scrollHeight);");
+        }
+
         data.Logger.Log("Scrolled to the bottom of the page", LogColors.DarkSalmon);
     }
 
@@ -412,8 +558,19 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateAsync($"window.scrollBy({horizontalScroll}, {verticalScroll});");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollAsync(
+                new Vector(horizontalScroll, verticalScroll),
+                GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateAsync($"window.scrollBy({horizontalScroll}, {verticalScroll});");
+        }
+
         data.Logger.Log($"Scrolled by ({horizontalScroll}, {verticalScroll})", LogColors.DarkSalmon);
     }
 
@@ -625,14 +782,44 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         data.Logger.LogHeader();
 
         var elem = await GetElement(GetFrame(data), findBy, identifier, index);
-        await elem.ClickAsync(new ElementHandleClickOptions
+
+        if (ShouldUseGhostCursor(data))
         {
-            Button = ToPlaywrightMouseButton(mouseButton),
-            ClickCount = clickCount,
-            Delay = timeBetweenClicks
-        });
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ClickAsync(elem, BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount, timeBetweenClicks));
+        }
+        else
+        {
+            await elem.ClickAsync(new ElementHandleClickOptions
+            {
+                Button = ToPlaywrightMouseButton(mouseButton),
+                ClickCount = clickCount,
+                Delay = timeBetweenClicks
+            });
+        }
 
         data.Logger.Log($"Clicked {clickCount} time(s) with {mouseButton} button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MoveCursorToElement(BotData data, FindElementBy findBy, string identifier, int index)
+    {
+        data.Logger.LogHeader();
+
+        var elem = await GetElement(GetFrame(data), findBy, identifier, index);
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveAsync(elem, GhostCursorOptionsBuilder.BuildMoveOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var box = await elem.BoundingBoxAsync() ?? throw new BlockExecutionException("Could not determine the element bounds");
+            await GetPage(data).Mouse.MoveAsync(box.X + (box.Width / 2), box.Y + (box.Height / 2));
+        }
+
+        data.Logger.Log("Moved the cursor to the element", LogColors.DarkSalmon);
     }
 
     /// <inheritdoc />
@@ -964,12 +1151,12 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             _ => throw new NotSupportedException($"Unsupported Playwright browser type {browserType}")
         };
 
-    private static MouseButton ToPlaywrightMouseButton(BrowserMouseButton mouseButton)
+    private static Microsoft.Playwright.MouseButton ToPlaywrightMouseButton(BrowserMouseButton mouseButton)
         => mouseButton switch
         {
-            BrowserMouseButton.Left => MouseButton.Left,
-            BrowserMouseButton.Middle => MouseButton.Middle,
-            BrowserMouseButton.Right => MouseButton.Right,
+            BrowserMouseButton.Left => Microsoft.Playwright.MouseButton.Left,
+            BrowserMouseButton.Middle => Microsoft.Playwright.MouseButton.Middle,
+            BrowserMouseButton.Right => Microsoft.Playwright.MouseButton.Right,
             _ => throw new NotSupportedException($"Unsupported mouse button {mouseButton}")
         };
 
@@ -1024,8 +1211,10 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
         SwitchToMainFramePrivate(data);
     }
 
-    private static async Task SetPageLoadingOptions(BotData data, IPage page)
+    private async Task SetPageLoadingOptions(BotData data, IPage page)
     {
+        page.Load += async (_, _) => await TryRestoreGhostCursorAfterNavigationAsync(data);
+
         if (data.ConfigSettings.BrowserSettings.LoadOnlyDocumentAndScript ||
             data.ConfigSettings.BrowserSettings.BlockedUrls.Any(u => !string.IsNullOrWhiteSpace(u)))
         {
@@ -1064,6 +1253,17 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             {
                 ["User-Agent"] = userAgent
             });
+        }
+    }
+
+    private async Task TryRestoreGhostCursorAfterNavigationAsync(BotData data)
+    {
+        try
+        {
+            await EnsureGhostCursorReadyAsync(data);
+        }
+        catch
+        {
         }
     }
 
@@ -1176,6 +1376,87 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             JsonValueKind.Number => value.GetRawText(),
             _ => value.GetRawText()
         };
+
+    private async Task EnsureGhostCursorReadyAsync(BotData data)
+    {
+        if (ShouldUseGhostCursor(data) && IsGhostCursorRandomMovesEnabled(data))
+        {
+            _ = await GetOrCreateGhostCursorAsync(data);
+        }
+    }
+
+    private async Task<PlaywrightGhostCursor> GetOrCreateGhostCursorAsync(BotData data)
+    {
+        var page = GetPage(data);
+        var existing = data.TryGetObject<PlaywrightGhostCursor>(GhostCursorObject);
+
+        if (existing?.Page == page)
+        {
+            return existing;
+        }
+
+        if (existing is not null)
+        {
+            await ResetGhostCursorAsync(data, resetRandomMoves: false);
+        }
+
+        var cursor = new PlaywrightGhostCursor(page, GhostCursorOptionsBuilder.BuildCursorOptions(
+            data.ConfigSettings.BrowserSettings,
+            IsGhostCursorRandomMovesEnabled(data)));
+
+        data.SetObject(GhostCursorObject, cursor, false);
+        return cursor;
+    }
+
+    private async Task ResetGhostCursorAsync(BotData data, bool resetRandomMoves)
+    {
+        var cursor = data.TryGetObject<PlaywrightGhostCursor>(GhostCursorObject);
+
+        if (cursor is not null)
+        {
+            try
+            {
+                cursor.ToggleRandomMove(false);
+                await cursor.RemoveMouseHelperAsync();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        data.SetObject(GhostCursorObject, null, false);
+
+        if (resetRandomMoves)
+        {
+            SetGhostCursorRandomMovesEnabled(data, false);
+        }
+    }
+
+    private static bool ShouldUseGhostCursor(BotData data)
+        => data.ConfigSettings.BrowserSettings.MouseAutomationMode == BrowserMouseAutomationMode.GhostCursor;
+
+    private static ClickOptions BuildGhostCursorClickOptions(
+        BrowserSettings settings,
+        BrowserMouseButton mouseButton,
+        int clickCount,
+        int? waitForClick = null)
+        => GhostCursorOptionsBuilder.BuildClickOptions(settings, ToGhostCursorMouseButton(mouseButton), clickCount, waitForClick);
+
+    private static GhostCursorSharp.MouseButton ToGhostCursorMouseButton(BrowserMouseButton mouseButton)
+        => mouseButton switch
+        {
+            BrowserMouseButton.Left => GhostCursorSharp.MouseButton.Left,
+            BrowserMouseButton.Middle => GhostCursorSharp.MouseButton.Middle,
+            BrowserMouseButton.Right => GhostCursorSharp.MouseButton.Right,
+            _ => throw new NotSupportedException($"Unsupported mouse button {mouseButton}")
+        };
+
+    private static bool IsGhostCursorRandomMovesEnabled(BotData data)
+        => data.TryGetObject<StrongBox<bool>>(RandomMovesObject)?.Value ?? false;
+
+    private static void SetGhostCursorRandomMovesEnabled(BotData data, bool enabled)
+        => data.SetObject(RandomMovesObject, new StrongBox<bool>(enabled), false);
 
     private static class PlaywrightBrowserInstaller
     {

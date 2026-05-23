@@ -201,6 +201,72 @@ public class BrowserBlocksTests
         Assert.Equal("No pages open!", ex.Message);
     }
 
+    [Fact]
+    public async Task BrowserMoveCursorToCoordinates_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserMoveCursorToCoordinates(data, 10, 20));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserMouseDown_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserMouseDown(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserMouseUp_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserMouseUp(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserInjectMousePositionHelper_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserPageMethods.BrowserInjectMousePositionHelper(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserMoveCursorToElement_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserElementMethods.BrowserMoveCursorToElement(data, FindElementBy.Id, "main", 0));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
+    [Fact]
+    public async Task BrowserToggleRandomMouseMoves_WithoutBrowser_Throws()
+    {
+        var data = NewBotData();
+
+        var ex = await Assert.ThrowsAsync<BlockExecutionException>(() =>
+            BrowserBrowserMethods.BrowserToggleRandomMouseMoves(data));
+
+        Assert.Equal("No pages open!", ex.Message);
+    }
+
     private static BotData NewBotData()
         => new(
             new BotProviders(null!)

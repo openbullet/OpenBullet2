@@ -60,6 +60,34 @@ public static class Methods
         => data.Providers.BrowserAutomation.Resolve(data).ClickAtCoordinates(data, x, y, mouseButton, clickCount, timeBetweenClicks);
 
     /// <summary>
+    /// Moves the cursor to the given page coordinates.
+    /// </summary>
+    [Block("Moves the cursor to the given page coordinates without clicking", name = "Move Cursor to Coordinates")]
+    public static Task BrowserMoveCursorToCoordinates(BotData data, int x, int y)
+        => data.Providers.BrowserAutomation.Resolve(data).MoveCursorToCoordinates(data, x, y);
+
+    /// <summary>
+    /// Presses a mouse button at the current cursor location.
+    /// </summary>
+    [Block("Presses a mouse button at the current cursor location without releasing it", name = "Mouse Down")]
+    public static Task BrowserMouseDown(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+        => data.Providers.BrowserAutomation.Resolve(data).MouseDown(data, mouseButton, clickCount);
+
+    /// <summary>
+    /// Releases a mouse button at the current cursor location.
+    /// </summary>
+    [Block("Releases a mouse button at the current cursor location", name = "Mouse Up")]
+    public static Task BrowserMouseUp(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+        => data.Providers.BrowserAutomation.Resolve(data).MouseUp(data, mouseButton, clickCount);
+
+    /// <summary>
+    /// Injects the Ghost Cursor mouse position helper into the current page for debugging.
+    /// </summary>
+    [Block("Injects the Ghost Cursor mouse position helper into the current page for debugging", name = "Inject Mouse Position Helper")]
+    public static Task BrowserInjectMousePositionHelper(BotData data)
+        => data.Providers.BrowserAutomation.Resolve(data).InjectMousePositionHelper(data);
+
+    /// <summary>
     /// Presses a key on the page without releasing it.
     /// </summary>
     [Block("Presses a key in the browser page without releasing it", name = "Key Down in Page",

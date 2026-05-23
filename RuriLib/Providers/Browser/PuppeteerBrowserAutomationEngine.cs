@@ -1,3 +1,4 @@
+using GhostCursorSharp;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
@@ -8,11 +9,13 @@ using RuriLib.Functions.Puppeteer;
 using RuriLib.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Configs.Settings;
 using RuriLib.Providers.Puppeteer;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -27,6 +30,9 @@ namespace RuriLib.Providers.Browser;
 /// </summary>
 public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
 {
+    private const string GhostCursorObject = "puppeteerGhostCursor";
+    private const string RandomMovesObject = "browserGhostCursorRandomMovesEnabled";
+
     private readonly IPuppeteerBrowserProvider _puppeteerBrowserProvider;
 
     /// <summary>
@@ -98,6 +104,8 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
             await page.AuthenticateAsync(new Credentials { Username = proxy.Username, Password = proxy.Password });
         }
 
+        await EnsureGhostCursorReadyAsync(data);
+
         data.Logger.Log($"{(launchOptions.Headless ? "Headless " : "")}Browser opened successfully!", LogColors.DarkSalmon);
     }
 
@@ -106,6 +114,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: true);
         var browser = GetBrowser(data);
         await browser.CloseAsync();
         StopYoveProxyInternalServer(data);
@@ -121,10 +130,12 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         data.Logger.LogHeader();
 
         var browser = GetBrowser(data);
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         var page = await browser.NewPageAsync();
         await SetPageLoadingOptions(data, page);
 
         SetPageAndFrame(data, page);
+        await EnsureGhostCursorReadyAsync(data);
         data.Logger.Log("Opened a new page", LogColors.DarkSalmon);
     }
 
@@ -136,6 +147,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         var browser = GetBrowser(data);
         var page = GetPage(data);
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         await page.CloseAsync();
 
         page = (await browser.PagesAsync()).FirstOrDefault(p => !p.IsClosed);
@@ -145,6 +157,8 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         {
             await page.BringToFrontAsync();
         }
+
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Closed the active page", LogColors.DarkSalmon);
     }
@@ -160,8 +174,10 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         var pages = await browser.PagesAsync();
         var page = pages[index];
 
+        await ResetGhostCursorAsync(data, resetRandomMoves: false);
         await page.BringToFrontAsync();
         SetPageAndFrame(data, page);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log($"Switched to tab with index {index}", LogColors.DarkSalmon);
     }
@@ -174,6 +190,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         var page = GetPage(data);
         await page.ReloadAsync();
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Reloaded the page", LogColors.DarkSalmon);
     }
@@ -186,6 +203,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         var page = GetPage(data);
         await page.GoBackAsync();
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Went back to the previously visited page", LogColors.DarkSalmon);
     }
@@ -198,6 +216,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         var page = GetPage(data);
         await page.GoForwardAsync();
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Went forward to the next visited page", LogColors.DarkSalmon);
     }
@@ -230,6 +249,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         }
 
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log($"Navigated to {url}", LogColors.DarkSalmon);
     }
@@ -251,6 +271,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         data.SOURCE = await page.GetContentAsync();
         data.RAWSOURCE = Encoding.UTF8.GetBytes(data.SOURCE);
         SwitchToMainFramePrivate(data);
+        await EnsureGhostCursorReadyAsync(data);
 
         data.Logger.Log("Waited for navigation to complete", LogColors.DarkSalmon);
     }
@@ -292,17 +313,128 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
         var frame = GetFrame(data);
         var (clickX, clickY) = await ResolveClickPoint(frame, x, y);
-        await page.Mouse.ClickAsync(clickX, clickY, new PuppeteerSharp.Input.ClickOptions
+
+        if (ShouldUseGhostCursor(data))
         {
-            Button = ToPuppeteerMouseButton(mouseButton),
-            Count = clickCount,
-            Delay = timeBetweenClicks
-        });
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveToAsync(new Vector(Convert.ToDouble(clickX), Convert.ToDouble(clickY)),
+                GhostCursorOptionsBuilder.BuildMoveToOptions(data.ConfigSettings.BrowserSettings));
+            await cursor.ClickAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount, timeBetweenClicks));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.Mouse.ClickAsync(clickX, clickY, new PuppeteerSharp.Input.ClickOptions
+            {
+                Button = ToPuppeteerMouseButton(mouseButton),
+                Count = clickCount,
+                Delay = timeBetweenClicks
+            });
+        }
 
         data.Logger.Log($"Clicked {clickCount} time(s) with {mouseButton} button at ({x}, {y})", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MoveCursorToCoordinates(BotData data, int x, int y)
+    {
+        data.Logger.LogHeader();
+
+        var frame = GetFrame(data);
+        var (moveX, moveY) = await ResolveClickPoint(frame, x, y);
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveToAsync(new Vector(Convert.ToDouble(moveX), Convert.ToDouble(moveY)),
+                GhostCursorOptionsBuilder.BuildMoveToOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            await GetPage(data).Mouse.MoveAsync(moveX, moveY);
+        }
+
+        data.Logger.Log($"Moved the cursor to ({x}, {y})", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MouseDown(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+    {
+        data.Logger.LogHeader();
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MouseDownAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount));
+        }
+        else
+        {
+            await GetPage(data).Mouse.DownAsync(new PuppeteerSharp.Input.ClickOptions
+            {
+                Button = ToPuppeteerMouseButton(mouseButton),
+                Count = clickCount
+            });
+        }
+
+        data.Logger.Log($"Pressed the {mouseButton} mouse button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MouseUp(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1)
+    {
+        data.Logger.LogHeader();
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MouseUpAsync(BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount));
+        }
+        else
+        {
+            await GetPage(data).Mouse.UpAsync(new PuppeteerSharp.Input.ClickOptions
+            {
+                Button = ToPuppeteerMouseButton(mouseButton),
+                Count = clickCount
+            });
+        }
+
+        data.Logger.Log($"Released the {mouseButton} mouse button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task ToggleRandomMouseMoves(BotData data, bool enabled)
+    {
+        data.Logger.LogHeader();
+
+        SetGhostCursorRandomMovesEnabled(data, enabled);
+
+        if (enabled)
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            cursor.ToggleRandomMove(true);
+        }
+        else
+        {
+            data.TryGetObject<GhostCursor>(GhostCursorObject)?.ToggleRandomMove(false);
+        }
+
+        data.Logger.Log(enabled
+            ? "Enabled random mouse movement"
+            : "Disabled random mouse movement",
+            LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task InjectMousePositionHelper(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var cursor = await GetOrCreateGhostCursorAsync(data);
+        await cursor.InstallMouseHelperAsync();
+
+        data.Logger.Log("Injected the mouse position helper into the current page", LogColors.DarkSalmon);
     }
 
     /// <inheritdoc />
@@ -365,8 +497,17 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateExpressionAsync("window.scrollTo(0, 0);");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollToAsync("top", GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateExpressionAsync("window.scrollTo(0, 0);");
+        }
+
         data.Logger.Log("Scrolled to the top of the page", LogColors.DarkSalmon);
     }
 
@@ -375,8 +516,17 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateExpressionAsync("window.scrollTo(0, document.body.scrollHeight);");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollToAsync("bottom", GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateExpressionAsync("window.scrollTo(0, document.body.scrollHeight);");
+        }
+
         data.Logger.Log("Scrolled to the bottom of the page", LogColors.DarkSalmon);
     }
 
@@ -385,8 +535,19 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     {
         data.Logger.LogHeader();
 
-        var page = GetPage(data);
-        await page.EvaluateExpressionAsync($"window.scrollBy({horizontalScroll}, {verticalScroll});");
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ScrollAsync(
+                new Vector(horizontalScroll, verticalScroll),
+                GhostCursorOptionsBuilder.BuildScrollOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var page = GetPage(data);
+            await page.EvaluateExpressionAsync($"window.scrollBy({horizontalScroll}, {verticalScroll});");
+        }
+
         data.Logger.Log($"Scrolled by ({horizontalScroll}, {verticalScroll})", LogColors.DarkSalmon);
     }
 
@@ -586,14 +747,44 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         data.Logger.LogHeader();
 
         var elem = await GetElement(GetFrame(data), findBy, identifier, index);
-        await elem.ClickAsync(new PuppeteerSharp.Input.ClickOptions
+
+        if (ShouldUseGhostCursor(data))
         {
-            Button = ToPuppeteerMouseButton(mouseButton),
-            Count = clickCount,
-            Delay = timeBetweenClicks
-        });
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.ClickAsync(elem, BuildGhostCursorClickOptions(data.ConfigSettings.BrowserSettings, mouseButton, clickCount, timeBetweenClicks));
+        }
+        else
+        {
+            await elem.ClickAsync(new PuppeteerSharp.Input.ClickOptions
+            {
+                Button = ToPuppeteerMouseButton(mouseButton),
+                Count = clickCount,
+                Delay = timeBetweenClicks
+            });
+        }
 
         data.Logger.Log($"Clicked {clickCount} time(s) with {mouseButton} button", LogColors.DarkSalmon);
+    }
+
+    /// <inheritdoc />
+    public async Task MoveCursorToElement(BotData data, FindElementBy findBy, string identifier, int index)
+    {
+        data.Logger.LogHeader();
+
+        var elem = await GetElement(GetFrame(data), findBy, identifier, index);
+
+        if (ShouldUseGhostCursor(data))
+        {
+            var cursor = await GetOrCreateGhostCursorAsync(data);
+            await cursor.MoveAsync(elem, GhostCursorOptionsBuilder.BuildMoveOptions(data.ConfigSettings.BrowserSettings));
+        }
+        else
+        {
+            var box = await elem.BoundingBoxAsync() ?? throw new BlockExecutionException("Could not determine the element bounds");
+            await GetPage(data).Mouse.MoveAsync(box.X + (box.Width / 2), box.Y + (box.Height / 2));
+        }
+
+        data.Logger.Log("Moved the cursor to the element", LogColors.DarkSalmon);
     }
 
     /// <inheritdoc />
@@ -916,8 +1107,90 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
     private static void StopYoveProxyInternalServer(BotData data)
         => data.TryGetObject<ProxyClient>("puppeteer.yoveproxy")?.Dispose();
 
-    private static async Task SetPageLoadingOptions(BotData data, IPage page)
+    private async Task EnsureGhostCursorReadyAsync(BotData data)
     {
+        if (ShouldUseGhostCursor(data) && IsGhostCursorRandomMovesEnabled(data))
+        {
+            _ = await GetOrCreateGhostCursorAsync(data);
+        }
+    }
+
+    private async Task<GhostCursor> GetOrCreateGhostCursorAsync(BotData data)
+    {
+        var page = GetPage(data);
+        var existing = data.TryGetObject<GhostCursor>(GhostCursorObject);
+
+        if (existing?.Page == page)
+        {
+            return existing;
+        }
+
+        if (existing is not null)
+        {
+            await ResetGhostCursorAsync(data, resetRandomMoves: false);
+        }
+
+        var cursor = new GhostCursor(page, GhostCursorOptionsBuilder.BuildCursorOptions(
+            data.ConfigSettings.BrowserSettings,
+            IsGhostCursorRandomMovesEnabled(data)));
+
+        data.SetObject(GhostCursorObject, cursor, false);
+        return cursor;
+    }
+
+    private async Task ResetGhostCursorAsync(BotData data, bool resetRandomMoves)
+    {
+        var cursor = data.TryGetObject<GhostCursor>(GhostCursorObject);
+
+        if (cursor is not null)
+        {
+            try
+            {
+                cursor.ToggleRandomMove(false);
+                await cursor.RemoveMouseHelperAsync();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        data.SetObject(GhostCursorObject, null, false);
+
+        if (resetRandomMoves)
+        {
+            SetGhostCursorRandomMovesEnabled(data, false);
+        }
+    }
+
+    private static bool ShouldUseGhostCursor(BotData data)
+        => data.ConfigSettings.BrowserSettings.MouseAutomationMode == BrowserMouseAutomationMode.GhostCursor;
+
+    private static ClickOptions BuildGhostCursorClickOptions(
+        BrowserSettings settings,
+        BrowserMouseButton mouseButton,
+        int clickCount,
+        int? waitForClick = null)
+        => GhostCursorOptionsBuilder.BuildClickOptions(settings, ToGhostCursorMouseButton(mouseButton), clickCount, waitForClick);
+
+    private static GhostCursorSharp.MouseButton ToGhostCursorMouseButton(BrowserMouseButton mouseButton)
+        => mouseButton switch
+        {
+            BrowserMouseButton.Left => GhostCursorSharp.MouseButton.Left,
+            BrowserMouseButton.Middle => GhostCursorSharp.MouseButton.Middle,
+            BrowserMouseButton.Right => GhostCursorSharp.MouseButton.Right,
+            _ => throw new NotSupportedException($"Unsupported mouse button {mouseButton}")
+        };
+
+    private static bool IsGhostCursorRandomMovesEnabled(BotData data)
+        => data.TryGetObject<StrongBox<bool>>(RandomMovesObject)?.Value ?? false;
+
+    private static void SetGhostCursorRandomMovesEnabled(BotData data, bool enabled)
+        => data.SetObject(RandomMovesObject, new StrongBox<bool>(enabled), false);
+
+    private async Task SetPageLoadingOptions(BotData data, IPage page)
+    {
+        page.Load += async (_, _) => await TryRestoreGhostCursorAfterNavigationAsync(data);
         await page.SetRequestInterceptionAsync(true);
         page.Request += (_, e) =>
         {
@@ -945,6 +1218,17 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
                 data.Logger.Log($"Dialog automatically dismissed: {e.Dialog.Message}", LogColors.DarkSalmon);
                 e.Dialog.Dismiss();
             };
+        }
+    }
+
+    private async Task TryRestoreGhostCursorAfterNavigationAsync(BotData data)
+    {
+        try
+        {
+            await EnsureGhostCursorReadyAsync(data);
+        }
+        catch
+        {
         }
     }
 

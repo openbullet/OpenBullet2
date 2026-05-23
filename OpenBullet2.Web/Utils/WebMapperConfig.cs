@@ -98,6 +98,7 @@ internal static class WebMapperConfig
         AddTwoWay<RuriLib.Models.Configs.Settings.ProxySettings, ConfigProxySettingsDto>(config);
         AddTwoWay<InputSettings, ConfigInputSettingsDto>(config);
         AddTwoWay<BrowserSettings, ConfigBrowserSettingsDto>(config);
+        AddTwoWay<BrowserGhostCursorSettings, ConfigGhostCursorSettingsDto>(config);
         AddTwoWay<ScriptSettings, ConfigScriptSettingsDto>(config);
         AddTwoWay<CustomInput, CustomInputDto>(config);
         AddTwoWay<SimpleDataRule, SimpleDataRuleDto>(config);

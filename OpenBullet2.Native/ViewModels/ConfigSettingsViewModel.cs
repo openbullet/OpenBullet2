@@ -24,6 +24,7 @@ public class ConfigSettingsViewModel : ViewModelBase
     private DataSettings Data => Config.Settings.DataSettings;
     private InputSettings Input => Config.Settings.InputSettings;
     private BrowserSettings Browser => Config.Settings.BrowserSettings;
+    private BrowserGhostCursorSettings GhostCursor => Browser.GhostCursor;
 
     public int SuggestedBots
     {
@@ -247,6 +248,23 @@ public class ConfigSettingsViewModel : ViewModelBase
         }
     }
 
+    public IEnumerable<BrowserMouseAutomationMode> BrowserMouseAutomationModes
+        => Enum.GetValues(typeof(BrowserMouseAutomationMode)).Cast<BrowserMouseAutomationMode>();
+
+    public BrowserMouseAutomationMode SelectedBrowserMouseAutomationMode
+    {
+        get => Browser.MouseAutomationMode;
+        set
+        {
+            Browser.MouseAutomationMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsGhostCursorMouseAutomationSelected));
+        }
+    }
+
+    public bool IsGhostCursorMouseAutomationSelected
+        => SelectedBrowserMouseAutomationMode == BrowserMouseAutomationMode.GhostCursor;
+
     public bool Headless
     {
         get => Browser.Headless;
@@ -303,6 +321,114 @@ public class ConfigSettingsViewModel : ViewModelBase
         set
         {
             Browser.BlockedUrls = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorMoveSpeed
+    {
+        get => GhostCursor.MoveSpeed;
+        set
+        {
+            GhostCursor.MoveSpeed = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorMoveDelay
+    {
+        get => GhostCursor.MoveDelay;
+        set
+        {
+            GhostCursor.MoveDelay = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool GhostCursorRandomizeMoveDelay
+    {
+        get => GhostCursor.RandomizeMoveDelay;
+        set
+        {
+            GhostCursor.RandomizeMoveDelay = value;
+            if (value)
+            {
+                GhostCursor.MoveDelay = null;
+                OnPropertyChanged(nameof(GhostCursorMoveDelay));
+            }
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsGhostCursorMoveDelayEnabled));
+        }
+    }
+
+    public bool IsGhostCursorMoveDelayEnabled => !GhostCursorRandomizeMoveDelay;
+
+    public int? GhostCursorDelayPerStep
+    {
+        get => GhostCursor.DelayPerStep;
+        set
+        {
+            GhostCursor.DelayPerStep = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorScrollSpeed
+    {
+        get => GhostCursor.ScrollSpeed;
+        set
+        {
+            GhostCursor.ScrollSpeed = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorScrollDelay
+    {
+        get => GhostCursor.ScrollDelay;
+        set
+        {
+            GhostCursor.ScrollDelay = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorHesitate
+    {
+        get => GhostCursor.Hesitate;
+        set
+        {
+            GhostCursor.Hesitate = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorWaitForClick
+    {
+        get => GhostCursor.WaitForClick;
+        set
+        {
+            GhostCursor.WaitForClick = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int? GhostCursorMaxTries
+    {
+        get => GhostCursor.MaxTries;
+        set
+        {
+            GhostCursor.MaxTries = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double? GhostCursorOvershootThreshold
+    {
+        get => GhostCursor.OvershootThreshold;
+        set
+        {
+            GhostCursor.OvershootThreshold = value;
             OnPropertyChanged();
         }
     }

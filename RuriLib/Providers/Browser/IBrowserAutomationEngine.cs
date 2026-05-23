@@ -71,6 +71,26 @@ public interface IBrowserAutomationEngine
     Task ClickAtCoordinates(BotData data, int x, int y, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1,
         int timeBetweenClicks = 0);
     /// <summary>
+    /// Moves the cursor to an absolute page coordinate.
+    /// </summary>
+    Task MoveCursorToCoordinates(BotData data, int x, int y);
+    /// <summary>
+    /// Presses a mouse button at the current cursor location.
+    /// </summary>
+    Task MouseDown(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1);
+    /// <summary>
+    /// Releases a mouse button at the current cursor location.
+    /// </summary>
+    Task MouseUp(BotData data, BrowserMouseButton mouseButton = BrowserMouseButton.Left, int clickCount = 1);
+    /// <summary>
+    /// Enables or disables background random mouse movement.
+    /// </summary>
+    Task ToggleRandomMouseMoves(BotData data, bool enabled);
+    /// <summary>
+    /// Injects the Ghost Cursor mouse position helper into the current page for debugging.
+    /// </summary>
+    Task InjectMousePositionHelper(BotData data);
+    /// <summary>
     /// Presses a key on the page without releasing it.
     /// </summary>
     Task PageKeyDown(BotData data, string key);
@@ -152,6 +172,10 @@ public interface IBrowserAutomationEngine
     /// </summary>
     Task Click(BotData data, FindElementBy findBy, string identifier, int index, BrowserMouseButton mouseButton = BrowserMouseButton.Left,
         int clickCount = 1, int timeBetweenClicks = 0);
+    /// <summary>
+    /// Moves the cursor to an element without clicking it.
+    /// </summary>
+    Task MoveCursorToElement(BotData data, FindElementBy findBy, string identifier, int index);
     /// <summary>
     /// Submits the form that contains the element.
     /// </summary>

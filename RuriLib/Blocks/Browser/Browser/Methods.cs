@@ -65,4 +65,11 @@ public static class Methods
     [Block("Goes forward to the next visited page", name = "Go Forward", aliases = ["PuppeteerGoForward"])]
     public static Task BrowserGoForward(BotData data)
         => data.Providers.BrowserAutomation.Resolve(data).GoForward(data);
+
+    /// <summary>
+    /// Enables or disables background random mouse movement.
+    /// </summary>
+    [Block("Enables or disables background random mouse movement for the current browser page", name = "Toggle Random Mouse Moves")]
+    public static Task BrowserToggleRandomMouseMoves(BotData data, bool enabled = true)
+        => data.Providers.BrowserAutomation.Resolve(data).ToggleRandomMouseMoves(data, enabled);
 }

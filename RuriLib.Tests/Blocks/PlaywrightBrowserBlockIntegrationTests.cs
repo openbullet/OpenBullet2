@@ -83,6 +83,41 @@ public class PlaywrightBrowserBlockIntegrationTests
     }
 
     [Fact]
+    public async Task BrowserBlocks_WithPlaywrightGhostCursor_CoverHelperMoveMouseButtonsAndScroll()
+    {
+        var connection = await TestProxyServer.GetConnectionInfo();
+        var (playwright, browser) = await OpenBrowser(connection, UniquePool());
+        try
+        {
+            var data = NewBotData();
+            data.ConfigSettings.BrowserSettings.MouseAutomationMode = BrowserMouseAutomationMode.GhostCursor;
+            await SetPlaywrightObjects(data, playwright, browser);
+
+            await BrowserPageMethods.BrowserNavigateTo(data, BuildDataUrl(GhostCursorHtml()), timeout: 20000);
+            await BrowserPageMethods.BrowserInjectMousePositionHelper(data);
+            await BrowserElementMethods.BrowserMoveCursorToElement(data, FindElementBy.Id, "target", 0);
+            Assert.Equal("true", await BrowserPageMethods.BrowserExecuteJs(data, "String(document.querySelector('p-mouse-pointer') !== null);"));
+            await BrowserPageMethods.BrowserMouseDown(data);
+            await BrowserPageMethods.BrowserMouseUp(data);
+
+            Assert.Equal("yes", await BrowserPageMethods.BrowserExecuteJs(data, "document.body.getAttribute('data-down');"));
+            Assert.Equal("yes", await BrowserPageMethods.BrowserExecuteJs(data, "document.body.getAttribute('data-up');"));
+
+            await BrowserBrowserMethods.BrowserToggleRandomMouseMoves(data, true);
+            await Task.Delay(50, TestContext.Current.CancellationToken);
+            await BrowserBrowserMethods.BrowserToggleRandomMouseMoves(data, false);
+
+            await BrowserPageMethods.BrowserScrollBy(data, 0, 200);
+            Assert.True(int.Parse(await BrowserPageMethods.BrowserExecuteJs(data, "String(window.scrollY);")) > 0);
+        }
+        finally
+        {
+            await browser.CloseAsync();
+            playwright.Dispose();
+        }
+    }
+
+    [Fact]
     public async Task BrowserPageBlocks_WithPlaywrightRemoteBrowser_CoverPageActionsCookiesFramesResponsesAndScreenshots()
     {
         var connection = await TestProxyServer.GetConnectionInfo();
@@ -354,7 +389,20 @@ public class PlaywrightBrowserBlockIntegrationTests
              <div id="selector-target" class="selector-class" data-selector="css">selector</div>
              <div class="multi">first</div>
              <div class="multi">second</div>
-             <iframe id="inner-frame" srcdoc="<div id='inside'>inside</div>"></iframe>
+           <iframe id="inner-frame" srcdoc="<div id='inside'>inside</div>"></iframe>
+           </body>
+           """;
+
+    private static string GhostCursorHtml()
+        => """
+           <body style="height: 1600px; margin: 0;">
+             <button id="target"
+                     type="button"
+                     style="position:absolute; left:120px; top:140px; width:80px; height:40px;"
+                     onmousedown="document.body.setAttribute('data-down', 'yes')"
+                     onmouseup="document.body.setAttribute('data-up', 'yes')">
+               Target
+             </button>
            </body>
            """;
 

@@ -415,12 +415,15 @@ public class ConfigDebugger : IDisposable
                     "puppeteer",
                     "puppeteerPage",
                     "puppeteerFrame",
+                    "puppeteerGhostCursor",
                     "playwright",
                     "playwrightBrowser",
                     "playwrightContext",
                     "playwrightPage",
                     "playwrightFrame",
+                    "playwrightGhostCursor",
                     "playwrightUserAgent",
+                    "browserGhostCursorRandomMovesEnabled",
                     "selenium",
                     "pythonRuntime"
                 ]);

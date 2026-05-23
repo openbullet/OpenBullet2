@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Configs.Settings;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -64,11 +66,61 @@ public class ConfigPackerTests
         Assert.Equal("metadata.json", exception.FileName);
     }
 
+    [Fact]
+    public void Deserialize_NestedGhostCursorSettings_PopulatesGhostCursor()
+    {
+        var settings = JsonConvert.DeserializeObject<BrowserSettings>(
+            """
+            {
+              "MouseAutomationMode": 1,
+              "GhostCursor": {
+                "ScrollSpeed": 42,
+                "OvershootThreshold": 321
+              }
+            }
+            """);
+
+        Assert.NotNull(settings);
+        Assert.Equal(BrowserMouseAutomationMode.GhostCursor, settings.MouseAutomationMode);
+        Assert.Equal(42, settings.GhostCursor.ScrollSpeed);
+        Assert.Equal(321, settings.GhostCursor.OvershootThreshold);
+    }
+
+    [Fact]
+    public async Task PackAsync_WritesGhostCursorSettings()
+    {
+        var config = new Config
+        {
+            Id = "cfg-ghost",
+            Mode = ConfigMode.LoliCode,
+            Readme = "readme",
+            LoliCodeScript = ValidLoliCode
+        };
+        config.Settings.BrowserSettings.MouseAutomationMode = BrowserMouseAutomationMode.GhostCursor;
+        config.Settings.BrowserSettings.GhostCursor.ScrollSpeed = 55;
+
+        var packed = await ConfigPacker.PackAsync(config);
+        await using var stream = new MemoryStream(packed);
+        using var archive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+
+        var settingsJson = ReadTextEntry(archive, "settings.json");
+
+        Assert.Contains(@"""GhostCursor"": {", settingsJson);
+        Assert.Contains(@"""ScrollSpeed"": 55", settingsJson);
+    }
+
     private static void CreateTextEntry(ZipArchive archive, string path, string content)
     {
         var entry = archive.CreateEntry(path);
         using var writer = new StreamWriter(entry.Open(), Encoding.UTF8);
         writer.Write(content);
+    }
+
+    private static string ReadTextEntry(ZipArchive archive, string path)
+    {
+        var entry = archive.GetEntry(path)!;
+        using var reader = new StreamReader(entry.Open(), Encoding.UTF8);
+        return reader.ReadToEnd();
     }
 }
 
