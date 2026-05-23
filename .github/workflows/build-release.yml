@@ -125,12 +125,18 @@ jobs:
     - name: Extract files from the image
       run: |
         docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
-        docker cp openbullet2-extract:/app/web .web
+        docker cp openbullet2-extract:/app/web-win-x64 .web-win-x64
+        docker cp openbullet2-extract:/app/web-linux-x64 .web-linux-x64
+        docker cp openbullet2-extract:/app/web-linux-arm64 .web-linux-arm64
         docker cp openbullet2-extract:/app/native .native
         docker rm openbullet2-extract
         mkdir .release
-        cd .web
-        zip -r ../.release/OpenBullet2.Web.zip .
+        cd .web-win-x64
+        zip -r ../.release/OpenBullet2.Web-win-x64.zip .
+        cd ../.web-linux-x64
+        zip -r ../.release/OpenBullet2.Web-linux-x64.zip .
+        cd ../.web-linux-arm64
+        zip -r ../.release/OpenBullet2.Web-linux-arm64.zip .
         cd ../.native
         zip -r ../.release/OpenBullet2.Native.zip .
         cd ..

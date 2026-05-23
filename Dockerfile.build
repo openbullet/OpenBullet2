@@ -8,21 +8,21 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 WORKDIR /code
 
 COPY . .
-RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 -o /build/native
-RUN dotnet publish OpenBullet2.Web -c Release -o /build/web
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build/web-win-x64
+RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 -p:PlaywrightPlatform=win -o /build/native
+RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -p:PlaywrightPlatform=win -o /build/web-win-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
 # No osx because it needs codesign and it costs money...
 
-# Copy the win-x64 executable to the root of the web folder
-RUN cp /build/web-win-x64/OpenBullet2.Web.exe /build/web/OpenBullet2.Web.exe
-
-WORKDIR /build/web
+WORKDIR /build/web-win-x64
 
 # Remove all .xml files
 # (we cannot use <GenerateDocumentationFile>false</GenerateDocumentationFile>
 # because we need it for swagger)
-RUN find . -name "*.xml" -type f -delete
+RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
+    && find /build/web-linux-x64 -name "*.xml" -type f -delete \
+    && find /build/web-linux-arm64 -name "*.xml" -type f -delete
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
@@ -50,14 +50,28 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
 
 RUN apt-get update -yq && apt-get install -y --no-install-recommends curl
 
-WORKDIR /app/web
+WORKDIR /app/web-win-x64
 
-COPY --from=backend /build/web .
+COPY --from=backend /build/web-win-x64 .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
-# Create a text file with all top-level files and folders, including hidden ones like .playwright,
-# to be used by the updater
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-linux-x64
+
+COPY --from=backend /build/web-linux-x64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-linux-arm64
+
+COPY --from=backend /build/web-linux-arm64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
 RUN ls -1A > build-files.txt
 
 WORKDIR /app/native

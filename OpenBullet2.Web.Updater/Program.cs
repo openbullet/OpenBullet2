@@ -9,17 +9,17 @@ namespace OpenBullet2.Web.Updater;
 
 public static class Program
 {
-    private static readonly UpdaterSettings Settings = new(
-        "OpenBullet2.Web.zip",
-        RequirementsChecker.EnsureOb2WebNotRunningAsync,
-        RequirementsChecker.EnsureDotNetInstalledAsync);
-
     private static async Task Main(string[] args)
     {
         try
         {
+            var settings = new UpdaterSettings(
+                ReleaseAssetNames.GetCurrentWebAssetName(),
+                RequirementsChecker.EnsureOb2WebNotRunningAsync,
+                RequirementsChecker.EnsureDotNetInstalledAsync);
+
             await new Parser(with => { with.CaseInsensitiveEnumValues = true; }).ParseArguments<CliOptions>(args)
-                .WithParsedAsync(async opts => await UpdaterRunner.UpdateAsync(opts, Settings));
+                .WithParsedAsync(async opts => await UpdaterRunner.UpdateAsync(opts, settings));
         }
         catch (Exception ex)
         {
