@@ -17,9 +17,9 @@ jobs:
           - ubuntu-latest
           - windows-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
     - name: Unit and integration tests
@@ -75,9 +75,9 @@ jobs:
             executable: OpenBullet2.Native.Updater.exe
             release_name: ob2-native-updater-win-arm64.exe
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
     - name: Publish updater
@@ -88,7 +88,7 @@ jobs:
         New-Item -ItemType Directory -Force -Path .release | Out-Null
         Move-Item "./publish/${{ matrix.release_name }}/${{ matrix.executable }}" "./.release/${{ matrix.release_name }}"
     - name: Upload updater artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: updater-${{ matrix.release_name }}
         path: ./.release/${{ matrix.release_name }}
@@ -109,7 +109,7 @@ jobs:
 
     # Checkout the repository
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
@@ -159,7 +159,7 @@ jobs:
         cd ..
 
     - name: Download updater artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         pattern: updater-*
         path: .release
@@ -215,7 +215,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
@@ -226,19 +226,19 @@ jobs:
       run: echo "VERSION=$(cat OpenBullet2.Web/version.txt).${{ env.COMMIT_NUMBER }}" >> $GITHUB_ENV
 
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v4
 
     - name: Login to DockerHub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v4
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v7
       with:
         push: true
         file: ./Dockerfile.remote
