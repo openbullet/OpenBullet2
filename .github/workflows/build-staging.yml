@@ -140,9 +140,19 @@ jobs:
     - name: Read version again
       run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     # Build using docker
     - name: Build using docker
-      run: docker build -t openbullet2-build -f Dockerfile.build .
+      uses: docker/build-push-action@v7
+      with:
+        context: .
+        file: ./Dockerfile.build
+        load: true
+        tags: openbullet2-build
+        cache-from: type=gha,scope=openbullet2-artifacts
+        cache-to: type=gha,mode=max,scope=openbullet2-artifacts
 
     # Extract files from the /app folder of the image into a zip
     - name: Extract files from the image
@@ -247,7 +257,7 @@ jobs:
       uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v4
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to DockerHub
       uses: docker/login-action@v4
@@ -263,3 +273,5 @@ jobs:
         build-args: RELEASE_TAG=${{ env.VERSION }}
         platforms: linux/arm64/v8,linux/amd64
         tags: openbullet/openbullet2:staging,openbullet/openbullet2:${{ env.VERSION }}
+        cache-from: type=gha,scope=openbullet2-remote-image
+        cache-to: type=gha,mode=max,scope=openbullet2-remote-image

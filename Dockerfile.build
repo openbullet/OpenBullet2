@@ -7,15 +7,26 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 
 WORKDIR /code
 
+COPY Directory.Build.props nuget.config OpenBullet2.slnx ./
+COPY OpenBullet2.Core/*.csproj ./OpenBullet2.Core/
+COPY OpenBullet2.Native/*.csproj ./OpenBullet2.Native/
+COPY OpenBullet2.Web/*.csproj ./OpenBullet2.Web/
+COPY RuriLib/*.csproj ./RuriLib/
+COPY RuriLib.Http/*.csproj ./RuriLib.Http/
+COPY RuriLib.Parallelization/*.csproj ./RuriLib.Parallelization/
+COPY RuriLib.Proxies/*.csproj ./RuriLib.Proxies/
+RUN dotnet restore OpenBullet2.Native/OpenBullet2.Native.csproj "-p:RuntimeIdentifiers=win-x64;win-arm64"
+RUN dotnet restore OpenBullet2.Web/OpenBullet2.Web.csproj "-p:RuntimeIdentifiers=win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64"
+
 COPY . .
-RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64
-RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
+RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true --no-restore -p:PlaywrightPlatform=win -o /build/native-win-x64
+RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true --no-restore -p:PlaywrightPlatform=win -o /build/native-win-arm64
+RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true --no-restore -p:PlaywrightPlatform=win -o /build/web-win-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true --no-restore -p:PlaywrightPlatform=win -o /build/web-win-arm64
+RUN dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true --no-restore -p:PlaywrightPlatform=osx -o /build/web-osx-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true --no-restore -p:PlaywrightPlatform=osx -o /build/web-osx-arm64
+RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true --no-restore -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true --no-restore -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
 # No osx because it needs codesign and it costs money...
 
@@ -46,7 +57,7 @@ WORKDIR /code
 
 COPY openbullet2-web-client/package.json .
 COPY openbullet2-web-client/package-lock.json .
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 COPY openbullet2-web-client .
 RUN npm run build
