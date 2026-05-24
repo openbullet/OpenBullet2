@@ -19,9 +19,6 @@ public static class UpdaterRunner
         // Check if OpenBullet2 is running
         await settings.EnsureNotRunningAsync();
 
-        // Make sure the user has the required .NET runtime installed
-        await settings.EnsureDotNetInstalledAsync();
-
         // Fetch info from remote
         using var githubClient = new GitHubClient(options.Repository, options.Channel.Value,
             settings.AssetName, options.Username, options.Token);

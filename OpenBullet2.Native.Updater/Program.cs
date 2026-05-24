@@ -12,8 +12,7 @@ public static class Program
 {
     private static readonly UpdaterSettings Settings = new(
         "OpenBullet2.Native.zip",
-        RequirementsChecker.EnsureOb2NativeNotRunningAsync,
-        RequirementsChecker.EnsureDotNetInstalledAsync);
+        RequirementsChecker.EnsureOb2NativeNotRunningAsync);
 
     private static async Task Main(string[] args)
     {

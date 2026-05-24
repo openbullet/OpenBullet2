@@ -60,4 +60,4 @@ RUN case "$TARGETARCH" in \
 
 EXPOSE 5000
 
-CMD ["dotnet", "./OpenBullet2.Web.dll", "--urls=http://*:5000"]
+CMD ["./OpenBullet2.Web", "--urls=http://*:5000"]

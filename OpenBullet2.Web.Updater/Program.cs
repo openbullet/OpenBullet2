@@ -15,8 +15,7 @@ public static class Program
         {
             var settings = new UpdaterSettings(
                 ReleaseAssetNames.GetCurrentWebAssetName(),
-                RequirementsChecker.EnsureOb2WebNotRunningAsync,
-                RequirementsChecker.EnsureDotNetInstalledAsync);
+                RequirementsChecker.EnsureOb2WebNotRunningAsync);
 
             await new Parser(with => { with.CaseInsensitiveEnumValues = true; }).ParseArguments<CliOptions>(args)
                 .WithParsedAsync(async opts => await UpdaterRunner.UpdateAsync(opts, settings));
