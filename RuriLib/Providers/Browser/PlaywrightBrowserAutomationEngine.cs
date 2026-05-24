@@ -71,6 +71,7 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
             args.Add("--no-sandbox");
         }
 
+        ConfigurePlaywrightDriverSearchPath();
         var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
         var browserType = GetBrowserType(playwright, _playwrightBrowserProvider.BrowserType);
 
@@ -1457,6 +1458,25 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
 
     private static void SetGhostCursorRandomMovesEnabled(BotData data, bool enabled)
         => data.SetObject(RandomMovesObject, new StrongBox<bool>(enabled), false);
+
+    private static void ConfigurePlaywrightDriverSearchPath()
+    {
+        var baseDirectory = AppContext.BaseDirectory;
+
+        if (string.IsNullOrWhiteSpace(baseDirectory))
+        {
+            return;
+        }
+
+        var driverDirectory = Path.Combine(baseDirectory, ".playwright");
+
+        if (!Directory.Exists(driverDirectory))
+        {
+            return;
+        }
+
+        Environment.SetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH", baseDirectory);
+    }
 
     private static class PlaywrightBrowserInstaller
     {
