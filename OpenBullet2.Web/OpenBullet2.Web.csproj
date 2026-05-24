@@ -29,6 +29,7 @@
         <BeautyNoRuntimeInfo>False</BeautyNoRuntimeInfo>
         <BeautyUsePatch>True</BeautyUsePatch>
         <BeautyLogLevel>Info</BeautyLogLevel>
+        <BeautyExcludes>Microsoft.Playwright.dll</BeautyExcludes>
     </PropertyGroup>
 
     <ItemGroup>
