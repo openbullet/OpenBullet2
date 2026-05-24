@@ -15,8 +15,8 @@ COPY RuriLib/*.csproj ./RuriLib/
 COPY RuriLib.Http/*.csproj ./RuriLib.Http/
 COPY RuriLib.Parallelization/*.csproj ./RuriLib.Parallelization/
 COPY RuriLib.Proxies/*.csproj ./RuriLib.Proxies/
-RUN dotnet restore OpenBullet2.Native/OpenBullet2.Native.csproj "-p:RuntimeIdentifiers=win-x64;win-arm64"
-RUN dotnet restore OpenBullet2.Web/OpenBullet2.Web.csproj "-p:RuntimeIdentifiers=win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64"
+RUN dotnet restore OpenBullet2.Native/OpenBullet2.Native.csproj "-p:RuntimeIdentifiers=win-x64%3Bwin-arm64"
+RUN dotnet restore OpenBullet2.Web/OpenBullet2.Web.csproj "-p:RuntimeIdentifiers=win-x64%3Bwin-arm64%3Bosx-x64%3Bosx-arm64%3Blinux-x64%3Blinux-arm64"
 
 COPY . .
 RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true --no-restore -p:PlaywrightPlatform=win -o /build/native-win-x64
