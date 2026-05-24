@@ -86,6 +86,7 @@ public static class FileSystemHelper
 
             installStarted = true;
             MoveStagedBuild(installDirectory, stagingDirectory, backupDirectory, stagedEntries);
+            EnsureUnixExecutablePermissions(installDirectory, stagedEntries);
 
             Directory.Delete(updateDirectory, true);
         }
@@ -402,5 +403,42 @@ public static class FileSystemHelper
                     await entryStream.CopyToAsync(fileStream);
                 }
             });
+    }
+
+    private static void EnsureUnixExecutablePermissions(string installDirectory, string[] stagedEntries)
+    {
+        if (!(OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()))
+        {
+            return;
+        }
+
+        var executableMode = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                             UnixFileMode.GroupRead | UnixFileMode.GroupExecute |
+                             UnixFileMode.OtherRead | UnixFileMode.OtherExecute;
+
+        foreach (var entry in stagedEntries)
+        {
+            if (!ShouldMakeExecutable(entry))
+            {
+                continue;
+            }
+
+            var path = GetSafeInstallationPath(installDirectory, entry);
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            File.SetUnixFileMode(path, executableMode);
+        }
+    }
+
+    private static bool ShouldMakeExecutable(string entry)
+    {
+        var normalizedEntry = entry.Replace('\\', '/');
+
+        return normalizedEntry.Equals("OpenBullet2.Web", StringComparison.Ordinal) ||
+               normalizedEntry.StartsWith(".playwright/node/", StringComparison.Ordinal) &&
+               normalizedEntry.EndsWith("/node", StringComparison.Ordinal);
     }
 }
