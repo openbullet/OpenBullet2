@@ -13,7 +13,7 @@ RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained t
 RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-arm64
+RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=all -o /build/web-osx-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
@@ -32,6 +32,11 @@ RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
     && find /build/web-linux-arm64 -name "*.xml" -type f -delete \
     && find /build/native-win-x64 -name "*.xml" -type f -delete \
     && find /build/native-win-arm64 -name "*.xml" -type f -delete
+
+RUN rm -rf /build/web-osx-arm64/.playwright/node/darwin-x64 \
+    /build/web-osx-arm64/.playwright/node/linux-arm64 \
+    /build/web-osx-arm64/.playwright/node/linux-x64 \
+    /build/web-osx-arm64/.playwright/node/win32_x64
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
