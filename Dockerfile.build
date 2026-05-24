@@ -10,6 +10,7 @@ WORKDIR /code
 COPY . .
 RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 -p:PlaywrightPlatform=win -o /build/native
 RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -p:PlaywrightPlatform=win -o /build/web-win-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 -p:PlaywrightPlatform=win -o /build/web-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
@@ -21,6 +22,7 @@ WORKDIR /build/web-win-x64
 # (we cannot use <GenerateDocumentationFile>false</GenerateDocumentationFile>
 # because we need it for swagger)
 RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
+    && find /build/web-win-arm64 -name "*.xml" -type f -delete \
     && find /build/web-linux-x64 -name "*.xml" -type f -delete \
     && find /build/web-linux-arm64 -name "*.xml" -type f -delete
 
@@ -61,6 +63,14 @@ RUN ls -1A > build-files.txt
 WORKDIR /app/web-linux-x64
 
 COPY --from=backend /build/web-linux-x64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-win-arm64
+
+COPY --from=backend /build/web-win-arm64 .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 

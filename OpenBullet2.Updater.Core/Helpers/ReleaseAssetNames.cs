@@ -13,7 +13,12 @@ public static class ReleaseAssetNames
 
     public static string GetWebAssetName(OSPlatform osPlatform, Architecture architecture)
         => osPlatform == OSPlatform.Windows
-            ? "OpenBullet2.Web-win-x64.zip"
+            ? architecture switch
+            {
+                Architecture.X64 => "OpenBullet2.Web-win-x64.zip",
+                Architecture.Arm64 => "OpenBullet2.Web-win-arm64.zip",
+                _ => throw new NotSupportedException($"Unsupported Windows architecture {architecture}")
+            }
             : osPlatform == OSPlatform.Linux
                 ? architecture switch
                 {
