@@ -8,7 +8,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 WORKDIR /code
 
 COPY . .
-RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native
+RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64
+RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
@@ -24,7 +25,9 @@ WORKDIR /build/web-win-x64
 RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
     && find /build/web-win-arm64 -name "*.xml" -type f -delete \
     && find /build/web-linux-x64 -name "*.xml" -type f -delete \
-    && find /build/web-linux-arm64 -name "*.xml" -type f -delete
+    && find /build/web-linux-arm64 -name "*.xml" -type f -delete \
+    && find /build/native-win-x64 -name "*.xml" -type f -delete \
+    && find /build/native-win-arm64 -name "*.xml" -type f -delete
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
@@ -84,9 +87,17 @@ COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
 RUN ls -1A > build-files.txt
 
-WORKDIR /app/native
+WORKDIR /app/native-win-x64
 
-COPY --from=backend /build/native /app/native
+COPY --from=backend /build/native-win-x64 /app/native-win-x64
+
+# Create a text file with all top-level files and folders, including hidden ones like .playwright,
+# to be used by the updater
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/native-win-arm64
+
+COPY --from=backend /build/native-win-arm64 /app/native-win-arm64
 
 # Create a text file with all top-level files and folders, including hidden ones like .playwright,
 # to be used by the updater

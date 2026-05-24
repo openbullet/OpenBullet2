@@ -11,7 +11,7 @@ namespace OpenBullet2.Native.Updater;
 public static class Program
 {
     private static readonly UpdaterSettings Settings = new(
-        "OpenBullet2.Native.zip",
+        ReleaseAssetNames.GetCurrentNativeAssetName(),
         RequirementsChecker.EnsureOb2NativeNotRunningAsync);
 
     private static async Task Main(string[] args)

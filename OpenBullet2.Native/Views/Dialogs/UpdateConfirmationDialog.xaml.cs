@@ -29,8 +29,7 @@ public partial class UpdateConfirmationDialog : Page
         {
             Architecture.Arm64 => "ob2-native-updater-win-arm64.exe",
             Architecture.X64 => "ob2-native-updater-win-x64.exe",
-            Architecture.X86 => "ob2-native-updater-win-x86.exe",
-            _ => throw new NotImplementedException()
+            _ => throw new PlatformNotSupportedException("Native updates are only published for x64 and arm64")
         };
 
         var installDirectory = AppContext.BaseDirectory;

@@ -19,6 +19,18 @@ public class ReleaseAssetNamesTests
         => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetWebAssetName(OSPlatform.Windows, architecture));
 
     [Theory]
+    [InlineData(Architecture.X64, "OpenBullet2.Native-win-x64.zip")]
+    [InlineData(Architecture.Arm64, "OpenBullet2.Native-win-arm64.zip")]
+    public void GetNativeAssetName_ReturnsWindowsAssetForSupportedArchitectures(Architecture architecture, string expected)
+        => Assert.Equal(expected, ReleaseAssetNames.GetNativeAssetName(OSPlatform.Windows, architecture));
+
+    [Theory]
+    [InlineData(Architecture.X86)]
+    [InlineData(Architecture.Arm)]
+    public void GetNativeAssetName_ThrowsForUnsupportedWindowsArchitectures(Architecture architecture)
+        => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetNativeAssetName(OSPlatform.Windows, architecture));
+
+    [Theory]
     [InlineData(Architecture.X64, "OpenBullet2.Web-linux-x64.zip")]
     [InlineData(Architecture.Arm64, "OpenBullet2.Web-linux-arm64.zip")]
     public void GetWebAssetName_ReturnsLinuxAssetForSupportedArchitectures(Architecture architecture, string expected)
@@ -29,4 +41,8 @@ public class ReleaseAssetNamesTests
     [InlineData(Architecture.Arm)]
     public void GetWebAssetName_ThrowsForUnsupportedLinuxArchitectures(Architecture architecture)
         => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetWebAssetName(OSPlatform.Linux, architecture));
+
+    [Fact]
+    public void GetNativeAssetName_ThrowsForNonWindowsPlatforms()
+        => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetNativeAssetName(OSPlatform.Linux, Architecture.X64));
 }

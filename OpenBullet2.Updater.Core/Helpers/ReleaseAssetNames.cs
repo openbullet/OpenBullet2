@@ -8,8 +8,14 @@ public static class ReleaseAssetNames
     public static string GetCurrentWebAssetName()
         => GetWebAssetName(GetCurrentOsPlatform(), RuntimeInformation.OSArchitecture);
 
+    public static string GetCurrentNativeAssetName()
+        => GetNativeAssetName(GetCurrentOsPlatform(), RuntimeInformation.OSArchitecture);
+
     public static string GetWebAssetName(Architecture architecture)
         => GetWebAssetName(GetCurrentOsPlatform(), architecture);
+
+    public static string GetNativeAssetName(Architecture architecture)
+        => GetNativeAssetName(GetCurrentOsPlatform(), architecture);
 
     public static string GetWebAssetName(OSPlatform osPlatform, Architecture architecture)
         => osPlatform == OSPlatform.Windows
@@ -27,6 +33,16 @@ public static class ReleaseAssetNames
                     _ => throw new NotSupportedException($"Unsupported Linux architecture {architecture}")
                 }
                 : throw new NotSupportedException("Only Windows and Linux are supported by the web updater");
+
+    public static string GetNativeAssetName(OSPlatform osPlatform, Architecture architecture)
+        => osPlatform == OSPlatform.Windows
+            ? architecture switch
+            {
+                Architecture.X64 => "OpenBullet2.Native-win-x64.zip",
+                Architecture.Arm64 => "OpenBullet2.Native-win-arm64.zip",
+                _ => throw new NotSupportedException($"Unsupported Windows architecture {architecture}")
+            }
+            : throw new NotSupportedException("Only Windows is supported by the native updater");
 
     private static OSPlatform GetCurrentOsPlatform()
     {

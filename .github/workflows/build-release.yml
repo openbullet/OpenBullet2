@@ -63,10 +63,6 @@ jobs:
             executable: OpenBullet2.Native.Updater.exe
             release_name: ob2-native-updater-win-x64.exe
           - project: OpenBullet2.Native.Updater/OpenBullet2.Native.Updater.csproj
-            runtime: win-x86
-            executable: OpenBullet2.Native.Updater.exe
-            release_name: ob2-native-updater-win-x86.exe
-          - project: OpenBullet2.Native.Updater/OpenBullet2.Native.Updater.csproj
             runtime: win-arm64
             executable: OpenBullet2.Native.Updater.exe
             release_name: ob2-native-updater-win-arm64.exe
@@ -125,7 +121,8 @@ jobs:
         docker cp openbullet2-extract:/app/web-win-arm64 .web-win-arm64
         docker cp openbullet2-extract:/app/web-linux-x64 .web-linux-x64
         docker cp openbullet2-extract:/app/web-linux-arm64 .web-linux-arm64
-        docker cp openbullet2-extract:/app/native .native
+        docker cp openbullet2-extract:/app/native-win-x64 .native-win-x64
+        docker cp openbullet2-extract:/app/native-win-arm64 .native-win-arm64
         docker rm openbullet2-extract
         mkdir .release
         cd .web-win-x64
@@ -136,8 +133,10 @@ jobs:
         zip -r ../.release/OpenBullet2.Web-linux-x64.zip .
         cd ../.web-linux-arm64
         zip -r ../.release/OpenBullet2.Web-linux-arm64.zip .
-        cd ../.native
-        zip -r ../.release/OpenBullet2.Native.zip .
+        cd ../.native-win-x64
+        zip -r ../.release/OpenBullet2.Native-win-x64.zip .
+        cd ../.native-win-arm64
+        zip -r ../.release/OpenBullet2.Native-win-arm64.zip .
         cd ..
 
     - name: Download updater artifacts
