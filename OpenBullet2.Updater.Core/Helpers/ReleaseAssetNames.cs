@@ -25,6 +25,13 @@ public static class ReleaseAssetNames
                 Architecture.Arm64 => "OpenBullet2.Web-win-arm64.zip",
                 _ => throw new NotSupportedException($"Unsupported Windows architecture {architecture}")
             }
+            : osPlatform == OSPlatform.OSX
+                ? architecture switch
+                {
+                    Architecture.X64 => "OpenBullet2.Web-osx-x64.zip",
+                    Architecture.Arm64 => "OpenBullet2.Web-osx-arm64.zip",
+                    _ => throw new NotSupportedException($"Unsupported macOS architecture {architecture}")
+                }
             : osPlatform == OSPlatform.Linux
                 ? architecture switch
                 {
@@ -32,7 +39,7 @@ public static class ReleaseAssetNames
                     Architecture.Arm64 => "OpenBullet2.Web-linux-arm64.zip",
                     _ => throw new NotSupportedException($"Unsupported Linux architecture {architecture}")
                 }
-                : throw new NotSupportedException("Only Windows and Linux are supported by the web updater");
+                : throw new NotSupportedException("Only Windows, macOS and Linux are supported by the web updater");
 
     public static string GetNativeAssetName(OSPlatform osPlatform, Architecture architecture)
         => osPlatform == OSPlatform.Windows
@@ -56,6 +63,11 @@ public static class ReleaseAssetNames
             return OSPlatform.Linux;
         }
 
-        throw new NotSupportedException("Only Windows and Linux are supported by the web updater");
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return OSPlatform.OSX;
+        }
+
+        throw new NotSupportedException("Only Windows, macOS and Linux are supported by the web updater");
     }
 }

@@ -19,6 +19,18 @@ public class ReleaseAssetNamesTests
         => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetWebAssetName(OSPlatform.Windows, architecture));
 
     [Theory]
+    [InlineData(Architecture.X64, "OpenBullet2.Web-osx-x64.zip")]
+    [InlineData(Architecture.Arm64, "OpenBullet2.Web-osx-arm64.zip")]
+    public void GetWebAssetName_ReturnsMacOsAssetForSupportedArchitectures(Architecture architecture, string expected)
+        => Assert.Equal(expected, ReleaseAssetNames.GetWebAssetName(OSPlatform.OSX, architecture));
+
+    [Theory]
+    [InlineData(Architecture.X86)]
+    [InlineData(Architecture.Arm)]
+    public void GetWebAssetName_ThrowsForUnsupportedMacOsArchitectures(Architecture architecture)
+        => Assert.Throws<NotSupportedException>(() => ReleaseAssetNames.GetWebAssetName(OSPlatform.OSX, architecture));
+
+    [Theory]
     [InlineData(Architecture.X64, "OpenBullet2.Native-win-x64.zip")]
     [InlineData(Architecture.Arm64, "OpenBullet2.Native-win-arm64.zip")]
     public void GetNativeAssetName_ReturnsWindowsAssetForSupportedArchitectures(Architecture architecture, string expected)

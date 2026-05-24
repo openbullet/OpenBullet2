@@ -12,6 +12,8 @@ RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained tru
 RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64
+RUN dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64
+RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
 RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
@@ -24,6 +26,8 @@ WORKDIR /build/web-win-x64
 # because we need it for swagger)
 RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
     && find /build/web-win-arm64 -name "*.xml" -type f -delete \
+    && find /build/web-osx-x64 -name "*.xml" -type f -delete \
+    && find /build/web-osx-arm64 -name "*.xml" -type f -delete \
     && find /build/web-linux-x64 -name "*.xml" -type f -delete \
     && find /build/web-linux-arm64 -name "*.xml" -type f -delete \
     && find /build/native-win-x64 -name "*.xml" -type f -delete \
@@ -74,6 +78,22 @@ RUN ls -1A > build-files.txt
 WORKDIR /app/web-win-arm64
 
 COPY --from=backend /build/web-win-arm64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-osx-x64
+
+COPY --from=backend /build/web-osx-x64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-osx-arm64
+
+COPY --from=backend /build/web-osx-arm64 .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 

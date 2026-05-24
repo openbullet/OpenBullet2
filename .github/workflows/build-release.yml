@@ -51,6 +51,14 @@ jobs:
             executable: OpenBullet2.Web.Updater.exe
             release_name: ob2-web-updater-win-arm64.exe
           - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: osx-x64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-osx-x64
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: osx-arm64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-osx-arm64
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
             runtime: linux-x64
             executable: OpenBullet2.Web.Updater
             release_name: ob2-web-updater-linux-x64
@@ -119,6 +127,8 @@ jobs:
         docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
         docker cp openbullet2-extract:/app/web-win-x64 .web-win-x64
         docker cp openbullet2-extract:/app/web-win-arm64 .web-win-arm64
+        docker cp openbullet2-extract:/app/web-osx-x64 .web-osx-x64
+        docker cp openbullet2-extract:/app/web-osx-arm64 .web-osx-arm64
         docker cp openbullet2-extract:/app/web-linux-x64 .web-linux-x64
         docker cp openbullet2-extract:/app/web-linux-arm64 .web-linux-arm64
         docker cp openbullet2-extract:/app/native-win-x64 .native-win-x64
@@ -129,6 +139,10 @@ jobs:
         zip -r ../.release/OpenBullet2.Web-win-x64.zip .
         cd ../.web-win-arm64
         zip -r ../.release/OpenBullet2.Web-win-arm64.zip .
+        cd ../.web-osx-x64
+        zip -r ../.release/OpenBullet2.Web-osx-x64.zip .
+        cd ../.web-osx-arm64
+        zip -r ../.release/OpenBullet2.Web-osx-arm64.zip .
         cd ../.web-linux-x64
         zip -r ../.release/OpenBullet2.Web-linux-x64.zip .
         cd ../.web-linux-arm64
