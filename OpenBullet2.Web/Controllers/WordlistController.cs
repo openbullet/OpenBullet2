@@ -143,7 +143,7 @@ public class WordlistController(IWordlistRepository wordlistRepo,
             Name = dto.Name,
             FileName = path,
             Purpose = dto.Purpose,
-            Total = System.IO.File.ReadLines(path).Count(),
+            Total = FileUtils.CountLines(path),
             Type = dto.WordlistType
         };
 

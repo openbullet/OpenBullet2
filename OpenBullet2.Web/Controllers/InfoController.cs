@@ -157,10 +157,10 @@ public class InfoController(IAnnouncementService announcementService,
                 .CountAsync(w => w.Owner != null && w.Owner.Id == apiUser.Id, cancellationToken);
 
         var wordlistLines = apiUser.Role is UserRole.Admin
-            ? await _wordlistRepo.GetAll().SumAsync(w => (long)w.Total, cancellationToken)
+            ? await _wordlistRepo.GetAll().SumAsync(w => w.Total, cancellationToken)
             : await _wordlistRepo.GetAll()
                 .Where(w => w.Owner != null && w.Owner.Id == apiUser.Id)
-                .SumAsync(w => (long)w.Total, cancellationToken);
+                .SumAsync(w => w.Total, cancellationToken);
 
         var hitCount = apiUser.Role is UserRole.Admin
             ? await _hitRepo.GetAll().CountAsync(cancellationToken)

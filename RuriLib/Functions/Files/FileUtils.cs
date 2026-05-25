@@ -83,4 +83,72 @@ public static class FileUtils
             Directory.CreateDirectory(dirName);
         }
     }
+
+    /// <summary>
+    /// Counts the number of lines in a text file without allocating a string per line.
+    /// Supports LF, CRLF and CR line terminators.
+    /// </summary>
+    public static long CountLines(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+
+        using var reader = new StreamReader(path);
+        var buffer = new char[8192];
+        long count = 0;
+        var sawAnyChar = false;
+        var endedWithLineTerminator = false;
+        var previousWasCarriageReturn = false;
+
+        int charsRead;
+        while ((charsRead = reader.ReadBlock(buffer, 0, buffer.Length)) > 0)
+        {
+            for (var i = 0; i < charsRead; i++)
+            {
+                var c = buffer[i];
+                sawAnyChar = true;
+
+                if (previousWasCarriageReturn)
+                {
+                    if (c == '\n')
+                    {
+                        count++;
+                        endedWithLineTerminator = true;
+                        previousWasCarriageReturn = false;
+                        continue;
+                    }
+
+                    count++;
+                    endedWithLineTerminator = true;
+                    previousWasCarriageReturn = false;
+                }
+
+                if (c == '\r')
+                {
+                    previousWasCarriageReturn = true;
+                }
+                else if (c == '\n')
+                {
+                    count++;
+                    endedWithLineTerminator = true;
+                }
+                else
+                {
+                    endedWithLineTerminator = false;
+                }
+            }
+        }
+
+        if (previousWasCarriageReturn)
+        {
+            count++;
+            endedWithLineTerminator = true;
+        }
+
+        if (sawAnyChar && !endedWithLineTerminator)
+        {
+            count++;
+        }
+
+        return count;
+    }
 }

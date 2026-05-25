@@ -21,7 +21,7 @@ public sealed class WordlistFactoryTests : IDisposable
             FileName = Path.Combine(tempDir, "creds.txt"),
             Type = "Credentials",
             Purpose = "Login",
-            Total = 42
+            Total = 3_000_000_000L
         };
 
         var wordlist = factory.FromEntity(entity);
@@ -31,7 +31,7 @@ public sealed class WordlistFactoryTests : IDisposable
         Assert.Equal(entity.FileName, wordlist.Path);
         Assert.Equal("Credentials", wordlist.Type.Name);
         Assert.Equal("Login", wordlist.Purpose);
-        Assert.Equal(42, wordlist.Total);
+        Assert.Equal(3_000_000_000L, wordlist.Total);
     }
 
     [Fact]

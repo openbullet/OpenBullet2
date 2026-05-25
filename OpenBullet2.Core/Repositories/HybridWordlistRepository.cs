@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using RuriLib.Functions.Files;
 using System;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,7 @@ public class HybridWordlistRepository : IWordlistRepository
             cancellationToken);
 
         // Count the amount of lines
-        entity.Total = File.ReadLines(entity.FileName).Count();
+        entity.Total = FileUtils.CountLines(entity.FileName);
 
         await AddAsync(entity);
     }

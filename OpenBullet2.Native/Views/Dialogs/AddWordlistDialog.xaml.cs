@@ -1,5 +1,6 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Native.Helpers;
+using RuriLib.Functions.Files;
 using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Proxies;
@@ -79,7 +80,7 @@ public partial class AddWordlistDialog : Page
                 FileName = path.Replace("\\", "/"),
                 Type = typeCombobox.Text,
                 Purpose = purposeTextbox.Text,
-                Total = File.ReadLines(path).Count()
+                Total = FileUtils.CountLines(path)
             };
 
             if (caller is Wordlists page)

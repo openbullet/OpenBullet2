@@ -4,6 +4,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
+using RuriLib.Functions.Files;
 using RuriLib.Models.Environment;
 using RuriLib.Services;
 using System;
@@ -144,7 +145,7 @@ public partial class Wordlists : Page
                         FileName = path,
                         Type = env.RecognizeWordlistType(firstLine),
                         Purpose = string.Empty,
-                        Total = File.ReadLines(path).Count()
+                        Total = FileUtils.CountLines(path)
                     };
 
                     await vm.AddAsync(entity);

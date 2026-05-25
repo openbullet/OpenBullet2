@@ -3,6 +3,7 @@ using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Environment;
+using RuriLib.Functions.Files;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,33 @@ namespace RuriLib.Tests.Models.Data;
 
 public class WordlistAndResourceTests
 {
+    [Theory]
+    [InlineData("", 0L)]
+    [InlineData("one", 1L)]
+    [InlineData("one\n", 1L)]
+    [InlineData("one\r\n", 1L)]
+    [InlineData("one\r", 1L)]
+    [InlineData("\n", 1L)]
+    [InlineData("\r\n", 1L)]
+    [InlineData("\r", 1L)]
+    [InlineData("one\ntwo\r\nthree\rfour", 4L)]
+    [InlineData("one\r\ntwo\nthree\r\n", 3L)]
+    public void FileUtils_CountLines_HandlesSupportedLineTerminators(string content, long expected)
+    {
+        var fileName = Path.GetTempFileName();
+
+        try
+        {
+            File.WriteAllText(fileName, content);
+
+            Assert.Equal(expected, FileUtils.CountLines(fileName));
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
     [Fact]
     public void Wordlist_CountLinesFalse_AllowsInMemoryWordlist()
     {
@@ -22,6 +50,24 @@ public class WordlistAndResourceTests
         Assert.Null(wordlist.Path);
         Assert.Equal(string.Empty, wordlist.Purpose);
         Assert.Equal(0, wordlist.Total);
+    }
+
+    [Fact]
+    public void Wordlist_CountLinesTrue_UsesLongSafeCounting()
+    {
+        var fileName = Path.GetTempFileName();
+
+        try
+        {
+            File.WriteAllText(fileName, "one\r\ntwo\nthree\rfour");
+            var wordlist = new Wordlist("test", fileName, new WordlistType { Name = "Default" }, null);
+
+            Assert.Equal(4L, wordlist.Total);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
     }
 
     [Fact]

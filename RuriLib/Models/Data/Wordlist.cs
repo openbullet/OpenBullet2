@@ -1,7 +1,7 @@
 using RuriLib.Models.Environment;
 using System;
 using System.IO;
-using System.Linq;
+using RuriLib.Functions.Files;
 
 namespace RuriLib.Models.Data;
 
@@ -28,7 +28,7 @@ public class Wordlist
     public string Purpose { get; set; }
 
     /// <summary>The total number of data lines of the file.</summary>
-    public int Total { get; set; }
+    public long Total { get; set; }
 
     /// <summary>
     /// Creates an instance of a Wordlist.
@@ -45,7 +45,7 @@ public class Wordlist
         Type = type ?? throw new ArgumentNullException(nameof(type));
         Purpose = purpose ?? string.Empty;
         Total = countLines
-            ? File.ReadLines(path ?? throw new ArgumentNullException(nameof(path))).Count()
+            ? FileUtils.CountLines(path ?? throw new ArgumentNullException(nameof(path)))
             : 0;
     }
 }

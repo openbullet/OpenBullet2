@@ -419,6 +419,34 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Null(result.Value.Owner);
     }
 
+    [Fact]
+    public async Task CreateWordlist_Admin_MixedLineTerminators_Success()
+    {
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var fileName = GetRandomTempPath();
+        await File.WriteAllTextAsync(fileName, "one\r\ntwo\nthree\rfour", TestCancellationToken);
+        var dto = new CreateWordlistDto
+        {
+            Name = "test",
+            Purpose = "test",
+            WordlistType = "Default",
+            FilePath = fileName
+        };
+
+        var result = await PostJsonAsync<WordlistDto>(
+            client, "/api/v1/wordlist", dto);
+
+        Assert.True(result.IsSuccess);
+
+        var wordlist = await dbContext.Wordlists
+            .FirstOrDefaultAsync(w => w.Id == result.Value.Id, TestCancellationToken);
+
+        Assert.NotNull(wordlist);
+        Assert.Equal(4L, wordlist.Total);
+        Assert.Equal(4L, result.Value.LineCount);
+    }
+
     /// <summary>
     /// A guest should be able to create a wordlist that
     /// references a file in the allowed subdirectory.

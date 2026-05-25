@@ -23,7 +23,7 @@ public class WordlistEntity : Entity
     /// <summary>
     /// The total amount of lines of the wordlist, usually calculated during import.
     /// </summary>
-    public int Total { get; set; }
+    public long Total { get; set; }
 
     /// <summary>
     /// The Wordlist Type.

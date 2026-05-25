@@ -140,14 +140,14 @@ public class WebMappingTests
             Name = "WL",
             FileName = "wl.txt",
             Purpose = "Combos",
-            Total = 123,
+            Total = 3_000_000_000L,
             Type = "EmailPass"
         });
 
         Assert.Equal("wl.txt", wordlistDto.FilePath);
         Assert.Equal("Combos", wordlistDto.Purpose);
         Assert.Equal("EmailPass", wordlistDto.WordlistType);
-        Assert.Equal(123, wordlistDto.LineCount);
+        Assert.Equal(3_000_000_000L, wordlistDto.LineCount);
 
         var configInfo = mapper.Map<ConfigInfoDto>(new Config
         {
