@@ -26,6 +26,16 @@ public enum JobDisplayMode
 }
 
 /// <summary>
+/// The channel used for update alerts.
+/// </summary>
+public enum UpdateChannel
+{
+    Release,
+    Staging,
+    Disabled
+}
+
+/// <summary>
 /// A target to be used as proxy check.
 /// </summary>
 public class ProxyCheckTarget(string url = "https://google.com", string successKey = "title>Google")
@@ -97,6 +107,11 @@ public class GeneralSettings
     /// The default author to use when creating new configs.
     /// </summary>
     public string DefaultAuthor { get; set; } = "Anonymous";
+
+    /// <summary>
+    /// The channel to use when checking for update alerts.
+    /// </summary>
+    public UpdateChannel UpdateChannel { get; set; } = UpdateChannel.Release;
 
     /// <summary>
     /// Whether to display the job log in the interface.

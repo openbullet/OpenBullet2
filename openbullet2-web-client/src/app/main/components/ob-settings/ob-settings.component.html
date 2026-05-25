@@ -80,6 +80,16 @@
                 placeholder="Anonymous" regex="^.+$" />
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Update alerts channel</span>
+            <app-input-dropdown key="updateChannel"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="updateChannels"
+                [(ngModel)]="settings.generalSettings.updateChannel" />
+        </div>
+    </div>
     <!-- These options are disregarded, logging is always enabled -->
     <!--
     <div class="row my-3">

@@ -2,6 +2,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
+using OpenBullet2.Core.Models.Settings;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,7 +33,8 @@ public partial class Home : Page
         => new MainDialog(uiFactory.Create<ShowChangelogDialog>(), "Changelog", true).ShowDialog();
 
     private void ShowUpdateConfirmation(object sender, RoutedEventArgs e)
-        => new MainDialog(uiFactory.Create<UpdateConfirmationDialog>(vm.CurrentVersion, vm.RemoteVersion), "Update confirmation").ShowDialog();
+        => new MainDialog(uiFactory.Create<UpdateConfirmationDialog>(
+            vm.CurrentVersion, vm.RemoteVersion, vm.UpdateChannel), "Update confirmation").ShowDialog();
 }
 
 public class HomeViewModel : ViewModelBase
@@ -43,6 +45,7 @@ public class HomeViewModel : ViewModelBase
     public bool UpdateAvailable => updateService.IsUpdateAvailable;
     public Version CurrentVersion => updateService.CurrentVersion;
     public Version RemoteVersion => updateService.RemoteVersion;
+    public UpdateChannel UpdateChannel => updateService.UpdateChannel;
 
     private string announcement = "Loading announcement...";
     public string Announcement
@@ -72,5 +75,6 @@ public class HomeViewModel : ViewModelBase
         OnPropertyChanged(nameof(UpdateAvailable));
         OnPropertyChanged(nameof(CurrentVersion));
         OnPropertyChanged(nameof(RemoteVersion));
+        OnPropertyChanged(nameof(UpdateChannel));
     }
 }

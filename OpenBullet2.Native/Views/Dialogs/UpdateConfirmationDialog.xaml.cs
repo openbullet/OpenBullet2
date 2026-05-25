@@ -1,3 +1,4 @@
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Native.ViewModels;
 using System;
 using System.Diagnostics;
@@ -14,11 +15,13 @@ namespace OpenBullet2.Native.Views.Dialogs;
 public partial class UpdateConfirmationDialog : Page
 {
     private readonly UpdateConfirmationDialogViewModel vm;
+    private readonly UpdateChannel updateChannel;
 
-    public UpdateConfirmationDialog(Version current, Version remote)
+    public UpdateConfirmationDialog(Version current, Version remote, UpdateChannel updateChannel)
     {
         InitializeComponent();
 
+        this.updateChannel = updateChannel;
         vm = new UpdateConfirmationDialogViewModel(current, remote);
         DataContext = vm;
     }
@@ -37,6 +40,12 @@ public partial class UpdateConfirmationDialog : Page
         {
             WorkingDirectory = installDirectory
         };
+
+        if (updateChannel != UpdateChannel.Disabled)
+        {
+            startInfo.ArgumentList.Add("--channel");
+            startInfo.ArgumentList.Add(updateChannel.ToString().ToLowerInvariant());
+        }
 
         Process.Start(startInfo);
         Environment.Exit(0);

@@ -40,6 +40,11 @@ public class OBGeneralSettingsDto
     public string DefaultAuthor { get; set; } = "Anonymous";
 
     /// <summary>
+    /// The channel to use when checking for update alerts.
+    /// </summary>
+    public UpdateChannel UpdateChannel { get; set; } = UpdateChannel.Release;
+
+    /// <summary>
     /// Whether to display the job log in the interface.
     /// </summary>
     public bool EnableJobLogging { get; set; } = false;

@@ -1,4 +1,6 @@
 using Newtonsoft.Json.Linq;
+using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -12,21 +14,32 @@ namespace OpenBullet2.Native.Services;
 public class UpdateService : IDisposable
 {
     private readonly ILogger<UpdateService> _logger;
+    private readonly OpenBulletSettingsService _settingsService;
     private readonly string versionFile = "version.txt";
     private readonly Timer timer;
+    private Version latestReleaseVersion = new(0, 3, 3);
+    private Version latestStagingVersion = new(0, 3, 3);
 
     public Version CurrentVersion { get; private set; } = new(0, 3, 3);
-    public Version RemoteVersion { get; private set; } = new(0, 3, 3);
-    public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
+    public Version RemoteVersion => UpdateChannel switch
+    {
+        UpdateChannel.Staging => latestStagingVersion,
+        UpdateChannel.Release => latestReleaseVersion,
+        _ => CurrentVersion
+    };
+    public bool IsUpdateAvailable => UpdateChannel != UpdateChannel.Disabled
+        && RemoteVersion > CurrentVersion;
     public string CurrentVersionType => CurrentVersion.Major == 0
         ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
         : "Release";
+    public UpdateChannel UpdateChannel => _settingsService.Settings.GeneralSettings.UpdateChannel;
 
     public event Action? UpdateAvailable;
 
-    public UpdateService(ILogger<UpdateService> logger)
+    public UpdateService(ILogger<UpdateService> logger, OpenBulletSettingsService settingsService)
     {
         _logger = logger;
+        _settingsService = settingsService;
 
         // Try to read the current version from disk
         try
@@ -48,6 +61,9 @@ public class UpdateService : IDisposable
                 versionFile, CurrentVersion);
             File.WriteAllText(versionFile, CurrentVersion.ToString());
         }
+
+        latestReleaseVersion = CurrentVersion;
+        latestStagingVersion = CurrentVersion;
 
         // Check for updates once a day
         timer = new Timer(new TimerCallback(async _ => await FetchRemoteVersionAsync()),
@@ -71,27 +87,43 @@ public class UpdateService : IDisposable
             return;
         }
 
+        if (UpdateChannel == UpdateChannel.Disabled)
+        {
+            _logger.LogDebug("Skipped update check because update alerts are disabled");
+            return;
+        }
+
         try
         {
-            // Query the github api to get a list of the latest releases
+            // Query the GitHub API to get the available releases.
             using HttpClient client = new();
             client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-            var response = await client.GetAsync("releases/latest");
+            var response = await client.GetAsync("releases");
             response.EnsureSuccessStatusCode();
 
-            // Take the first and get its name
             var json = await response.Content.ReadAsStringAsync();
-            var release = JToken.Parse(json);
-            var releaseName = release["tag_name"]?.ToString()
-                ?? throw new InvalidOperationException("GitHub release payload did not contain tag_name");
+            var releases = JArray.Parse(json)
+                .Select(release => new
+                {
+                    Version = Version.Parse(release["tag_name"]?.ToString()
+                        ?? throw new InvalidOperationException("GitHub release payload did not contain tag_name")),
+                    IsPrerelease = release["prerelease"]?.ToObject<bool>() ?? false
+                })
+                .ToList();
 
-            // Try to parse that name to a Version object
-            RemoteVersion = Version.Parse(releaseName);
+            latestStagingVersion = releases.Count > 0
+                ? releases.MaxBy(release => release.Version)!.Version
+                : CurrentVersion;
+
+            latestReleaseVersion = releases
+                .Where(release => !release.IsPrerelease)
+                .MaxBy(release => release.Version)?.Version ?? CurrentVersion;
 
             if (IsUpdateAvailable)
             {
-                _logger.LogInformation("A new update is available for Native client: {RemoteVersion}", RemoteVersion);
+                _logger.LogInformation("A new update is available for the Native client on the {Channel} channel: {RemoteVersion}",
+                    UpdateChannel, RemoteVersion);
                 UpdateAvailable?.Invoke();
             }
             else

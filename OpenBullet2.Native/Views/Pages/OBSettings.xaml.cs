@@ -24,6 +24,7 @@ public partial class OBSettings : Page
         InitializeComponent();
 
         configSectionOnLoadCombobox.ItemsSource = Enum.GetValues(typeof(ConfigSection)).Cast<ConfigSection>();
+        updateChannelCombobox.ItemsSource = Enum.GetValues(typeof(UpdateChannel)).Cast<UpdateChannel>();
     }
 
     private async void Save(object sender, RoutedEventArgs e)

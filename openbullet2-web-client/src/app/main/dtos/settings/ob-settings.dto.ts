@@ -13,6 +13,12 @@ export enum JobDisplayMode {
   Detailed = 'detailed',
 }
 
+export enum UpdateChannel {
+  Disabled = 'disabled',
+  Release = 'release',
+  Staging = 'staging',
+}
+
 export interface OBSettingsDto {
   generalSettings: GeneralOBSettings;
   remoteSettings: RemoteOBSettings;
@@ -26,6 +32,7 @@ export interface GeneralOBSettings {
   warnConfigNotSaved: boolean;
   warnDangerousConfig: boolean;
   defaultAuthor: string;
+  updateChannel: UpdateChannel;
   enableJobLogging: boolean;
   logBufferSize: number;
   ignoreWordlistNameOnHitsDedupe: boolean;

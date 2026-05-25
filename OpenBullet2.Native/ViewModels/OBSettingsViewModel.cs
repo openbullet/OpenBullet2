@@ -74,6 +74,16 @@ public class OBSettingsViewModel : ViewModelBase
         }
     }
 
+    public UpdateChannel UpdateChannel
+    {
+        get => General.UpdateChannel;
+        set
+        {
+            General.UpdateChannel = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool EnableJobLogging
     {
         get => General.EnableJobLogging;

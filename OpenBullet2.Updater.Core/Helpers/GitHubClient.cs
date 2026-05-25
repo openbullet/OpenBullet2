@@ -42,16 +42,28 @@ public class GitHubClient : IDisposable
                 // Parse all the releases and versions
                 var json = await response.Content.ReadAsStringAsync();
                 var releases = JArray.Parse(json)
-                    .ToDictionary(r => Version.Parse(r["tag_name"]!.ToString()), r => r);
+                    .Select(release => new
+                    {
+                        Version = Version.Parse(release["tag_name"]!.ToString()),
+                        IsPrerelease = release["prerelease"]?.ToObject<bool>() ?? false,
+                        Release = release
+                    })
+                    .ToList();
 
                 // If the channel is staging, get the latest version,
                 // while if the channel is release, get the latest stable version
                 var latest = _channel == BuildChannel.Staging
-                    ? releases.MaxBy(r => r.Key)
-                    : releases.Where(r => r.Key.Revision == -1).MaxBy(r => r.Key);
+                    ? releases.MaxBy(release => release.Version)
+                    : releases.Where(release => !release.IsPrerelease)
+                        .MaxBy(release => release.Version);
 
-                var remoteVersion = latest.Key;
-                var release = latest.Value;
+                if (latest is null)
+                {
+                    throw new InvalidOperationException("No matching GitHub releases were found");
+                }
+
+                var remoteVersion = latest.Version;
+                var release = latest.Release;
                 var build = release["assets"]!.First(t => t["name"]!.ToObject<string>()! == _assetName);
                 var downloadUrl = build["url"]!.ToString();
                 var size = build["size"]!.ToObject<double>();
