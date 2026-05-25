@@ -119,6 +119,42 @@ public sealed class JobManagerServiceTests
     }
 
     [Fact]
+    public async Task AddJob_WhenStatusChanges_PersistsLastRunOutcome()
+    {
+        using var database = new TestDatabase();
+        using var manager = new JobManagerService(
+            database.Services.GetRequiredService<IServiceScopeFactory>(),
+            (JobFactoryService)RuntimeHelpers.GetUninitializedObject(typeof(JobFactoryService)));
+
+        var entity = await database.AddJobEntityAsync(new MultiRunJobOptions
+        {
+            ConfigId = "cfg",
+            DataPool = new RangeDataPoolOptions()
+        });
+
+        var job = new MultiRunJob(CreateSettingsService(), CreatePluginRepository())
+        {
+            Id = entity.Id
+        };
+
+        manager.AddJob(job);
+
+        typeof(Job)
+            .GetProperty(nameof(Job.LastRunOutcome))!
+            .GetSetMethod(true)!
+            .Invoke(job, [JobLastRunOutcome.Completed]);
+
+        RaiseStatusChanged(job, JobStatus.Idle);
+
+        var saved = await WaitForJobEntityAsync(
+            database,
+            entity.Id,
+            e => e.LastRunOutcome == JobLastRunOutcome.Completed);
+
+        Assert.Equal(JobLastRunOutcome.Completed, saved.LastRunOutcome);
+    }
+
+    [Fact]
     public async Task Constructor_WhenPersistedJobOptionsAreMalformed_DoesNotThrow()
     {
         using var database = new TestDatabase();
@@ -192,13 +228,14 @@ public sealed class JobManagerServiceTests
 
         public ServiceProvider Services { get; }
 
-        public async Task<JobEntity> AddJobEntityAsync(MultiRunJobOptions options)
+        public async Task<JobEntity> AddJobEntityAsync(MultiRunJobOptions options, JobLastRunOutcome? lastRunOutcome = null)
         {
             using var scope = Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var entity = new JobEntity
             {
                 JobType = JobType.MultiRun,
+                LastRunOutcome = lastRunOutcome ?? JobLastRunOutcome.None,
                 JobOptions = JsonConvert.SerializeObject(
                     new JobOptionsWrapper { Options = options },
                     new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto })
@@ -262,5 +299,34 @@ public sealed class JobManagerServiceTests
             IsDisposed = true;
             base.Dispose(disposing);
         }
+    }
+
+    private static void RaiseStatusChanged(MultiRunJob job, JobStatus status)
+    {
+        var handler = typeof(MultiRunJob)
+            .GetField("OnStatusChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetValue(job) as EventHandler<JobStatus>;
+
+        handler?.Invoke(job, status);
+    }
+
+    private static async Task<JobEntity> WaitForJobEntityAsync(
+        TestDatabase database,
+        int id,
+        Func<JobEntity, bool> predicate)
+    {
+        for (var i = 0; i < 20; i++)
+        {
+            var entity = await database.GetJobEntityAsync(id);
+
+            if (predicate(entity))
+            {
+                return entity;
+            }
+
+            await Task.Delay(50, TestContext.Current.CancellationToken);
+        }
+
+        return await database.GetJobEntityAsync(id);
     }
 }

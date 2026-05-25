@@ -370,7 +370,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
         var oldJob = _jobManager.Jobs.OfType<MultiRunJob>().First(j => j.Id == dto.Id);
 
         var newJob = (MultiRunJob)_jobFactory.FromOptions(
-            dto.Id, entity.Owner?.Id ?? 0, jobOptions);
+            dto.Id, entity.Owner?.Id ?? 0, jobOptions, entity.LastRunOutcome);
         CopyCustomInputsAnswers(oldJob, newJob);
 
         _jobManager.RemoveJob(oldJob);
@@ -417,7 +417,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
         var oldJob = _jobManager.Jobs.First(j => j.Id == dto.Id);
 
         var newJob = _jobFactory.FromOptions(
-            dto.Id, entity.Owner?.Id ?? 0, jobOptions);
+            dto.Id, entity.Owner?.Id ?? 0, jobOptions, entity.LastRunOutcome);
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);

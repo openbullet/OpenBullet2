@@ -1,6 +1,7 @@
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
@@ -122,6 +123,38 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(guest.Id, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
             });
+    }
+
+    [Fact]
+    public async Task JobManagerService_WhenJobEntityHasLastRunOutcome_RestoresIt()
+    {
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.RemoveRange(dbContext.Jobs);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        var options = (ProxyCheckJobOptions)JobOptionsFactory.CreateNew(JobType.ProxyCheck);
+        var wrapper = new JobOptionsWrapper { Options = options };
+        var settings = new Newtonsoft.Json.JsonSerializerSettings
+        {
+            TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+        };
+
+        dbContext.Jobs.Add(new JobEntity
+        {
+            JobType = JobType.ProxyCheck,
+            JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, settings),
+            LastRunOutcome = JobLastRunOutcome.Completed
+        });
+
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        using var manager = new JobManagerService(
+            GetRequiredService<IServiceScopeFactory>(),
+            GetRequiredService<JobFactoryService>());
+
+        var job = Assert.Single(manager.Jobs);
+        Assert.Equal(JobStatus.Idle, job.Status);
+        Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
     }
 
     /// <summary>

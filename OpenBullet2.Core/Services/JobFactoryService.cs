@@ -68,7 +68,7 @@ public class JobFactoryService
     /// <param name="id">The ID of the newly created job, must be unique</param>
     /// <param name="ownerId">The ID of the user who owns the job. 0 for admin</param>
     /// <param name="options">The options to create the job from</param>
-    public Job FromOptions(int id, int ownerId, JobOptions options)
+    public Job FromOptions(int id, int ownerId, JobOptions options, JobLastRunOutcome lastRunOutcome = JobLastRunOutcome.None)
     {
         Job job = options switch
         {
@@ -79,6 +79,12 @@ public class JobFactoryService
 
         job.Id = id;
         job.OwnerId = ownerId;
+
+        if (lastRunOutcome != JobLastRunOutcome.None)
+        {
+            job.RestoreLastRunOutcome(lastRunOutcome);
+        }
+
         return job;
     }
 

@@ -109,7 +109,7 @@ public class JobsViewModel : ViewModelBase
 
         await WithRepositoryAsync(repo => repo.UpdateAsync(entity));
 
-        var newJob = jobFactory.FromOptions(entity.Id, 0, options);
+        var newJob = jobFactory.FromOptions(entity.Id, 0, options, entity.LastRunOutcome);
 
         jobManager.RemoveJob(oldJob);
         jobManager.AddJob(newJob);

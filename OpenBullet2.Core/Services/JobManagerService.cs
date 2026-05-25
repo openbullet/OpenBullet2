@@ -73,7 +73,11 @@ public class JobManagerService : IDisposable
                 }
 
                 var options = wrapper.Options;
-                var job = jobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, options);
+                var job = jobFactory.FromOptions(
+                    entity.Id,
+                    entity.Owner == null ? 0 : entity.Owner.Id,
+                    options,
+                    entity.LastRunOutcome);
                 AddJob(job);
             }
             catch (Exception ex)
@@ -92,11 +96,16 @@ public class JobManagerService : IDisposable
 
         if (job is MultiRunJob mrj)
         {
+            mrj.OnStatusChanged += SaveLastRunOutcomeAsync;
             mrj.OnCompleted += SaveRecord;
             mrj.OnTimerTick += SaveRecord;
             mrj.OnCompleted += SaveMultiRunJobOptionsAsync;
             mrj.OnTimerTick += SaveMultiRunJobOptionsAsync;
             mrj.OnBotsChanged += SaveMultiRunJobOptionsAsync;
+        }
+        else if (job is ProxyCheckJob pcj)
+        {
+            pcj.OnStatusChanged += SaveLastRunOutcomeAsync;
         }
     }
 
@@ -193,6 +202,41 @@ public class JobManagerService : IDisposable
         await SaveMultiRunJobOptionsAsync(job);
     }
 
+    private async void SaveLastRunOutcomeAsync(object? sender, JobStatus status)
+    {
+        if (sender is not Job job || status != JobStatus.Idle)
+        {
+            return;
+        }
+
+        using var scope = _scopeFactory.CreateScope();
+        var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
+
+        await _jobSemaphore.WaitAsync();
+
+        try
+        {
+            var entity = await jobRepo.GetAsync(job.Id);
+
+            if (entity == null)
+            {
+                _logger.LogDebug("Skipped last run outcome save for job {JobId} because the entity was null", job.Id);
+                return;
+            }
+
+            entity.LastRunOutcome = job.LastRunOutcome;
+            await jobRepo.UpdateAsync(entity);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to save last run outcome for job {JobId}", job.Id);
+        }
+        finally
+        {
+            _jobSemaphore.Release();
+        }
+    }
+
     // Saves the options for a MultiRunJob in the IJobRepository. Thread safe.
     public async Task SaveMultiRunJobOptionsAsync(MultiRunJob job)
     {
@@ -245,6 +289,7 @@ public class JobManagerService : IDisposable
             // Wrap and serialize again
             var newWrapper = new JobOptionsWrapper { Options = options };
             entity.JobOptions = JsonConvert.SerializeObject(newWrapper, settings);
+            entity.LastRunOutcome = job.LastRunOutcome;
 
             // Update the job
             await jobRepo.UpdateAsync(entity);
@@ -265,6 +310,7 @@ public class JobManagerService : IDisposable
         {
             try
             {
+                mrj.OnStatusChanged -= SaveLastRunOutcomeAsync;
                 mrj.OnCompleted -= SaveRecord;
                 mrj.OnTimerTick -= SaveRecord;
                 mrj.OnCompleted -= SaveMultiRunJobOptionsAsync;
@@ -276,8 +322,18 @@ public class JobManagerService : IDisposable
                 _logger.LogDebug(ex, "Failed to unbind events for job {JobId}", mrj.Id);
             }
         }
+        else if (job is ProxyCheckJob pcj)
+        {
+            try
+            {
+                pcj.OnStatusChanged -= SaveLastRunOutcomeAsync;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Failed to unbind events for job {JobId}", pcj.Id);
+            }
+        }
     }
-
     public void Dispose()
     {
         Clear();

@@ -140,6 +140,15 @@ public abstract class Job : IDisposable
     }
 
     /// <summary>
+    /// Restores the outcome of the most recent run from persisted state.
+    /// </summary>
+    /// <param name="lastRunOutcome">The outcome to restore.</param>
+    public void RestoreLastRunOutcome(JobLastRunOutcome lastRunOutcome)
+    {
+        LastRunOutcome = lastRunOutcome;
+    }
+
+    /// <summary>
     /// Disposes the job resources.
     /// </summary>
     public void Dispose()
