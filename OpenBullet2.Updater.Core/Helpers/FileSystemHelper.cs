@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.Versioning;
 using Spectre.Console;
 
 namespace OpenBullet2.Updater.Core.Helpers;
@@ -86,7 +87,10 @@ public static class FileSystemHelper
 
             installStarted = true;
             MoveStagedBuild(installDirectory, stagingDirectory, backupDirectory, stagedEntries);
-            EnsureUnixExecutablePermissions(installDirectory, stagedEntries);
+            if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+            {
+                EnsureUnixExecutablePermissions(installDirectory, stagedEntries);
+            }
 
             Directory.Delete(updateDirectory, true);
         }
@@ -405,6 +409,8 @@ public static class FileSystemHelper
             });
     }
 
+    [SupportedOSPlatform("linux")]
+    [SupportedOSPlatform("macos")]
     private static void EnsureUnixExecutablePermissions(string installDirectory, string[] stagedEntries)
     {
         if (!(OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()))
@@ -416,29 +422,33 @@ public static class FileSystemHelper
                              UnixFileMode.GroupRead | UnixFileMode.GroupExecute |
                              UnixFileMode.OtherRead | UnixFileMode.OtherExecute;
 
-        foreach (var entry in stagedEntries)
+        if (stagedEntries.Any(entry => entry.Replace('\\', '/').Equals("OpenBullet2.Web", StringComparison.Ordinal)))
         {
-            if (!ShouldMakeExecutable(entry))
-            {
-                continue;
-            }
+            TrySetUnixExecutableMode(Path.Combine(installDirectory, "OpenBullet2.Web"), executableMode);
+        }
 
-            var path = GetSafeInstallationPath(installDirectory, entry);
-            if (!File.Exists(path))
+        if (stagedEntries.Any(entry => entry.Replace('\\', '/').Equals(".playwright", StringComparison.Ordinal)))
+        {
+            var nodeRoot = Path.Combine(installDirectory, ".playwright", "node");
+            if (Directory.Exists(nodeRoot))
             {
-                continue;
+                foreach (var nodePath in Directory.GetFiles(nodeRoot, "node", SearchOption.AllDirectories))
+                {
+                    TrySetUnixExecutableMode(nodePath, executableMode);
+                }
             }
-
-            File.SetUnixFileMode(path, executableMode);
         }
     }
 
-    private static bool ShouldMakeExecutable(string entry)
+    [SupportedOSPlatform("linux")]
+    [SupportedOSPlatform("macos")]
+    private static void TrySetUnixExecutableMode(string path, UnixFileMode mode)
     {
-        var normalizedEntry = entry.Replace('\\', '/');
+        if (!File.Exists(path))
+        {
+            return;
+        }
 
-        return normalizedEntry.Equals("OpenBullet2.Web", StringComparison.Ordinal) ||
-               normalizedEntry.StartsWith(".playwright/node/", StringComparison.Ordinal) &&
-               normalizedEntry.EndsWith("/node", StringComparison.Ordinal);
+        File.SetUnixFileMode(path, mode);
     }
 }
