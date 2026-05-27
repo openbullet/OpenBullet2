@@ -83,6 +83,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, content);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -129,6 +130,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, Base64Converter.ToBase64String(options.Content));
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -176,6 +178,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -266,6 +269,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, SerializeMultipart(options.Boundary, options.Contents), options.Boundary);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         try
         {
@@ -342,6 +346,18 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
+    }
+
+    private static void LogCurlImpersonateRequestLogNotice(BotData data, Options.HttpRequestOptions options)
+    {
+        if (options.HttpLibrary != HttpLibrary.CurlImpersonate)
+        {
+            return;
+        }
+
+        data.Logger.Log(
+            "[NOTE] The request headers shown above are reconstructed by OB2 and may not match the exact headers or order sent by curl-impersonate. Use a MITM proxy or packet capture when you need the real outgoing request.",
+            LogColors.DarkOrange);
     }
 
     private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response,

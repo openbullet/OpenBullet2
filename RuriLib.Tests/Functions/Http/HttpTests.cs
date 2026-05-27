@@ -69,6 +69,13 @@ public class HttpTests
         Assert.Contains(data.Logger.Entries,
             entry => entry.Message.StartsWith("Response HTTP version: HTTP/", StringComparison.Ordinal));
 
+        if (library == HttpLibrary.CurlImpersonate)
+        {
+            Assert.Contains(data.Logger.Entries,
+                entry => entry.Message.Contains("may not match the exact headers or order sent by curl-impersonate",
+                    StringComparison.Ordinal));
+        }
+
         var response = DeserializeHttpBinResponse(data.SOURCE);
         var expectedUri = new Uri(httpBin);
         var actualUri = new Uri(response.Url);
