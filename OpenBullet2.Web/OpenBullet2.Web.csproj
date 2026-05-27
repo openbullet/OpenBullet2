@@ -70,6 +70,20 @@
         <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj"/>
     </ItemGroup>
 
+    <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
+        <CurlImpersonateNativeAsset Include="..\RuriLib.Http\runtimes\$(RuntimeIdentifier)\native\**\*" />
+        <Content Include="@(CurlImpersonateNativeAsset)"
+                 CopyToOutputDirectory="PreserveNewest"
+                 CopyToPublishDirectory="PreserveNewest"
+                 ExcludeFromSingleFile="true"
+                 TargetPath="runtimes\$(RuntimeIdentifier)\native\%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <Target Name="EnsureCurlImpersonateNativeAssets" BeforeTargets="Publish"
+            Condition="'$(RuntimeIdentifier)' != '' and '@(CurlImpersonateNativeAsset)' == ''">
+        <Error Text="curl-impersonate native assets for $(RuntimeIdentifier) were not found. Run 'dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid $(RuntimeIdentifier)' before publishing." />
+    </Target>
+
     <ItemGroup>
         <None Update="version.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

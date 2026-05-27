@@ -12,6 +12,7 @@ UserData/
 # RuriLib API Documentation
 RuriLib/_site/
 RuriLib/log.txt
+RuriLib.Http/runtimes/
 
 # User-specific files
 *.suo

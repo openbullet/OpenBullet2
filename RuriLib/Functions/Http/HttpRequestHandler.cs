@@ -178,6 +178,8 @@ internal abstract class HttpRequestHandler
         UseCustomCipherSuites = options.UseCustomCipherSuites,
         CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
         CertRevocationMode = data.Providers.Security.X509RevocationMode,
-        ReadResponseContent = options.ReadResponseContent
+        ReadResponseContent = options.ReadResponseContent,
+        CurlImpersonateBrowserProfile = options.CurlImpersonateBrowserProfile,
+        CurlUseBrowserHeaders = options.CurlUseBrowserHeaders
     };
 }

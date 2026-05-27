@@ -37,6 +37,8 @@ public class HttpRequestProxyIntegrationTests
     [InlineData(HttpLibrary.SystemNet, ProxyType.Socks4)]
     [InlineData(HttpLibrary.SystemNet, ProxyType.Socks4a)]
     [InlineData(HttpLibrary.SystemNet, ProxyType.Socks5)]
+    [InlineData(HttpLibrary.CurlImpersonate, ProxyType.Http)]
+    [InlineData(HttpLibrary.CurlImpersonate, ProxyType.Socks5)]
     public async Task HttpRequestStandard_Get_ThroughProxy_Verify(HttpLibrary library, ProxyType proxyType)
     {
         var connection = await TestProxyServer.GetConnectionInfo();
@@ -73,6 +75,8 @@ public class HttpRequestProxyIntegrationTests
     [InlineData(HttpLibrary.RuriLibHttp, ProxyType.Socks5)]
     [InlineData(HttpLibrary.SystemNet, ProxyType.Http)]
     [InlineData(HttpLibrary.SystemNet, ProxyType.Socks5)]
+    [InlineData(HttpLibrary.CurlImpersonate, ProxyType.Http)]
+    [InlineData(HttpLibrary.CurlImpersonate, ProxyType.Socks5)]
     public async Task HttpRequestStandard_Get_ThroughAuthenticatedProxy_Verify(HttpLibrary library, ProxyType proxyType)
     {
         var connection = await TestProxyServer.GetConnectionInfo();

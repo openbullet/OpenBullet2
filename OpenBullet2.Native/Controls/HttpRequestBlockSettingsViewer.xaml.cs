@@ -1,7 +1,9 @@
 using OpenBullet2.Native.ViewModels;
+using RuriLib.Functions.Http.Options;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+using RuriLib.Models.Blocks.Settings;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +33,7 @@ public partial class HttpRequestBlockSettingsViewer : UserControl
         DataContext = vm;
 
         InitializeComponent();
+        httpLibrarySetting.ValueChanged += (_, _) => vm.UpdateLibraryDependentSettingsVisibility();
 
         tabControl.SelectedIndex = (int)vm.Mode;
         BindSettings();
@@ -83,6 +86,8 @@ public partial class HttpRequestBlockSettingsViewer : UserControl
         readResponseContentSetting.Setting = vm.HttpRequestBlock.Settings["readResponseContent"];
         codePagesEncodingSetting.Setting = vm.HttpRequestBlock.Settings["codePagesEncoding"];
         httpLibrarySetting.Setting = vm.HttpRequestBlock.Settings["httpLibrary"];
+        curlImpersonateBrowserProfileSetting.Setting = vm.HttpRequestBlock.Settings["curlImpersonateBrowserProfile"];
+        curlUseBrowserHeadersSetting.Setting = vm.HttpRequestBlock.Settings["curlUseBrowserHeaders"];
         securityProtocolSetting.Setting = vm.HttpRequestBlock.Settings["securityProtocol"];
         ignoreCertificateValidationSetting.Setting = vm.HttpRequestBlock.Settings["ignoreCertificateValidation"];
         useCustomCipherSuitesSetting.Setting = vm.HttpRequestBlock.Settings["useCustomCipherSuites"];
@@ -152,6 +157,10 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
     // Seed the per-mode cache from the block's current payload once, so the first
     // mode switch preserves the object that was originally loaded instead of replacing it.
     private bool requestParamsCachePrimed;
+
+    public bool IsCurlImpersonate => HttpLibrarySetting.Value == nameof(HttpLibrary.CurlImpersonate);
+
+    public bool IsNotCurlImpersonate => !IsCurlImpersonate;
 
     public HttpRequestMode Mode
     {
@@ -271,6 +280,12 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
     public void RemoveMultipartContent(HttpContentSettingsGroup content)
         => GetMultipartRequestParams().Contents.Remove(content);
 
+    public void UpdateLibraryDependentSettingsVisibility()
+    {
+        OnPropertyChanged(nameof(IsCurlImpersonate));
+        OnPropertyChanged(nameof(IsNotCurlImpersonate));
+    }
+
     private MultipartRequestParams GetMultipartRequestParams()
     {
         PrimeRequestParamsCache();
@@ -320,6 +335,9 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
                 throw new NotImplementedException();
         }
     }
+
+    private EnumSetting HttpLibrarySetting
+        => (EnumSetting)HttpRequestBlock.Settings["httpLibrary"].FixedSetting!;
 }
 
 public enum HttpRequestMode

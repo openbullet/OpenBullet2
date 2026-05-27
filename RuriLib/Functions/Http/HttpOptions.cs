@@ -1,6 +1,7 @@
 using System;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using RuriLib.Http.Curl;
 
 namespace RuriLib.Functions.Http;
 
@@ -79,4 +80,15 @@ public class HttpOptions
         TlsCipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
         TlsCipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA
     ];
+
+    /// <summary>
+    /// Gets or sets the browser profile used by the curl-impersonate HTTP library.
+    /// </summary>
+    public CurlImpersonateBrowserProfile CurlImpersonateBrowserProfile { get; set; } =
+        CurlImpersonateBrowserProfile.Chrome142;
+
+    /// <summary>
+    /// Gets or sets whether curl-impersonate should send its browser-default headers.
+    /// </summary>
+    public bool CurlUseBrowserHeaders { get; set; } = true;
 }

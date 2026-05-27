@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="OpenBullet2.Native.Controls.HttpRequestBlockSettingsViewer"
+             x:Name="root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -197,10 +198,17 @@
             Foreground="{DynamicResource ForegroundCustom}" />
 
         <local:EnumSettingViewer x:Name="httpLibrarySetting" />
-        <local:EnumSettingViewer x:Name="securityProtocolSetting" />
+        <local:EnumSettingViewer x:Name="curlImpersonateBrowserProfileSetting"
+                                 Visibility="{Binding DataContext.IsCurlImpersonate, ElementName=root, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:BoolSettingViewer x:Name="curlUseBrowserHeadersSetting"
+                                 Visibility="{Binding DataContext.IsCurlImpersonate, ElementName=root, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:EnumSettingViewer x:Name="securityProtocolSetting"
+                                 Visibility="{Binding DataContext.IsNotCurlImpersonate, ElementName=root, Converter={StaticResource ResourceKey=BoolToVis}}" />
         <local:BoolSettingViewer x:Name="ignoreCertificateValidationSetting" />
-        <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting" />
-        <local:ListOfStringsSettingViewer x:Name="customCipherSuitesSetting" />
+        <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting"
+                                 Visibility="{Binding DataContext.IsNotCurlImpersonate, ElementName=root, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:ListOfStringsSettingViewer x:Name="customCipherSuitesSetting"
+                                          Visibility="{Binding DataContext.IsNotCurlImpersonate, ElementName=root, Converter={StaticResource ResourceKey=BoolToVis}}" />
         
     </StackPanel>
 </UserControl>

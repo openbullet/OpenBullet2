@@ -117,6 +117,11 @@ export class HttpRequestBlockComponent implements OnChanges {
     this.useCustomCipherSuites = this.block.settings['useCustomCipherSuites'].value;
   }
 
+  get isCurlImpersonate() {
+    const value = this.block?.settings?.['httpLibrary']?.value;
+    return value === 'CurlImpersonate' || value === 'curlImpersonate';
+  }
+
   valueChanged() {
     this.onChange.emit();
   }
@@ -145,6 +150,10 @@ export class HttpRequestBlockComponent implements OnChanges {
 
   useCustomCipherSuitesChanged() {
     this.useCustomCipherSuites = this.block.settings['useCustomCipherSuites'].value;
+    this.valueChanged();
+  }
+
+  httpLibraryChanged() {
     this.valueChanged();
   }
 

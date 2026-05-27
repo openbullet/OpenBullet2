@@ -38,6 +38,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestStandard_Get_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -65,6 +66,16 @@ public class HttpTests
 
         await Methods.HttpRequestStandard(data, options);
 
+        Assert.Contains(data.Logger.Entries,
+            entry => entry.Message.StartsWith("Response HTTP version: HTTP/", StringComparison.Ordinal));
+
+        if (library == HttpLibrary.CurlImpersonate)
+        {
+            Assert.Contains(data.Logger.Entries,
+                entry => entry.Message.Contains("may not match the exact headers or order sent by curl-impersonate",
+                    StringComparison.Ordinal));
+        }
+
         var response = DeserializeHttpBinResponse(data.SOURCE);
         var expectedUri = new Uri(httpBin);
         var actualUri = new Uri(response.Url);
@@ -80,6 +91,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestStandard_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -106,6 +118,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestRaw_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -132,6 +145,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestBasicAuth_Normal_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -229,6 +243,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestMultipart_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");

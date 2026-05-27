@@ -23,6 +23,18 @@ namespace RuriLib.Functions.Http;
 
 internal class HttpClientRequestHandler : HttpRequestHandler
 {
+    private readonly Func<RuriLib.Models.Proxies.Proxy?, HttpOptions, CookieContainer, HttpClient> clientFactory;
+
+    public HttpClientRequestHandler()
+        : this(HttpFactory.GetHttpClient)
+    {
+    }
+
+    protected HttpClientRequestHandler(Func<RuriLib.Models.Proxies.Proxy?, HttpOptions, CookieContainer, HttpClient> clientFactory)
+    {
+        this.clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+    }
+
     public override async Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
     {
         foreach (var cookie in options.CustomCookies)
@@ -38,7 +50,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -71,6 +83,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, content);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -98,7 +111,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -117,6 +130,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, Base64Converter.ToBase64String(options.Content));
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -144,7 +158,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -164,6 +178,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
@@ -191,7 +206,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         if (string.IsNullOrWhiteSpace(options.Boundary))
         {
@@ -254,6 +269,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         data.Logger.LogHeader();
         LogHttpRequestData(data, request, SerializeMultipart(options.Boundary, options.Contents), options.Boundary);
+        LogCurlImpersonateRequestLogNotice(data, options);
 
         try
         {
@@ -332,6 +348,18 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
     }
 
+    private static void LogCurlImpersonateRequestLogNotice(BotData data, Options.HttpRequestOptions options)
+    {
+        if (options.HttpLibrary != HttpLibrary.CurlImpersonate)
+        {
+            return;
+        }
+
+        data.Logger.Log(
+            "[NOTE] The request headers shown above are reconstructed by OB2 and may not match the exact headers or order sent by curl-impersonate. Use a MITM proxy or packet capture when you need the real outgoing request.",
+            LogColors.DarkOrange);
+    }
+
     private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response,
         CookieContainer cookieContainer, Options.HttpRequestOptions requestOptions)
     {
@@ -356,6 +384,8 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         // Response code
         data.RESPONSECODE = (int)response.StatusCode;
         data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
+        data.Logger.Log($"Response HTTP version: HTTP/{response.Version.Major}.{response.Version.Minor}",
+            LogColors.Citrine);
 
         data.HEADERS = response.Headers.ToDictionary(h => h.Key, GetHeaderValue);
 

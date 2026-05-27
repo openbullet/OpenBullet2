@@ -54,6 +54,7 @@ public static class Methods
         {
             HttpLibrary.RuriLibHttp => new RLHttpClientRequestHandler(),
             HttpLibrary.SystemNet => new HttpClientRequestHandler(),
+            HttpLibrary.CurlImpersonate => new CurlImpersonateRequestHandler(),
             _ => throw new System.NotImplementedException()
         };
 }

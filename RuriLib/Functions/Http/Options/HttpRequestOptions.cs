@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RuriLib.Http.Curl;
 
 namespace RuriLib.Functions.Http.Options;
 
@@ -96,6 +97,19 @@ public class HttpRequestOptions
     /// Gets or sets whether response content should be read.
     /// </summary>
     public bool ReadResponseContent { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the browser profile used when <see cref="HttpLibrary"/> is
+    /// <see cref="HttpLibrary.CurlImpersonate"/>.
+    /// </summary>
+    public CurlImpersonateBrowserProfile CurlImpersonateBrowserProfile { get; set; } =
+        CurlImpersonateBrowserProfile.Chrome142;
+
+    /// <summary>
+    /// Gets or sets whether curl-impersonate should send its browser-default
+    /// headers when <see cref="HttpLibrary"/> is <see cref="HttpLibrary.CurlImpersonate"/>.
+    /// </summary>
+    public bool CurlUseBrowserHeaders { get; set; } = true;
 }
 
 /// <summary>
@@ -111,5 +125,10 @@ public enum HttpLibrary
     /// <summary>
     /// Use the custom RuriLib HTTP stack.
     /// </summary>
-    RuriLibHttp
+    RuriLibHttp,
+
+    /// <summary>
+    /// Use curl-impersonate for browser TLS and HTTP fingerprint impersonation.
+    /// </summary>
+    CurlImpersonate
 }

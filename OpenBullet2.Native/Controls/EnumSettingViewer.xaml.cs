@@ -16,6 +16,8 @@ public partial class EnumSettingViewer : UserControl
     private EnumSettingViewerViewModel ViewModel => vm
         ?? throw new InvalidOperationException("The setting viewer has not been initialized");
 
+    public event EventHandler? ValueChanged;
+
     public BlockSetting Setting
     {
         get => ViewModel.Setting;
@@ -27,6 +29,7 @@ public partial class EnumSettingViewer : UserControl
             }
 
             vm = new EnumSettingViewerViewModel(value);
+            vm.ValueChanged += (_, _) => ValueChanged?.Invoke(this, EventArgs.Empty);
             DataContext = vm;
         }
     }
@@ -40,6 +43,8 @@ public partial class EnumSettingViewer : UserControl
 public class EnumSettingViewerViewModel(BlockSetting setting) : ViewModelBase
 {
     public BlockSetting Setting { get; init; } = setting;
+
+    public event EventHandler? ValueChanged;
 
     private EnumSetting FixedSetting => (EnumSetting)Setting.FixedSetting!;
 
@@ -56,6 +61,7 @@ public class EnumSettingViewerViewModel(BlockSetting setting) : ViewModelBase
         {
             FixedSetting.SetFromPrettyName(value);
             OnPropertyChanged();
+            ValueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
