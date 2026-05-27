@@ -1,5 +1,4 @@
 using OpenBullet2.Core.Services;
-using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using System;
@@ -185,7 +184,7 @@ public class ConfigStackerViewModel : ViewModelBase
 
         foreach (var block in selected)
         {
-            var newBlock = new BlockViewModel(Cloner.Clone(block.Block));
+            var newBlock = new BlockViewModel(BlockCloner.Clone(block.Block));
 
             Stack.Insert(Stack.IndexOf(block) + 1, newBlock);
         }
