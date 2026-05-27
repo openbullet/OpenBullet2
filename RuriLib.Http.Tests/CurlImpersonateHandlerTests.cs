@@ -36,6 +36,22 @@ public class CurlImpersonateHandlerTests
     }
 
     [Fact]
+    public async Task SendAsync_Http10Response_ReportsActualVersion()
+    {
+        await using var server = new CaptureHttpServer("ok", "HTTP/1.0");
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            UseBrowserHeaders = false,
+            AllowAutoRedirect = false
+        });
+        using var client = new HttpClient(handler);
+
+        using var response = await client.GetAsync(server.Uri, TestCancellationToken);
+
+        Assert.Equal(new Version(1, 0), response.Version);
+    }
+
+    [Fact]
     public async Task SendAsync_WithBrowserHeaders_DoesNotOverrideBrowserManagedHeaders()
     {
         await using var server = new CaptureHttpServer("ok");
@@ -125,12 +141,14 @@ public class CurlImpersonateHandlerTests
         private readonly CancellationTokenSource cts = new();
         private readonly Task acceptTask;
         private readonly string responseBody;
+        private readonly string responseVersion;
         private readonly TaskCompletionSource<string> rawRequest =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public CaptureHttpServer(string responseBody)
+        public CaptureHttpServer(string responseBody, string responseVersion = "HTTP/1.1")
         {
             this.responseBody = responseBody;
+            this.responseVersion = responseVersion;
             listener.Start();
             acceptTask = Task.Run(AcceptAsync);
         }
@@ -174,7 +192,7 @@ public class CurlImpersonateHandlerTests
 
             var body = Encoding.UTF8.GetBytes(responseBody);
             var headers = Encoding.ASCII.GetBytes(
-                "HTTP/1.1 200 OK\r\n" +
+                $"{responseVersion} 200 OK\r\n" +
                 $"Content-Length: {body.Length}\r\n" +
                 "Connection: close\r\n" +
                 "\r\n");

@@ -21,6 +21,7 @@ internal static class CurlResponseMessageBuilder
         var response = new HttpResponseMessage((HttpStatusCode)data.StatusCode)
         {
             RequestMessage = request,
+            Version = data.HttpVersion ?? request.Version,
             Content = new ByteArrayContent(options.ReadResponseContent ? body : [])
         };
 

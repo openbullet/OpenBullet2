@@ -368,6 +368,8 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         // Response code
         data.RESPONSECODE = (int)response.StatusCode;
         data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
+        data.Logger.Log($"Response HTTP version: HTTP/{response.Version.Major}.{response.Version.Minor}",
+            LogColors.Citrine);
 
         data.HEADERS = response.Headers.ToDictionary(h => h.Key, GetHeaderValue);
 

@@ -357,6 +357,8 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
         // Response code
         data.RESPONSECODE = (int)response.StatusCode;
         data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
+        data.Logger.Log($"Response HTTP version: HTTP/{response.Version.Major}.{response.Version.Minor}",
+            LogColors.Citrine);
 
         // Headers
         data.HEADERS = response.Headers;

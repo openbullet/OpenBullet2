@@ -88,7 +88,7 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         if (result == CurlCode.Ok)
         {
-            return context.BuildResponse();
+            return context.BuildResponse(GetHttpVersion());
         }
 
         if (cancellationToken.IsCancellationRequested)
@@ -97,6 +97,28 @@ internal sealed class CurlEasyTransfer : IDisposable
         }
 
         throw new CurlImpersonateException(result, GetErrorMessage());
+    }
+
+    private Version? GetHttpVersion()
+    {
+        var result = CurlNativeMethods.EasyGetInfo(handle, CurlInfo.HttpVersion, out var value);
+
+        if (result != CurlCode.Ok)
+        {
+            return null;
+        }
+
+        return (CurlHttpVersion)value switch
+        {
+            CurlHttpVersion.Version10 => new Version(1, 0),
+            CurlHttpVersion.Version11 => new Version(1, 1),
+            CurlHttpVersion.Version20 => new Version(2, 0),
+            CurlHttpVersion.Version2Tls => new Version(2, 0),
+            CurlHttpVersion.Version2PriorKnowledge => new Version(2, 0),
+            CurlHttpVersion.Version30 => new Version(3, 0),
+            CurlHttpVersion.Version3Only => new Version(3, 0),
+            _ => null
+        };
     }
 
     private void SetHttpVersionIfNeeded(HttpRequestMessage request)
@@ -483,8 +505,8 @@ internal sealed class CurlRequestContext(CancellationToken cancellationToken, bo
         headers.Add(headerLine);
     }
 
-    public CurlResponseData BuildResponse()
-        => new(StatusCode, Body.ToArray(), [.. headers]);
+    public CurlResponseData BuildResponse(Version? httpVersion)
+        => new(StatusCode, Body.ToArray(), [.. headers], httpVersion);
 
     public void Dispose()
         => Body.Dispose();

@@ -26,6 +26,10 @@ internal static partial class CurlNativeMethods
     [DllImport(CurlLibrary, EntryPoint = "curl_easy_perform", CallingConvention = CallingConvention.Cdecl)]
     public static extern CurlCode EasyPerform(nint handle);
 
+    // curl_easy_getinfo is variadic in C. This overload covers long outputs.
+    [DllImport(CurlLibrary, EntryPoint = "curl_easy_getinfo", CallingConvention = CallingConvention.Cdecl)]
+    public static extern CurlCode EasyGetInfo(nint handle, CurlInfo info, out long value);
+
     // curl_easy_setopt is variadic in C. These overloads cover the argument
     // shapes used by this handler; selecting the right CurlOption value matters.
     [DllImport(CurlLibrary, EntryPoint = "curl_easy_setopt", CallingConvention = CallingConvention.Cdecl)]
