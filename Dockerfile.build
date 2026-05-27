@@ -8,36 +8,34 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 WORKDIR /code
 
 COPY . .
-RUN dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid all
-RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64
-RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=all -o /build/web-osx-arm64
-RUN dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64
-RUN dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64
 
-# No osx because it needs codesign and it costs money...
-
-WORKDIR /build/web-win-x64
-
-# Remove all .xml files
-# (we cannot use <GenerateDocumentationFile>false</GenerateDocumentationFile>
-# because we need it for swagger)
-RUN find /build/web-win-x64 -name "*.xml" -type f -delete \
+# Build all release artifacts in a single layer. Splitting every publish into its own RUN
+# makes BuildKit keep large cumulative self-contained publish snapshots, which can exhaust
+# the GitHub-hosted runner disk when exporting the artifact build cache.
+RUN dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid all \
+    && dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64 \
+    && dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=all -o /build/web-osx-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64 \
+    && find /build/web-win-x64 -name "*.xml" -type f -delete \
     && find /build/web-win-arm64 -name "*.xml" -type f -delete \
     && find /build/web-osx-x64 -name "*.xml" -type f -delete \
     && find /build/web-osx-arm64 -name "*.xml" -type f -delete \
     && find /build/web-linux-x64 -name "*.xml" -type f -delete \
     && find /build/web-linux-arm64 -name "*.xml" -type f -delete \
     && find /build/native-win-x64 -name "*.xml" -type f -delete \
-    && find /build/native-win-arm64 -name "*.xml" -type f -delete
-
-RUN rm -rf /build/web-osx-arm64/.playwright/node/darwin-x64 \
+    && find /build/native-win-arm64 -name "*.xml" -type f -delete \
+    && rm -rf /build/web-osx-arm64/.playwright/node/darwin-x64 \
     /build/web-osx-arm64/.playwright/node/linux-arm64 \
     /build/web-osx-arm64/.playwright/node/linux-x64 \
-    /build/web-osx-arm64/.playwright/node/win32_x64
+    /build/web-osx-arm64/.playwright/node/win32_x64 \
+    /tmp/openbullet2-curl-impersonate \
+    /root/.nuget/packages \
+    && find /code -type d \( -name bin -o -name obj \) -prune -exec rm -rf {} +
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
@@ -61,9 +59,7 @@ RUN mkdir /build && mv dist/* /build
 # ---------
 # AGGREGATE
 # ---------
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
-
-RUN apt-get update -yq && apt-get install -y --no-install-recommends curl
+FROM alpine:3.20
 
 WORKDIR /app/web-win-x64
 

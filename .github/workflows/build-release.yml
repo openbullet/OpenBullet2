@@ -130,8 +130,10 @@ jobs:
         file: ./Dockerfile.build
         load: true
         tags: openbullet2-build
-        cache-from: type=gha,scope=openbullet2-artifacts
-        cache-to: type=gha,mode=max,scope=openbullet2-artifacts
+        # This image contains every release artifact, so max-mode cache exports too many
+        # large intermediate self-contained publish layers for GitHub-hosted runner disks.
+        cache-from: type=gha,scope=openbullet2-artifacts-v2
+        cache-to: type=gha,mode=min,scope=openbullet2-artifacts-v2
 
     # Extract files from the /app folder of the image into a zip
     - name: Extract files from the image
