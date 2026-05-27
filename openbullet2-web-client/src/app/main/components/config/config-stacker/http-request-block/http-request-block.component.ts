@@ -31,6 +31,7 @@ export class HttpRequestBlockComponent implements OnChanges {
   MultipartContentType = MultipartContentType;
   currentParamsType: RequestParamsType = RequestParamsType.Standard;
   useCustomCipherSuites = false;
+  isCurlImpersonate = false;
 
   standardRequestParams: StandardRequestParamsDto = {
     _polyTypeName: RequestParamsType.Standard,
@@ -115,6 +116,7 @@ export class HttpRequestBlockComponent implements OnChanges {
     }
 
     this.useCustomCipherSuites = this.block.settings['useCustomCipherSuites'].value;
+    this.isCurlImpersonate = this.block.settings['httpLibrary'].value === 'CurlImpersonate';
   }
 
   valueChanged() {
@@ -145,6 +147,11 @@ export class HttpRequestBlockComponent implements OnChanges {
 
   useCustomCipherSuitesChanged() {
     this.useCustomCipherSuites = this.block.settings['useCustomCipherSuites'].value;
+    this.valueChanged();
+  }
+
+  httpLibraryChanged() {
+    this.isCurlImpersonate = this.block.settings['httpLibrary'].value === 'CurlImpersonate';
     this.valueChanged();
   }
 

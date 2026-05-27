@@ -83,6 +83,8 @@ public partial class HttpRequestBlockSettingsViewer : UserControl
         readResponseContentSetting.Setting = vm.HttpRequestBlock.Settings["readResponseContent"];
         codePagesEncodingSetting.Setting = vm.HttpRequestBlock.Settings["codePagesEncoding"];
         httpLibrarySetting.Setting = vm.HttpRequestBlock.Settings["httpLibrary"];
+        curlImpersonateBrowserProfileSetting.Setting = vm.HttpRequestBlock.Settings["curlImpersonateBrowserProfile"];
+        curlUseBrowserHeadersSetting.Setting = vm.HttpRequestBlock.Settings["curlUseBrowserHeaders"];
         securityProtocolSetting.Setting = vm.HttpRequestBlock.Settings["securityProtocol"];
         ignoreCertificateValidationSetting.Setting = vm.HttpRequestBlock.Settings["ignoreCertificateValidation"];
         useCustomCipherSuitesSetting.Setting = vm.HttpRequestBlock.Settings["useCustomCipherSuites"];

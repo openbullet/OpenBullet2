@@ -412,6 +412,8 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
             Prop("ReadResponseContent", CSharpWriter.FromSettingSyntax(Settings["readResponseContent"])),
             Prop("AbsoluteUriInFirstLine", CSharpWriter.FromSettingSyntax(Settings["absoluteUriInFirstLine"])),
             Prop("HttpLibrary", CSharpWriter.FromSettingSyntax(Settings["httpLibrary"])),
+            Prop("CurlImpersonateBrowserProfile", CSharpWriter.FromSettingSyntax(Settings["curlImpersonateBrowserProfile"])),
+            Prop("CurlUseBrowserHeaders", CSharpWriter.FromSettingSyntax(Settings["curlUseBrowserHeaders"])),
             Prop("SecurityProtocol", CSharpWriter.FromSettingSyntax(Settings["securityProtocol"])),
             Prop("IgnoreCertificateValidation", CSharpWriter.FromSettingSyntax(Settings["ignoreCertificateValidation"])),
             Prop("CustomCookies", CSharpWriter.FromSettingSyntax(Settings["customCookies"])),

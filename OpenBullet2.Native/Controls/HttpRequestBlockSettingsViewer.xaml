@@ -197,6 +197,8 @@
             Foreground="{DynamicResource ForegroundCustom}" />
 
         <local:EnumSettingViewer x:Name="httpLibrarySetting" />
+        <local:EnumSettingViewer x:Name="curlImpersonateBrowserProfileSetting" />
+        <local:BoolSettingViewer x:Name="curlUseBrowserHeadersSetting" />
         <local:EnumSettingViewer x:Name="securityProtocolSetting" />
         <local:BoolSettingViewer x:Name="ignoreCertificateValidationSetting" />
         <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting" />

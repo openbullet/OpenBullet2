@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using RuriLib.Functions.Http;
 using RuriLib.Functions.Http.Options;
+using RuriLib.Http.Curl;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Blocks.Settings;
 
@@ -42,7 +43,16 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
             },
             ["httpLibrary"] = new EnumParameter("httpLibrary", typeof(HttpLibrary), nameof(HttpLibrary.RuriLibHttp))
             {
-                Description = $"{nameof(HttpLibrary.RuriLibHttp)} is the custom library, {nameof(HttpLibrary.SystemNet)} is the built-in .NET one with HTTP/2.0 and HTTP/3.0 support"
+                Description = $"{nameof(HttpLibrary.RuriLibHttp)} is the custom library, {nameof(HttpLibrary.SystemNet)} is the built-in .NET one with HTTP/2.0 and HTTP/3.0 support, {nameof(HttpLibrary.CurlImpersonate)} uses curl-impersonate for browser fingerprint spoofing"
+            },
+            ["curlImpersonateBrowserProfile"] = new EnumParameter("curlImpersonateBrowserProfile",
+                typeof(CurlImpersonateBrowserProfile), nameof(CurlImpersonateBrowserProfile.Chrome142))
+            {
+                Description = "The browser profile to impersonate when using the CurlImpersonate HTTP library."
+            },
+            ["curlUseBrowserHeaders"] = new BoolParameter("curlUseBrowserHeaders", true)
+            {
+                Description = "If true, curl-impersonate sends browser-default headers and browser-managed custom headers are ignored to preserve header order."
             },
             ["securityProtocol"] = new EnumParameter("securityProtocol", typeof(SecurityProtocol), nameof(SecurityProtocol.SystemDefault))
             {

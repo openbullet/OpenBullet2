@@ -23,6 +23,18 @@ namespace RuriLib.Functions.Http;
 
 internal class HttpClientRequestHandler : HttpRequestHandler
 {
+    private readonly Func<RuriLib.Models.Proxies.Proxy?, HttpOptions, CookieContainer, HttpClient> clientFactory;
+
+    public HttpClientRequestHandler()
+        : this(HttpFactory.GetHttpClient)
+    {
+    }
+
+    protected HttpClientRequestHandler(Func<RuriLib.Models.Proxies.Proxy?, HttpOptions, CookieContainer, HttpClient> clientFactory)
+    {
+        this.clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+    }
+
     public override async Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
     {
         foreach (var cookie in options.CustomCookies)
@@ -38,7 +50,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -98,7 +110,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -144,7 +156,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         using var request = new HttpRequestMessage
         {
@@ -191,7 +203,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetHttpClient(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         if (string.IsNullOrWhiteSpace(options.Boundary))
         {

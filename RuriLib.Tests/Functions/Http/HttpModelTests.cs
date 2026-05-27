@@ -1,6 +1,7 @@
 using RuriLib.Functions.Http;
 using RuriLib.Functions.Http.Options;
 using RuriLib.Functions.Networking;
+using RuriLib.Http.Curl;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using System.IO;
 using System.Text;
@@ -28,6 +29,8 @@ public class HttpModelTests
         Assert.True(options.IgnoreCertificateValidation);
         Assert.False(options.UseCustomCipherSuites);
         Assert.NotEmpty(options.CustomCipherSuites);
+        Assert.Equal(CurlImpersonateBrowserProfile.Chrome142, options.CurlImpersonateBrowserProfile);
+        Assert.True(options.CurlUseBrowserHeaders);
     }
 
     [Fact]
@@ -52,6 +55,8 @@ public class HttpModelTests
         Assert.False(options.AlwaysSendContent);
         Assert.False(options.DecodeHtml);
         Assert.True(options.ReadResponseContent);
+        Assert.Equal(CurlImpersonateBrowserProfile.Chrome142, options.CurlImpersonateBrowserProfile);
+        Assert.True(options.CurlUseBrowserHeaders);
     }
 
     [Fact]

@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 WORKDIR /code
 
 COPY . .
+RUN dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid all
 RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64
 RUN dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64
 RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64

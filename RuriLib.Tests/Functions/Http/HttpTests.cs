@@ -38,6 +38,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestStandard_Get_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -80,6 +81,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestStandard_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -106,6 +108,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestRaw_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -132,6 +135,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestBasicAuth_Normal_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");
@@ -229,6 +233,7 @@ public class HttpTests
     [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
+    [InlineData(HttpLibrary.CurlImpersonate)]
     public async Task HttpRequestMultipart_Post_Verify(HttpLibrary library)
     {
         var httpBin = await TestHttpBin.BuildUrl("anything");

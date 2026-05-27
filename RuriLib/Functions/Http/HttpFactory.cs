@@ -1,4 +1,5 @@
 using RuriLib.Http;
+using RuriLib.Http.Curl;
 using RuriLib.Models.Proxies;
 using RuriLib.Proxies;
 using RuriLib.Proxies.Clients;
@@ -88,7 +89,39 @@ public class HttpFactory
         return new HttpClient(handler)
         {
             // The block-level timeout is enforced by the request handler via CancellationTokenSource.
-            // Using the proxy read/write timeout here caps all System.Net requests to that value.
+            // HttpClient.Timeout would race that token and report a different timeout failure path.
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+    }
+
+    /// <summary>
+    /// Creates an <see cref="HttpClient"/> backed by curl-impersonate.
+    /// </summary>
+    public static HttpClient GetCurlImpersonateHttpClient(Proxy? proxy, HttpOptions options, CookieContainer cookieContainer)
+    {
+        var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            BrowserProfile = options.CurlImpersonateBrowserProfile,
+            UseBrowserHeaders = options.CurlUseBrowserHeaders,
+            AllowAutoRedirect = options.AutoRedirect,
+            MaxNumberOfRedirects = options.MaxNumberOfRedirects,
+            ReadResponseContent = options.ReadResponseContent,
+            IgnoreCertificateValidation = options.IgnoreCertificateValidation,
+            ConnectTimeout = options.ConnectTimeout,
+            // The request handler owns the whole-transfer timeout via CancellationTokenSource.
+            // Keep curl's total timeout disabled so it does not race the block timeout.
+            Timeout = Timeout.InfiniteTimeSpan,
+            ProxyUri = proxy is null ? null : GetProxyUri(proxy),
+            ProxyCredentials = proxy?.NeedsAuthentication == true
+                ? new NetworkCredential(proxy.Username, proxy.Password)
+                : null,
+            CookieContainer = cookieContainer,
+            UseCookies = true
+        });
+
+        return new HttpClient(handler)
+        {
+            // The request handler owns the timeout; this only prevents HttpClient from racing it.
             Timeout = Timeout.InfiniteTimeSpan
         };
     }
@@ -172,6 +205,20 @@ public class HttpFactory
         };
 
         return new WebProxy(address, true, null, proxyCredentials);
+    }
+
+    private static Uri GetProxyUri(Proxy proxy)
+    {
+        var scheme = proxy.Type switch
+        {
+            ProxyType.Http => "http",
+            ProxyType.Socks4 => "socks4",
+            ProxyType.Socks4a => "socks4a",
+            ProxyType.Socks5 => "socks5",
+            _ => throw new NotImplementedException(),
+        };
+
+        return new Uri($"{scheme}://{proxy.Host}:{proxy.Port}");
     }
 
     private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer)
