@@ -1,7 +1,9 @@
 using OpenBullet2.Native.ViewModels;
+using RuriLib.Functions.Http.Options;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+using RuriLib.Models.Blocks.Settings;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +33,7 @@ public partial class HttpRequestBlockSettingsViewer : UserControl
         DataContext = vm;
 
         InitializeComponent();
+        httpLibrarySetting.ValueChanged += (_, _) => vm.UpdateLibraryDependentSettingsVisibility();
 
         tabControl.SelectedIndex = (int)vm.Mode;
         BindSettings();
@@ -155,6 +158,10 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
     // mode switch preserves the object that was originally loaded instead of replacing it.
     private bool requestParamsCachePrimed;
 
+    public bool IsCurlImpersonate => HttpLibrarySetting.Value == nameof(HttpLibrary.CurlImpersonate);
+
+    public bool IsNotCurlImpersonate => !IsCurlImpersonate;
+
     public HttpRequestMode Mode
     {
         get
@@ -273,6 +280,12 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
     public void RemoveMultipartContent(HttpContentSettingsGroup content)
         => GetMultipartRequestParams().Contents.Remove(content);
 
+    public void UpdateLibraryDependentSettingsVisibility()
+    {
+        OnPropertyChanged(nameof(IsCurlImpersonate));
+        OnPropertyChanged(nameof(IsNotCurlImpersonate));
+    }
+
     private MultipartRequestParams GetMultipartRequestParams()
     {
         PrimeRequestParamsCache();
@@ -322,6 +335,9 @@ public class HttpRequestBlockSettingsViewerViewModel(BlockViewModel block) : Blo
                 throw new NotImplementedException();
         }
     }
+
+    private EnumSetting HttpLibrarySetting
+        => (EnumSetting)HttpRequestBlock.Settings["httpLibrary"].FixedSetting!;
 }
 
 public enum HttpRequestMode

@@ -197,12 +197,17 @@
             Foreground="{DynamicResource ForegroundCustom}" />
 
         <local:EnumSettingViewer x:Name="httpLibrarySetting" />
-        <local:EnumSettingViewer x:Name="curlImpersonateBrowserProfileSetting" />
-        <local:BoolSettingViewer x:Name="curlUseBrowserHeadersSetting" />
-        <local:EnumSettingViewer x:Name="securityProtocolSetting" />
+        <local:EnumSettingViewer x:Name="curlImpersonateBrowserProfileSetting"
+                                 Visibility="{Binding IsCurlImpersonate, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:BoolSettingViewer x:Name="curlUseBrowserHeadersSetting"
+                                 Visibility="{Binding IsCurlImpersonate, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:EnumSettingViewer x:Name="securityProtocolSetting"
+                                 Visibility="{Binding IsNotCurlImpersonate, Converter={StaticResource ResourceKey=BoolToVis}}" />
         <local:BoolSettingViewer x:Name="ignoreCertificateValidationSetting" />
-        <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting" />
-        <local:ListOfStringsSettingViewer x:Name="customCipherSuitesSetting" />
+        <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting"
+                                 Visibility="{Binding IsNotCurlImpersonate, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        <local:ListOfStringsSettingViewer x:Name="customCipherSuitesSetting"
+                                          Visibility="{Binding IsNotCurlImpersonate, Converter={StaticResource ResourceKey=BoolToVis}}" />
         
     </StackPanel>
 </UserControl>
