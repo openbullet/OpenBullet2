@@ -57,7 +57,15 @@ public class CurlImpersonateManualTargetTests(ITestOutputHelper output)
         AssertBodyContains(body, "application_layer_protocol_negotiation");
         AssertBodyContains(body, "\"h2\"");
     }
-    
+
+    [Fact(Skip = ManualSkip)]
+    public async Task ErisaCloudflareBotScore_ChromeHttp2_ReturnsScorePage()
+    {
+        var body = await SendAndDumpAsync("https://cf.erisa.uk/", HttpVersion.Version20);
+
+        Assert.False(string.IsNullOrWhiteSpace(body));
+    }
+
     [Fact(Skip = ManualSkip)]
     public async Task TlsPeetAll_ChromeHttp2_ReportsTlsAndHttp2Fingerprints()
     {
@@ -83,10 +91,7 @@ public class CurlImpersonateManualTargetTests(ITestOutputHelper output)
         {
             BrowserProfile = CurlImpersonateBrowserProfile.Chrome142,
             UseBrowserHeaders = true,
-            // The Windows curl-impersonate build uses its bundled TLS stack and
-            // may not have access to the OS CA store. These manual tests validate
-            // fingerprint/browser classification, not certificate chain handling.
-            IgnoreCertificateValidation = true,
+            IgnoreCertificateValidation = false,
             AllowAutoRedirect = true,
             ConnectTimeout = TimeSpan.FromSeconds(10),
             Timeout = TimeSpan.FromSeconds(30)

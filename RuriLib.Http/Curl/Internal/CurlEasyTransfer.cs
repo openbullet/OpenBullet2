@@ -161,6 +161,11 @@ internal sealed class CurlEasyTransfer : IDisposable
     {
         if (!options.IgnoreCertificateValidation)
         {
+            if (OperatingSystem.IsWindows())
+            {
+                SetLongOption(CurlOption.SslOptions, CurlSslOptions.NativeCa);
+            }
+
             return;
         }
 

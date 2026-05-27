@@ -26,6 +26,7 @@ internal enum CurlOption
     NoSignal = 99,
     TimeoutMs = 155,
     ConnectTimeoutMs = 156,
+    SslOptions = 216,
     WriteFunction = 20011,
     HeaderFunction = 20079,
     XferInfoFunction = 20219,
