@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace RuriLib.Http.Curl.Native;
@@ -14,41 +15,52 @@ internal static partial class CurlNativeMethods
         CurlNativeLibraryResolver.Initialize();
     }
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_global_init", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode GlobalInit(long flags);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_global_init")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode GlobalInit(long flags);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_init", CallingConvention = CallingConvention.Cdecl)]
-    public static extern nint EasyInit();
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_init")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint EasyInit();
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_cleanup", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void EasyCleanup(nint handle);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_cleanup")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial void EasyCleanup(nint handle);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_perform", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode EasyPerform(nint handle);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_perform")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode EasyPerform(nint handle);
 
     // curl_easy_getinfo is variadic in C. This overload covers long outputs.
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_getinfo", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode EasyGetInfo(nint handle, CurlInfo info, out long value);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_getinfo")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode EasyGetInfo(nint handle, CurlInfo info, out long value);
 
     // curl_easy_setopt is variadic in C. These overloads cover the argument
     // shapes used by this handler; selecting the right CurlOption value matters.
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_setopt", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode EasySetOpt(nint handle, CurlOption option, long value);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_setopt")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode EasySetOpt(nint handle, CurlOption option, long value);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_setopt", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode EasySetOpt(nint handle, CurlOption option, nint value);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_setopt")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode EasySetOpt(nint handle, CurlOption option, nint value);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_impersonate", CallingConvention = CallingConvention.Cdecl)]
-    public static extern CurlCode EasyImpersonate(nint handle, nint target, int defaultHeaders);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_impersonate")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlCode EasyImpersonate(nint handle, nint target, int defaultHeaders);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_easy_strerror", CallingConvention = CallingConvention.Cdecl)]
-    public static extern nint EasyStrError(CurlCode code);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_strerror")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint EasyStrError(CurlCode code);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_slist_append", CallingConvention = CallingConvention.Cdecl)]
-    public static extern nint SlistAppend(nint list, nint value);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_slist_append")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint SlistAppend(nint list, nint value);
 
-    [DllImport(CurlLibrary, EntryPoint = "curl_slist_free_all", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SlistFreeAll(nint list);
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_slist_free_all")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial void SlistFreeAll(nint list);
 
     public static string GetErrorString(CurlCode code)
     {
