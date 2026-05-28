@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-9">
+                            <div class="col-9 block-info-container">
                                 <app-block-info *ngIf="selectedBlocks.length === 1"
                                     (onChange)="stackChanged()"
                                     [envSettings]="envSettings"
@@ -139,7 +139,7 @@
     header="Add a block" 
     [(visible)]="addBlockModalVisible"
     [modal]="true" 
-    [style]="{ width: '50vw' }" 
+    [style]="{ width: '50vw', maxWidth: '900px' }"
     [dismissableMask]="true"
     [closeOnEscape]="true"
     [draggable]="false" 

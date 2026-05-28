@@ -18,6 +18,9 @@
     }
 
     .stack-container {
+        flex: 0 0 25%;
+        max-width: 22rem;
+
         .stack {
             margin-top: 1rem;
             max-height: 725px;
@@ -87,6 +90,12 @@
                 }
             }
         }
+    }
+
+    .block-info-container {
+        flex: 1 1 0;
+        max-width: none;
+        min-width: 0;
     }
 }
 
