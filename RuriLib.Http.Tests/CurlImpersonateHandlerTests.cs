@@ -87,6 +87,19 @@ public class CurlImpersonateHandlerTests
         Assert.NotEqual(chromeJa3, firefoxJa3);
     }
 
+    [Theory]
+    [InlineData(CurlImpersonateBrowserProfile.Okhttp4Android10,
+        "771,4865-4866-4867-49195-49196-52393-49199-49200-52392-49171-49172-156-157-47-53,23-65281-10-11-35-16-5-13-51-45-43,29-23-24,0")]
+    [InlineData(CurlImpersonateBrowserProfile.SafariIos170,
+        "771,4865-4866-4867-49196-49195-52393-49200-49199-52392-49162-49161-49172-49171-157-156-53-47-49160-49170-10,23-65281-10-11-16-5-13-18-51-45-43-27-21,29-23-24-25,0")]
+    public async Task SendAsync_CustomProfiles_ProduceExpectedJa3Fingerprints(
+        CurlImpersonateBrowserProfile profile, string expectedJa3)
+    {
+        var ja3 = Ja3.CalculateString(await CaptureClientHelloAsync(profile));
+
+        Assert.Equal(expectedJa3, ja3);
+    }
+
     [Fact]
     public async Task SendAsync_Http2Request_OffersH2InAlpn()
     {

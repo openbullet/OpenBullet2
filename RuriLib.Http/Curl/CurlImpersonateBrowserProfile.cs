@@ -78,7 +78,27 @@ public enum CurlImpersonateBrowserProfile
     /// <summary>Firefox 147.</summary>
     Firefox147,
     /// <summary>Tor Browser 145.</summary>
-    Tor145
+    Tor145,
+    /// <summary>Safari on iPadOS 15.6.</summary>
+    SafariIpad156,
+    /// <summary>Safari on iOS 15.5.</summary>
+    SafariIos155,
+    /// <summary>Safari on iOS 15.6.</summary>
+    SafariIos156,
+    /// <summary>Safari on iOS 16.0.</summary>
+    SafariIos160,
+    /// <summary>Safari on iOS 17.0.</summary>
+    SafariIos170,
+    /// <summary>Safari on iOS 18.5.</summary>
+    SafariIos185,
+    /// <summary>OkHttp 4 on Android 10.</summary>
+    Okhttp4Android10,
+    /// <summary>OkHttp 4 on Android 11.</summary>
+    Okhttp4Android11,
+    /// <summary>OkHttp 4 on Android 12.</summary>
+    Okhttp4Android12,
+    /// <summary>OkHttp 4 on Android 13.</summary>
+    Okhttp4Android13
 }
 
 /// <summary>

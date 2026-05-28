@@ -17,7 +17,7 @@ internal static class Ja3
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
-    private static string CalculateString(byte[] handshakeRecord)
+    public static string CalculateString(byte[] handshakeRecord)
     {
         var span = handshakeRecord.AsSpan();
         Assert.Equal((byte)0x01, span[0]);

@@ -12,6 +12,56 @@ namespace RuriLib.Http.Curl.Internal;
 
 internal sealed class CurlEasyTransfer : IDisposable
 {
+    private const long CurlSslVersionTlsV12 = 6;
+    private const long CurlSslVersionMaxDefault = 1 << 16;
+    private static readonly HashSet<int> DefaultEnabledTlsExtensions =
+    [
+        0,
+        10,
+        11,
+        13,
+        16,
+        23,
+        35,
+        43,
+        45,
+        51,
+        65281
+    ];
+
+    private static readonly Dictionary<int, string> TlsCipherNames = new()
+    {
+        [0x000A] = "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+        [0x002F] = "TLS_RSA_WITH_AES_128_CBC_SHA",
+        [0x0035] = "TLS_RSA_WITH_AES_256_CBC_SHA",
+        [0x009C] = "TLS_RSA_WITH_AES_128_GCM_SHA256",
+        [0x009D] = "TLS_RSA_WITH_AES_256_GCM_SHA384",
+        [0x1301] = "TLS_AES_128_GCM_SHA256",
+        [0x1302] = "TLS_AES_256_GCM_SHA384",
+        [0x1303] = "TLS_CHACHA20_POLY1305_SHA256",
+        [0xC008] = "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+        [0xC009] = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+        [0xC00A] = "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+        [0xC012] = "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+        [0xC013] = "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+        [0xC014] = "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+        [0xC02B] = "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+        [0xC02C] = "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+        [0xC02F] = "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+        [0xC030] = "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        [0xCCA8] = "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+        [0xCCA9] = "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256"
+    };
+
+    private static readonly Dictionary<int, string> TlsEcCurveNames = new()
+    {
+        [23] = "P-256",
+        [24] = "P-384",
+        [25] = "P-521",
+        [29] = "X25519",
+        [4588] = "X25519MLKEM768"
+    };
+
     private readonly nint handle;
     private readonly CurlRequestContext context;
     private readonly GCHandle contextHandle;
@@ -66,14 +116,14 @@ internal sealed class CurlEasyTransfer : IDisposable
         SetPointerOption(CurlOption.XferInfoData, GCHandle.ToIntPtr(contextHandle));
 
         SetHttpVersionIfNeeded(request);
-        Impersonate(options);
+        var browserHeadersSeeded = Impersonate(options);
 
         SetStringOption(CurlOption.Url, request.RequestUri.AbsoluteUri);
         SetTimeouts(options);
         SetProxy(options);
         SetCertificateValidation(options);
         ConfigureMethod(request);
-        ConfigureHeaders(request, options);
+        ConfigureHeaders(request, options, browserHeadersSeeded);
 
         if (request.Content is not null)
         {
@@ -144,13 +194,204 @@ internal sealed class CurlEasyTransfer : IDisposable
         }
     }
 
-    private void Impersonate(CurlImpersonateHandlerOptions options)
+    private bool Impersonate(CurlImpersonateHandlerOptions options)
     {
+        if (CurlImpersonateCustomProfile.TryGet(options.BrowserProfile, out var customProfile))
+        {
+            ApplyCustomFingerprint(customProfile);
+            return false;
+        }
+
         using var target = new NativeUtf8String(options.BrowserProfile.ToCurlTarget());
         // curl_easy_impersonate applies the TLS/HTTP fingerprint. With default
         // headers enabled, it also seeds browser headers in curl's intended order.
         var result = CurlNativeMethods.EasyImpersonate(handle, target.Pointer, options.UseBrowserHeaders ? 1 : 0);
         CurlNativeMethods.ThrowIfError(result, "curl_easy_impersonate");
+
+        return options.UseBrowserHeaders;
+    }
+
+    private void ApplyCustomFingerprint(CurlImpersonateCustomProfile profile)
+    {
+        SetJa3Options(profile);
+        SetExtraFingerprintOptions(profile);
+        SetAkamaiOptions(profile.Akamai);
+    }
+
+    private void SetJa3Options(CurlImpersonateCustomProfile profile)
+    {
+        var ja3Parts = profile.Ja3.Split(',');
+
+        if (ja3Parts.Length != 5)
+        {
+            throw new InvalidOperationException($"Invalid JA3 fingerprint: {profile.Ja3}");
+        }
+
+        SetLongOption(CurlOption.SslVersion, CurlSslVersionTlsV12 | CurlSslVersionMaxDefault);
+        SetStringOption(CurlOption.SslCipherList, MapJa3Values(ja3Parts[1], TlsCipherNames, ":"));
+
+        var extensions = ja3Parts[2];
+        ToggleExtensions(ReadJa3IntSet(extensions), profile);
+        SetStringOption(CurlOption.TlsExtensionOrder, StripTrailingPaddingExtension(extensions));
+        SetStringOption(CurlOption.SslEcCurves, MapJa3Values(ja3Parts[3], TlsEcCurveNames, ":"));
+
+        if (ja3Parts[4] != "0")
+        {
+            throw new InvalidOperationException(
+                $"Unsupported JA3 EC point format list '{ja3Parts[4]}'. Only uncompressed points are supported.");
+        }
+    }
+
+    private void SetExtraFingerprintOptions(CurlImpersonateCustomProfile profile)
+    {
+        if (profile.TlsSignatureAlgorithms.Count > 0)
+        {
+            SetStringOption(CurlOption.SslSigHashAlgs, string.Join(",", profile.TlsSignatureAlgorithms));
+        }
+
+        SetLongOption(CurlOption.SslVersion, CurlSslVersionTlsV12 | CurlSslVersionMaxDefault);
+        SetLongOption(CurlOption.TlsGrease, profile.TlsGrease ? 1 : 0);
+        SetLongOption(CurlOption.SslPermuteExtensions, 0);
+
+        if (!string.IsNullOrWhiteSpace(profile.TlsCertCompression))
+        {
+            SetStringOption(CurlOption.SslCertCompression, profile.TlsCertCompression);
+        }
+
+        if (profile.Http2StreamWeight.HasValue)
+        {
+            SetLongOption(CurlOption.StreamWeight, profile.Http2StreamWeight.Value);
+        }
+
+        if (profile.Http2StreamExclusive.HasValue)
+        {
+            SetLongOption(CurlOption.StreamExclusive, profile.Http2StreamExclusive.Value ? 1 : 0);
+        }
+
+        if (profile.Http2NoPriority)
+        {
+            SetLongOption(CurlOption.Http2NoPriority, 1);
+        }
+    }
+
+    private void SetAkamaiOptions(string akamai)
+    {
+        var parts = akamai.Split('|');
+
+        if (parts.Length != 4)
+        {
+            throw new InvalidOperationException($"Invalid Akamai HTTP/2 fingerprint: {akamai}");
+        }
+
+        SetLongOption(CurlOption.HttpVersion, (long)CurlHttpVersion.Version20);
+        SetStringOption(CurlOption.Http2Settings, parts[0].Replace(',', ';'));
+        SetLongOption(CurlOption.Http2WindowUpdate, long.Parse(parts[1]));
+
+        if (parts[2] != "0")
+        {
+            SetStringOption(CurlOption.Http2Streams, parts[2]);
+        }
+
+        SetStringOption(CurlOption.Http2PseudoHeadersOrder, parts[3].Replace(",", string.Empty));
+    }
+
+    private void ToggleExtensions(IReadOnlySet<int> extensionIds, CurlImpersonateCustomProfile profile)
+    {
+        foreach (var extensionId in extensionIds)
+        {
+            if (!DefaultEnabledTlsExtensions.Contains(extensionId))
+            {
+                ToggleExtension(extensionId, enable: true, profile);
+            }
+        }
+
+        foreach (var extensionId in DefaultEnabledTlsExtensions)
+        {
+            if (!extensionIds.Contains(extensionId))
+            {
+                ToggleExtension(extensionId, enable: false, profile);
+            }
+        }
+    }
+
+    private void ToggleExtension(int extensionId, bool enable, CurlImpersonateCustomProfile profile)
+    {
+        switch (extensionId)
+        {
+            case 0:
+            case 10:
+            case 11:
+            case 13:
+            case 23:
+            case 43:
+            case 45:
+            case 51:
+            case 65281:
+                return;
+            case 5:
+                if (enable)
+                {
+                    SetLongOption(CurlOption.TlsStatusRequest, 1);
+                }
+
+                return;
+            case 16:
+                SetLongOption(CurlOption.SslEnableAlpn, enable ? 1 : 0);
+                return;
+            case 18:
+                if (enable)
+                {
+                    SetLongOption(CurlOption.TlsSignedCertTimestamps, 1);
+                }
+
+                return;
+            case 21:
+                return;
+            case 27:
+                SetStringOption(CurlOption.SslCertCompression,
+                    enable ? profile.TlsCertCompression ?? "brotli" : string.Empty);
+                return;
+            case 35:
+                SetLongOption(CurlOption.SslEnableTicket, enable ? 1 : 0);
+                return;
+            default:
+                throw new InvalidOperationException(
+                    $"TLS extension {extensionId} cannot be toggled for curl-impersonate custom profiles.");
+        }
+    }
+
+    private static string StripTrailingPaddingExtension(string extensions)
+        => extensions.EndsWith("-21", StringComparison.Ordinal) ? extensions[..^3] : extensions;
+
+    private static IReadOnlySet<int> ReadJa3IntSet(string value)
+    {
+        var result = new HashSet<int>();
+
+        foreach (var part in value.Split('-', StringSplitOptions.RemoveEmptyEntries))
+        {
+            result.Add(int.Parse(part));
+        }
+
+        return result;
+    }
+
+    private static string MapJa3Values(string value, IReadOnlyDictionary<int, string> map, string separator)
+    {
+        var mapped = new List<string>();
+
+        foreach (var part in value.Split('-', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var id = int.Parse(part);
+
+            if (!map.TryGetValue(id, out var name))
+            {
+                throw new InvalidOperationException($"JA3 value {id} is not supported by this curl-impersonate wrapper.");
+            }
+
+            mapped.Add(name);
+        }
+
+        return string.Join(separator, mapped);
     }
 
     private void SetTimeouts(CurlImpersonateHandlerOptions options)
@@ -234,11 +475,12 @@ internal sealed class CurlEasyTransfer : IDisposable
         SetLongOption(CurlOption.PostFieldSizeLarge, body.Length);
     }
 
-    private void ConfigureHeaders(HttpRequestMessage request, CurlImpersonateHandlerOptions options)
+    private void ConfigureHeaders(HttpRequestMessage request, CurlImpersonateHandlerOptions options,
+        bool browserHeadersSeeded)
     {
         foreach (var header in request.Headers)
         {
-            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, options.UseBrowserHeaders))
+            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
             {
                 continue;
             }
@@ -264,7 +506,7 @@ internal sealed class CurlEasyTransfer : IDisposable
         {
             foreach (var header in request.Content.Headers)
             {
-                if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, options.UseBrowserHeaders))
+                if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
                 {
                     continue;
                 }
