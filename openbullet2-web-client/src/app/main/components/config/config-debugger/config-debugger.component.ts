@@ -5,6 +5,7 @@ import {
   faCaretRight,
   faPlay,
   faSliders,
+  faSpinner,
   faStop,
 } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
@@ -45,10 +46,12 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   faCaretRight = faCaretRight;
   faAlignLeft = faAlignLeft;
   faSliders = faSliders;
+  faSpinner = faSpinner;
 
   logs: BotLoggerEntry[] = [];
   variables: VariableDto[] = [];
   status = 'unknown';
+  isStarting = false;
 
   displayVariables = false;
   viewAsHtmlModalVisible = false;
@@ -94,6 +97,9 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
           ...msg.variables.filter((v) => v.markedForCapture)
         ] : msg.variables;
       this.status = msg.status;
+      if (msg.status !== 'idle') {
+        this.isStarting = false;
+      }
 
       this.scrollToBottom();
     });
@@ -125,6 +131,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }
 
       this.status = msg.newStatus;
+      this.isStarting = false;
 
       // Needed because otherwise the scroll is so fast that
       // it happens before the new element is actually rendered
@@ -145,6 +152,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         detail: this.truncatePipe.transform(msg.message, 100),
       });
 
+      this.isStarting = false;
       this.scrollToBottom();
     });
 
@@ -165,15 +173,25 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   }
 
   start() {
+    if (this.isStarting || this.status !== 'idle' || this.settings === null) {
+      return;
+    }
+
+    this.isStarting = true;
+
     if (!this.settings?.persistLog) {
       this.logs = [];
     }
 
     // Save the config on the backend but without persisting the changes.
     // We need this in order to properly debug any new changes
-    this.configService.saveConfig(this.config, false).subscribe((_) => {
-      // Then, send the start message to the debugger
-      this.debuggerHubService.start(this.settings!);
+    this.configService.saveConfig(this.config, false).subscribe({
+      next: (_) => {
+        // Then, send the start message to the debugger
+        this.debuggerHubService.start(this.settings!)
+          .catch((error) => this.onStartError(error));
+      },
+      error: (error) => this.onStartError(error),
     });
   }
 
@@ -229,5 +247,15 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   invariantDisplayFunction(x: string) {
     return x;
+  }
+
+  private onStartError(error: unknown) {
+    console.log(error);
+    this.isStarting = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Debugger Error',
+      detail: 'Could not start the debugger',
+    });
   }
 }

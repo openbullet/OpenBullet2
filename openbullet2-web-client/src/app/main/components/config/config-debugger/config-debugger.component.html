@@ -5,7 +5,14 @@
         </div>
         <div class="col-auto text-right pr-0">
             <button class="button button-accent ml-2"
-                *ngIf="status === 'idle'"
+                *ngIf="isStarting"
+                pTooltip="Starting the debugger" tooltipPosition="bottom"
+                [disabled]="true">
+                <fa-icon [icon]="faSpinner" [fixedWidth]="true" [spin]="true"></fa-icon>
+                Starting
+            </button>
+            <button class="button button-accent ml-2"
+                *ngIf="status === 'idle' && !isStarting"
                 pTooltip="Start the debugger" tooltipPosition="bottom"
                 (click)="start()">
                 <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>

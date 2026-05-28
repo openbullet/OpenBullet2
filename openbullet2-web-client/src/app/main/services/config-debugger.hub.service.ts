@@ -76,17 +76,19 @@ export class ConfigDebuggerHubService {
   }
 
   async start(settings: ConfigDebuggerSettings) {
-    return this.hubConnection
-      ?.invoke('start', {
-        testData: settings.testData,
-        wordlistType: settings.wordlistType,
-        useProxy: settings.useProxy,
-        testProxy: settings.testProxy,
-        proxyType: settings.proxyType,
-        persistLog: settings.persistLog,
-        stepByStep: settings.stepByStep,
-      })
-      .catch((error) => console.log(error));
+    if (this.hubConnection === null) {
+      throw new Error('The debugger hub connection has not been started');
+    }
+
+    return this.hubConnection.invoke('start', {
+      testData: settings.testData,
+      wordlistType: settings.wordlistType,
+      useProxy: settings.useProxy,
+      testProxy: settings.testProxy,
+      proxyType: settings.proxyType,
+      persistLog: settings.persistLog,
+      stepByStep: settings.stepByStep,
+    });
   }
 
   async stop() {
