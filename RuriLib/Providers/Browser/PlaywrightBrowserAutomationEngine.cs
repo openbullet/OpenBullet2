@@ -250,8 +250,14 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
 
         if (response is not null)
         {
-            data.SOURCE = await response.TextAsync();
-            data.RAWSOURCE = await response.BodyAsync();
+            data.SOURCE = string.Empty;
+            data.RAWSOURCE = [];
+
+            if (ResponseCanHaveBody(response) && !await TryPopulateResponseBody(data, response))
+            {
+                data.SOURCE = await page.ContentAsync();
+                data.RAWSOURCE = Encoding.UTF8.GetBytes(data.SOURCE);
+            }
         }
         else
         {
@@ -1329,27 +1335,32 @@ public class PlaywrightBrowserAutomationEngine : IBrowserAutomationEngine
                statusCode / 100 != 3;
     }
 
-    private static async Task TryPopulateResponseBody(BotData data, IResponse response)
+    private static async Task<bool> TryPopulateResponseBody(BotData data, IResponse response)
     {
         try
         {
             data.SOURCE = await response.TextAsync();
             data.RAWSOURCE = await response.BodyAsync();
+            return true;
         }
         catch (Exception ex) when (IsMissingResponseBodyException(ex))
         {
             data.SOURCE = string.Empty;
             data.RAWSOURCE = [];
             data.Logger.Log("Response body is not available", LogColors.Orange);
+            return false;
         }
     }
 
-    private static bool IsMissingResponseBodyException(Exception ex)
+    internal static bool IsMissingResponseBodyException(Exception ex)
     {
         for (var current = ex; current is not null; current = current.InnerException)
         {
             if (current.Message.Contains("Unable to retrieve body", StringComparison.OrdinalIgnoreCase) ||
-                current.Message.Contains("No resource with given identifier found", StringComparison.OrdinalIgnoreCase))
+                current.Message.Contains("No resource with given identifier found", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("Request content was evicted from inspector cache", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("NS_ERROR_FAILURE", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("nsIStreamListener.onDataAvailable", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
