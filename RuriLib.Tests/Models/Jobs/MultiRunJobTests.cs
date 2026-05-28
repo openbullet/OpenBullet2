@@ -87,6 +87,74 @@ public class MultiRunJobTests
     }
 
     [Fact]
+    public async Task Start_WhenAbortedDuringInitialProxyReload_CompletesWithoutNullReference()
+    {
+        var settings = CreateSettingsService();
+        var proxySource = new BlockingProxySource();
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+
+        var job = new MultiRunJob(settings, CreatePluginRepository())
+        {
+            Bots = 1,
+            Providers = new global::RuriLib.Models.Bots.Providers(settings),
+            StartCondition = new ImmediateStartCondition(),
+            Config = new Config
+            {
+                Id = "test",
+                Mode = ConfigMode.Legacy,
+                Settings = configSettings
+            },
+            DataPool = new TestDataPool(["data"], settings.Environment.WordlistTypes[0].Name),
+            ProxySources = [proxySource]
+        };
+
+        var startTask = job.Start(TestCancellationToken);
+        await proxySource.ReloadStarted.Task.WaitAsync(TestCancellationToken);
+
+        await job.Abort();
+
+        var exception = await Record.ExceptionAsync(() =>
+            startTask.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken));
+
+        Assert.Null(exception);
+        Assert.Equal(JobStatus.Idle, job.Status);
+        Assert.Equal(JobLastRunOutcome.Aborted, job.LastRunOutcome);
+    }
+
+    [Fact]
+    public async Task Start_WithEmptyProxySource_FailsWithoutRetryBackoff()
+    {
+        var settings = CreateSettingsService();
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+
+        var job = new MultiRunJob(settings, CreatePluginRepository())
+        {
+            Bots = 1,
+            Providers = new global::RuriLib.Models.Bots.Providers(settings),
+            StartCondition = new ImmediateStartCondition(),
+            Config = new Config
+            {
+                Id = "test",
+                Mode = ConfigMode.Legacy,
+                Settings = configSettings
+            },
+            DataPool = new TestDataPool(["data"], settings.Environment.WordlistTypes[0].Name),
+            ProxySources = [new EmptyProxySource()]
+        };
+
+        var exception = await Record.ExceptionAsync(() =>
+            job.Start(TestCancellationToken).WaitAsync(TimeSpan.FromSeconds(2), TestCancellationToken));
+
+        Assert.NotNull(exception);
+        Assert.False(exception is TimeoutException, exception.ToString());
+        Assert.Contains("No proxies that respect the allowed types are available", exception.Message);
+        Assert.Equal(JobStatus.Idle, job.Status);
+        Assert.Equal(JobLastRunOutcome.Failed, job.LastRunOutcome);
+    }
+
+    [Fact]
     public async Task Start_WithEmptyData_InitializesCurrentBotDatas()
     {
         var settings = CreateSettingsService();
@@ -496,6 +564,24 @@ public class MultiRunJobTests
     private sealed class ImmediateStartCondition : StartCondition
     {
         public override bool Verify(Job job) => true;
+    }
+
+    private sealed class BlockingProxySource : ProxySource
+    {
+        public TaskCompletionSource ReloadStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public override async Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            ReloadStarted.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return [];
+        }
+    }
+
+    private sealed class EmptyProxySource : ProxySource
+    {
+        public override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult<IEnumerable<Proxy>>([]);
     }
 
     private sealed class FakeMultiRunParallelizer

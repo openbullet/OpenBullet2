@@ -328,7 +328,10 @@ public class ProxyCheckJob : Job
         }
         catch (TaskCanceledException)
         {
-            // ignored
+            if (LastRunOutcome == JobLastRunOutcome.None && pendingLastRunOutcome != JobLastRunOutcome.None)
+            {
+                LastRunOutcome = pendingLastRunOutcome;
+            }
         }
         catch (Exception ex)
         {
@@ -343,7 +346,7 @@ public class ProxyCheckJob : Job
         finally
         {
             // Reset the status
-            if (Status == JobStatus.Starting)
+            if (Status is JobStatus.Starting or JobStatus.Waiting)
             {
                 Status = JobStatus.Idle;
                 OnStatusChanged?.Invoke(this, Status);
@@ -364,6 +367,11 @@ public class ProxyCheckJob : Job
             if (parallelizer is not null)
             {
                 await parallelizer.Stop().ConfigureAwait(false);
+            }
+
+            if (startCts is not null)
+            {
+                await startCts.CancelAsync();
             }
         }
         catch (Exception ex)

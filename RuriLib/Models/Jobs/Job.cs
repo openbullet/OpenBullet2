@@ -77,13 +77,15 @@ public abstract class Job : IDisposable
 
         StartTime = DateTime.Now;
 
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token);
+
         try
         {
             logger?.LogInfo(Id, "Waiting for the start condition to be verified...");
-            await StartCondition.WaitUntilVerified(this, cts.Token);
+            await StartCondition.WaitUntilVerified(this, linkedCts.Token);
             logger?.LogInfo(Id, "Finished waiting");
         }
-        catch (TaskCanceledException)
+        catch (TaskCanceledException) when (cts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
             // The token has been cancelled, skip the wait
             logger?.LogInfo(Id, "The wait has been manually skipped");

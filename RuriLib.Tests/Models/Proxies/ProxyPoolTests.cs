@@ -175,6 +175,19 @@ public class ProxyPoolTests
     }
 
     [Fact]
+    public async Task ReloadAllOnceAsync_EmptySource_ReturnsFalseWithoutBackoff()
+    {
+        ListProxySource source = new([]);
+
+        using var pool = new ProxyPool([source]);
+
+        var reloaded = await pool.ReloadAllOnceAsync(false, TestCancellationToken);
+
+        Assert.False(reloaded);
+        Assert.Empty(pool.Proxies);
+    }
+
+    [Fact]
     public async Task Proxies_SnapshotEnumeration_RemainsValidAfterShuffle()
     {
         ListProxySource source = new([

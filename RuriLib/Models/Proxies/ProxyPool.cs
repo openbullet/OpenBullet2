@@ -221,18 +221,32 @@ public class ProxyPool : IDisposable
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that completes when the reload process finishes.</returns>
     public async Task ReloadAllAsync(bool shuffle = true, CancellationToken cancellationToken = default)
+        => await ReloadAllAsync(shuffle, retryOnEmpty: true, cancellationToken).ConfigureAwait(false);
+
+    /// <summary>
+    /// Reloads all proxies in the pool from the provided sources once, without retry backoff if no proxies are found.
+    /// </summary>
+    /// <param name="shuffle">Whether the loaded proxies should be shuffled.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns><see langword="true"/> if at least one source returned proxies.</returns>
+    public Task<bool> ReloadAllOnceAsync(bool shuffle = true, CancellationToken cancellationToken = default)
+        => ReloadAllAsync(shuffle, retryOnEmpty: false, cancellationToken);
+
+    private async Task<bool> ReloadAllAsync(bool shuffle, bool retryOnEmpty, CancellationToken cancellationToken)
     {
         if (isReloadingProxies)
         {
-            return;
+            return false;
         }
 
         var locker = asyncLocker ?? throw new ObjectDisposedException(nameof(ProxyPool));
+        var reloadLockAcquired = false;
 
         try
         {
             isReloadingProxies = true;
             await locker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+            reloadLockAcquired = true;
             var currentTry = 0;
             var currentBackoff = minBackoff;
 
@@ -242,7 +256,12 @@ public class ProxyPool : IDisposable
                 // Try to reload proxies from sources
                 if (await TryReloadAllAsync(shuffle, cancellationToken).ConfigureAwait(false))
                 {
-                    return;
+                    return true;
+                }
+
+                if (!retryOnEmpty)
+                {
+                    return false;
                 }
 
                 // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
@@ -252,11 +271,17 @@ public class ProxyPool : IDisposable
                 currentTry++;
                 currentBackoff *= 2;
             }
+
+            return false;
         }
         finally
         {
             isReloadingProxies = false;
-            locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+
+            if (reloadLockAcquired)
+            {
+                locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+            }
         }
     }
 
@@ -267,6 +292,10 @@ public class ProxyPool : IDisposable
             try
             {
                 return await source.GetAllAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {

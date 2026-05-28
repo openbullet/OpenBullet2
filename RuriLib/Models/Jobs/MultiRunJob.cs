@@ -323,12 +323,15 @@ public class MultiRunJob : Job
                     {
                         if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                         {
+                            var reloadLockAcquired = false;
+                            var locker = input.BotData.AsyncLocker
+                                ?? throw new InvalidOperationException("The async locker was not initialized");
+
                             try
                             {
-                                var locker = input.BotData.AsyncLocker
-                                    ?? throw new InvalidOperationException("The async locker was not initialized");
                                 await locker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
                                     input.BotData.CancellationToken).ConfigureAwait(false);
+                                reloadLockAcquired = true;
 
                                 botData.Proxy = inputProxyPool.GetProxy(input.Job.ConcurrentProxyMode, input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
 
@@ -339,9 +342,10 @@ public class MultiRunJob : Job
                             }
                             finally
                             {
-                                var locker = input.BotData.AsyncLocker
-                                    ?? throw new InvalidOperationException("The async locker was not initialized");
-                                locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                                if (reloadLockAcquired)
+                                {
+                                    locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                                }
                             }
                         }
                         else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
@@ -633,16 +637,22 @@ public class MultiRunJob : Job
                     new ProxyPoolOptions { AllowedTypes = config.Settings.ProxySettings.AllowedProxyTypes };
                 proxyPool = new ProxyPool(ProxySources, proxyPoolOptions,
                     logger is null ? null : new JobLoggerAdapter<ProxyPool>(logger, Id));
+                var reloadLockAcquired = false;
+                var locker = asyncLocker;
                 try
                 {
-                    await asyncLocker
+                    await locker
                         .Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), linkedCts.Token)
                         .ConfigureAwait(false);
-                    await proxyPool.ReloadAllAsync(ShuffleProxies, linkedCts.Token).ConfigureAwait(false);
+                    reloadLockAcquired = true;
+                    await proxyPool.ReloadAllOnceAsync(ShuffleProxies, linkedCts.Token).ConfigureAwait(false);
                 }
                 finally
                 {
-                    asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                    if (reloadLockAcquired)
+                    {
+                        locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                    }
                 }
 
                 if (!proxyPool.Proxies.Any())
@@ -833,7 +843,10 @@ public class MultiRunJob : Job
         }
         catch (TaskCanceledException)
         {
-            // ignored
+            if (LastRunOutcome == JobLastRunOutcome.None && pendingLastRunOutcome != JobLastRunOutcome.None)
+            {
+                LastRunOutcome = pendingLastRunOutcome;
+            }
         }
         catch (Exception ex)
         {
@@ -848,10 +861,17 @@ public class MultiRunJob : Job
         finally
         {
             // Reset the status
-            if (Status is JobStatus.Starting)
+            if (Status is JobStatus.Starting or JobStatus.Waiting)
             {
                 Status = JobStatus.Idle;
                 OnStatusChanged?.Invoke(this, Status);
+            }
+
+            if (Status is JobStatus.Idle
+                && (LastRunOutcome is JobLastRunOutcome.Aborted or JobLastRunOutcome.Stopped or JobLastRunOutcome.Failed
+                    || pendingLastRunOutcome is JobLastRunOutcome.Aborted or JobLastRunOutcome.Stopped))
+            {
+                DisposeRunResources();
             }
 
             startCts?.Dispose();
@@ -863,12 +883,18 @@ public class MultiRunJob : Job
     public override async Task Stop()
     {
         pendingLastRunOutcome = JobLastRunOutcome.Stopped;
+        var disposeRunResources = Status is not (JobStatus.Starting or JobStatus.Waiting);
 
         try
         {
             if (parallelizer is not null)
             {
                 await parallelizer.Stop().ConfigureAwait(false);
+            }
+
+            if (startCts is not null)
+            {
+                await startCts.CancelAsync();
             }
         }
         catch (Exception ex)
@@ -885,7 +911,11 @@ public class MultiRunJob : Job
 
             StopTimers();
             logger?.LogInfo(Id, "Execution stopped");
-            DisposeRunResources();
+
+            if (disposeRunResources)
+            {
+                DisposeRunResources();
+            }
         }
     }
 
@@ -893,6 +923,7 @@ public class MultiRunJob : Job
     public override async Task Abort()
     {
         pendingLastRunOutcome = JobLastRunOutcome.Aborted;
+        var disposeRunResources = Status is not (JobStatus.Starting or JobStatus.Waiting);
 
         try
         {
@@ -920,7 +951,11 @@ public class MultiRunJob : Job
 
             StopTimers();
             logger?.LogInfo(Id, "Execution aborted");
-            DisposeRunResources();
+
+            if (disposeRunResources)
+            {
+                DisposeRunResources();
+            }
         }
     }
 
@@ -977,15 +1012,20 @@ public class MultiRunJob : Job
     {
         var locker = asyncLocker ?? throw new InvalidOperationException("The job has not been initialized yet");
         var pool = proxyPool ?? throw new InvalidOperationException("The proxy pool has not been initialized yet");
+        var reloadLockAcquired = false;
 
         try
         {
             await locker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+            reloadLockAcquired = true;
             await pool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
         }
         finally
         {
-            locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+            if (reloadLockAcquired)
+            {
+                locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+            }
         }
 
     }
@@ -1071,10 +1111,13 @@ public class MultiRunJob : Job
                 // Unhandled exceptions will crash the process
                 if (proxyPool is not null)
                 {
+                    var reloadLockAcquired = false;
+
                     try
                     {
                         await locker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
                             .ConfigureAwait(false);
+                        reloadLockAcquired = true;
                         await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
                     }
                     catch
@@ -1083,7 +1126,10 @@ public class MultiRunJob : Job
                     }
                     finally
                     {
-                        locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                        if (reloadLockAcquired)
+                        {
+                            locker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                        }
                     }
                 }
             }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
