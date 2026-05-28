@@ -2,17 +2,10 @@
 
 <div class="logs-container" *ngIf="hitLog !== null">
     <ng-container *ngIf="hitLog.log !== null">
-        <div *ngFor="let log of hitLog.log"
-            class="log-message"
-            [ngStyle]="{ color: log.color }">{{ log.message }}
-            <button class="button button-secondary mt-2 d-block"
-                *ngIf="log.canViewAsHtml"
-                pTooltip="View as HTML" tooltipPosition="bottom"
-                (click)="viewAsHtml(log)">
-                <fa-icon [icon]="faWindowMaximize" [fixedWidth]="true"></fa-icon>
-                HTML
-            </button>
-        </div>
+        <app-bot-log-entry
+            *ngFor="let log of hitLog.log"
+            [log]="log"
+            (viewAsHtml)="viewAsHtml($event)" />
     </ng-container>
     <ng-container *ngIf="hitLog.log === null">
         <div class="log-message">
@@ -24,7 +17,7 @@
 
 <p-dialog 
     #viewAsHtmlModal
-    header="HTML Viewer" 
+    header="Content Viewer"
     [(visible)]="viewAsHtmlModalVisible" 
     [modal]="true" 
     [style]="{ width: '80vw' }" 

@@ -6,7 +6,6 @@ import {
   faPlay,
   faSliders,
   faStop,
-  faWindowMaximize,
 } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -46,7 +45,6 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   faCaretRight = faCaretRight;
   faAlignLeft = faAlignLeft;
   faSliders = faSliders;
-  faWindowMaximize = faWindowMaximize;
 
   logs: BotLoggerEntry[] = [];
   variables: VariableDto[] = [];

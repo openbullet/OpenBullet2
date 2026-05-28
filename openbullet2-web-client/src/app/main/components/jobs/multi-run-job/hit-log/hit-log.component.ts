@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MRJHitLogDto } from 'src/app/main/dtos/job/hit-log.dto';
 import { BotLoggerEntry } from 'src/app/main/models/config-debugger-settings';
 import { JobService } from 'src/app/main/services/job.service';
@@ -18,7 +17,6 @@ export class HitLogComponent {
 
   hitLog: MRJHitLogDto | null = null;
 
-  faWindowMaximize = faWindowMaximize;
   viewAsHtmlModalVisible = false;
   html = '';
 

@@ -29,6 +29,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SharedModule } from '../shared/shared.module';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
+import { BotLogEntryComponent } from './components/config/config-debugger/bot-log-entry.component';
 import { ConfigDebuggerComponent } from './components/config/config-debugger/config-debugger.component';
 import { ViewAsHtmlComponent } from './components/config/config-debugger/view-as-html/view-as-html.component';
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
@@ -174,6 +175,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ConfigLolicodeComponent,
     ConfigCsharpComponent,
     ConfigDebuggerComponent,
+    BotLogEntryComponent,
     ViewAsHtmlComponent,
     JobsComponent,
     CreateJobComponent,
