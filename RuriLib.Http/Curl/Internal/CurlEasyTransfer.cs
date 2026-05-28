@@ -84,7 +84,10 @@ internal sealed class CurlEasyTransfer : IDisposable
 
     public CurlResponseData Perform(CancellationToken cancellationToken)
     {
-        var result = CurlNativeMethods.EasyPerform(handle);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        using var multiTransfer = new CurlMultiTransfer(handle);
+        var result = multiTransfer.Perform(cancellationToken);
 
         if (result == CurlCode.Ok)
         {

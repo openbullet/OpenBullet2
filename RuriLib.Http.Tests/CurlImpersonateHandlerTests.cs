@@ -2,6 +2,7 @@ using RuriLib.Http.Curl;
 using RuriLib.Http.Tests.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -92,6 +93,33 @@ public class CurlImpersonateHandlerTests
         var protocols = await CaptureAlpnProtocolsAsync(CurlImpersonateBrowserProfile.Chrome142, HttpVersion.Version20);
 
         Assert.Contains("h2", protocols);
+    }
+
+    [Fact]
+    public async Task SendAsync_CancellationWhileWaitingForResponse_CancelsPromptly()
+    {
+        await using var server = new HangingHttpServer();
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            UseBrowserHeaders = false,
+            AllowAutoRedirect = false
+        });
+        using var client = new HttpClient(handler)
+        {
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestCancellationToken);
+
+        var requestTask = client.GetAsync(server.Uri, cts.Token);
+        await server.RequestReceived.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken);
+
+        var sw = Stopwatch.StartNew();
+        cts.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await requestTask);
+        sw.Stop();
+
+        Assert.True(sw.Elapsed < TimeSpan.FromMilliseconds(500),
+            $"Cancellation took {sw.ElapsedMilliseconds} ms");
     }
 
     private static async Task<string> CaptureJa3Async(CurlImpersonateBrowserProfile profile)
@@ -221,6 +249,84 @@ public class CurlImpersonateHandlerTests
                 if (request.Contains("\r\n\r\n", StringComparison.Ordinal))
                 {
                     return request;
+                }
+            }
+        }
+    }
+
+    private sealed class HangingHttpServer : IAsyncDisposable
+    {
+        private readonly TcpListener listener = new(IPAddress.Loopback, 0);
+        private readonly CancellationTokenSource cts = new();
+        private readonly Task acceptTask;
+        private readonly TaskCompletionSource requestReceived =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public HangingHttpServer()
+        {
+            listener.Start();
+            acceptTask = Task.Run(AcceptAsync);
+        }
+
+        public Uri Uri => new($"http://127.0.0.1:{((IPEndPoint)listener.LocalEndpoint).Port}/");
+
+        public Task RequestReceived => requestReceived.Task;
+
+        public async ValueTask DisposeAsync()
+        {
+            await cts.CancelAsync();
+            listener.Stop();
+
+            try
+            {
+                await acceptTask;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (SocketException)
+            {
+            }
+            finally
+            {
+                cts.Dispose();
+            }
+        }
+
+        private async Task AcceptAsync()
+        {
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TestCancellationToken);
+            using var client = await listener.AcceptTcpClientAsync(linkedCts.Token);
+            await using var stream = client.GetStream();
+
+            await ReadHeadersAsync(stream, linkedCts.Token);
+            requestReceived.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, linkedCts.Token);
+        }
+
+        private static async Task ReadHeadersAsync(Stream stream, CancellationToken cancellationToken)
+        {
+            var buffer = new byte[4096];
+            using var ms = new MemoryStream();
+
+            while (true)
+            {
+                var bytesRead = await stream.ReadAsync(buffer, cancellationToken);
+
+                if (bytesRead == 0)
+                {
+                    throw new InvalidOperationException("Client closed the connection before sending headers");
+                }
+
+                ms.Write(buffer, 0, bytesRead);
+                var request = Encoding.ASCII.GetString(ms.ToArray());
+
+                if (request.Contains("\r\n\r\n", StringComparison.Ordinal))
+                {
+                    return;
                 }
             }
         }

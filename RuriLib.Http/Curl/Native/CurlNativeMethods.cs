@@ -31,6 +31,39 @@ internal static partial class CurlNativeMethods
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static partial CurlCode EasyPerform(nint handle);
 
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_init")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint MultiInit();
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_cleanup")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiCleanup(nint multiHandle);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_add_handle")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiAddHandle(nint multiHandle, nint easyHandle);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_remove_handle")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiRemoveHandle(nint multiHandle, nint easyHandle);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_perform")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiPerform(nint multiHandle, out int runningHandles);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_poll")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiPoll(nint multiHandle, nint extraFds, uint extraNfds,
+        int timeoutMilliseconds, out int numFds);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_wakeup")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial CurlMultiCode MultiWakeup(nint multiHandle);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_info_read")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint MultiInfoRead(nint multiHandle, out int messagesInQueue);
+
     // curl_easy_getinfo is variadic in C. This overload covers long outputs.
     [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_getinfo")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
@@ -54,6 +87,10 @@ internal static partial class CurlNativeMethods
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static partial nint EasyStrError(CurlCode code);
 
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_multi_strerror")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial nint MultiStrError(CurlMultiCode code);
+
     [LibraryImport(CurlLibrary, EntryPoint = "curl_slist_append")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static partial nint SlistAppend(nint list, nint value);
@@ -68,11 +105,26 @@ internal static partial class CurlNativeMethods
         return ptr == 0 ? code.ToString() : Marshal.PtrToStringUTF8(ptr) ?? code.ToString();
     }
 
+    public static string GetMultiErrorString(CurlMultiCode code)
+    {
+        var ptr = MultiStrError(code);
+        return ptr == 0 ? code.ToString() : Marshal.PtrToStringUTF8(ptr) ?? code.ToString();
+    }
+
     public static void ThrowIfError(CurlCode code, string operation)
     {
         if (code != CurlCode.Ok)
         {
             throw new InvalidOperationException($"{operation} failed with code {(int)code} ({GetErrorString(code)})");
+        }
+    }
+
+    public static void ThrowIfMultiError(CurlMultiCode code, string operation)
+    {
+        if (code != CurlMultiCode.Ok)
+        {
+            throw new InvalidOperationException(
+                $"{operation} failed with code {(int)code} ({GetMultiErrorString(code)})");
         }
     }
 }
