@@ -165,6 +165,12 @@ public class LoliCodeBlockInstanceTests
             $"myCapture = \"hello\";{_nl}data.MarkForCapture(nameof(myCapture));{_nl}", ["myCapture"]);
 
     [Fact]
+    public void BuildScriptSnippet_SetVarInStepByStepMode_TracksDebuggerVariable()
+        => Assert.Equal(
+            $"string myString = \"hello\";{_nl}data.SetDebuggerVariable(nameof(myString), myString);{_nl}",
+            CreateBlock("SET VAR myString \"hello\"").BuildScriptSnippet([], stepByStep: true));
+
+    [Fact]
     public void BuildScriptSnippet_SetUseProxy_LowercasesBoolean()
         => AssertTranspilesTo("SET USEPROXY TRUE", $"data.UseProxy = true;{_nl}");
 

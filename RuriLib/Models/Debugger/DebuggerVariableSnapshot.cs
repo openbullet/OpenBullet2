@@ -59,7 +59,33 @@ public static class DebuggerVariableSnapshot
         ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(entries);
 
-        data.SetObject(ObjectKey, entries.ToList(), disposeExisting: false);
+        var snapshot = GetOrCreateEntries(data);
+        snapshot.Clear();
+
+        foreach (var entry in entries)
+        {
+            snapshot[entry.Name] = entry;
+        }
+    }
+
+    /// <summary>
+    /// Stores or replaces a single debugger-visible variable.
+    /// </summary>
+    public static void Set<T>(BotData data, string name, T value)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+        GetOrCreateEntries(data)[name] = DebuggerVariableSnapshotEntry.Create(name, value);
+    }
+
+    /// <summary>
+    /// Clears all stored debugger-visible variables for a bot.
+    /// </summary>
+    public static void Clear(BotData data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        GetOrCreateEntries(data).Clear();
     }
 
     /// <summary>
@@ -68,6 +94,20 @@ public static class DebuggerVariableSnapshot
     public static IReadOnlyList<DebuggerVariableSnapshotEntry> Get(BotData data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        return data.TryGetObject<List<DebuggerVariableSnapshotEntry>>(ObjectKey) ?? [];
+        return GetOrCreateEntries(data).Values.ToList();
+    }
+
+    private static Dictionary<string, DebuggerVariableSnapshotEntry> GetOrCreateEntries(BotData data)
+    {
+        var snapshot = data.TryGetObject<Dictionary<string, DebuggerVariableSnapshotEntry>>(ObjectKey);
+
+        if (snapshot is not null)
+        {
+            return snapshot;
+        }
+
+        snapshot = new Dictionary<string, DebuggerVariableSnapshotEntry>(StringComparer.Ordinal);
+        data.SetObject(ObjectKey, snapshot, disposeExisting: false);
+        return snapshot;
     }
 }

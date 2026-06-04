@@ -3,6 +3,7 @@ using RuriLib.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
+using RuriLib.Models.Debugger;
 using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
@@ -173,6 +174,17 @@ public class BotData
         => Logger.Log($"Assigned value to variable '{name}'", LogColors.Yellow);
 
     /// <summary>
+    /// Updates the latest debugger-visible value for a variable.
+    /// </summary>
+    /// <param name="name">The variable name.</param>
+    /// <param name="value">The current variable value.</param>
+    public void SetDebuggerVariable<T>(string name, T value)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        DebuggerVariableSnapshot.Set(this, name, value);
+    }
+
+    /// <summary>
     /// Marks a variable so that future assignments are captured.
     /// </summary>
     /// <param name="name">The variable name.</param>
@@ -239,6 +251,7 @@ public class BotData
         COOKIES.Clear();
         HEADERS.Clear();
         MarkedForCapture.Clear();
+        DebuggerVariableSnapshot.Clear(this);
 
         // We need to dispose of objects created in each retry, because jobs should
         // only dispose of them after the bot has completed its work

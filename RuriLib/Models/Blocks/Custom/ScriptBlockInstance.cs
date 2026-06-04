@@ -226,10 +226,11 @@ public class ScriptBlockInstance : BlockInstance
 
                 foreach (var output in OutputVariables)
                 {
-                    statements.Add(CreateOutputAssignmentStatement(
+                    statements.AddRange(CreateOutputAssignmentStatements(
                         context.DefinedVariables,
                         output,
-                        BuildJintOutputExpression(engineName, output)));
+                        BuildJintOutputExpression(engineName, output),
+                        context.StepByStep));
                 }
 
                 break;
@@ -267,10 +268,11 @@ public class ScriptBlockInstance : BlockInstance
 
                 foreach (var output in OutputVariables)
                 {
-                    statements.Add(CreateOutputAssignmentStatement(
+                    statements.AddRange(CreateOutputAssignmentStatements(
                         context.DefinedVariables,
                         output,
-                        BuildNodeOutputExpression(resultName, output)));
+                        BuildNodeOutputExpression(resultName, output),
+                        context.StepByStep));
                 }
 
                 break;
@@ -298,10 +300,11 @@ public class ScriptBlockInstance : BlockInstance
 
                 foreach (var output in OutputVariables)
                 {
-                    statements.Add(CreateOutputAssignmentStatement(
+                    statements.AddRange(CreateOutputAssignmentStatements(
                         context.DefinedVariables,
                         output,
-                        BuildIronPythonOutputExpression(scopeName, output)));
+                        BuildIronPythonOutputExpression(scopeName, output),
+                        context.StepByStep));
                 }
 
                 break;
@@ -321,10 +324,11 @@ public class ScriptBlockInstance : BlockInstance
 
                 foreach (var output in OutputVariables)
                 {
-                    statements.Add(CreateOutputAssignmentStatement(
+                    statements.AddRange(CreateOutputAssignmentStatements(
                         context.DefinedVariables,
                         output,
-                        BuildPythonOutputExpression(resultName, output)));
+                        BuildPythonOutputExpression(resultName, output),
+                        context.StepByStep));
                 }
 
                 break;
@@ -468,10 +472,11 @@ public class ScriptBlockInstance : BlockInstance
             "global::RuriLib.Models.Variables.VariableType",
             OutputVariables.Select(o => Expr($"global::RuriLib.Models.Variables.VariableType.{o.Type}")).ToArray());
 
-    private StatementSyntax CreateOutputAssignmentStatement(
+    private IEnumerable<StatementSyntax> CreateOutputAssignmentStatements(
         List<string> definedVariables,
         OutputVariable output,
-        ExpressionSyntax expression)
+        ExpressionSyntax expression,
+        bool trackDebuggerVariable)
     {
         var assignToExistingVariable = definedVariables.Contains(output.Name);
 
@@ -480,10 +485,17 @@ public class ScriptBlockInstance : BlockInstance
             definedVariables.Add(output.Name);
         }
 
-        return BlockSyntaxFactory.CreateVariableDeclarationOrAssignment(
+        yield return BlockSyntaxFactory.CreateVariableDeclarationOrAssignment(
             GetRuntimeTypeName(output.Type),
             output.Name,
             expression,
             assignToExistingVariable);
+
+        if (trackDebuggerVariable && !output.Name.StartsWith("globals.", StringComparison.Ordinal))
+        {
+            yield return BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                "SetDebuggerVariable",
+                output.Name);
+        }
     }
 }

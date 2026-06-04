@@ -6,6 +6,7 @@ using RuriLib.Models.Environment;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -270,6 +271,86 @@ public class ConfigDebuggerTests
 
         Assert.Equal(ConfigDebuggerStatus.Idle, debugger.Status);
         Assert.Contains(debugger.Options.Variables, v => v.Name == "secondVar" && v.AsString() == "second");
+    }
+
+    [Fact]
+    public async Task Run_LoliCodeConfigInStepByStepMode_DoesNotLoseScopedVariablesAfterConditionalBlock()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        using var debugger = CreateDebugger(new Config
+        {
+            Id = "lolicode-conditional-scope-test",
+            Mode = ConfigMode.LoliCode,
+            LoliCodeScript = """
+                IF true
+                BLOCK:ConstantString
+                value = "inner"
+                => VAR @token
+                ENDBLOCK
+                END
+                BLOCK:ConstantString
+                value = "outer"
+                => VAR @result
+                ENDBLOCK
+                """
+        }, new DebuggerOptions
+        {
+            TestData = "test",
+            WordlistType = "Default",
+            StepByStep = true
+        });
+
+        debugger.RuriLibSettings = CreateSettingsService();
+        debugger.RNGProvider = new global::RuriLib.Providers.RandomNumbers.DefaultRNGProvider();
+        debugger.PluginRepo = CreatePluginRepository();
+
+        var waitingCount = 0;
+        debugger.StatusChanged += (_, status) =>
+        {
+            if (status == ConfigDebuggerStatus.WaitingForStep)
+            {
+                Interlocked.Increment(ref waitingCount);
+            }
+        };
+
+        var runTask = debugger.Run();
+        await WaitForStepCountAsync(expectedCount: 1, () => waitingCount, cancellationToken);
+        Assert.Equal(ConfigDebuggerStatus.WaitingForStep, debugger.Status);
+        Assert.Empty(debugger.Options.Variables);
+        Assert.True(debugger.TryTakeStep());
+
+        await WaitForStepCountAsync(expectedCount: 2, () => waitingCount, cancellationToken);
+        Assert.Equal(ConfigDebuggerStatus.WaitingForStep, debugger.Status);
+        Assert.Contains(debugger.Options.Variables, v => v.Name == "token" && v.AsString() == "inner");
+        Assert.DoesNotContain(debugger.Options.Variables, v => v.Name == "result");
+        Assert.True(debugger.TryTakeStep());
+
+        await WaitForStepCountAsync(expectedCount: 3, () => waitingCount, cancellationToken);
+        Assert.Equal(ConfigDebuggerStatus.WaitingForStep, debugger.Status);
+        Assert.Contains(debugger.Options.Variables, v => v.Name == "token" && v.AsString() == "inner");
+        Assert.DoesNotContain(debugger.Options.Variables, v => v.Name == "result");
+        Assert.True(debugger.TryTakeStep());
+
+        await runTask.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
+
+        Assert.Equal(ConfigDebuggerStatus.Idle, debugger.Status);
+        Assert.Contains(debugger.Options.Variables, v => v.Name == "token" && v.AsString() == "inner");
+        Assert.Contains(debugger.Options.Variables, v => v.Name == "result" && v.AsString() == "outer");
+    }
+
+    private static async Task WaitForStepCountAsync(
+        int expectedCount,
+        Func<int> getCurrentCount,
+        CancellationToken cancellationToken)
+    {
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(TimeSpan.FromSeconds(5));
+
+        while (getCurrentCount() < expectedCount)
+        {
+            await Task.Delay(50, cts.Token);
+        }
     }
 
     private static ConfigDebugger CreateDebugger(DebuggerOptions? options = null)

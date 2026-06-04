@@ -20,13 +20,20 @@ public class BlockSyntaxGenerationContext
     public ConfigSettings Settings { get; }
 
     /// <summary>
+    /// Gets a value indicating whether step-by-step debugger instrumentation should be emitted.
+    /// </summary>
+    public bool StepByStep { get; }
+
+    /// <summary>
     /// Initializes a new <see cref="BlockSyntaxGenerationContext"/>.
     /// </summary>
     /// <param name="definedVariables">The variables already declared in the generated script.</param>
     /// <param name="settings">The config settings that influence generated code.</param>
-    public BlockSyntaxGenerationContext(List<string> definedVariables, ConfigSettings settings)
+    /// <param name="stepByStep">Whether step-by-step debugger instrumentation should be emitted.</param>
+    public BlockSyntaxGenerationContext(List<string> definedVariables, ConfigSettings settings, bool stepByStep = false)
     {
         DefinedVariables = definedVariables ?? throw new ArgumentNullException(nameof(definedVariables));
         Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        StepByStep = stepByStep;
     }
 }

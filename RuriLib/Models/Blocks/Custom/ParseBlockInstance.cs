@@ -196,14 +196,24 @@ public class ParseBlockInstance(ParseBlockDescriptor descriptor) : BlockInstance
                 SyntaxFactory.List([BlockSyntaxFactory.CreateSafeModeCatchClause()]),
                 null));
 
+            if (ShouldTrackDebuggerVariable(context))
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                    "SetDebuggerVariable",
+                    OutputVariable));
+            }
+
             return statements;
         }
 
-        statements.AddRange(CreateExecutionStatements(context.DefinedVariables, false));
+        statements.AddRange(CreateExecutionStatements(context.DefinedVariables, false, context.StepByStep));
         return statements;
     }
 
-    private List<StatementSyntax> CreateExecutionStatements(List<string> definedVariables, bool assignmentOnly)
+    private List<StatementSyntax> CreateExecutionStatements(
+        List<string> definedVariables,
+        bool assignmentOnly,
+        bool trackDebuggerVariable = false)
     {
         var statements = new List<StatementSyntax>();
         var outputType = Recursive ? "List<string>" : "string";
@@ -225,6 +235,13 @@ public class ParseBlockInstance(ParseBlockDescriptor descriptor) : BlockInstance
 
         statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("LogVariableAssignment", OutputVariable));
 
+        if (trackDebuggerVariable && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal))
+        {
+            statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                "SetDebuggerVariable",
+                OutputVariable));
+        }
+
         if (IsCapture)
         {
             statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("MarkForCapture", OutputVariable));
@@ -232,6 +249,9 @@ public class ParseBlockInstance(ParseBlockDescriptor descriptor) : BlockInstance
 
         return statements;
     }
+
+    private bool ShouldTrackDebuggerVariable(BlockSyntaxGenerationContext context)
+        => context.StepByStep && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal);
 
     private ExpressionSyntax BuildParseInvocationExpression()
     {

@@ -68,6 +68,8 @@ public class Stack2CSharpTranspilerTests
         Assert.Equal(1, script.Split("// BLOCK:").Count(segment => segment.Contains("Substring")));
         Assert.DoesNotContain("data.ExecutingBlock(\"\");", script);
         Assert.Contains("// BLOCK: Parse", script);
+        Assert.Contains("data.SetDebuggerVariable(nameof(sharedValue), sharedValue);", script);
+        Assert.DoesNotContain("DebuggerVariableSnapshot.Store", script);
         Assert.Equal(1, script.Split("await data.Stepper.WaitForStepAsync(data.CancellationToken);").Length - 1);
     }
 

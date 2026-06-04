@@ -160,10 +160,17 @@ public class AutoBlockInstance : BlockInstance
                 SyntaxFactory.List([BlockSyntaxFactory.CreateSafeModeCatchClause()]),
                 null));
 
+            if (ShouldTrackDebuggerVariable(context))
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                    "SetDebuggerVariable",
+                    OutputVariable));
+            }
+
             return statements;
         }
 
-        statements.AddRange(CreateExecutionStatements(context.DefinedVariables, false));
+        statements.AddRange(CreateExecutionStatements(context.DefinedVariables, false, context.StepByStep));
         return statements;
     }
 
@@ -194,7 +201,10 @@ public class AutoBlockInstance : BlockInstance
         _ => throw new NotSupportedException()
     };
 
-    private List<StatementSyntax> CreateExecutionStatements(List<string> declaredVariables, bool assignmentOnly)
+    private List<StatementSyntax> CreateExecutionStatements(
+        List<string> declaredVariables,
+        bool assignmentOnly,
+        bool trackDebuggerVariable = false)
     {
         var statements = new List<StatementSyntax>();
 
@@ -218,6 +228,13 @@ public class AutoBlockInstance : BlockInstance
 
             statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("LogVariableAssignment", OutputVariable));
 
+            if (trackDebuggerVariable && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal))
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                    "SetDebuggerVariable",
+                    OutputVariable));
+            }
+
             if (IsCapture)
             {
                 statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("MarkForCapture", OutputVariable));
@@ -230,6 +247,11 @@ public class AutoBlockInstance : BlockInstance
 
         return statements;
     }
+
+    private bool ShouldTrackDebuggerVariable(BlockSyntaxGenerationContext context)
+        => context.StepByStep
+            && Descriptor.ReturnType.HasValue
+            && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal);
 
     private ExpressionSyntax BuildMethodInvocationExpression()
     {

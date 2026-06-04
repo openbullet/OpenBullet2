@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Bots;
@@ -26,11 +24,9 @@ public class Stack2CSharpTranspiler
     {
         var declaredVariables = typeof(BotData).GetProperties()
             .Select(p => $"data.{p.Name}").ToList();
-        var syntaxContext = new BlockSyntaxGenerationContext(declaredVariables, settings);
-
+        var validBlocks = blocks.Where(b => !b.Disabled).ToList();
         using var writer = new StringWriter();
-
-        var validBlocks = blocks.Where(b => !b.Disabled);
+        var syntaxContext = new BlockSyntaxGenerationContext(declaredVariables, settings, stepByStep);
 
         foreach (var block in validBlocks)
         {
@@ -39,7 +35,7 @@ public class Stack2CSharpTranspiler
 
             if (block is LoliCodeBlockInstance loliCodeBlock)
             {
-                writer.Write(loliCodeBlock.BuildScriptSnippet(syntaxContext.DefinedVariables));
+                writer.Write(loliCodeBlock.BuildScriptSnippet(syntaxContext.DefinedVariables, stepByStep));
             }
             else
             {
@@ -51,29 +47,10 @@ public class Stack2CSharpTranspiler
             // If in step by step mode, and if not the last block, check if pause was requested
             if (stepByStep && block != validBlocks.Last())
             {
-                WriteDebuggerVariableSnapshot(writer, syntaxContext.DefinedVariables);
                 writer.WriteLine("await data.Stepper.WaitForStepAsync(data.CancellationToken);");
             }
         }
 
         return writer.ToString();
-    }
-
-    private static void WriteDebuggerVariableSnapshot(StringWriter writer, IEnumerable<string> definedVariables)
-    {
-        var snapshotVariables = definedVariables
-            .Where(v => !v.Contains('.'))
-            .Distinct()
-            .ToList();
-
-        writer.WriteLine("global::RuriLib.Models.Debugger.DebuggerVariableSnapshot.Store(data, new global::RuriLib.Models.Debugger.DebuggerVariableSnapshotEntry[]");
-        writer.WriteLine("{");
-
-        foreach (var variable in snapshotVariables)
-        {
-            writer.WriteLine($"    global::RuriLib.Models.Debugger.DebuggerVariableSnapshotEntry.Create(nameof({variable}), {variable}),");
-        }
-
-        writer.WriteLine("});");
     }
 }

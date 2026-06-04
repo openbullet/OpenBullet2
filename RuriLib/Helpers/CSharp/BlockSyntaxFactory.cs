@@ -118,6 +118,20 @@ public static class BlockSyntaxFactory
             Arg(CreateNameofExpression(variableName))).Stmt();
 
     /// <summary>
+    /// Creates a call on <c>data</c> with a <c>nameof(variableName)</c> argument plus the variable value.
+    /// </summary>
+    public static ExpressionStatementSyntax CreateDataMethodWithNameofAndValueArgument(
+        string methodName,
+        string variableName)
+        => CreateMemberInvocation(
+            Id("data"),
+            methodName,
+            [
+                Arg(CreateNameofExpression(variableName)),
+                Arg(Expr(variableName))
+            ]).Stmt();
+
+    /// <summary>
     /// Creates the standard safe-mode catch clause used by generated blocks.
     /// </summary>
     public static CatchClauseSyntax CreateSafeModeCatchClause()

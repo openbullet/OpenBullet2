@@ -344,7 +344,15 @@ public class ConfigDebugger : IDisposable
                 }
 
                 var state = await script.RunAsync(scriptGlobals, null, cts.Token).ConfigureAwait(false);
-                UpdateVariablesFromScriptState(state);
+
+                if (Options.StepByStep)
+                {
+                    UpdateVariablesFromStepByStepState(state);
+                }
+                else
+                {
+                    UpdateVariablesFromScriptState(state);
+                }
             }
             else
             {
@@ -556,6 +564,54 @@ public class ConfigDebugger : IDisposable
                 var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
 
                 if (type.HasValue && !scriptVar.Name.StartsWith("tmp_"))
+                {
+                    var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
+                    variable.MarkedForCapture = data?.MarkedForCapture.Contains(scriptVar.Name) == true;
+                    updatedVariables.Add(variable);
+                }
+            }
+            catch
+            {
+                // The type is not supported, e.g. it was generated using custom C# code and not blocks
+                // so we just disregard it
+            }
+        }
+
+        SetVariables(updatedVariables);
+    }
+
+    private void UpdateVariablesFromStepByStepState(ScriptState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+
+        var updatedVariables = new List<Variable>();
+        var snapshotVariableNames = new HashSet<string>(StringComparer.Ordinal);
+
+        if (data is not null)
+        {
+            foreach (var snapshot in DebuggerVariableSnapshot.Get(data))
+            {
+                var variable = TryCreateVariable(snapshot);
+
+                if (variable is null)
+                {
+                    continue;
+                }
+
+                updatedVariables.Add(variable);
+                snapshotVariableNames.Add(variable.Name);
+            }
+        }
+
+        foreach (var scriptVar in state.Variables)
+        {
+            try
+            {
+                var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
+
+                if (type.HasValue
+                    && !scriptVar.Name.StartsWith("tmp_")
+                    && !snapshotVariableNames.Contains(scriptVar.Name))
                 {
                     var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
                     variable.MarkedForCapture = data?.MarkedForCapture.Contains(scriptVar.Name) == true;

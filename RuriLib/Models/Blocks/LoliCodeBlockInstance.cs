@@ -52,10 +52,12 @@ public class LoliCodeBlockInstance : BlockInstance
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        return StatementSyntaxParser.ParseStatements(BuildScriptSnippet(context.DefinedVariables));
+        return StatementSyntaxParser.ParseStatements(BuildScriptSnippet(
+            context.DefinedVariables,
+            context.StepByStep));
     }
 
-    internal string BuildScriptSnippet(List<string> definedVariables)
+    internal string BuildScriptSnippet(List<string> definedVariables, bool stepByStep = false)
     {
         ArgumentNullException.ThrowIfNull(definedVariables);
 
@@ -69,7 +71,7 @@ public class LoliCodeBlockInstance : BlockInstance
             try
             {
                 // Try to read it as a LoliCode-exclusive statement
-                writer.WriteLine(TranspileStatement(trimmedLine, definedVariables));
+                writer.WriteLine(TranspileStatement(trimmedLine, definedVariables, stepByStep));
             }
             catch (NotSupportedException)
             {
@@ -81,7 +83,7 @@ public class LoliCodeBlockInstance : BlockInstance
         return writer.ToString();
     }
 
-    private string TranspileStatement(string input, List<string> definedVariables)
+    private string TranspileStatement(string input, List<string> definedVariables, bool stepByStep)
     {
         Match match;
 
@@ -91,11 +93,17 @@ public class LoliCodeBlockInstance : BlockInstance
         {
             if (definedVariables.Contains(match.Groups[2].Value))
             {
-                return $"{match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
+                return AppendDebuggerTracking(
+                    $"{match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();",
+                    match.Groups[2].Value,
+                    stepByStep);
             }
 
             definedVariables.Add(match.Groups[2].Value);
-            return $"string {match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
+            return AppendDebuggerTracking(
+                $"string {match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();",
+                match.Groups[2].Value,
+                stepByStep);
         }
 
         // (RESOURCES) TAKE
@@ -104,11 +112,17 @@ public class LoliCodeBlockInstance : BlockInstance
         {
             if (definedVariables.Contains(match.Groups[3].Value))
             {
-                return $"{match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
+                return AppendDebuggerTracking(
+                    $"{match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});",
+                    match.Groups[3].Value,
+                    stepByStep);
             }
 
             definedVariables.Add(match.Groups[3].Value);
-            return $"List<string> {match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
+            return AppendDebuggerTracking(
+                $"List<string> {match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});",
+                match.Groups[3].Value,
+                stepByStep);
         }
 
         // CODE LABEL
@@ -261,11 +275,17 @@ public class LoliCodeBlockInstance : BlockInstance
         {
             if (definedVariables.Contains(match.Groups[1].Value))
             {
-                return $"{match.Groups[1].Value} = {match.Groups[2].Value};";
+                return AppendDebuggerTracking(
+                    $"{match.Groups[1].Value} = {match.Groups[2].Value};",
+                    match.Groups[1].Value,
+                    stepByStep);
             }
 
             definedVariables.Add(match.Groups[1].Value);
-            return $"string {match.Groups[1].Value} = {match.Groups[2].Value};";
+            return AppendDebuggerTracking(
+                $"string {match.Groups[1].Value} = {match.Groups[2].Value};",
+                match.Groups[1].Value,
+                stepByStep);
         }
 
         // SET CAP
@@ -274,11 +294,17 @@ public class LoliCodeBlockInstance : BlockInstance
         {
             if (definedVariables.Contains(match.Groups[1].Value))
             {
-                return $"{match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
+                return AppendDebuggerTracking(
+                    $"{match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
+                    match.Groups[1].Value,
+                    stepByStep);
             }
 
             definedVariables.Add(match.Groups[1].Value);
-            return $"string {match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
+            return AppendDebuggerTracking(
+                $"string {match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
+                match.Groups[1].Value,
+                stepByStep);
         }
 
         // SET USEPROXY
@@ -320,4 +346,14 @@ public class LoliCodeBlockInstance : BlockInstance
 
         throw new NotSupportedException();
     }
+
+    private static string AppendDebuggerTracking(string statement, string variableName, bool stepByStep)
+        => stepByStep && IsDebuggerTrackableVariable(variableName)
+            ? $"{statement}{NewLine}data.SetDebuggerVariable(nameof({variableName}), {variableName});"
+            : statement;
+
+    private static bool IsDebuggerTrackableVariable(string variableName)
+        => !string.IsNullOrWhiteSpace(variableName)
+            && !variableName.Contains('.')
+            && !variableName.StartsWith("globals.", StringComparison.Ordinal);
 }
