@@ -3,6 +3,12 @@ import contextvars
 import sys
 from typing import Any
 
+if sys.platform == "win32":
+    try:
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    except Exception:
+        pass
+
 # Cache compiled wrappers by script hash plus signature so repeated executions
 # skip the dynamic exec/compile step.
 _CACHE: dict[str, Any] = {}
