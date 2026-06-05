@@ -279,19 +279,19 @@ public static partial class LineParser
         return input[0] == c;
     }
 
-    [GeneratedRegex("[A-Za-z0-9+/=]+")]
+    [GeneratedRegex("^[A-Za-z0-9+/=]+(?=\\s|$)")]
     private static partial Regex ByteArrayRegex();
 
-    [GeneratedRegex("\"(\\\\.|[^\\\"])*\"")]
+    [GeneratedRegex("^\"(\\\\.|[^\\\"])*\"")]
     private static partial Regex LiteralRegex();
 
-    [GeneratedRegex("^([Tt]rue|[Ff]alse)")]
+    [GeneratedRegex("^(?:[Tt]rue|[Ff]alse)(?=\\s|$)")]
     private static partial Regex BoolRegex();
 
-    [GeneratedRegex("-?[0-9][0-9.]*")]
+    [GeneratedRegex("^-?[0-9][0-9.]*(?=\\s|$)")]
     private static partial Regex FloatRegex();
 
-    [GeneratedRegex("-?[0-9]+")]
+    [GeneratedRegex("^-?[0-9]+(?=\\s|$)")]
     private static partial Regex IntRegex();
 
     [GeneratedRegex("[^ ]+")]

@@ -33,6 +33,13 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseLiteral_NonLiteralPrefix_Throws()
+    {
+        var input = "x \"hello\"";
+        Assert.Throws<Exception>(() => LineParser.ParseLiteral(ref input));
+    }
+
+    [Fact]
     public void ParseInt_NormalInt_Parse()
     {
         var input = "42 is the answer";
@@ -41,11 +48,25 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseInt_NonIntPrefix_Throws()
+    {
+        var input = "abc 42";
+        Assert.Throws<Exception>(() => LineParser.ParseInt(ref input));
+    }
+
+    [Fact]
     public void ParseFloat_NormalFloat_Parse()
     {
         var input = "3.14 is not pi";
         Assert.Equal(3.14f, LineParser.ParseFloat(ref input));
         Assert.Equal("is not pi", input);
+    }
+
+    [Fact]
+    public void ParseFloat_NonFloatPrefix_Throws()
+    {
+        var input = "abc 3.14";
+        Assert.Throws<Exception>(() => LineParser.ParseFloat(ref input));
     }
 
     [Fact]
@@ -93,11 +114,25 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseByteArray_NonBase64Prefix_Throws()
+    {
+        var input = "* /wA=";
+        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+    }
+
+    [Fact]
     public void ParseBool_NormalBool_Parse()
     {
         var input = "True indeed";
         Assert.True(LineParser.ParseBool(ref input));
         Assert.Equal("indeed", input);
+    }
+
+    [Fact]
+    public void ParseBool_PrefixedToken_Throws()
+    {
+        var input = "TrueValue";
+        Assert.Throws<Exception>(() => LineParser.ParseBool(ref input));
     }
 
     [Fact]
