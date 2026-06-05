@@ -285,7 +285,7 @@ public static partial class LineParser
     [GeneratedRegex("\"(\\\\.|[^\\\"])*\"")]
     private static partial Regex LiteralRegex();
 
-    [GeneratedRegex("^([Tt]rue)|([Ff]alse)")]
+    [GeneratedRegex("^([Tt]rue|[Ff]alse)")]
     private static partial Regex BoolRegex();
 
     [GeneratedRegex("-?[0-9][0-9.]*")]
