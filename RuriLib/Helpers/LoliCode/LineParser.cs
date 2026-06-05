@@ -1,7 +1,7 @@
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.LoliCode;
@@ -261,20 +261,39 @@ public static partial class LineParser
     {
         input = input.TrimStart();
 
-        var match = LiteralRegex().Match(input);
-
-        if (!match.Success)
+        if (input.Length == 0 || input[0] != '"')
         {
             throw new Exception("Could not parse the literal");
         }
 
-        input = input[match.Value.Length..];
-        input = input.TrimStart();
+        var literal = new StringBuilder();
 
-        // Wrap the literal in json and deserialize it
-        var json = $"{{\"literal\":{match.Value}}}";
-        var obj = JObject.Parse(json);
-        return (string)obj["literal"]!;
+        for (var i = 1; i < input.Length; i++)
+        {
+            if (input[i] == '"')
+            {
+                input = input[(i + 1)..];
+                input = input.TrimStart();
+                return literal.ToString();
+            }
+
+            if (input[i] != '\\')
+            {
+                literal.Append(input[i]);
+                continue;
+            }
+
+            i++;
+
+            if (i >= input.Length)
+            {
+                throw new Exception("Could not parse the literal");
+            }
+
+            literal.Append(ParseEscapeSequence(input, ref i));
+        }
+
+        throw new Exception("Could not parse the literal");
     }
 
     private static void EnsureHasInput(string input, string message)
@@ -294,9 +313,6 @@ public static partial class LineParser
     [GeneratedRegex("^[A-Za-z0-9+/=]+(?=\\s|$)")]
     private static partial Regex ByteArrayRegex();
 
-    [GeneratedRegex("^\"(\\\\.|[^\\\"])*\"")]
-    private static partial Regex LiteralRegex();
-
     [GeneratedRegex("^(?:[Tt]rue|[Ff]alse)(?=\\s|$)")]
     private static partial Regex BoolRegex();
 
@@ -306,4 +322,77 @@ public static partial class LineParser
     [GeneratedRegex("^-?[0-9]+(?=\\s|$)")]
     private static partial Regex IntRegex();
 
+    private static string ParseEscapeSequence(string input, ref int index)
+        => input[index] switch
+        {
+            '"' => "\"",
+            '\\' => "\\",
+            '/' => "/",
+            '\'' => "'",
+            '0' => "\0",
+            'a' => "\a",
+            'b' => "\b",
+            'f' => "\f",
+            'n' => "\n",
+            'r' => "\r",
+            't' => "\t",
+            'v' => "\v",
+            'u' => ParseFixedLengthHexEscape(input, ref index, 4),
+            'U' => ParseFixedLengthHexEscape(input, ref index, 8),
+            'x' => ParseVariableLengthHexEscape(input, ref index),
+            _ => throw new Exception("Could not parse the literal")
+        };
+
+    private static string ParseFixedLengthHexEscape(string input, ref int index, int digits)
+    {
+        if (index + digits >= input.Length)
+        {
+            throw new Exception("Could not parse the literal");
+        }
+
+        var startIndex = index + 1;
+        var hex = input.Substring(startIndex, digits);
+
+        if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
+        {
+            throw new Exception("Could not parse the literal");
+        }
+
+        index += digits;
+
+        if (digits == 8)
+        {
+            return char.ConvertFromUtf32(checked((int)code));
+        }
+
+        return ((char)code).ToString();
+    }
+
+    private static string ParseVariableLengthHexEscape(string input, ref int index)
+    {
+        var startIndex = index + 1;
+        var length = 0;
+
+        while (startIndex + length < input.Length
+            && length < 4
+            && Uri.IsHexDigit(input[startIndex + length]))
+        {
+            length++;
+        }
+
+        if (length == 0)
+        {
+            throw new Exception("Could not parse the literal");
+        }
+
+        var hex = input.Substring(startIndex, length);
+
+        if (!ushort.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
+        {
+            throw new Exception("Could not parse the literal");
+        }
+
+        index += length;
+        return ((char)code).ToString();
+    }
 }

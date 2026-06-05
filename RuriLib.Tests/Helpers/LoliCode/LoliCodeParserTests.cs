@@ -41,6 +41,41 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseLiteral_WriterEscapesRoundTrip_Parse()
+    {
+        var expected = "line\nbreak\tquote\"slash\\";
+        var input = LoliCodeWriter.GetSettingValue(new BlockSetting
+        {
+            InputMode = SettingInputMode.Fixed,
+            FixedSetting = new StringSetting { Value = expected }
+        });
+
+        Assert.Equal(expected, LineParser.ParseLiteral(ref input));
+        Assert.Equal(string.Empty, input);
+    }
+
+    [Fact]
+    public void ParseLiteral_ControlCharacterEscapesRoundTrip_Parse()
+    {
+        var expected = "\0\a\b\f\n\r\t\v";
+        var input = LoliCodeWriter.GetSettingValue(new BlockSetting
+        {
+            InputMode = SettingInputMode.Fixed,
+            FixedSetting = new StringSetting { Value = expected }
+        });
+
+        Assert.Equal(expected, LineParser.ParseLiteral(ref input));
+        Assert.Equal(string.Empty, input);
+    }
+
+    [Fact]
+    public void ParseLiteral_InvalidEscape_Throws()
+    {
+        var input = "\"\\q\"";
+        Assert.Throws<Exception>(() => LineParser.ParseLiteral(ref input));
+    }
+
+    [Fact]
     public void ParseInt_NormalInt_Parse()
     {
         var input = "42 is the answer";
