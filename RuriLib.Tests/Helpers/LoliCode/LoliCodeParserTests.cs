@@ -1,4 +1,5 @@
 using System;
+using RuriLib.Exceptions;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks;
@@ -37,7 +38,7 @@ public class LoliCodeParserTests
     public void ParseLiteral_NonLiteralPrefix_Throws()
     {
         var input = "x \"hello\"";
-        Assert.Throws<Exception>(() => LineParser.ParseLiteral(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseLiteral(ref input));
     }
 
     [Fact]
@@ -72,7 +73,7 @@ public class LoliCodeParserTests
     public void ParseLiteral_InvalidEscape_Throws()
     {
         var input = "\"\\q\"";
-        Assert.Throws<Exception>(() => LineParser.ParseLiteral(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseLiteral(ref input));
     }
 
     [Fact]
@@ -87,7 +88,7 @@ public class LoliCodeParserTests
     public void ParseInt_NonIntPrefix_Throws()
     {
         var input = "abc 42";
-        Assert.Throws<Exception>(() => LineParser.ParseInt(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseInt(ref input));
     }
 
     [Fact]
@@ -102,7 +103,7 @@ public class LoliCodeParserTests
     public void ParseFloat_NonFloatPrefix_Throws()
     {
         var input = "abc 3.14";
-        Assert.Throws<Exception>(() => LineParser.ParseFloat(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseFloat(ref input));
     }
 
     [Fact]
@@ -161,14 +162,14 @@ public class LoliCodeParserTests
     public void ParseList_MissingCommaBetweenItems_Throws()
     {
         var input = "[\"one\" \"two\"]";
-        Assert.Throws<Exception>(() => LineParser.ParseList(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseList(ref input));
     }
 
     [Fact]
     public void ParseList_UnterminatedList_Throws()
     {
         var input = "[\"one\"";
-        Assert.Throws<Exception>(() => LineParser.ParseList(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseList(ref input));
     }
 
     [Fact]
@@ -183,14 +184,14 @@ public class LoliCodeParserTests
     public void ParseByteArray_NonBase64Prefix_Throws()
     {
         var input = "* /wA=";
-        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseByteArray(ref input));
     }
 
     [Fact]
     public void ParseByteArray_InvalidLength_ThrowsWithoutConsumingInput()
     {
         var input = "abc remaining";
-        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseByteArray(ref input));
         Assert.Equal("abc remaining", input);
     }
 
@@ -198,7 +199,7 @@ public class LoliCodeParserTests
     public void ParseByteArray_InvalidPadding_ThrowsWithoutConsumingInput()
     {
         var input = "ab=c remaining";
-        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseByteArray(ref input));
         Assert.Equal("ab=c remaining", input);
     }
 
@@ -214,7 +215,7 @@ public class LoliCodeParserTests
     public void ParseBool_PrefixedToken_Throws()
     {
         var input = "TrueValue";
-        Assert.Throws<Exception>(() => LineParser.ParseBool(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseBool(ref input));
     }
 
     [Fact]
@@ -262,14 +263,14 @@ public class LoliCodeParserTests
     public void ParseDictionary_MissingCommaBetweenEntries_Throws()
     {
         var input = "{ (\"key1\", \"value1\") (\"key2\", \"value2\") }";
-        Assert.Throws<Exception>(() => LineParser.ParseDictionary(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseDictionary(ref input));
     }
 
     [Fact]
     public void ParseDictionary_UnterminatedDictionary_Throws()
     {
         var input = "{ (\"key1\", \"value1\")";
-        Assert.Throws<Exception>(() => LineParser.ParseDictionary(ref input));
+        Assert.Throws<LineParsingException>(() => LineParser.ParseDictionary(ref input));
     }
 
     [Fact]

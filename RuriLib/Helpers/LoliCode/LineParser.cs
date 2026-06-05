@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using RuriLib.Exceptions;
 
 namespace RuriLib.Helpers.LoliCode;
 
@@ -15,10 +16,10 @@ public static class LineParser
     /// </summary>
     public static string ParseToken(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var token = ParseToken(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var token = ParseToken(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return token;
     }
 
@@ -27,10 +28,10 @@ public static class LineParser
     /// </summary>
     public static int ParseInt(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var value = ParseInt(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var value = ParseInt(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return value;
     }
 
@@ -39,10 +40,10 @@ public static class LineParser
     /// </summary>
     public static float ParseFloat(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var value = ParseFloat(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var value = ParseFloat(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return value;
     }
 
@@ -56,10 +57,10 @@ public static class LineParser
             return [];
         }
 
-        input = input.TrimStart();
-        var index = 0;
-        var bytes = ParseByteArray(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var bytes = ParseByteArray(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return bytes;
     }
 
@@ -68,10 +69,10 @@ public static class LineParser
     /// </summary>
     public static bool ParseBool(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var value = ParseBool(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var value = ParseBool(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return value;
     }
 
@@ -80,10 +81,10 @@ public static class LineParser
     /// </summary>
     public static List<string> ParseList(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var list = ParseList(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var list = ParseList(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return list;
     }
 
@@ -92,10 +93,10 @@ public static class LineParser
     /// </summary>
     public static Dictionary<string, string> ParseDictionary(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var dict = ParseDictionary(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var dict = ParseDictionary(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return dict;
     }
 
@@ -104,52 +105,52 @@ public static class LineParser
     /// </summary>
     public static string ParseLiteral(ref string input)
     {
-        input = input.TrimStart();
-        var index = 0;
-        var literal = ParseLiteral(input.AsSpan(), ref index);
-        AdvanceInput(ref input, index);
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var literal = ParseLiteral(cursor);
+        AdvanceInput(ref input, cursor.Index);
         return literal;
     }
 
-    private static string ParseToken(ReadOnlySpan<char> input, ref int index)
+    private static string ParseToken(LineParserCursor cursor)
     {
-        var token = ParseTokenSpan(input, ref index, "Could not parse the token");
+        var token = ParseTokenSpan(cursor, "Expected token");
         return token.ToString();
     }
 
-    private static int ParseInt(ReadOnlySpan<char> input, ref int index)
+    private static int ParseInt(LineParserCursor cursor)
     {
-        var token = ParseTokenSpan(input, ref index, "Could not parse the int");
+        var token = ParseTokenSpan(cursor, "Expected int");
 
         if (!IsIntToken(token)
             || !int.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
         {
-            throw new Exception("Could not parse the int");
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid integer token '{token}'");
         }
 
         return value;
     }
 
-    private static float ParseFloat(ReadOnlySpan<char> input, ref int index)
+    private static float ParseFloat(LineParserCursor cursor)
     {
-        var token = ParseTokenSpan(input, ref index, "Could not parse the float");
+        var token = ParseTokenSpan(cursor, "Expected float");
 
         if (!IsFloatToken(token)
             || !float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
         {
-            throw new Exception("Could not parse the float");
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid float token '{token}'");
         }
 
         return value;
     }
 
-    private static byte[] ParseByteArray(ReadOnlySpan<char> input, ref int index)
+    private static byte[] ParseByteArray(LineParserCursor cursor)
     {
-        var token = ParseTokenSpan(input, ref index, "Could not parse the byte array");
+        var token = ParseTokenSpan(cursor, "Expected byte array");
 
         if (!IsBase64Token(token))
         {
-            throw new Exception("Could not parse the byte array");
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, "Invalid base64 byte array");
         }
 
         var decodedLength = GetDecodedBase64Length(token);
@@ -157,104 +158,98 @@ public static class LineParser
 
         if (!Convert.TryFromBase64Chars(token, bytes, out var bytesWritten) || bytesWritten != decodedLength)
         {
-            throw new Exception("Could not parse the byte array");
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, "Invalid base64 byte array");
         }
 
         return bytes;
     }
 
-    private static bool ParseBool(ReadOnlySpan<char> input, ref int index)
+    private static bool ParseBool(LineParserCursor cursor)
     {
-        var token = ParseTokenSpan(input, ref index, "Could not parse the bool");
+        var token = ParseTokenSpan(cursor, "Expected bool");
 
         if (!bool.TryParse(token, out var value))
         {
-            throw new Exception("Could not parse the bool");
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid bool token '{token}'");
         }
 
         return value;
     }
 
-    private static List<string> ParseList(ReadOnlySpan<char> input, ref int index)
+    private static List<string> ParseList(LineParserCursor cursor)
     {
-        const string errorMessage = "Could not parse the list";
-
-        ExpectChar(input, ref index, '[', errorMessage);
-        SkipWhitespace(input, ref index);
+        ExpectChar(cursor, '[', "to start a list");
+        cursor.SkipWhitespace();
 
         var list = new List<string>();
-        if (TryConsumeChar(input, ref index, ']'))
+        if (cursor.TryConsume(']'))
         {
             return list;
         }
 
         while (true)
         {
-            list.Add(ParseLiteral(input, ref index));
-            SkipWhitespace(input, ref index);
+            list.Add(ParseLiteral(cursor));
+            cursor.SkipWhitespace();
 
-            if (TryConsumeChar(input, ref index, ']'))
+            if (cursor.TryConsume(']'))
             {
                 return list;
             }
 
-            ExpectChar(input, ref index, ',', errorMessage);
-            SkipWhitespace(input, ref index);
+            ExpectChar(cursor, ',', "between list items");
+            cursor.SkipWhitespace();
         }
     }
 
-    private static Dictionary<string, string> ParseDictionary(ReadOnlySpan<char> input, ref int index)
+    private static Dictionary<string, string> ParseDictionary(LineParserCursor cursor)
     {
-        const string errorMessage = "Could not parse the dictionary";
-
-        ExpectChar(input, ref index, '{', errorMessage);
-        SkipWhitespace(input, ref index);
+        ExpectChar(cursor, '{', "to start a dictionary");
+        cursor.SkipWhitespace();
 
         var dict = new Dictionary<string, string>();
-        if (TryConsumeChar(input, ref index, '}'))
+        if (cursor.TryConsume('}'))
         {
             return dict;
         }
 
         while (true)
         {
-            ExpectChar(input, ref index, '(', errorMessage);
-            SkipWhitespace(input, ref index);
+            ExpectChar(cursor, '(', "to start a dictionary entry");
+            cursor.SkipWhitespace();
 
-            var key = ParseLiteral(input, ref index);
-            SkipWhitespace(input, ref index);
+            var key = ParseLiteral(cursor);
+            cursor.SkipWhitespace();
 
-            ExpectChar(input, ref index, ',', errorMessage);
-            SkipWhitespace(input, ref index);
+            ExpectChar(cursor, ',', "between dictionary key and value");
+            cursor.SkipWhitespace();
 
-            var value = ParseLiteral(input, ref index);
-            SkipWhitespace(input, ref index);
+            var value = ParseLiteral(cursor);
+            cursor.SkipWhitespace();
 
             dict.Add(key, value);
 
-            ExpectChar(input, ref index, ')', errorMessage);
-            SkipWhitespace(input, ref index);
+            ExpectChar(cursor, ')', "to close a dictionary entry");
+            cursor.SkipWhitespace();
 
-            if (TryConsumeChar(input, ref index, '}'))
+            if (cursor.TryConsume('}'))
             {
                 return dict;
             }
 
-            ExpectChar(input, ref index, ',', errorMessage);
-            SkipWhitespace(input, ref index);
+            ExpectChar(cursor, ',', "between dictionary entries");
+            cursor.SkipWhitespace();
         }
     }
 
-    private static string ParseLiteral(ReadOnlySpan<char> input, ref int index)
+    private static string ParseLiteral(LineParserCursor cursor)
     {
-        const string errorMessage = "Could not parse the literal";
-
-        ExpectChar(input, ref index, '"', errorMessage);
+        ExpectChar(cursor, '"', "to start a string literal");
 
         var literal = new StringBuilder();
-        while (index < input.Length)
+        while (!cursor.IsAtEnd)
         {
-            var c = input[index++];
+            var c = cursor.Read();
 
             if (c == '"')
             {
@@ -267,36 +262,39 @@ public static class LineParser
                 continue;
             }
 
-            literal.Append(ParseEscapeSequence(input, ref index));
+            literal.Append(ParseEscapeSequence(cursor));
         }
 
-        throw new Exception(errorMessage);
+        throw cursor.CreateException("Unterminated string literal");
     }
 
-    private static ReadOnlySpan<char> ParseTokenSpan(ReadOnlySpan<char> input, ref int index, string errorMessage)
+    private static ReadOnlySpan<char> ParseTokenSpan(LineParserCursor cursor, string errorMessage)
     {
-        var startIndex = index;
-        while (index < input.Length && !char.IsWhiteSpace(input[index]))
+        var startIndex = cursor.Index;
+        cursor.LastTokenStartIndex = startIndex;
+
+        while (!cursor.IsAtEnd && !char.IsWhiteSpace(cursor.Current))
         {
-            index++;
+            cursor.Advance();
         }
 
-        if (index == startIndex)
+        if (cursor.Index == startIndex)
         {
-            throw new Exception(errorMessage);
+            throw cursor.CreateException(errorMessage);
         }
 
-        return input[startIndex..index];
+        return cursor.Input.AsSpan(startIndex, cursor.Index - startIndex);
     }
 
-    private static string ParseEscapeSequence(ReadOnlySpan<char> input, ref int index)
+    private static string ParseEscapeSequence(LineParserCursor cursor)
     {
-        if (index >= input.Length)
+        if (cursor.IsAtEnd)
         {
-            throw new Exception("Could not parse the literal");
+            throw cursor.CreateException("Unterminated escape sequence");
         }
 
-        var escapedChar = input[index++];
+        var escapeIndex = cursor.Index;
+        var escapedChar = cursor.Read();
 
         return escapedChar switch
         {
@@ -312,28 +310,28 @@ public static class LineParser
             'r' => "\r",
             't' => "\t",
             'v' => "\v",
-            'u' => ParseFixedLengthHexEscape(input, ref index, 4),
-            'U' => ParseFixedLengthHexEscape(input, ref index, 8),
-            'x' => ParseVariableLengthHexEscape(input, ref index),
-            _ => throw new Exception("Could not parse the literal")
+            'u' => ParseFixedLengthHexEscape(cursor, 4),
+            'U' => ParseFixedLengthHexEscape(cursor, 8),
+            'x' => ParseVariableLengthHexEscape(cursor),
+            _ => throw cursor.CreateExceptionAt(escapeIndex, $"Invalid escape sequence '\\{escapedChar}'")
         };
     }
 
-    private static string ParseFixedLengthHexEscape(ReadOnlySpan<char> input, ref int index, int digits)
+    private static string ParseFixedLengthHexEscape(LineParserCursor cursor, int digits)
     {
-        if (index + digits > input.Length)
+        if (cursor.Index + digits > cursor.Input.Length)
         {
-            throw new Exception("Could not parse the literal");
+            throw cursor.CreateException($"Expected {digits} hex digits in escape sequence");
         }
 
-        var hex = input[index..(index + digits)];
+        var hex = cursor.Input.AsSpan(cursor.Index, digits);
 
         if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
         {
-            throw new Exception("Could not parse the literal");
+            throw cursor.CreateException($"Invalid hex escape sequence '{hex}'");
         }
 
-        index += digits;
+        cursor.Advance(digits);
 
         if (digits == 8)
         {
@@ -343,31 +341,31 @@ public static class LineParser
         return ((char)code).ToString();
     }
 
-    private static string ParseVariableLengthHexEscape(ReadOnlySpan<char> input, ref int index)
+    private static string ParseVariableLengthHexEscape(LineParserCursor cursor)
     {
-        var startIndex = index;
+        var startIndex = cursor.Index;
         var length = 0;
 
-        while (startIndex + length < input.Length
+        while (startIndex + length < cursor.Input.Length
             && length < 4
-            && Uri.IsHexDigit(input[startIndex + length]))
+            && Uri.IsHexDigit(cursor.Input[startIndex + length]))
         {
             length++;
         }
 
         if (length == 0)
         {
-            throw new Exception("Could not parse the literal");
+            throw cursor.CreateException("Expected at least one hex digit in escape sequence");
         }
 
-        var hex = input.Slice(startIndex, length);
+        var hex = cursor.Input.AsSpan(startIndex, length);
 
         if (!ushort.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
         {
-            throw new Exception("Could not parse the literal");
+            throw cursor.CreateException($"Invalid hex escape sequence '{hex}'");
         }
 
-        index += length;
+        cursor.Advance(length);
         return ((char)code).ToString();
     }
 
@@ -377,31 +375,12 @@ public static class LineParser
         input = input.TrimStart();
     }
 
-    private static void SkipWhitespace(ReadOnlySpan<char> input, ref int index)
+    private static void ExpectChar(LineParserCursor cursor, char c, string expectation)
     {
-        while (index < input.Length && char.IsWhiteSpace(input[index]))
+        if (!cursor.TryConsume(c))
         {
-            index++;
+            throw cursor.CreateException($"Expected '{c}' {expectation}, found {cursor.DescribeCurrent()}");
         }
-    }
-
-    private static void ExpectChar(ReadOnlySpan<char> input, ref int index, char c, string errorMessage)
-    {
-        if (!TryConsumeChar(input, ref index, c))
-        {
-            throw new Exception(errorMessage);
-        }
-    }
-
-    private static bool TryConsumeChar(ReadOnlySpan<char> input, ref int index, char c)
-    {
-        if (index >= input.Length || input[index] != c)
-        {
-            return false;
-        }
-
-        index++;
-        return true;
     }
 
     private static bool IsIntToken(ReadOnlySpan<char> token)
@@ -515,5 +494,68 @@ public static class LineParser
         }
 
         return (token.Length / 4) * 3 - padding;
+    }
+
+    private sealed class LineParserCursor
+    {
+        public LineParserCursor(string input)
+            => Input = input;
+
+        public string Input { get; }
+
+        public int Index { get; private set; }
+
+        public int LastTokenStartIndex { get; set; }
+
+        public bool IsAtEnd => Index >= Input.Length;
+
+        public char Current => Input[Index];
+
+        public int ColumnNumber
+            => GetColumnNumber(Index);
+
+        public void Advance(int count = 1) => Index += count;
+
+        public char Read() => Input[Index++];
+
+        public void SkipWhitespace()
+        {
+            while (!IsAtEnd && char.IsWhiteSpace(Current))
+            {
+                Advance();
+            }
+        }
+
+        public bool TryConsume(char c)
+        {
+            if (IsAtEnd || Current != c)
+            {
+                return false;
+            }
+
+            Advance();
+            return true;
+        }
+
+        public LineParsingException CreateException(string message)
+            => new(ColumnNumber, message);
+
+        public LineParsingException CreateExceptionAt(int index, string message)
+            => new(GetColumnNumber(index), message);
+
+        public string DescribeCurrent()
+            => IsAtEnd ? "end of line" : $"'{Current}'";
+
+        private int GetColumnNumber(int index)
+        {
+            var lineStartIndex = index;
+
+            while (lineStartIndex > 0 && Input[lineStartIndex - 1] is not '\r' and not '\n')
+            {
+                lineStartIndex--;
+            }
+
+            return index - lineStartIndex + 1;
+        }
     }
 }
