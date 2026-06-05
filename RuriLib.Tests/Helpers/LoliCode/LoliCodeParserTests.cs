@@ -151,6 +151,13 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseList_WithNewlines_Parse()
+    {
+        var input = "[\n  \"one\",\n  \"two\"\n]";
+        Assert.Equal(new[] { "one", "two" }, LineParser.ParseList(ref input).ToArray());
+    }
+
+    [Fact]
     public void ParseList_MissingCommaBetweenItems_Throws()
     {
         var input = "[\"one\" \"two\"]";
@@ -237,6 +244,15 @@ public class LoliCodeParserTests
     public void ParseDictionary_MultiEntry_Parse()
     {
         var input = "{ (\"key1\", \"value1\"), (\"key2\", \"value2\") }";
+        var dict = LineParser.ParseDictionary(ref input);
+        Assert.Equal("value1", dict["key1"]);
+        Assert.Equal("value2", dict["key2"]);
+    }
+
+    [Fact]
+    public void ParseDictionary_WithNewlines_Parse()
+    {
+        var input = "{\n  (\"key1\", \"value1\"),\n  (\"key2\", \"value2\")\n}";
         var dict = LineParser.ParseDictionary(ref input);
         Assert.Equal("value1", dict["key1"]);
         Assert.Equal("value2", dict["key2"]);

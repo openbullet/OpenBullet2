@@ -17,22 +17,10 @@ public static partial class LineParser
     public static string ParseToken(ref string input)
     {
         input = input.TrimStart();
-
-        var tokenLength = 0;
-        while (tokenLength < input.Length && !char.IsWhiteSpace(input[tokenLength]))
-        {
-            tokenLength++;
-        }
-
-        if (tokenLength == 0)
-        {
-            throw new Exception("Could not parse the token");
-        }
-
-        var token = input[..tokenLength];
-        input = input[tokenLength..];
+        var index = 0;
+        var token = ParseToken(input, ref index);
+        input = input[index..];
         input = input.TrimStart();
-
         return token;
     }
 
@@ -87,38 +75,10 @@ public static partial class LineParser
         }
 
         input = input.TrimStart();
-
-        var tokenLength = 0;
-        while (tokenLength < input.Length && !char.IsWhiteSpace(input[tokenLength]))
-        {
-            tokenLength++;
-        }
-
-        if (tokenLength == 0)
-        {
-            throw new Exception("Could not parse the byte array");
-        }
-
-        var token = input[..tokenLength];
-
-        if (!IsBase64Token(token))
-        {
-            throw new Exception("Could not parse the byte array");
-        }
-
-        byte[] bytes;
-        try
-        {
-            bytes = Convert.FromBase64String(token);
-        }
-        catch (FormatException)
-        {
-            throw new Exception("Could not parse the byte array");
-        }
-
-        input = input[tokenLength..];
+        var index = 0;
+        var bytes = ParseByteArray(input, ref index);
+        input = input[index..];
         input = input.TrimStart();
-
         return bytes;
     }
 
@@ -148,46 +108,10 @@ public static partial class LineParser
     public static List<string> ParseList(ref string input)
     {
         input = input.TrimStart();
-
-        var list = new List<string>();
-
-        // Syntax of a list of strings: ["one", "two"]
-        if (!StartsWith(ref input, '['))
-        {
-            throw new Exception("Could not parse the list");
-        }
-
-        input = input[1..];
+        var index = 0;
+        var list = ParseList(input, ref index);
+        input = input[index..];
         input = input.TrimStart();
-
-        // "one", "two"]
-        while (!StartsWith(ref input, ']'))
-        {
-            EnsureHasInput(input, "Could not parse the list");
-
-            list.Add(ParseLiteral(ref input));
-            input = input.TrimStart();
-
-            EnsureHasInput(input, "Could not parse the list");
-
-            if (input[0] == ']')
-            {
-                continue;
-            }
-
-            if (input[0] != ',')
-            {
-                throw new Exception("Could not parse the list");
-            }
-
-            input = input[1..];
-            input = input.TrimStart();
-        }
-
-        // Parse the final ]
-        input = input[1..];
-        input = input.TrimStart();
-
         return list;
     }
 
@@ -197,81 +121,10 @@ public static partial class LineParser
     public static Dictionary<string, string> ParseDictionary(ref string input)
     {
         input = input.TrimStart();
-
-        var dict = new Dictionary<string, string>();
-
-        // Syntax of a dictionary of strings: { ("key1", "value1"), ("key2", "value2") }
-        if (!StartsWith(ref input, '{'))
-        {
-            throw new Exception("Could not parse the dictionary");
-        }
-
-        input = input[1..];
+        var index = 0;
+        var dict = ParseDictionary(input, ref index);
+        input = input[index..];
         input = input.TrimStart();
-
-        // ("key1", "value1"), ("key2", "value2") }
-        while (!StartsWith(ref input, '}'))
-        {
-            EnsureHasInput(input, "Could not parse the dictionary");
-
-            if (input[0] != '(')
-            {
-                throw new Exception("Could not parse the dictionary");
-            }
-
-            input = input[1..];
-            input = input.TrimStart();
-
-            // "key1", "value1"), ("key2", "value2") }
-            var key = ParseLiteral(ref input);
-
-            EnsureHasInput(input, "Could not parse the dictionary");
-
-            // , "value1"), ("key2", "value2") }
-            if (input[0] != ',')
-            {
-                throw new Exception("Could not parse the dictionary");
-            }
-
-            input = input[1..];
-            input = input.TrimStart();
-
-            // "value1"), ("key2", "value2") }
-            var value = ParseLiteral(ref input);
-
-            dict.Add(key, value);
-
-            EnsureHasInput(input, "Could not parse the dictionary");
-
-            if (input[0] != ')')
-            {
-                throw new Exception("Could not parse the dictionary");
-            }
-
-            // Parse the )
-            input = input[1..];
-            input = input.TrimStart();
-
-            EnsureHasInput(input, "Could not parse the dictionary");
-
-            if (input[0] == '}')
-            {
-                continue;
-            }
-
-            if (input[0] != ',')
-            {
-                throw new Exception("Could not parse the dictionary");
-            }
-
-            input = input[1..];
-            input = input.TrimStart();
-        }
-
-        // Parse the final }
-        input = input[1..];
-        input = input.TrimStart();
-
         return dict;
     }
 
@@ -281,54 +134,144 @@ public static partial class LineParser
     public static string ParseLiteral(ref string input)
     {
         input = input.TrimStart();
+        var index = 0;
+        var literal = ParseLiteral(input, ref index);
+        input = input[index..];
+        input = input.TrimStart();
+        return literal;
+    }
 
-        if (input.Length == 0 || input[0] != '"')
+    private static string ParseToken(string input, ref int index)
+    {
+        var startIndex = index;
+        while (index < input.Length && !char.IsWhiteSpace(input[index]))
         {
-            throw new Exception("Could not parse the literal");
+            index++;
         }
 
-        var literal = new StringBuilder();
-
-        for (var i = 1; i < input.Length; i++)
+        if (index == startIndex)
         {
-            if (input[i] == '"')
+            throw new Exception("Could not parse the token");
+        }
+
+        return input[startIndex..index];
+    }
+
+    private static byte[] ParseByteArray(string input, ref int index)
+    {
+        var token = ParseToken(input, ref index);
+
+        if (!IsBase64Token(token))
+        {
+            throw new Exception("Could not parse the byte array");
+        }
+
+        try
+        {
+            return Convert.FromBase64String(token);
+        }
+        catch (FormatException)
+        {
+            throw new Exception("Could not parse the byte array");
+        }
+    }
+
+    private static List<string> ParseList(string input, ref int index)
+    {
+        const string errorMessage = "Could not parse the list";
+
+        ExpectChar(input, ref index, '[', errorMessage);
+        SkipWhitespace(input, ref index);
+
+        var list = new List<string>();
+        if (TryConsumeChar(input, ref index, ']'))
+        {
+            return list;
+        }
+
+        while (true)
+        {
+            list.Add(ParseLiteral(input, ref index));
+            SkipWhitespace(input, ref index);
+
+            if (TryConsumeChar(input, ref index, ']'))
             {
-                input = input[(i + 1)..];
-                input = input.TrimStart();
+                return list;
+            }
+
+            ExpectChar(input, ref index, ',', errorMessage);
+            SkipWhitespace(input, ref index);
+        }
+    }
+
+    private static Dictionary<string, string> ParseDictionary(string input, ref int index)
+    {
+        const string errorMessage = "Could not parse the dictionary";
+
+        ExpectChar(input, ref index, '{', errorMessage);
+        SkipWhitespace(input, ref index);
+
+        var dict = new Dictionary<string, string>();
+        if (TryConsumeChar(input, ref index, '}'))
+        {
+            return dict;
+        }
+
+        while (true)
+        {
+            ExpectChar(input, ref index, '(', errorMessage);
+            SkipWhitespace(input, ref index);
+
+            var key = ParseLiteral(input, ref index);
+            SkipWhitespace(input, ref index);
+
+            ExpectChar(input, ref index, ',', errorMessage);
+            SkipWhitespace(input, ref index);
+
+            var value = ParseLiteral(input, ref index);
+            SkipWhitespace(input, ref index);
+
+            dict.Add(key, value);
+
+            ExpectChar(input, ref index, ')', errorMessage);
+            SkipWhitespace(input, ref index);
+
+            if (TryConsumeChar(input, ref index, '}'))
+            {
+                return dict;
+            }
+
+            ExpectChar(input, ref index, ',', errorMessage);
+            SkipWhitespace(input, ref index);
+        }
+    }
+
+    private static string ParseLiteral(string input, ref int index)
+    {
+        const string errorMessage = "Could not parse the literal";
+
+        ExpectChar(input, ref index, '"', errorMessage);
+
+        var literal = new StringBuilder();
+        while (index < input.Length)
+        {
+            var c = input[index++];
+
+            if (c == '"')
+            {
                 return literal.ToString();
             }
 
-            if (input[i] != '\\')
+            if (c != '\\')
             {
-                literal.Append(input[i]);
+                literal.Append(c);
                 continue;
             }
 
-            i++;
-
-            if (i >= input.Length)
-            {
-                throw new Exception("Could not parse the literal");
-            }
-
-            literal.Append(ParseEscapeSequence(input, ref i));
+            literal.Append(ParseEscapeSequence(input, ref index));
         }
 
-        throw new Exception("Could not parse the literal");
-    }
-
-    private static void EnsureHasInput(string input, string message)
-    {
-        if (string.IsNullOrEmpty(input))
-        {
-            throw new Exception(message);
-        }
-    }
-
-    private static bool StartsWith(ref string input, char c)
-    {
-        EnsureHasInput(input, $"Could not parse the {(c == '[' ? "list" : c == '{' ? "dictionary" : "input")}");
-        return input[0] == c;
+        throw new Exception(errorMessage);
     }
 
     [GeneratedRegex("^(?:[Tt]rue|[Ff]alse)(?=\\s|$)")]
@@ -341,7 +284,15 @@ public static partial class LineParser
     private static partial Regex IntRegex();
 
     private static string ParseEscapeSequence(string input, ref int index)
-        => input[index] switch
+    {
+        if (index >= input.Length)
+        {
+            throw new Exception("Could not parse the literal");
+        }
+
+        var escapedChar = input[index++];
+
+        return escapedChar switch
         {
             '"' => "\"",
             '\\' => "\\",
@@ -360,16 +311,16 @@ public static partial class LineParser
             'x' => ParseVariableLengthHexEscape(input, ref index),
             _ => throw new Exception("Could not parse the literal")
         };
+    }
 
     private static string ParseFixedLengthHexEscape(string input, ref int index, int digits)
     {
-        if (index + digits >= input.Length)
+        if (index + digits > input.Length)
         {
             throw new Exception("Could not parse the literal");
         }
 
-        var startIndex = index + 1;
-        var hex = input.Substring(startIndex, digits);
+        var hex = input.Substring(index, digits);
 
         if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
         {
@@ -388,7 +339,7 @@ public static partial class LineParser
 
     private static string ParseVariableLengthHexEscape(string input, ref int index)
     {
-        var startIndex = index + 1;
+        var startIndex = index;
         var length = 0;
 
         while (startIndex + length < input.Length
@@ -412,6 +363,33 @@ public static partial class LineParser
 
         index += length;
         return ((char)code).ToString();
+    }
+
+    private static void SkipWhitespace(string input, ref int index)
+    {
+        while (index < input.Length && char.IsWhiteSpace(input[index]))
+        {
+            index++;
+        }
+    }
+
+    private static void ExpectChar(string input, ref int index, char c, string errorMessage)
+    {
+        if (!TryConsumeChar(input, ref index, c))
+        {
+            throw new Exception(errorMessage);
+        }
+    }
+
+    private static bool TryConsumeChar(string input, ref int index, char c)
+    {
+        if (index >= input.Length || input[index] != c)
+        {
+            return false;
+        }
+
+        index++;
+        return true;
     }
 
     private static bool IsBase64Token(string token)
