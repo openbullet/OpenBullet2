@@ -84,9 +84,19 @@ public class LoliCodeBlockInstanceTests
         => AssertTranspilesTo("LOG myVar", $"data.Logger.LogObject(myVar);{_nl}");
 
     [Fact]
+    public void BuildScriptSnippet_LogInterpolatedString_UsesLoliCodeInterpolation()
+        => AssertTranspilesTo("LOG $\"hello <x>\"",
+            $"data.Logger.LogObject($\"hello {{x}}\");{_nl}");
+
+    [Fact]
     public void BuildScriptSnippet_CLog_OutputsColoredLogObject()
         => AssertTranspilesTo("CLOG Tomato \"hello\"",
             $"data.Logger.LogObject(\"hello\", LogColors.Tomato);{_nl}");
+
+    [Fact]
+    public void BuildScriptSnippet_CLogInterpolatedString_UsesLoliCodeInterpolation()
+        => AssertTranspilesTo("CLOG YellowGreen $\"hello <x>\"",
+            $"data.Logger.LogObject($\"hello {{x}}\", LogColors.YellowGreen);{_nl}");
 
     [Fact]
     public void BuildScriptSnippet_While_OutputsLoop()
@@ -170,6 +180,11 @@ public class LoliCodeBlockInstanceTests
             $"myString = \"hello\";{_nl}", ["myString"]);
 
     [Fact]
+    public void BuildScriptSnippet_SetVarInterpolatedString_UsesLoliCodeInterpolation()
+        => AssertTranspilesTo("SET VAR myString $\"hello <x>\"",
+            $"string myString = $\"hello {{x}}\";{_nl}");
+
+    [Fact]
     public void BuildScriptSnippet_SetCap_DeclaresAndMarksVariable()
         => AssertTranspilesTo("SET CAP myCapture \"hello\"",
             $"string myCapture = \"hello\";{_nl}data.MarkForCapture(nameof(myCapture));{_nl}");
@@ -178,6 +193,11 @@ public class LoliCodeBlockInstanceTests
     public void BuildScriptSnippet_SetCap_AssignsAndMarksExistingVariable()
         => AssertTranspilesTo("SET CAP myCapture \"hello\"",
             $"myCapture = \"hello\";{_nl}data.MarkForCapture(nameof(myCapture));{_nl}", ["myCapture"]);
+
+    [Fact]
+    public void BuildScriptSnippet_SetCapInterpolatedString_UsesLoliCodeInterpolation()
+        => AssertTranspilesTo("SET CAP myCapture $\"hello <x>\"",
+            $"string myCapture = $\"hello {{x}}\";{_nl}data.MarkForCapture(nameof(myCapture));{_nl}");
 
     [Fact]
     public void BuildScriptSnippet_SetVarInStepByStepMode_TracksDebuggerVariable()

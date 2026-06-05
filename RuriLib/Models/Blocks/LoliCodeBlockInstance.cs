@@ -9,6 +9,8 @@ using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
+using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Proxies;
 
@@ -182,14 +184,14 @@ public class LoliCodeBlockInstance : BlockInstance
         // LOG myVar => data.Logger.Log(myVar);
         if ((match = Regex.Match(input, "^LOG (.+)$")).Success)
         {
-            return $"data.Logger.LogObject({match.Groups[1].Value});";
+            return $"data.Logger.LogObject({ConvertStatementArgument(match.Groups[1].Value)});";
         }
 
         // CLOG
         // CLOG Tomato "hello" => data.Logger.Log("hello", LogColors.Tomato);
         if ((match = Regex.Match(input, "^CLOG ([A-Za-z]+) (.+)$")).Success)
         {
-            return $"data.Logger.LogObject({match.Groups[2].Value}, LogColors.{match.Groups[1].Value});";
+            return $"data.Logger.LogObject({ConvertStatementArgument(match.Groups[2].Value)}, LogColors.{match.Groups[1].Value});";
         }
 
         // WHILE
@@ -284,17 +286,19 @@ public class LoliCodeBlockInstance : BlockInstance
         // SET VAR myString "hello" => string myString = "hello";
         if ((match = Regex.Match(input, $"^SET VAR @?\"?({ValidTokenRegex})\"? (.+)$")).Success)
         {
+            var value = ConvertStatementArgument(match.Groups[2].Value);
+
             if (definedVariables.Contains(match.Groups[1].Value))
             {
                 return AppendDebuggerTracking(
-                    $"{match.Groups[1].Value} = {match.Groups[2].Value};",
+                    $"{match.Groups[1].Value} = {value};",
                     match.Groups[1].Value,
                     stepByStep);
             }
 
             definedVariables.Add(match.Groups[1].Value);
             return AppendDebuggerTracking(
-                $"string {match.Groups[1].Value} = {match.Groups[2].Value};",
+                $"string {match.Groups[1].Value} = {value};",
                 match.Groups[1].Value,
                 stepByStep);
         }
@@ -303,17 +307,19 @@ public class LoliCodeBlockInstance : BlockInstance
         // SET CAP myCapture "hello" => string myString = "hello"; data.MarkForCapture(nameof(myCapture));
         if ((match = Regex.Match(input, $"^SET CAP @?\"?({ValidTokenRegex})\"? (.+)$")).Success)
         {
+            var value = ConvertStatementArgument(match.Groups[2].Value);
+
             if (definedVariables.Contains(match.Groups[1].Value))
             {
                 return AppendDebuggerTracking(
-                    $"{match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
+                    $"{match.Groups[1].Value} = {value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
                     match.Groups[1].Value,
                     stepByStep);
             }
 
             definedVariables.Add(match.Groups[1].Value);
             return AppendDebuggerTracking(
-                $"string {match.Groups[1].Value} = {match.Groups[2].Value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
+                $"string {match.Groups[1].Value} = {value};{NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));",
                 match.Groups[1].Value,
                 stepByStep);
         }
@@ -384,6 +390,40 @@ public class LoliCodeBlockInstance : BlockInstance
                 ex.Message,
                 ex);
         }
+    }
+
+    private static string ConvertStatementArgument(string argument)
+    {
+        var trimmed = argument.TrimStart();
+
+        if (!trimmed.StartsWith('$'))
+        {
+            return argument;
+        }
+
+        var setting = new BlockSetting();
+        BlockParameter? parameter = trimmed[1..] switch
+        {
+            ['"', ..] => new StringParameter(string.Empty),
+            ['[', ..] => new ListOfStringsParameter(string.Empty),
+            ['{', ..] => new DictionaryOfStringsParameter(string.Empty),
+            _ => null
+        };
+
+        if (parameter is null)
+        {
+            return argument;
+        }
+
+        LoliCodeParser.ParseSettingValue(ref trimmed, setting, parameter);
+
+        if (!string.IsNullOrWhiteSpace(trimmed))
+        {
+            throw new LineParsingException(argument.Length - trimmed.Length + 1,
+                $"Unexpected text after interpolated literal: {trimmed.TrimStart()}");
+        }
+
+        return CSharpWriter.FromSetting(setting);
     }
 
     private static bool IsDebuggerTrackableVariable(string variableName)
