@@ -288,12 +288,12 @@ public static partial class LineParser
     [GeneratedRegex("^([Tt]rue)|([Ff]alse)")]
     private static partial Regex BoolRegex();
 
-    [GeneratedRegex("-?[0-9\\.]*")]
+    [GeneratedRegex("-?[0-9][0-9.]*")]
     private static partial Regex FloatRegex();
 
-    [GeneratedRegex("-?[0-9]*")]
+    [GeneratedRegex("-?[0-9]+")]
     private static partial Regex IntRegex();
 
-    [GeneratedRegex("[^ ]*")]
+    [GeneratedRegex("[^ ]+")]
     private static partial Regex TokenRegex();
 }
