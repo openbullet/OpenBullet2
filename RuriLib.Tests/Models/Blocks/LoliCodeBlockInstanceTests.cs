@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using RuriLib.Exceptions;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
@@ -104,6 +105,20 @@ public class LoliCodeBlockInstanceTests
     public void BuildScriptSnippet_IfKey_OutputsConditionCheck()
         => AssertTranspilesTo("IF STRINGKEY @left Contains \"abc\"",
             $"if (CheckCondition(data, left.AsString(), StrComparison.Contains, \"abc\")){_nl}{{{_nl}");
+
+    [Fact]
+    public void BuildScriptSnippet_InvalidIfKey_PreservesSourceLineAndColumn()
+    {
+        var block = CreateBlock($"LOG data{_nl}  IF STRINGKEY @left BadComparison \"abc\"");
+        block.SourceLineNumber = 10;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.BuildScriptSnippet([]));
+
+        Assert.Equal(11, ex.LineNumber);
+        Assert.Equal(22, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Invalid StrComparison value 'BadComparison'", ex.Message);
+    }
 
     [Fact]
     public void BuildScriptSnippet_Else_OutputsBranch()

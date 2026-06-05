@@ -1,4 +1,5 @@
 using System;
+using RuriLib.Exceptions;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
@@ -60,6 +61,21 @@ public class TranspilerTests
 
         Assert.Equal("BrowserReload", block.Id);
         Assert.Equal($"BLOCK:BrowserReload{nl}ENDBLOCK{nl}", newScript);
+    }
+
+    [Fact]
+    public void Transpile_InvalidRawLoliCodeKey_PreservesScriptLineAndColumn()
+    {
+        var nl = Environment.NewLine;
+        var script = $"LOG data{nl}  IF STRINGKEY @left BadComparison \"abc\"{nl}";
+
+        var ex = Assert.Throws<LoliCodeParsingException>(
+            () => Loli2CSharpTranspiler.Transpile(script, new ConfigSettings()));
+
+        Assert.Equal(2, ex.LineNumber);
+        Assert.Equal(22, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Invalid StrComparison value 'BadComparison'", ex.Message);
     }
 
     private static string NormalizeLineEndings(string value) => value.Replace("\r\n", "\n");

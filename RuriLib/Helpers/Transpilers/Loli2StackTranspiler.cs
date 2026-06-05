@@ -83,7 +83,10 @@ public static class Loli2StackTranspiler
             else
             {
                 var descriptor = new LoliCodeBlockDescriptor();
-                var block = new LoliCodeBlockInstance(descriptor);
+                var block = new LoliCodeBlockInstance(descriptor)
+                {
+                    SourceLineNumber = lineNumber
+                };
 
                 var sb = new StringBuilder();
 

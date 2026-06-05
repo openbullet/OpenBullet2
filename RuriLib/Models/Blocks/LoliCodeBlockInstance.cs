@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using RuriLib.Exceptions;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
@@ -25,6 +26,11 @@ public class LoliCodeBlockInstance : BlockInstance
     /// Gets or sets the raw LoliCode script.
     /// </summary>
     public string Script { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the source line number of the first line in <see cref="Script"/>.
+    /// </summary>
+    public int SourceLineNumber { get; set; } = 1;
 
     /// <summary>
     /// Initializes a new <see cref="LoliCodeBlockInstance"/>.
@@ -63,15 +69,26 @@ public class LoliCodeBlockInstance : BlockInstance
 
         using var reader = new StringReader(Script);
         using var writer = new StringWriter();
+        var localLineNumber = 0;
 
         while (reader.ReadLine() is { } line)
         {
+            localLineNumber++;
             var trimmedLine = line.Trim();
+            var leadingWhitespaceLength = line.Length - line.TrimStart().Length;
 
             try
             {
                 // Try to read it as a LoliCode-exclusive statement
                 writer.WriteLine(TranspileStatement(trimmedLine, definedVariables, stepByStep));
+            }
+            catch (LineParsingException ex)
+            {
+                throw new LoliCodeParsingException(
+                    SourceLineNumber + localLineNumber - 1,
+                    leadingWhitespaceLength + (ex.ColumnNumber ?? 1),
+                    $"Could not parse LoliCode statement: {trimmedLine.TruncatePretty(50)} ({ex.Message})",
+                    ex);
             }
             catch (NotSupportedException)
             {
@@ -182,9 +199,7 @@ public class LoliCodeBlockInstance : BlockInstance
             var line = match.Groups[1].Value.Trim();
             if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t, StringComparison.Ordinal)))
             {
-                var keyType = LineParser.ParseToken(ref line);
-                var key = LoliCodeParser.ParseKey(ref line, keyType);
-                return $"while ({CSharpWriter.ConvertKey(key)}){NewLine}{{";
+                return $"while ({ConvertKeyCondition(input, line)}){NewLine}{{";
             }
 
             return $"while ({line}){NewLine}{{";
@@ -197,9 +212,7 @@ public class LoliCodeBlockInstance : BlockInstance
             var line = match.Groups[1].Value.Trim();
             if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t, StringComparison.Ordinal)))
             {
-                var keyType = LineParser.ParseToken(ref line);
-                var key = LoliCodeParser.ParseKey(ref line, keyType);
-                return $"if ({CSharpWriter.ConvertKey(key)}){NewLine}{{";
+                return $"if ({ConvertKeyCondition(input, line)}){NewLine}{{";
             }
 
             return $"if ({line}){NewLine}{{";
@@ -219,9 +232,7 @@ public class LoliCodeBlockInstance : BlockInstance
             var line = match.Groups[1].Value.Trim();
             if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t, StringComparison.Ordinal)))
             {
-                var keyType = LineParser.ParseToken(ref line);
-                var key = LoliCodeParser.ParseKey(ref line, keyType);
-                return $"}}{NewLine}else if ({CSharpWriter.ConvertKey(key)}){NewLine}{{";
+                return $"}}{NewLine}else if ({ConvertKeyCondition(input, line)}){NewLine}{{";
             }
 
             return $"}}{NewLine}else if ({line}){NewLine}{{";
@@ -351,6 +362,29 @@ public class LoliCodeBlockInstance : BlockInstance
         => stepByStep && IsDebuggerTrackableVariable(variableName)
             ? $"{statement}{NewLine}data.SetDebuggerVariable(nameof({variableName}), {variableName});"
             : statement;
+
+    private static string ConvertKeyCondition(string statement, string condition)
+    {
+        var keyLine = condition;
+        var keyType = LineParser.ParseToken(ref keyLine);
+        var keyArguments = keyLine;
+
+        try
+        {
+            var key = LoliCodeParser.ParseKey(ref keyArguments, keyType);
+            return CSharpWriter.ConvertKey(key);
+        }
+        catch (LineParsingException ex)
+        {
+            var conditionColumn = statement.IndexOf(condition, StringComparison.Ordinal) + 1;
+            var consumedKeyArgumentColumns = keyLine.Length - keyArguments.Length;
+
+            throw new LineParsingException(
+                conditionColumn + keyType.Length + 1 + consumedKeyArgumentColumns + (ex.ColumnNumber ?? 1) - 1,
+                ex.Message,
+                ex);
+        }
+    }
 
     private static bool IsDebuggerTrackableVariable(string variableName)
         => !string.IsNullOrWhiteSpace(variableName)

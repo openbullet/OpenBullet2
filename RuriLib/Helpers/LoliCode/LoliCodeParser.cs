@@ -362,7 +362,8 @@ public static class LoliCodeParser
     private static string ParseEnumValue(ref string input, Type enumType)
     {
         var tokenColumn = input.Length - input.TrimStart().Length + 1;
-        var token = LineParser.ParseToken(ref input);
+        var remainingInput = input;
+        var token = LineParser.ParseToken(ref remainingInput);
 
         if (!Array.Exists(Enum.GetNames(enumType), name => name == token))
         {
@@ -370,13 +371,15 @@ public static class LoliCodeParser
                 $"Invalid {enumType.Name} value '{token}'. Valid values: {FormatValidValues(enumType)}");
         }
 
+        input = remainingInput;
         return token;
     }
 
     private static T ParseEnumValue<T>(ref string input) where T : struct, Enum
     {
         var tokenColumn = input.Length - input.TrimStart().Length + 1;
-        var token = LineParser.ParseToken(ref input);
+        var remainingInput = input;
+        var token = LineParser.ParseToken(ref remainingInput);
 
         if (!Enum.TryParse<T>(token, ignoreCase: false, out var value)
             || !Enum.IsDefined(value))
@@ -385,6 +388,7 @@ public static class LoliCodeParser
                 $"Invalid {typeof(T).Name} value '{token}'. Valid values: {FormatValidValues(typeof(T))}");
         }
 
+        input = remainingInput;
         return value;
     }
 
