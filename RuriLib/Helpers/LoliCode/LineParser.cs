@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.LoliCode;
 
 /// <summary>
 /// Has methods to parse LoliCode tokens.
 /// </summary>
-public static partial class LineParser
+public static class LineParser
 {
     /// <summary>
     /// Parses a generic LoliCode token (anything until a whitespace character) and moves forward.
@@ -18,9 +17,8 @@ public static partial class LineParser
     {
         input = input.TrimStart();
         var index = 0;
-        var token = ParseToken(input, ref index);
-        input = input[index..];
-        input = input.TrimStart();
+        var token = ParseToken(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
         return token;
     }
 
@@ -30,18 +28,10 @@ public static partial class LineParser
     public static int ParseInt(ref string input)
     {
         input = input.TrimStart();
-
-        var match = IntRegex().Match(input);
-
-        if (!match.Success)
-        {
-            throw new Exception("Could not parse the int");
-        }
-
-        input = input[match.Value.Length..];
-        input = input.TrimStart();
-
-        return int.Parse(match.Value);
+        var index = 0;
+        var value = ParseInt(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
+        return value;
     }
 
     /// <summary>
@@ -50,18 +40,10 @@ public static partial class LineParser
     public static float ParseFloat(ref string input)
     {
         input = input.TrimStart();
-
-        var match = FloatRegex().Match(input);
-
-        if (!match.Success)
-        {
-            throw new Exception("Could not parse the float");
-        }
-
-        input = input[match.Value.Length..];
-        input = input.TrimStart();
-
-        return float.Parse(match.Value, CultureInfo.InvariantCulture);
+        var index = 0;
+        var value = ParseFloat(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
+        return value;
     }
 
     /// <summary>
@@ -76,9 +58,8 @@ public static partial class LineParser
 
         input = input.TrimStart();
         var index = 0;
-        var bytes = ParseByteArray(input, ref index);
-        input = input[index..];
-        input = input.TrimStart();
+        var bytes = ParseByteArray(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
         return bytes;
     }
 
@@ -88,18 +69,10 @@ public static partial class LineParser
     public static bool ParseBool(ref string input)
     {
         input = input.TrimStart();
-
-        var match = BoolRegex().Match(input);
-
-        if (!match.Success)
-        {
-            throw new Exception("Could not parse the bool");
-        }
-
-        input = input[match.Value.Length..];
-        input = input.TrimStart();
-
-        return bool.Parse(match.Value);
+        var index = 0;
+        var value = ParseBool(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
+        return value;
     }
 
     /// <summary>
@@ -109,9 +82,8 @@ public static partial class LineParser
     {
         input = input.TrimStart();
         var index = 0;
-        var list = ParseList(input, ref index);
-        input = input[index..];
-        input = input.TrimStart();
+        var list = ParseList(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
         return list;
     }
 
@@ -122,9 +94,8 @@ public static partial class LineParser
     {
         input = input.TrimStart();
         var index = 0;
-        var dict = ParseDictionary(input, ref index);
-        input = input[index..];
-        input = input.TrimStart();
+        var dict = ParseDictionary(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
         return dict;
     }
 
@@ -135,48 +106,76 @@ public static partial class LineParser
     {
         input = input.TrimStart();
         var index = 0;
-        var literal = ParseLiteral(input, ref index);
-        input = input[index..];
-        input = input.TrimStart();
+        var literal = ParseLiteral(input.AsSpan(), ref index);
+        AdvanceInput(ref input, index);
         return literal;
     }
 
-    private static string ParseToken(string input, ref int index)
+    private static string ParseToken(ReadOnlySpan<char> input, ref int index)
     {
-        var startIndex = index;
-        while (index < input.Length && !char.IsWhiteSpace(input[index]))
-        {
-            index++;
-        }
-
-        if (index == startIndex)
-        {
-            throw new Exception("Could not parse the token");
-        }
-
-        return input[startIndex..index];
+        var token = ParseTokenSpan(input, ref index, "Could not parse the token");
+        return token.ToString();
     }
 
-    private static byte[] ParseByteArray(string input, ref int index)
+    private static int ParseInt(ReadOnlySpan<char> input, ref int index)
     {
-        var token = ParseToken(input, ref index);
+        var token = ParseTokenSpan(input, ref index, "Could not parse the int");
+
+        if (!IsIntToken(token)
+            || !int.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+        {
+            throw new Exception("Could not parse the int");
+        }
+
+        return value;
+    }
+
+    private static float ParseFloat(ReadOnlySpan<char> input, ref int index)
+    {
+        var token = ParseTokenSpan(input, ref index, "Could not parse the float");
+
+        if (!IsFloatToken(token)
+            || !float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            throw new Exception("Could not parse the float");
+        }
+
+        return value;
+    }
+
+    private static byte[] ParseByteArray(ReadOnlySpan<char> input, ref int index)
+    {
+        var token = ParseTokenSpan(input, ref index, "Could not parse the byte array");
 
         if (!IsBase64Token(token))
         {
             throw new Exception("Could not parse the byte array");
         }
 
-        try
-        {
-            return Convert.FromBase64String(token);
-        }
-        catch (FormatException)
+        var decodedLength = GetDecodedBase64Length(token);
+        var bytes = new byte[decodedLength];
+
+        if (!Convert.TryFromBase64Chars(token, bytes, out var bytesWritten) || bytesWritten != decodedLength)
         {
             throw new Exception("Could not parse the byte array");
         }
+
+        return bytes;
     }
 
-    private static List<string> ParseList(string input, ref int index)
+    private static bool ParseBool(ReadOnlySpan<char> input, ref int index)
+    {
+        var token = ParseTokenSpan(input, ref index, "Could not parse the bool");
+
+        if (!bool.TryParse(token, out var value))
+        {
+            throw new Exception("Could not parse the bool");
+        }
+
+        return value;
+    }
+
+    private static List<string> ParseList(ReadOnlySpan<char> input, ref int index)
     {
         const string errorMessage = "Could not parse the list";
 
@@ -204,7 +203,7 @@ public static partial class LineParser
         }
     }
 
-    private static Dictionary<string, string> ParseDictionary(string input, ref int index)
+    private static Dictionary<string, string> ParseDictionary(ReadOnlySpan<char> input, ref int index)
     {
         const string errorMessage = "Could not parse the dictionary";
 
@@ -246,7 +245,7 @@ public static partial class LineParser
         }
     }
 
-    private static string ParseLiteral(string input, ref int index)
+    private static string ParseLiteral(ReadOnlySpan<char> input, ref int index)
     {
         const string errorMessage = "Could not parse the literal";
 
@@ -274,16 +273,23 @@ public static partial class LineParser
         throw new Exception(errorMessage);
     }
 
-    [GeneratedRegex("^(?:[Tt]rue|[Ff]alse)(?=\\s|$)")]
-    private static partial Regex BoolRegex();
+    private static ReadOnlySpan<char> ParseTokenSpan(ReadOnlySpan<char> input, ref int index, string errorMessage)
+    {
+        var startIndex = index;
+        while (index < input.Length && !char.IsWhiteSpace(input[index]))
+        {
+            index++;
+        }
 
-    [GeneratedRegex("^-?[0-9][0-9.]*(?=\\s|$)")]
-    private static partial Regex FloatRegex();
+        if (index == startIndex)
+        {
+            throw new Exception(errorMessage);
+        }
 
-    [GeneratedRegex("^-?[0-9]+(?=\\s|$)")]
-    private static partial Regex IntRegex();
+        return input[startIndex..index];
+    }
 
-    private static string ParseEscapeSequence(string input, ref int index)
+    private static string ParseEscapeSequence(ReadOnlySpan<char> input, ref int index)
     {
         if (index >= input.Length)
         {
@@ -313,14 +319,14 @@ public static partial class LineParser
         };
     }
 
-    private static string ParseFixedLengthHexEscape(string input, ref int index, int digits)
+    private static string ParseFixedLengthHexEscape(ReadOnlySpan<char> input, ref int index, int digits)
     {
         if (index + digits > input.Length)
         {
             throw new Exception("Could not parse the literal");
         }
 
-        var hex = input.Substring(index, digits);
+        var hex = input[index..(index + digits)];
 
         if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
         {
@@ -337,7 +343,7 @@ public static partial class LineParser
         return ((char)code).ToString();
     }
 
-    private static string ParseVariableLengthHexEscape(string input, ref int index)
+    private static string ParseVariableLengthHexEscape(ReadOnlySpan<char> input, ref int index)
     {
         var startIndex = index;
         var length = 0;
@@ -354,7 +360,7 @@ public static partial class LineParser
             throw new Exception("Could not parse the literal");
         }
 
-        var hex = input.Substring(startIndex, length);
+        var hex = input.Slice(startIndex, length);
 
         if (!ushort.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
         {
@@ -365,7 +371,13 @@ public static partial class LineParser
         return ((char)code).ToString();
     }
 
-    private static void SkipWhitespace(string input, ref int index)
+    private static void AdvanceInput(ref string input, int index)
+    {
+        input = input[index..];
+        input = input.TrimStart();
+    }
+
+    private static void SkipWhitespace(ReadOnlySpan<char> input, ref int index)
     {
         while (index < input.Length && char.IsWhiteSpace(input[index]))
         {
@@ -373,7 +385,7 @@ public static partial class LineParser
         }
     }
 
-    private static void ExpectChar(string input, ref int index, char c, string errorMessage)
+    private static void ExpectChar(ReadOnlySpan<char> input, ref int index, char c, string errorMessage)
     {
         if (!TryConsumeChar(input, ref index, c))
         {
@@ -381,7 +393,7 @@ public static partial class LineParser
         }
     }
 
-    private static bool TryConsumeChar(string input, ref int index, char c)
+    private static bool TryConsumeChar(ReadOnlySpan<char> input, ref int index, char c)
     {
         if (index >= input.Length || input[index] != c)
         {
@@ -392,7 +404,64 @@ public static partial class LineParser
         return true;
     }
 
-    private static bool IsBase64Token(string token)
+    private static bool IsIntToken(ReadOnlySpan<char> token)
+    {
+        if (token.Length == 0)
+        {
+            return false;
+        }
+
+        var index = token[0] == '-' ? 1 : 0;
+        if (index == token.Length)
+        {
+            return false;
+        }
+
+        for (; index < token.Length; index++)
+        {
+            if (!char.IsAsciiDigit(token[index]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsFloatToken(ReadOnlySpan<char> token)
+    {
+        if (token.Length == 0)
+        {
+            return false;
+        }
+
+        var index = token[0] == '-' ? 1 : 0;
+        if (index == token.Length || !char.IsAsciiDigit(token[index]))
+        {
+            return false;
+        }
+
+        var sawDot = false;
+        for (; index < token.Length; index++)
+        {
+            if (char.IsAsciiDigit(token[index]))
+            {
+                continue;
+            }
+
+            if (token[index] == '.' && !sawDot)
+            {
+                sawDot = true;
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsBase64Token(ReadOnlySpan<char> token)
     {
         if (token.Length == 0 || token.Length % 4 != 0)
         {
@@ -430,5 +499,21 @@ public static partial class LineParser
         }
 
         return true;
+    }
+
+    private static int GetDecodedBase64Length(ReadOnlySpan<char> token)
+    {
+        var padding = 0;
+        if (token.Length > 0 && token[^1] == '=')
+        {
+            padding++;
+        }
+
+        if (token.Length > 1 && token[^2] == '=')
+        {
+            padding++;
+        }
+
+        return (token.Length / 4) * 3 - padding;
     }
 }
