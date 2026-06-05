@@ -53,9 +53,20 @@ public static class LoliCodeParser
         }
 
         input = input[1..];
+        var valueLeadingWhitespaceLength = input.Length - input.TrimStart().Length;
+        var valueColumn = FindSettingAssignmentColumn(originalInput, leadingWhitespaceLength, name) + 1
+            + valueLeadingWhitespaceLength;
+
         input = input.TrimStart();
 
-        ParseSettingValue(ref input, setting, param);
+        try
+        {
+            ParseSettingValue(ref input, setting, param);
+        }
+        catch (LineParsingException ex) when (ex.ColumnNumber.HasValue)
+        {
+            throw new LineParsingException(valueColumn + ex.ColumnNumber.Value - 1, ex.Message, ex);
+        }
     }
 
     /// <summary>
@@ -143,7 +154,7 @@ public static class LoliCodeParser
                 BoolParameter _ => new BoolSetting { Value = LineParser.ParseBool(ref input) },
                 ByteArrayParameter _ => new ByteArraySetting { Value = LineParser.ParseByteArray(ref input) },
                 DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
-                EnumParameter x => new EnumSetting(x.EnumType) { Value = LineParser.ParseToken(ref input) },
+                EnumParameter x => new EnumSetting(x.EnumType) { Value = ParseEnumValue(ref input, x.EnumType) },
                 FloatParameter _ => new FloatSetting { Value = LineParser.ParseFloat(ref input) },
                 IntParameter _ => new IntSetting { Value = LineParser.ParseInt(ref input) },
                 ListOfStringsParameter _ => new ListOfStringsSetting { Value = LineParser.ParseList(ref input) },
@@ -348,6 +359,38 @@ public static class LoliCodeParser
         return token.Length > 0;
     }
 
+    private static string ParseEnumValue(ref string input, Type enumType)
+    {
+        var tokenColumn = input.Length - input.TrimStart().Length + 1;
+        var token = LineParser.ParseToken(ref input);
+
+        if (!Array.Exists(Enum.GetNames(enumType), name => name == token))
+        {
+            throw new LineParsingException(tokenColumn,
+                $"Invalid {enumType.Name} value '{token}'. Valid values: {FormatValidValues(enumType)}");
+        }
+
+        return token;
+    }
+
+    private static T ParseEnumValue<T>(ref string input) where T : struct, Enum
+    {
+        var tokenColumn = input.Length - input.TrimStart().Length + 1;
+        var token = LineParser.ParseToken(ref input);
+
+        if (!Enum.TryParse<T>(token, ignoreCase: false, out var value)
+            || !Enum.IsDefined(value))
+        {
+            throw new LineParsingException(tokenColumn,
+                $"Invalid {typeof(T).Name} value '{token}'. Valid values: {FormatValidValues(typeof(T))}");
+        }
+
+        return value;
+    }
+
+    private static string FormatValidValues(Type enumType)
+        => string.Join(", ", Enum.GetNames(enumType));
+
     /// <summary>
     /// All the supported key identifiers.
     /// </summary>
@@ -367,14 +410,15 @@ public static class LoliCodeParser
         "FLOATKEY" => ParseFloatKey(ref line),
         "LISTKEY" => ParseListKey(ref line),
         "DICTKEY" => ParseDictKey(ref line),
-        _ => throw new NotSupportedException()
+        _ => throw new LineParsingException(1,
+            $"Invalid key type '{keyType}'. Valid values: {string.Join(", ", keyIdentifiers)}")
     };
 
     private static BoolKey ParseBoolKey(ref string line)
     {
         var key = new BoolKey();
         ParseSettingValue(ref line, key.Left, new BoolParameter(string.Empty));
-        key.Comparison = Enum.Parse<BoolComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<BoolComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new BoolParameter(string.Empty));
         return key;
     }
@@ -383,7 +427,7 @@ public static class LoliCodeParser
     {
         var key = new StringKey();
         ParseSettingValue(ref line, key.Left, new StringParameter(string.Empty));
-        key.Comparison = Enum.Parse<StrComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<StrComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new StringParameter(string.Empty));
         return key;
     }
@@ -392,7 +436,7 @@ public static class LoliCodeParser
     {
         var key = new IntKey();
         ParseSettingValue(ref line, key.Left, new IntParameter(string.Empty));
-        key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<NumComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new IntParameter(string.Empty));
         return key;
     }
@@ -401,7 +445,7 @@ public static class LoliCodeParser
     {
         var key = new FloatKey();
         ParseSettingValue(ref line, key.Left, new FloatParameter(string.Empty));
-        key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<NumComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new FloatParameter(string.Empty));
         return key;
     }
@@ -410,7 +454,7 @@ public static class LoliCodeParser
     {
         var key = new ListKey();
         ParseSettingValue(ref line, key.Left, new ListOfStringsParameter(string.Empty));
-        key.Comparison = Enum.Parse<ListComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<ListComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new StringParameter(string.Empty));
         return key;
     }
@@ -419,7 +463,7 @@ public static class LoliCodeParser
     {
         var key = new DictionaryKey();
         ParseSettingValue(ref line, key.Left, new DictionaryOfStringsParameter(string.Empty));
-        key.Comparison = Enum.Parse<DictComparison>(LineParser.ParseToken(ref line));
+        key.Comparison = ParseEnumValue<DictComparison>(ref line);
         ParseSettingValue(ref line, key.Right, new StringParameter(string.Empty));
         return key;
     }
