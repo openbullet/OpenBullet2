@@ -97,6 +97,49 @@ public class MultiRunJob : Job
 
     // Private fields
     private readonly string[] badStatuses = ["FAIL", "RETRY", "BAN", "ERROR", "INVALID"];
+    private static readonly string[] persistentRuntimeObjectKeys =
+    [
+        "puppeteer",
+        "puppeteerPage",
+        "puppeteerFrame",
+        "puppeteerGhostCursor",
+        "playwright",
+        "playwrightBrowser",
+        "playwrightContext",
+        "playwrightPage",
+        "playwrightFrame",
+        "playwrightGhostCursor",
+        "playwrightUserAgent",
+        "browserGhostCursorRandomMovesEnabled",
+        "httpClient",
+        "ironPyEngine",
+        "pythonRuntime"
+    ];
+    private static readonly string[] knownRetryScopedObjectKeys =
+    [
+        "selenium",
+        "webSocket",
+        "wsMessages",
+        "tcpClient",
+        "netStream",
+        "sslStream",
+        "sshClient",
+        "smtpClient",
+        "smtpLogger",
+        "pop3Client",
+        "pop3Logger",
+        "imapClient",
+        "imapFolders",
+        "imapCurrentFolder",
+        "imapLogger",
+        "ftpClient",
+        "ftpLogger",
+        "lastCaptchaInfo",
+        "TCPClient",
+        "NETStream",
+        "SSLStream",
+        "TCPSSL"
+    ];
     private readonly object hitsLock = new();
     private bool disposed;
     private Parallelizer<MultiRunInput, CheckResult>? parallelizer;
@@ -295,7 +338,7 @@ public class MultiRunJob : Job
 
             START:
             token.ThrowIfCancellationRequested();
-            botData.ResetState();
+            botData.ResetState(preserveObjects: true);
             var badProxyFailure = false;
 
             try
@@ -425,35 +468,6 @@ public class MultiRunJob : Job
                 var endMessage = $"[{DateTime.Now.ToLongTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
                 botData.ExecutingBlock(endMessage);
                 botData.Logger.Log(endMessage);
-
-                // Close the browser if needed
-                if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
-                {
-                    await ClosePuppeteerBrowserIfOpen(botData).ConfigureAwait(false);
-                    await ClosePlaywrightBrowserIfOpen(botData).ConfigureAwait(false);
-                    botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine", "pythonRuntime" });
-                }
-                else
-                {
-                    botData.DisposeObjectsExcept(
-                    [
-                        "puppeteer",
-                        "puppeteerPage",
-                        "puppeteerFrame",
-                        "puppeteerGhostCursor",
-                        "playwright",
-                        "playwrightBrowser",
-                        "playwrightContext",
-                        "playwrightPage",
-                        "playwrightFrame",
-                        "playwrightGhostCursor",
-                        "playwrightUserAgent",
-                        "browserGhostCursorRandomMovesEnabled",
-                        "httpClient",
-                        "ironPyEngine",
-                        "pythonRuntime"
-                    ]);
-                }
             }
 
             // Update captcha credit
@@ -490,6 +504,7 @@ public class MultiRunJob : Job
                 else
                 {
                     input.Job.DebugLog("TASK HARD CANCELED");
+                    await CleanupAfterFinalResultAsync(botData).ConfigureAwait(false);
                     throw new TaskCanceledException();
                 }
             }
@@ -518,6 +533,7 @@ public class MultiRunJob : Job
 
                 input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
                 Interlocked.Increment(ref input.Job.dataRetried);
+                await CleanupBeforeRetryAsync(botData).ConfigureAwait(false);
                 goto START;
             }
             else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
@@ -534,6 +550,7 @@ public class MultiRunJob : Job
                 {
                     input.Job.DebugLog($"BAN ({botData.Line.Data})({botData.Proxy})");
                     Interlocked.Increment(ref input.Job.dataBanned);
+                    await CleanupBeforeRetryAsync(botData).ConfigureAwait(false);
                     goto START;
                 }
             }
@@ -577,6 +594,8 @@ public class MultiRunJob : Job
                     }
                 }
             }
+
+            await CleanupAfterFinalResultAsync(botData).ConfigureAwait(false);
 
             // RETURN THE RESULT
             return new CheckResult
@@ -1315,6 +1334,29 @@ public class MultiRunJob : Job
         }
 
         return false;
+    }
+
+    private static async Task CleanupBeforeRetryAsync(BotData botData)
+    {
+        await CloseBrowserIfRequiredAsync(botData).ConfigureAwait(false);
+        botData.DisposeObjects(knownRetryScopedObjectKeys);
+    }
+
+    private static async Task CleanupAfterFinalResultAsync(BotData botData)
+    {
+        await CloseBrowserIfRequiredAsync(botData).ConfigureAwait(false);
+        botData.DisposeObjectsExcept(persistentRuntimeObjectKeys);
+    }
+
+    private static async Task CloseBrowserIfRequiredAsync(BotData botData)
+    {
+        if (!botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
+        {
+            return;
+        }
+
+        await ClosePuppeteerBrowserIfOpen(botData).ConfigureAwait(false);
+        await ClosePlaywrightBrowserIfOpen(botData).ConfigureAwait(false);
     }
 
     private void DebugLog(string message)

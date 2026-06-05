@@ -240,6 +240,13 @@ public class BotData
     /// Resets transient bot state before a retry.
     /// </summary>
     public void ResetState()
+        => ResetState(preserveObjects: false);
+
+    /// <summary>
+    /// Resets transient bot state before a retry.
+    /// </summary>
+    /// <param name="preserveObjects">Whether tracked runtime objects should be preserved.</param>
+    public void ResetState(bool preserveObjects)
     {
         ExecutionInfo = "Retrying";
         STATUS = "NONE";
@@ -253,8 +260,13 @@ public class BotData
         MarkedForCapture.Clear();
         DebuggerVariableSnapshot.Clear(this);
 
+        if (preserveObjects)
+        {
+            return;
+        }
+
         // We need to dispose of objects created in each retry, because jobs should
-        // only dispose of them after the bot has completed its work
+        // only dispose of them after the bot has completed its work.
         DisposeObjectsExcept(
         [
             "puppeteer",
@@ -340,6 +352,34 @@ public class BotData
         }
 
         _objects.Remove(name);
+    }
+
+    /// <summary>
+    /// Disposes tracked runtime objects and removes them from the object map.
+    /// </summary>
+    /// <param name="names">The object keys.</param>
+    public void DisposeObjects(params string[] names)
+    {
+        foreach (var name in names)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+            if (!_objects.TryGetValue(name, out var value))
+            {
+                continue;
+            }
+
+            try
+            {
+                (value as IDisposable)?.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
+
+            _objects.Remove(name);
+        }
     }
 
     /// <summary>

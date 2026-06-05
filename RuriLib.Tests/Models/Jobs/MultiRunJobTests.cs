@@ -315,6 +315,37 @@ public class MultiRunJobTests
     }
 
     [Fact]
+    public async Task WorkFunction_PreservesCustomObjectsAcrossBanRetries()
+    {
+        var settings = CreateSettingsService();
+        var job = new MultiRunJob(settings, CreatePluginRepository());
+        var configSettings = new ConfigSettings();
+
+        var input = new MultiRunInput
+        {
+            Job = job,
+            BotData = new global::RuriLib.Models.Bots.BotData(
+                new global::RuriLib.Models.Bots.Providers(settings),
+                configSettings,
+                new BotLogger(),
+                new DataLine("data", settings.Environment.WordlistTypes[0])),
+            Globals = new System.Dynamic.ExpandoObject(),
+            IsDLL = true,
+            DLLMethod = typeof(MultiRunJobTests).GetMethod(nameof(BanUntilCounterExceedsTenAsync),
+                BindingFlags.Static | BindingFlags.NonPublic)
+        };
+
+        var workFunction = (Func<MultiRunInput, CancellationToken, Task<CheckResult>>)typeof(MultiRunJob)
+            .GetField("workFunction", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetValue(job)!;
+
+        var result = await workFunction(input, TestCancellationToken);
+
+        Assert.Equal("BANNED", result.BotData.STATUS);
+        Assert.Equal(11, job.DataBanned);
+    }
+
+    [Fact]
     public void ResetStats_AlsoResetsInvalidCount()
     {
         var job = CreateJob();
@@ -481,6 +512,29 @@ public class MultiRunJobTests
         }
 
         throw new BadProxyException("bad proxy");
+    }
+
+    private static Task BanUntilCounterExceedsTenAsync(global::RuriLib.Models.Bots.BotData data,
+        dynamic input, dynamic globals, Dictionary<string, object> outputVariables, CancellationToken cancellationToken)
+    {
+        var counterObject = data.TryGetObject<object>("counter");
+
+        if (counterObject is null)
+        {
+            data.SetObject("counter", 0);
+        }
+
+        var counter = (int)data.TryGetObject<object>("counter")!;
+
+        if (counter > 10)
+        {
+            data.STATUS = "BANNED";
+            return Task.CompletedTask;
+        }
+
+        data.SetObject("counter", counter + 1);
+        data.STATUS = "BAN";
+        return Task.CompletedTask;
     }
 
     private static async Task WaitUntilIdleAsync(MultiRunJob job)
