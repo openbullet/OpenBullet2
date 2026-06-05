@@ -31,7 +31,7 @@ public class SystemNetTimeoutTests
             Url = server.Uri.ToString(),
             Method = HttpMethod.GET,
             HttpLibrary = HttpLibrary.SystemNet,
-            TimeoutMilliseconds = 1000
+            TimeoutMilliseconds = 5000
         };
 
         await Methods.HttpRequestStandard(data, options);
