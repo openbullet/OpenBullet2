@@ -106,8 +106,8 @@ public static class LoliCodeParser
             setting.FixedSetting = param switch // Initialize fixed setting as well, used for type switching
             {
                 BoolParameter _ => new BoolSetting(),
-                IntParameter _ => new IntSetting(),
-                FloatParameter _ => new FloatSetting(),
+                IntParameter x => new IntSetting { UseLong = x.UseLong },
+                FloatParameter x => new FloatSetting { UseDouble = x.UseDouble },
                 StringParameter x => new StringSetting { MultiLine = x.MultiLine },
                 ListOfStringsParameter _ => new ListOfStringsSetting(),
                 DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting(),
@@ -155,8 +155,16 @@ public static class LoliCodeParser
                 ByteArrayParameter _ => new ByteArraySetting { Value = LineParser.ParseByteArray(ref input) },
                 DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
                 EnumParameter x => new EnumSetting(x.EnumType) { Value = ParseEnumValue(ref input, x.EnumType) },
-                FloatParameter _ => new FloatSetting { Value = LineParser.ParseFloat(ref input) },
-                IntParameter _ => new IntSetting { Value = LineParser.ParseInt(ref input) },
+                FloatParameter x => new FloatSetting
+                {
+                    Value = LineParser.ParseDouble(ref input),
+                    UseDouble = x.UseDouble
+                },
+                IntParameter x => new IntSetting
+                {
+                    Value = LineParser.ParseLong(ref input),
+                    UseLong = x.UseLong
+                },
                 ListOfStringsParameter _ => new ListOfStringsSetting { Value = LineParser.ParseList(ref input) },
                 _ => throw new NotSupportedException()
             };
@@ -291,7 +299,7 @@ public static class LoliCodeParser
             }
         }
 
-        return true;
+        return long.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
     }
 
     private static bool IsFloatToken(string token)
@@ -325,7 +333,7 @@ public static class LoliCodeParser
 
         return sawDigit
             && sawDot
-            && float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out _);
+            && double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out _);
     }
 
     private static bool IsIdentifierToken(string token)

@@ -150,9 +150,9 @@ public class KeycheckBlockInstanceTests
         Assert.Equal("abc", (firstKey.Right.FixedSetting as StringSetting)!.Value);
 
         var secondKey = (FloatKey)firstKeychain.Keys[1];
-        Assert.Equal(3F, (secondKey.Left.FixedSetting as FloatSetting)!.Value);
+        Assert.Equal(3D, (secondKey.Left.FixedSetting as FloatSetting)!.Value);
         Assert.Equal(NumComparison.GreaterThan, secondKey.Comparison);
-        Assert.Equal(1.5F, (secondKey.Right.FixedSetting as FloatSetting)!.Value);
+        Assert.Equal(1.5D, (secondKey.Right.FixedSetting as FloatSetting)!.Value);
 
         var secondKeychain = block.Keychains[1];
         Assert.Equal("FAIL", secondKeychain.ResultStatus);
@@ -222,7 +222,7 @@ public class KeycheckBlockInstanceTests
         block.Label = "My Label";
         block.Keychains = CreateKeychains();
 
-        var expected = $"data.Logger.LogHeader(\"CheckCondition\");{_nl}if (CheckCondition(data, myString.AsString(), StrComparison.Contains, \"abc\") || CheckCondition(data, 3F, NumComparison.GreaterThan, 1.5F)){_nl} {{ data.STATUS = \"SUCCESS\"; }}{_nl}else if (CheckCondition(data, myList.AsList(), ListComparison.Contains, \"abc\") && CheckCondition(data, myDict.AsDict(), DictComparison.HasKey, \"abc\")){_nl}  {{ data.STATUS = \"FAIL\"; return; }}{_nl}else if (myBool.AsBool()){_nl}  {{ data.STATUS = \"BAN\"; return; }}{_nl}if (CheckGlobalBanKeys(data)) {{ data.STATUS = \"BAN\"; return; }}{_nl}if (CheckGlobalRetryKeys(data)) {{ data.STATUS = \"RETRY\"; return; }}{_nl}";
+        var expected = $"data.Logger.LogHeader(\"CheckCondition\");{_nl}if (CheckCondition(data, myString.AsString(), StrComparison.Contains, \"abc\") || CheckCondition(data, 3D, NumComparison.GreaterThan, 1.5D)){_nl} {{ data.STATUS = \"SUCCESS\"; }}{_nl}else if (CheckCondition(data, myList.AsList(), ListComparison.Contains, \"abc\") && CheckCondition(data, myDict.AsDict(), DictComparison.HasKey, \"abc\")){_nl}  {{ data.STATUS = \"FAIL\"; return; }}{_nl}else if (myBool.AsBool()){_nl}  {{ data.STATUS = \"BAN\"; return; }}{_nl}if (CheckGlobalBanKeys(data)) {{ data.STATUS = \"BAN\"; return; }}{_nl}if (CheckGlobalRetryKeys(data)) {{ data.STATUS = \"RETRY\"; return; }}{_nl}";
         Assert.Equal(NormalizeSnippet(expected), RenderSyntax(block, new ConfigSettings()));
     }
 
@@ -244,7 +244,7 @@ public class KeycheckBlockInstanceTests
     {
         AssertSyntax(CreateVariableBanBlock(), new ConfigSettings(),
             "data.Logger.LogHeader(\"CheckCondition\")",
-            "if (CheckCondition(data, ObjectExtensions.DynamicAsString(globals.myString), StrComparison.Contains, \"abc\") || CheckCondition(data, 3F, NumComparison.GreaterThan, 1.5F))",
+            "if (CheckCondition(data, ObjectExtensions.DynamicAsString(globals.myString), StrComparison.Contains, \"abc\") || CheckCondition(data, 3D, NumComparison.GreaterThan, 1.5D))",
             "data.STATUS = \"SUCCESS\";",
             "else if (CheckCondition(data, ObjectExtensions.DynamicAsList(globals.myList), ListComparison.Contains, \"abc\") && CheckCondition(data, ObjectExtensions.DynamicAsDict(input.myDict), DictComparison.HasKey, \"abc\"))",
             "data.STATUS = \"FAIL\";",

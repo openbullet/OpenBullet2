@@ -85,6 +85,14 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseLong_LargeInt_Parse()
+    {
+        var input = "5000000000 is the answer";
+        Assert.Equal(5_000_000_000L, LineParser.ParseLong(ref input));
+        Assert.Equal("is the answer", input);
+    }
+
+    [Fact]
     public void ParseInt_NonIntPrefix_Throws()
     {
         var input = "abc 42";
@@ -97,6 +105,14 @@ public class LoliCodeParserTests
         var input = "3.14 is not pi";
         Assert.Equal(3.14f, LineParser.ParseFloat(ref input));
         Assert.Equal("is not pi", input);
+    }
+
+    [Fact]
+    public void ParseDouble_HighPrecisionFloat_Parse()
+    {
+        var input = "3.141592653589793 is pi";
+        Assert.Equal(3.141592653589793D, LineParser.ParseDouble(ref input));
+        Assert.Equal("is pi", input);
     }
 
     [Fact]
@@ -397,6 +413,12 @@ public class LoliCodeParserTests
     public void DetectTokenType_ValidFloat_ReturnsFloat()
     {
         Assert.Equal(VariableType.Float, LoliCodeParser.DetectTokenType("-1.5"));
+    }
+
+    [Fact]
+    public void DetectTokenType_ValidLong_ReturnsInt()
+    {
+        Assert.Equal(VariableType.Int, LoliCodeParser.DetectTokenType("5000000000"));
     }
 
     [Fact]

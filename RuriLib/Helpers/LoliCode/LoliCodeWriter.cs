@@ -99,7 +99,7 @@ public class LoliCodeWriter : StringWriter
                 IntSetting x => parameter is IntParameter intParameter
                     && x.Value == intParameter.DefaultValue,
                 FloatSetting x => parameter is FloatParameter floatParameter
-                    && x.Value == floatParameter.DefaultValue,
+                    && Math.Abs(x.Value - floatParameter.DefaultValue) < double.Epsilon,
                 BoolSetting x => parameter is BoolParameter boolParameter
                     && x.Value == boolParameter.DefaultValue,
                 ByteArraySetting x => parameter is ByteArrayParameter byteArrayParameter
@@ -166,7 +166,7 @@ public class LoliCodeWriter : StringWriter
         return setting.FixedSetting switch
         {
             StringSetting x => x.Value is null ? "\"\"" : ToLiteral(x.Value),
-            IntSetting x => x.Value.ToString(),
+            IntSetting x => x.Value.ToString(CultureInfo.InvariantCulture),
             FloatSetting x => FormatFloat(x.Value),
             BoolSetting x => x.Value.ToString(),
             ByteArraySetting x => x.Value is null ? string.Empty : Convert.ToBase64String(x.Value),
@@ -181,7 +181,7 @@ public class LoliCodeWriter : StringWriter
         => SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression,
             SyntaxFactory.Literal(input ?? string.Empty)).ToFullString();
 
-    private static string FormatFloat(float input)
+    private static string FormatFloat(double input)
         => input.ToString(CultureInfo.InvariantCulture);
 
     private static string SerializeList(List<string>? input)

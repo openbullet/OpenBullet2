@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
+using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Trees;
 using RuriLib.Models.Variables;
 using Xunit;
@@ -122,6 +123,25 @@ public class DescriptorsRepositoryTests
         Assert.Equal("Requests", requestsCategory.Name);
         Assert.Equal("Blocks for performing network requests",
             requestsCategory.Description);
+    }
+
+    [Fact]
+    public void TimeBlocks_ExposeMillisecondsAsSettings()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.False(repository.Descriptors.ContainsKey("CurrentUnixTimeMilliseconds"));
+        Assert.False(repository.Descriptors.ContainsKey("UnixTimeMillisecondsToDate"));
+        Assert.False(repository.Descriptors.ContainsKey("DateToUnixTimeMilliseconds"));
+
+        var currentUnixTime = repository.GetAs<AutoBlockDescriptor>("CurrentUnixTime");
+        var unixTimeToDate = repository.GetAs<AutoBlockDescriptor>("UnixTimeToDate");
+        var dateToUnixTime = repository.GetAs<AutoBlockDescriptor>("DateToUnixTime");
+
+        Assert.Equal("CurrentUnixTimeLong", currentUnixTime.MethodName);
+        Assert.IsType<BoolParameter>(currentUnixTime.Parameters["outputMilliseconds"]);
+        Assert.IsType<BoolParameter>(unixTimeToDate.Parameters["inputMilliseconds"]);
+        Assert.IsType<BoolParameter>(dateToUnixTime.Parameters["outputMilliseconds"]);
     }
 
     private static IEnumerable<BlockDescriptor> Flatten(CategoryTreeNode node)

@@ -24,7 +24,9 @@ public class DescriptorsRepository
     {
         [typeof(void)] = null,
         [typeof(string)] = VariableType.String,
+        [typeof(long)] = VariableType.Int,
         [typeof(int)] = VariableType.Int,
+        [typeof(double)] = VariableType.Float,
         [typeof(float)] = VariableType.Float,
         [typeof(bool)] = VariableType.Bool,
         [typeof(List<string>)] = VariableType.ListOfStrings,
@@ -32,7 +34,9 @@ public class DescriptorsRepository
         [typeof(byte[])] = VariableType.ByteArray,
         [typeof(Task)] = null,
         [typeof(Task<string>)] = VariableType.String,
+        [typeof(Task<long>)] = VariableType.Int,
         [typeof(Task<int>)] = VariableType.Int,
+        [typeof(Task<double>)] = VariableType.Float,
         [typeof(Task<float>)] = VariableType.Float,
         [typeof(Task<bool>)] = VariableType.Bool,
         [typeof(Task<List<string>>)] = VariableType.ListOfStrings,
@@ -369,13 +373,29 @@ public class DescriptorsRepository
             {
                 typeof(int), () => new IntParameter(parameter.Name!)
                 {
-                    DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue! : 0
+                    DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue! : 0,
+                    UseLong = false
+                }
+            },
+            {
+                typeof(long), () => new IntParameter(parameter.Name!)
+                {
+                    DefaultValue = parameter.HasDefaultValue ? (long)parameter.DefaultValue! : 0,
+                    UseLong = true
                 }
             },
             {
                 typeof(float), () => new FloatParameter(parameter.Name!)
                 {
-                    DefaultValue = parameter.HasDefaultValue ? (float)parameter.DefaultValue! : 0.0f
+                    DefaultValue = parameter.HasDefaultValue ? (float)parameter.DefaultValue! : 0.0f,
+                    UseDouble = false
+                }
+            },
+            {
+                typeof(double), () => new FloatParameter(parameter.Name!)
+                {
+                    DefaultValue = parameter.HasDefaultValue ? (double)parameter.DefaultValue! : 0.0,
+                    UseDouble = true
                 }
             },
             {

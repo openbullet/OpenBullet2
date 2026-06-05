@@ -42,11 +42,34 @@ public class GeneralAndTimeFunctionsTests
         var data = NewBotData(new StubUaProvider("ua"));
         const string datetime = "2020-04-18:00-00-00";
         const string format = "yyyy-MM-dd:HH-mm-ss";
-        var expected = (int)DateTime.ParseExact(datetime, format, null).ToUniversalTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+        var expected = (long)DateTime.ParseExact(datetime, format, null).ToUniversalTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
-        var parsed = TimeMethods.DateToUnixTime(data, datetime, format);
+        var parsed = TimeMethods.DateToUnixTimeLong(data, datetime, format);
 
         Assert.Equal(expected, parsed);
+    }
+
+    [Fact]
+    public void DateToUnixTime_WithMillisecondsOutput_ParsesAsLocalTime()
+    {
+        var data = NewBotData(new StubUaProvider("ua"));
+        const string datetime = "2020-04-18:00-00-00";
+        const string format = "yyyy-MM-dd:HH-mm-ss";
+        var expected = (long)DateTime.ParseExact(datetime, format, null).ToUniversalTime().Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+
+        var parsed = TimeMethods.DateToUnixTimeLong(data, datetime, format, outputMilliseconds: true);
+
+        Assert.Equal(expected, parsed);
+    }
+
+    [Fact]
+    public void UnixTimeToDate_WithMillisecondsInput_FormatsExpectedValue()
+    {
+        var data = NewBotData(new StubUaProvider("ua"));
+
+        var date = TimeMethods.UnixTimeToDate(data, 1587168000000L, "yyyy-MM-dd:HH-mm-ss", inputMilliseconds: true);
+
+        Assert.Equal("2020-04-18:00-00-00", date);
     }
 
     [Fact]

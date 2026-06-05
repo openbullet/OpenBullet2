@@ -169,8 +169,8 @@ public sealed class ConfigDebuggerService : IDisposable
             Value = v switch
             {
                 StringVariable x => x.AsString(),
-                IntVariable x => x.AsInt(),
-                FloatVariable x => x.AsFloat(),
+                IntVariable x => x.AsLong(),
+                FloatVariable x => x.AsDouble(),
                 ListOfStringsVariable x => x.AsListOfStrings(),
                 DictionaryOfStringsVariable x => x.AsDictionaryOfStrings(),
                 BoolVariable x => x.AsBool(),

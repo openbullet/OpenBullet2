@@ -30,7 +30,7 @@ public static class Methods
     /// Creates a constant integer.
     /// </summary>
     [Block("Creates a constant integer")]
-    public static int ConstantInteger(BotData data, int value)
+    public static long ConstantInteger(BotData data, long value)
     {
         data.Logger.LogHeader();
 
@@ -39,16 +39,28 @@ public static class Methods
     }
 
     /// <summary>
+    /// Creates a constant integer.
+    /// </summary>
+    public static int ConstantInteger(BotData data, int value)
+        => (int)ConstantInteger(data, (long)value);
+
+    /// <summary>
     /// Creates a constant float.
     /// </summary>
     [Block("Creates a constant float")]
-    public static float ConstantFloat(BotData data, float value)
+    public static double ConstantFloat(BotData data, double value)
     {
         data.Logger.LogHeader();
 
         data.Logger.Log($"Set constant value {value.ToString(CultureInfo.InvariantCulture)}", LogColors.YellowGreen);
         return value;
     }
+
+    /// <summary>
+    /// Creates a constant float.
+    /// </summary>
+    public static float ConstantFloat(BotData data, float value)
+        => (float)ConstantFloat(data, (double)value);
 
     /// <summary>
     /// Creates a constant bool.

@@ -10,7 +10,13 @@ public class FloatParameter : BlockParameter
     /// <summary>
     /// The default value of the parameter.
     /// </summary>
-    public float DefaultValue { get; set; }
+    public double DefaultValue { get; set; }
+
+    /// <summary>
+    /// Whether generated code should pass this parameter as a <see cref="double"/> instead of a <see cref="float"/>.
+    /// </summary>
+    [Newtonsoft.Json.JsonIgnore]
+    public bool UseDouble { get; set; } = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FloatParameter"/> class.
@@ -35,6 +41,16 @@ public class FloatParameter : BlockParameter
     /// Initializes a new instance of the <see cref="FloatParameter"/> class.
     /// </summary>
     /// <param name="name">The parameter name.</param>
+    /// <param name="defaultValue">The default fixed value.</param>
+    public FloatParameter(string name, double defaultValue) : base(name)
+    {
+        DefaultValue = defaultValue;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FloatParameter"/> class.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
     /// <param name="defaultVariableName">The default variable name when used in variable mode.</param>
     public FloatParameter(string name, string defaultVariableName = "") : base(name)
     {
@@ -45,5 +61,5 @@ public class FloatParameter : BlockParameter
     /// <inheritdoc />
     public override BlockSetting ToBlockSetting()
         => BlockSettingFactory.CreateFloatSetting(Name, DefaultValue, InputMode,
-            DefaultVariableName, PrettyName, Description);
+            DefaultVariableName, PrettyName, Description, UseDouble);
 }

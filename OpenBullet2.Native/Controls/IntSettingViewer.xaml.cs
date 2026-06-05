@@ -98,7 +98,7 @@ public class IntSettingViewerViewModel(BlockSetting setting) : ViewModelBase
         }
     }
 
-    public int Value
+    public long Value
     {
         get => FixedSetting.Value;
         set

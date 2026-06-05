@@ -27,6 +27,9 @@ public class BoolVariable : Variable
     public override int AsInt() => value ? 1 : 0;
 
     /// <inheritdoc />
+    public override long AsLong() => value ? 1 : 0;
+
+    /// <inheritdoc />
     public override bool AsBool() => value;
 
     /// <inheritdoc />
@@ -34,6 +37,9 @@ public class BoolVariable : Variable
 
     /// <inheritdoc />
     public override float AsFloat() => value ? 1 : 0;
+
+    /// <inheritdoc />
+    public override double AsDouble() => value ? 1 : 0;
 
     /// <inheritdoc />
     public override List<string> AsListOfStrings() => [AsString()];

@@ -26,12 +26,28 @@ public static class ListOfStringsExtensions
         => list.Count > 0 ? list.First().AsInt() : 0;
 
     /// <summary>
+    /// Converts a list of strings to a long integer.
+    /// Returns the first element of the list as a long integer,
+    /// or 0 if the list is empty.
+    /// </summary>
+    public static long AsLong(this List<string> list)
+        => list.Count > 0 ? list.First().AsLong() : 0;
+
+    /// <summary>
     /// Converts a list of strings to a float.
     /// Returns the first element of the list as a float,
     /// or 0.0f if the list is empty.
     /// </summary>
     public static float AsFloat(this List<string> list)
         => list.Count > 0 ? list.First().AsFloat() : 0.0f;
+
+    /// <summary>
+    /// Converts a list of strings to a double.
+    /// Returns the first element of the list as a double,
+    /// or 0.0 if the list is empty.
+    /// </summary>
+    public static double AsDouble(this List<string> list)
+        => list.Count > 0 ? list.First().AsDouble() : 0.0;
 
     /// <summary>
     /// Converts a list of strings to a byte array.

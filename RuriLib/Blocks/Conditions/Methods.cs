@@ -66,6 +66,12 @@ public static class Methods
     /// Checks a condition with two integer terms.
     /// </summary>
     public static bool CheckCondition(BotData data, int leftTerm, NumComparison comparison, int rightTerm)
+        => CheckCondition(data, (long)leftTerm, comparison, rightTerm);
+
+    /// <summary>
+    /// Checks a condition with two integer terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, long leftTerm, NumComparison comparison, long rightTerm)
     {
         var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
 
@@ -81,6 +87,12 @@ public static class Methods
     /// Checks a condition with two float terms.
     /// </summary>
     public static bool CheckCondition(BotData data, float leftTerm, NumComparison comparison, float rightTerm)
+        => CheckCondition(data, (double)leftTerm, comparison, rightTerm);
+
+    /// <summary>
+    /// Checks a condition with two double terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, double leftTerm, NumComparison comparison, double rightTerm)
     {
         var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
 

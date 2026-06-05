@@ -114,6 +114,19 @@ public class CSharpWriterTests
             FixedSetting = new IntSetting()
         };
 
+        Assert.Equal("ObjectExtensions.DynamicAsLong(input.count)", CSharpWriter.FromSetting(setting));
+    }
+
+    [Fact]
+    public void FromSetting_InputVariable_LegacyIntSetting_UsesDynamicIntHelperCall()
+    {
+        var setting = new BlockSetting
+        {
+            InputMode = SettingInputMode.Variable,
+            InputVariableName = "input.count",
+            FixedSetting = new IntSetting { UseLong = false }
+        };
+
         Assert.Equal("ObjectExtensions.DynamicAsInt(input.count)", CSharpWriter.FromSetting(setting));
     }
 
@@ -128,6 +141,56 @@ public class CSharpWriterTests
         };
 
         Assert.Equal("myVar.AsString()", CSharpWriter.FromSetting(setting));
+    }
+
+    [Fact]
+    public void FromSetting_IntVariable_UsesLongCastByDefault()
+    {
+        var setting = new BlockSetting
+        {
+            InputMode = SettingInputMode.Variable,
+            InputVariableName = "myVar",
+            FixedSetting = new IntSetting()
+        };
+
+        Assert.Equal("myVar.AsLong()", CSharpWriter.FromSetting(setting));
+    }
+
+    [Fact]
+    public void FromSetting_FloatVariable_UsesDoubleCastByDefault()
+    {
+        var setting = new BlockSetting
+        {
+            InputMode = SettingInputMode.Variable,
+            InputVariableName = "myVar",
+            FixedSetting = new FloatSetting()
+        };
+
+        Assert.Equal("myVar.AsDouble()", CSharpWriter.FromSetting(setting));
+    }
+
+    [Fact]
+    public void FromSetting_FixedLongSetting_EmitsLongLiteral()
+    {
+        var setting = new BlockSetting
+        {
+            InputMode = SettingInputMode.Fixed,
+            FixedSetting = new IntSetting { Value = 5_000_000_000L }
+        };
+
+        Assert.Contains("5000000000", CSharpWriter.FromSetting(setting));
+    }
+
+    [Fact]
+    public void FromSetting_FixedDoubleSetting_EmitsDoubleLiteral()
+    {
+        var setting = new BlockSetting
+        {
+            InputMode = SettingInputMode.Fixed,
+            FixedSetting = new FloatSetting { Value = 3.141592653589793D }
+        };
+
+        Assert.Contains("3.14159265358979", CSharpWriter.FromSetting(setting));
     }
 
     [Fact]

@@ -13,5 +13,5 @@ public class IntBlockParameterDto : BlockParameterDto
     /// <summary>
     /// The default value.
     /// </summary>
-    public int DefaultValue { get; set; } = 0;
+    public long DefaultValue { get; set; } = 0;
 }

@@ -33,8 +33,26 @@ public static class DictionaryOfStringsExtensions
     /// <exception cref="InvalidCastException">
     /// Always thrown.
     /// </exception>
+    public static long AsLong(Dictionary<string, string> _)
+        => throw new InvalidCastException("Cannot convert a dictionary of strings to a long");
+
+    /// <summary>
+    /// Not implemented. Throws an <see cref="InvalidCastException"/>.
+    /// </summary>
+    /// <exception cref="InvalidCastException">
+    /// Always thrown.
+    /// </exception>
     public static float AsFloat(Dictionary<string, string> _)
         => throw new InvalidCastException("Cannot convert a dictionary of strings to a float");
+
+    /// <summary>
+    /// Not implemented. Throws an <see cref="InvalidCastException"/>.
+    /// </summary>
+    /// <exception cref="InvalidCastException">
+    /// Always thrown.
+    /// </exception>
+    public static double AsDouble(Dictionary<string, string> _)
+        => throw new InvalidCastException("Cannot convert a dictionary of strings to a double");
 
     /// <summary>
     /// Not implemented. Throws an <see cref="InvalidCastException"/>.

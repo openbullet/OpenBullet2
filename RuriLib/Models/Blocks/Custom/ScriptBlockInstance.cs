@@ -368,8 +368,8 @@ public class ScriptBlockInstance : BlockInstance
         {
             VariableType.Bool => $"{resultName}.GetProperty(\"{output.Name}\").GetBoolean()",
             VariableType.ByteArray => $"{resultName}.GetProperty(\"{output.Name}\").GetBytesFromBase64()",
-            VariableType.Float => $"{resultName}.GetProperty(\"{output.Name}\").GetSingle()",
-            VariableType.Int => $"{resultName}.GetProperty(\"{output.Name}\").GetInt32()",
+            VariableType.Float => $"{resultName}.GetProperty(\"{output.Name}\").GetDouble()",
+            VariableType.Int => $"{resultName}.GetProperty(\"{output.Name}\").GetInt64()",
             VariableType.String => $"{resultName}.GetProperty(\"{output.Name}\").ToString()",
             VariableType.ListOfStrings => $"((System.Text.Json.JsonElement.ArrayEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateArray()).Select(e => e.GetString()).ToList()",
             VariableType.DictionaryOfStrings => $"((System.Text.Json.JsonElement.ObjectEnumerator){resultName}.GetProperty(\"{output.Name}\").EnumerateObject()).ToDictionary(e => e.Name, e => e.Value.GetString())",
@@ -381,8 +381,8 @@ public class ScriptBlockInstance : BlockInstance
         {
             VariableType.Bool => "AsBoolean()",
             VariableType.ByteArray => "TryCast<byte[]>()",
-            VariableType.Float => "AsNumber().ToSingle()",
-            VariableType.Int => "AsNumber().ToInt()",
+            VariableType.Float => "AsNumber()",
+            VariableType.Int => "AsNumber().ToLong()",
             VariableType.ListOfStrings => "AsArray().GetEnumerator().ToEnumerable().Select(j => j.ToString()).ToList()",
             VariableType.String => "ToString()",
             _ => throw new NotImplementedException() // Dictionary not implemented yet
@@ -408,8 +408,8 @@ public class ScriptBlockInstance : BlockInstance
         {
             VariableType.Bool => $"GetPythonBoolOutput({resultName}, \"{output.Name}\")",
             VariableType.ByteArray => $"GetPythonByteArrayOutput({resultName}, \"{output.Name}\")",
-            VariableType.Float => $"GetPythonFloatOutput({resultName}, \"{output.Name}\")",
-            VariableType.Int => $"GetPythonIntOutput({resultName}, \"{output.Name}\")",
+            VariableType.Float => $"GetPythonDoubleOutput({resultName}, \"{output.Name}\")",
+            VariableType.Int => $"GetPythonLongOutput({resultName}, \"{output.Name}\")",
             VariableType.String => $"GetPythonStringOutput({resultName}, \"{output.Name}\")",
             VariableType.ListOfStrings => $"GetPythonListOfStringsOutput({resultName}, \"{output.Name}\")",
             VariableType.DictionaryOfStrings => $"GetPythonDictionaryOfStringsOutput({resultName}, \"{output.Name}\")",
@@ -421,8 +421,8 @@ public class ScriptBlockInstance : BlockInstance
         {
             VariableType.Bool => "bool",
             VariableType.ByteArray => "byte[]",
-            VariableType.Float => "float",
-            VariableType.Int => "int",
+            VariableType.Float => "double",
+            VariableType.Int => "long",
             VariableType.ListOfStrings => "List<string>",
             VariableType.String => "string",
             VariableType.DictionaryOfStrings => "Dictionary<string, string>",

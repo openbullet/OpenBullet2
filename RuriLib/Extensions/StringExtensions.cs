@@ -27,10 +27,22 @@ public static class StringExtensions
         => int.Parse(str);
 
     /// <summary>
+    /// Converts a string to a long integer by parsing it.
+    /// </summary>
+    public static long AsLong(this string str)
+        => long.Parse(str, CultureInfo.InvariantCulture);
+
+    /// <summary>
     /// Converts a string to a float by parsing it with the invariant culture.
     /// </summary>
     public static float AsFloat(this string str)
         => float.Parse(str, NumberStyles.Any, CultureInfo.InvariantCulture);
+
+    /// <summary>
+    /// Converts a string to a double by parsing it with the invariant culture.
+    /// </summary>
+    public static double AsDouble(this string str)
+        => double.Parse(str, NumberStyles.Any, CultureInfo.InvariantCulture);
 
     /// <summary>
     /// Converts a string to a byte array.

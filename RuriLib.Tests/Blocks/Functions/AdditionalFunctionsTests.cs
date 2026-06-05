@@ -51,7 +51,9 @@ public class AdditionalFunctionsTests
     {
         var data = NewBotData();
 
+        Assert.Equal(42L, ConstantsMethods.ConstantInteger(data, 42L));
         Assert.Equal(42, ConstantsMethods.ConstantInteger(data, 42));
+        Assert.Equal(1.5D, ConstantsMethods.ConstantFloat(data, 1.5D));
         Assert.Equal(1.5f, ConstantsMethods.ConstantFloat(data, 1.5f));
         Assert.True(ConstantsMethods.ConstantBool(data, true));
         Assert.Equal([0x01, 0x02], ConstantsMethods.ConstantByteArray(data, [0x01, 0x02]));
@@ -62,9 +64,19 @@ public class AdditionalFunctionsTests
     {
         var data = NewBotData();
 
-        var value = IntegerMethods.RandomInteger(data, 5, 5);
+        var value = IntegerMethods.RandomInteger(data, 5L, 5L);
 
-        Assert.Equal(5, value);
+        Assert.Equal(5L, value);
+    }
+
+    [Fact]
+    public void RandomInteger_WithLargeBounds_ReturnsLong()
+    {
+        var data = NewBotData();
+
+        var value = IntegerMethods.RandomInteger(data, 5_000_000_000L, 5_000_000_000L);
+
+        Assert.Equal(5_000_000_000L, value);
     }
 
     [Fact]
@@ -72,9 +84,9 @@ public class AdditionalFunctionsTests
     {
         var data = NewBotData();
 
-        var value = FloatMethods.RandomFloat(data, 2.5f, 2.5f);
+        var value = FloatMethods.RandomFloat(data, 2.5D, 2.5D);
 
-        Assert.Equal(2.5f, value);
+        Assert.Equal(2.5D, value);
     }
 
     [Fact]
@@ -82,9 +94,19 @@ public class AdditionalFunctionsTests
     {
         var data = NewBotData();
 
-        var value = FloatMethods.Compute(data, "3*(2+1)");
+        var value = FloatMethods.ComputeDouble(data, "3*(2+1)");
 
-        Assert.Equal(9f, value);
+        Assert.Equal(9D, value);
+    }
+
+    [Fact]
+    public void Compute_PreservesDoublePrecision()
+    {
+        var data = NewBotData();
+
+        var value = FloatMethods.ComputeDouble(data, "16777217");
+
+        Assert.Equal(16777217D, value);
     }
 
     [Fact]
@@ -92,13 +114,13 @@ public class AdditionalFunctionsTests
     {
         var data = NewBotData();
 
-        Assert.Equal(3, FloatMethods.Ceil(data, 2.1f));
-        Assert.Equal(2, FloatMethods.Floor(data, 2.9f));
-        Assert.Equal(3, FloatMethods.RoundToInteger(data, 2.5f));
-        Assert.Equal(4.5f, FloatMethods.TakeMaxFloat(data, 1.5f, 4.5f));
-        Assert.Equal(1.5f, FloatMethods.TakeMinFloat(data, 1.5f, 4.5f));
-        Assert.Equal(9, IntegerMethods.TakeMaxInt(data, 4, 9));
-        Assert.Equal(4, IntegerMethods.TakeMinInt(data, 4, 9));
+        Assert.Equal(3L, FloatMethods.Ceil(data, 2.1D));
+        Assert.Equal(2L, FloatMethods.Floor(data, 2.9D));
+        Assert.Equal(3L, FloatMethods.RoundToInteger(data, 2.5D));
+        Assert.Equal(4.5D, FloatMethods.TakeMaxFloat(data, 1.5D, 4.5D));
+        Assert.Equal(1.5D, FloatMethods.TakeMinFloat(data, 1.5D, 4.5D));
+        Assert.Equal(9L, IntegerMethods.TakeMaxInt(data, 4L, 9L));
+        Assert.Equal(4L, IntegerMethods.TakeMinInt(data, 4L, 9L));
     }
 
     [Fact]

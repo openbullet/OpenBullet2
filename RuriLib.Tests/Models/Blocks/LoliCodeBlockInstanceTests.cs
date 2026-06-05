@@ -70,7 +70,7 @@ public class LoliCodeBlockInstanceTests
     {
         var output = Transpile("REPEAT 10");
 
-        Assert.Matches($@"^for \(var [A-Za-z0-9_]+ = 0; [A-Za-z0-9_]+ < \(10\)\.AsInt\(\); [A-Za-z0-9_]+\+\+\){Regex.Escape(_nl)}\{{{Regex.Escape(_nl)}$",
+        Assert.Matches($@"^for \(var [A-Za-z0-9_]+ = 0L; [A-Za-z0-9_]+ < \(10\)\.AsLong\(\); [A-Za-z0-9_]+\+\+\){Regex.Escape(_nl)}\{{{Regex.Escape(_nl)}$",
             output);
     }
 

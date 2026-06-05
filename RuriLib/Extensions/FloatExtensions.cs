@@ -24,9 +24,22 @@ public static class FloatExtensions
         => (int)f;
 
     /// <summary>
+    /// Converts a <see cref="float"/> to a <see cref="long"/>.
+    /// Returns the integer part of the float.
+    /// </summary>
+    public static long AsLong(this float f)
+        => Convert.ToInt64(f);
+
+    /// <summary>
     /// Converts a <see cref="float"/> to a <see cref="float"/>.
     /// </summary>
     public static float AsFloat(this float f)
+        => f;
+
+    /// <summary>
+    /// Converts a <see cref="float"/> to a <see cref="double"/>.
+    /// </summary>
+    public static double AsDouble(this float f)
         => f;
 
     /// <summary>

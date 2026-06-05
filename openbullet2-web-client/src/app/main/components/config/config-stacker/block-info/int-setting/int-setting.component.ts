@@ -29,7 +29,7 @@ export class IntSettingComponent {
 
     const value = Number.parseInt(event);
 
-    if (value < -2147483648 || value > 2147483647) {
+    if (!Number.isSafeInteger(value)) {
       return;
     }
 

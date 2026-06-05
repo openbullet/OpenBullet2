@@ -9,13 +9,13 @@ namespace RuriLib.Models.Variables;
 /// </summary>
 public class FloatVariable : Variable
 {
-    private readonly float value;
+    private readonly double value;
 
     /// <summary>
     /// Creates a floating-point variable.
     /// </summary>
     /// <param name="value">The floating-point value.</param>
-    public FloatVariable(float value)
+    public FloatVariable(double value)
     {
         this.value = value;
         Type = VariableType.Float;
@@ -25,7 +25,10 @@ public class FloatVariable : Variable
     public override string AsString() => value.ToString(CultureInfo.InvariantCulture);
 
     /// <inheritdoc />
-    public override int AsInt() => (int)value;
+    public override int AsInt() => Convert.ToInt32(value);
+
+    /// <inheritdoc />
+    public override long AsLong() => Convert.ToInt64(value);
 
     /// <inheritdoc />
     public override bool AsBool() => value switch
@@ -39,7 +42,10 @@ public class FloatVariable : Variable
     public override byte[] AsByteArray() => BitConverter.GetBytes(value);
 
     /// <inheritdoc />
-    public override float AsFloat() => value;
+    public override float AsFloat() => Convert.ToSingle(value);
+
+    /// <inheritdoc />
+    public override double AsDouble() => value;
 
     /// <inheritdoc />
     public override List<string> AsListOfStrings() => [AsString()];

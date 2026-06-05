@@ -59,8 +59,8 @@ public class CSharpWriter
             BoolSetting x => ToPrimitive(x.Value),
             ByteArraySetting x => SerializeByteArray(x.Value),
             DictionaryOfStringsSetting x => SerializeDictionary(x.Value),
-            FloatSetting x => ToPrimitive(x.Value),
-            IntSetting x => ToPrimitive(x.Value),
+            FloatSetting x => x.UseDouble ? ToPrimitive(x.Value) : ToPrimitive(Convert.ToSingle(x.Value)),
+            IntSetting x => x.UseLong ? ToPrimitive(x.Value) : ToPrimitive(Convert.ToInt32(x.Value)),
             ListOfStringsSetting x => SerializeList(x.Value),
             StringSetting x => ToPrimitive(x.Value),
             EnumSetting x => $"{x.EnumType.FullName}.{x.Value}",
@@ -98,8 +98,12 @@ public class CSharpWriter
                 : SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression),
             ByteArraySetting x => SyntaxFactory.ParseExpression(SerializeByteArray(x.Value)),
             DictionaryOfStringsSetting x => SyntaxFactory.ParseExpression(SerializeDictionary(x.Value)),
-            FloatSetting x => SyntaxFactory.ParseExpression(ToPrimitive(x.Value)),
-            IntSetting x => SyntaxFactory.ParseExpression(ToPrimitive(x.Value)),
+            FloatSetting x => SyntaxFactory.ParseExpression(x.UseDouble
+                ? ToPrimitive(x.Value)
+                : ToPrimitive(Convert.ToSingle(x.Value))),
+            IntSetting x => SyntaxFactory.ParseExpression(x.UseLong
+                ? ToPrimitive(x.Value)
+                : ToPrimitive(Convert.ToInt32(x.Value))),
             ListOfStringsSetting x => SyntaxFactory.ParseExpression(SerializeList(x.Value)),
             StringSetting x => x.Value is null
                 ? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
@@ -348,8 +352,8 @@ public class CSharpWriter
             BoolSetting _ => "AsBool",
             ByteArraySetting _ => "AsBytes",
             DictionaryOfStringsSetting _ => "AsDict",
-            FloatSetting _ => "AsFloat",
-            IntSetting _ => "AsInt",
+            FloatSetting x => x.UseDouble ? "AsDouble" : "AsFloat",
+            IntSetting x => x.UseLong ? "AsLong" : "AsInt",
             ListOfStringsSetting _ => "AsList",
             StringSetting _ => "AsString",
             _ => throw new NotImplementedException()

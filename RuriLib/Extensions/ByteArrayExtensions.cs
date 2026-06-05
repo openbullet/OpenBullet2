@@ -34,6 +34,13 @@ public static class ByteArrayExtensions
         => BitConverter.ToInt32(bytes, 0);
 
     /// <summary>
+    /// Converts a <see cref="T:byte[]"/> to a <see cref="long"/>.
+    /// Returns the integer representation of the first 8 bytes.
+    /// </summary>
+    public static long AsLong(this byte[] bytes)
+        => BitConverter.ToInt64(bytes, 0);
+
+    /// <summary>
     /// Converts a <see cref="T:byte[]"/> to a <see cref="float"/>.
     /// Returns the float representation of the first 4 bytes.
     /// </summary>
@@ -45,6 +52,13 @@ public static class ByteArrayExtensions
     /// </exception>
     public static float AsFloat(this byte[] bytes)
         => BitConverter.ToSingle(bytes, 0);
+
+    /// <summary>
+    /// Converts a <see cref="T:byte[]"/> to a <see cref="double"/>.
+    /// Returns the double representation of the first 8 bytes.
+    /// </summary>
+    public static double AsDouble(this byte[] bytes)
+        => BitConverter.ToDouble(bytes, 0);
 
     /// <summary>
     /// Converts a <see cref="T:byte[]"/> to a <see cref="T:byte[]"/>.

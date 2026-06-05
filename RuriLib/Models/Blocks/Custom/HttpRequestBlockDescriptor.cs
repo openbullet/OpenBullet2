@@ -34,7 +34,10 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
             ["url"] = new StringParameter("url", "https://google.com"),
             ["method"] = new EnumParameter("method", typeof(HttpMethod), nameof(HttpMethod.GET)),
             ["autoRedirect"] = new BoolParameter("autoRedirect", true),
-            ["maxNumberOfRedirects"] = new IntParameter("maxNumberOfRedirects", 8),
+            ["maxNumberOfRedirects"] = new IntParameter("maxNumberOfRedirects", 8)
+            {
+                UseLong = false
+            },
             ["readResponseContent"] = new BoolParameter("readResponseContent", true),
             ["urlEncodeContent"] = new BoolParameter("urlEncodeContent", false),
             ["absoluteUriInFirstLine"] = new BoolParameter("absoluteUriInFirstLine", false)
@@ -110,7 +113,10 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
                     ["Accept-Language"] = "en-US,en;q=0.8"
                 },
                 SettingInputMode.Interpolated),
-            ["timeoutMilliseconds"] = new IntParameter("timeoutMilliseconds", 15000),
+            ["timeoutMilliseconds"] = new IntParameter("timeoutMilliseconds", 15000)
+            {
+                UseLong = false
+            },
             ["httpVersion"] = new StringParameter("httpVersion", "1.1")
             {
                 Description = "HTTP version string such as 1.1, 2.0, or 3.0, depending on the selected HTTP library and platform support."

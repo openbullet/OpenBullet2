@@ -402,8 +402,8 @@ internal sealed class PythonScriptRuntime : IDisposable
         {
             VariableType.Bool => value.As<bool>(),
             VariableType.ByteArray => value.As<byte[]>(),
-            VariableType.Float => Convert.ToSingle(value.As<double>()),
-            VariableType.Int => Convert.ToInt32(value.As<long>()),
+            VariableType.Float => value.As<double>(),
+            VariableType.Int => value.As<long>(),
             VariableType.String => value.As<string>(),
             VariableType.ListOfStrings => value.As<IReadOnlyList<string>>().ToList(),
             VariableType.DictionaryOfStrings => value.As<IReadOnlyDictionary<string, string>>()

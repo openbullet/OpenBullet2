@@ -13,5 +13,5 @@ public class FloatBlockParameterDto : BlockParameterDto
     /// <summary>
     /// The default value.
     /// </summary>
-    public float DefaultValue { get; set; } = 0f;
+    public double DefaultValue { get; set; } = 0d;
 }

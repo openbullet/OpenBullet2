@@ -28,6 +28,9 @@ public class ByteArrayVariable : Variable
     public override int AsInt() => BitConverter.ToInt32(value ?? throw new InvalidCastException(), 0);
 
     /// <inheritdoc />
+    public override long AsLong() => BitConverter.ToInt64(value ?? throw new InvalidCastException(), 0);
+
+    /// <inheritdoc />
     public override bool AsBool() => BitConverter.ToBoolean(value ?? throw new InvalidCastException(), 0);
 
     /// <inheritdoc />
@@ -35,6 +38,9 @@ public class ByteArrayVariable : Variable
 
     /// <inheritdoc />
     public override float AsFloat() => AsInt();
+
+    /// <inheritdoc />
+    public override double AsDouble() => BitConverter.ToDouble(value ?? throw new InvalidCastException(), 0);
 
     /// <inheritdoc />
     public override List<string> AsListOfStrings() => [AsString()];

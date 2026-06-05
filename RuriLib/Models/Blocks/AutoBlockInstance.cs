@@ -187,8 +187,8 @@ public class AutoBlockInstance : BlockInstance
         VariableType.Bool => "bool",
         VariableType.ByteArray => "byte[]",
         VariableType.DictionaryOfStrings => "Dictionary<string, string>",
-        VariableType.Float => "float",
-        VariableType.Int => "int",
+        VariableType.Float => "double",
+        VariableType.Int => "long",
         VariableType.ListOfStrings => "List<string>",
         VariableType.String => "string",
         _ => throw new NotSupportedException()

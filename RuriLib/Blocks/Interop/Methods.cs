@@ -276,13 +276,19 @@ public static class Methods
     /// Gets a floating-point output value from a Python script result.
     /// </summary>
     public static float GetPythonFloatOutput(IReadOnlyDictionary<string, object> result, string name)
+        => Convert.ToSingle(GetPythonDoubleOutput(result, name));
+
+    /// <summary>
+    /// Gets a double-precision floating-point output value from a Python script result.
+    /// </summary>
+    public static double GetPythonDoubleOutput(IReadOnlyDictionary<string, object> result, string name)
     {
         var value = GetRequiredPythonOutput(result, name);
 
         return value switch
         {
             float single => single,
-            double number => Convert.ToSingle(number),
+            double number => number,
             _ => throw new BlockExecutionException($"Python output '{name}' is not a floating-point number")
         };
     }
@@ -291,13 +297,19 @@ public static class Methods
     /// Gets an integer output value from a Python script result.
     /// </summary>
     public static int GetPythonIntOutput(IReadOnlyDictionary<string, object> result, string name)
+        => Convert.ToInt32(GetPythonLongOutput(result, name));
+
+    /// <summary>
+    /// Gets a long integer output value from a Python script result.
+    /// </summary>
+    public static long GetPythonLongOutput(IReadOnlyDictionary<string, object> result, string name)
     {
         var value = GetRequiredPythonOutput(result, name);
 
         return value switch
         {
             int number => number,
-            long number => Convert.ToInt32(number),
+            long number => number,
             _ => throw new BlockExecutionException($"Python output '{name}' is not an integer")
         };
     }

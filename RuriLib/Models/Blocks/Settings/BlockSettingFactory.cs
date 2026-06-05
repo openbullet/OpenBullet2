@@ -42,10 +42,11 @@ public static class BlockSettingFactory
     /// <param name="defaultVariableName">The default variable name when used in variable mode.</param>
     /// <param name="readableName">The optional display name.</param>
     /// <param name="description">The optional description.</param>
+    /// <param name="useLong">Whether generated code should pass this setting as a long.</param>
     /// <returns>The created setting.</returns>
-    public static BlockSetting CreateIntSetting(string name, int defaultValue = 0,
+    public static BlockSetting CreateIntSetting(string name, long defaultValue = 0,
         SettingInputMode mode = SettingInputMode.Fixed, string? defaultVariableName = null,
-        string? readableName = null, string? description = null)
+        string? readableName = null, string? description = null, bool useLong = true)
         => new()
         {
             Name = name,
@@ -53,7 +54,7 @@ public static class BlockSettingFactory
             ReadableName = readableName ?? name.ToReadableName(),
             InputMode = mode,
             InputVariableName = defaultVariableName ?? string.Empty,
-            FixedSetting = new IntSetting { Value = defaultValue }
+            FixedSetting = new IntSetting { Value = defaultValue, UseLong = useLong }
         };
 
     /// <summary>
@@ -65,10 +66,11 @@ public static class BlockSettingFactory
     /// <param name="defaultVariableName">The default variable name when used in variable mode.</param>
     /// <param name="readableName">The optional display name.</param>
     /// <param name="description">The optional description.</param>
+    /// <param name="useDouble">Whether generated code should pass this setting as a double.</param>
     /// <returns>The created setting.</returns>
-    public static BlockSetting CreateFloatSetting(string name, float defaultValue = 0,
+    public static BlockSetting CreateFloatSetting(string name, double defaultValue = 0,
         SettingInputMode mode = SettingInputMode.Fixed, string? defaultVariableName = null,
-        string? readableName = null, string? description = null)
+        string? readableName = null, string? description = null, bool useDouble = true)
         => new()
         {
             Name = name,
@@ -76,7 +78,7 @@ public static class BlockSettingFactory
             ReadableName = readableName ?? name.ToReadableName(),
             InputMode = mode,
             InputVariableName = defaultVariableName ?? string.Empty,
-            FixedSetting = new FloatSetting { Value = defaultValue }
+            FixedSetting = new FloatSetting { Value = defaultValue, UseDouble = useDouble }
         };
 
     /// <summary>

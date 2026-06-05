@@ -98,7 +98,7 @@ public class FloatSettingViewerViewModel(BlockSetting setting) : ViewModelBase
         }
     }
 
-    public float Value
+    public double Value
     {
         get => FixedSetting.Value;
         set

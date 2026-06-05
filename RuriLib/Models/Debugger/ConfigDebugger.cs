@@ -671,9 +671,17 @@ public class ConfigDebugger : IDisposable
         {
             variable = new IntVariable(intValue);
         }
+        else if (type == typeof(long) && snapshot.Value is long longValue)
+        {
+            variable = new IntVariable(longValue);
+        }
         else if (type == typeof(float) && snapshot.Value is float floatValue)
         {
             variable = new FloatVariable(floatValue);
+        }
+        else if (type == typeof(double) && snapshot.Value is double doubleValue)
+        {
+            variable = new FloatVariable(doubleValue);
         }
         else if (type == typeof(bool) && snapshot.Value is bool boolValue)
         {

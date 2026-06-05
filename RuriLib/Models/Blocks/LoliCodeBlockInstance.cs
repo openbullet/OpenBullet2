@@ -170,7 +170,7 @@ public class LoliCodeBlockInstance : BlockInstance
         if ((match = Regex.Match(input, "^REPEAT (.+)$")).Success)
         {
             var i = VariableNames.RandomName();
-            return $"for (var {i} = 0; {i} < ({match.Groups[1].Value}).AsInt(); {i}++){NewLine}{{";
+            return $"for (var {i} = 0L; {i} < ({match.Groups[1].Value}).AsLong(); {i}++){NewLine}{{";
         }
 
         // FOREACH

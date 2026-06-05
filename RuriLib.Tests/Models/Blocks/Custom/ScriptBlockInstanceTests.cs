@@ -193,7 +193,7 @@ public class ScriptBlockInstanceTests
             "SetValue(nameof(globals.source), globals.source);",
             ".SetValue(nameof(y), y);",
             "InvokeJint(data, tmp_",
-            "int count = ");
+            "long count = ");
 
         AssertSyntax(CreateIronPythonBlock(), [],
             ["message"],

@@ -94,6 +94,14 @@ public static class Conditions
     /// <param name="rightTerm">The right operand.</param>
     /// <returns><see langword="true"/> if the comparison succeeds.</returns>
     public static bool Check(int leftTerm, NumComparison comparison, int rightTerm)
+        => Check((long)leftTerm, comparison, rightTerm);
+
+    /// <summary>Compares two <see cref="long"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(long leftTerm, NumComparison comparison, long rightTerm)
     {
         return comparison switch
         {
@@ -132,11 +140,19 @@ public static class Conditions
     /// <param name="rightTerm">The right operand.</param>
     /// <returns><see langword="true"/> if the comparison succeeds.</returns>
     public static bool Check(float leftTerm, NumComparison comparison, float rightTerm)
+        => Check((double)leftTerm, comparison, rightTerm);
+
+    /// <summary>Compares two <see cref="double"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(double leftTerm, NumComparison comparison, double rightTerm)
     {
         return comparison switch
         {
-            NumComparison.EqualTo => Math.Abs(leftTerm - rightTerm) < float.Epsilon,
-            NumComparison.NotEqualTo => Math.Abs(leftTerm - rightTerm) > float.Epsilon,
+            NumComparison.EqualTo => Math.Abs(leftTerm - rightTerm) < double.Epsilon,
+            NumComparison.NotEqualTo => Math.Abs(leftTerm - rightTerm) > double.Epsilon,
             NumComparison.LessThan => leftTerm < rightTerm,
             NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
             NumComparison.GreaterThan => leftTerm > rightTerm,

@@ -36,11 +36,11 @@ internal static class BlockSettingMapper
                 break;
 
             case BlockSettingType.Int:
-                ((IntSetting)setting.FixedSetting!).Value = value.GetInt32();
+                ((IntSetting)setting.FixedSetting!).Value = value.GetInt64();
                 break;
 
             case BlockSettingType.Float:
-                ((FloatSetting)setting.FixedSetting!).Value = value.GetSingle();
+                ((FloatSetting)setting.FixedSetting!).Value = value.GetDouble();
                 break;
 
             case BlockSettingType.Bool:

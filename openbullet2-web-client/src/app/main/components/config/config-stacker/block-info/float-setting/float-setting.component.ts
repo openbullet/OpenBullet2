@@ -29,7 +29,7 @@ export class FloatSettingComponent {
 
     const value = Number.parseFloat(event);
 
-    if (value < -3.40282347e38 || value > 3.40282347e38) {
+    if (!Number.isFinite(value)) {
       return;
     }
 

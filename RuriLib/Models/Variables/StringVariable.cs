@@ -37,6 +37,17 @@ public class StringVariable : Variable
     }
 
     /// <inheritdoc />
+    public override long AsLong()
+    {
+        if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result))
+        {
+            return result;
+        }
+
+        throw new InvalidCastException();
+    }
+
+    /// <inheritdoc />
     public override bool AsBool()
     {
         if (bool.TryParse(value, out var result))
@@ -54,6 +65,17 @@ public class StringVariable : Variable
     public override float AsFloat()
     {
         if (float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+        {
+            return result;
+        }
+
+        throw new InvalidCastException();
+    }
+
+    /// <inheritdoc />
+    public override double AsDouble()
+    {
+        if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
         {
             return result;
         }

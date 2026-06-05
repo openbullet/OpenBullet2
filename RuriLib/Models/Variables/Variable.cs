@@ -36,10 +36,22 @@ public abstract class Variable
     public virtual int AsInt() => throw new InvalidCastException();
 
     /// <summary>
+    /// Converts the variable to a long integer.
+    /// </summary>
+    /// <returns>The long integer representation.</returns>
+    public virtual long AsLong() => throw new InvalidCastException();
+
+    /// <summary>
     /// Converts the variable to a floating-point number.
     /// </summary>
     /// <returns>The floating-point representation.</returns>
     public virtual float AsFloat() => throw new InvalidCastException();
+
+    /// <summary>
+    /// Converts the variable to a double-precision floating-point number.
+    /// </summary>
+    /// <returns>The double-precision floating-point representation.</returns>
+    public virtual double AsDouble() => throw new InvalidCastException();
 
     /// <summary>
     /// Converts the variable to a boolean.

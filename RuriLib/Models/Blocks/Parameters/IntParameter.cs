@@ -10,7 +10,13 @@ public class IntParameter : BlockParameter
     /// <summary>
     /// The default value of the parameter.
     /// </summary>
-    public int DefaultValue { get; set; }
+    public long DefaultValue { get; set; }
+
+    /// <summary>
+    /// Whether generated code should pass this parameter as a <see cref="long"/> instead of an <see cref="int"/>.
+    /// </summary>
+    [Newtonsoft.Json.JsonIgnore]
+    public bool UseLong { get; set; } = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IntParameter"/> class.
@@ -35,6 +41,16 @@ public class IntParameter : BlockParameter
     /// Initializes a new instance of the <see cref="IntParameter"/> class.
     /// </summary>
     /// <param name="name">The parameter name.</param>
+    /// <param name="defaultValue">The default fixed value.</param>
+    public IntParameter(string name, long defaultValue) : base(name)
+    {
+        DefaultValue = defaultValue;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IntParameter"/> class.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
     /// <param name="defaultVariableName">The default variable name when used in variable mode.</param>
     public IntParameter(string name, string defaultVariableName = "") : base(name)
     {
@@ -45,5 +61,5 @@ public class IntParameter : BlockParameter
     /// <inheritdoc />
     public override BlockSetting ToBlockSetting()
         => BlockSettingFactory.CreateIntSetting(Name, DefaultValue, InputMode,
-            DefaultVariableName, PrettyName, Description);
+            DefaultVariableName, PrettyName, Description, UseLong);
 }

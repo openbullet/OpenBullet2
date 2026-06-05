@@ -60,6 +60,24 @@ public class VariableModelsTests
     }
 
     [Fact]
+    public void IntVariable_StoresLongAndKeepsLegacyIntCast()
+    {
+        var variable = new IntVariable(5_000_000_000L);
+
+        Assert.Equal(5_000_000_000L, variable.AsLong());
+        Assert.Throws<OverflowException>(() => variable.AsInt());
+    }
+
+    [Fact]
+    public void FloatVariable_StoresDoubleAndKeepsLegacyFloatCast()
+    {
+        var variable = new FloatVariable(3.141592653589793D);
+
+        Assert.Equal(3.141592653589793D, variable.AsDouble());
+        Assert.Equal((float)3.141592653589793D, variable.AsFloat());
+    }
+
+    [Fact]
     public void DictionaryOfStringsVariable_AsString_FormatsEntries()
     {
         var variable = new DictionaryOfStringsVariable(new Dictionary<string, string>

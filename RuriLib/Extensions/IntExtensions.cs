@@ -22,10 +22,22 @@ public static class IntExtensions
         => i;
 
     /// <summary>
+    /// Converts an <see cref="int"/> to a <see cref="long"/>.
+    /// </summary>
+    public static long AsLong(this int i)
+        => i;
+
+    /// <summary>
     /// Converts an <see cref="int"/> to a <see cref="float"/>.
     /// </summary>
     public static float AsFloat(this int i)
         => Convert.ToSingle(i);
+
+    /// <summary>
+    /// Converts an <see cref="int"/> to a <see cref="double"/>.
+    /// </summary>
+    public static double AsDouble(this int i)
+        => i;
 
     /// <summary>
     /// Converts an <see cref="int"/> to an array of <see cref="byte"/>.

@@ -8,5 +8,11 @@ public class IntSetting : Setting
     /// <summary>
     /// The value of the setting.
     /// </summary>
-    public int Value { get; set; }
+    public long Value { get; set; }
+
+    /// <summary>
+    /// Whether generated code should pass this setting as a <see cref="long"/> instead of an <see cref="int"/>.
+    /// </summary>
+    [Newtonsoft.Json.JsonIgnore]
+    public bool UseLong { get; set; } = true;
 }

@@ -36,6 +36,18 @@ public static class LineParser
     }
 
     /// <summary>
+    /// Parses a <see cref="long" /> value and moves forward.
+    /// </summary>
+    public static long ParseLong(ref string input)
+    {
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var value = ParseLong(cursor);
+        AdvanceInput(ref input, cursor.Index);
+        return value;
+    }
+
+    /// <summary>
     /// Parses a <see cref="float" /> value and moves forward.
     /// </summary>
     public static float ParseFloat(ref string input)
@@ -43,6 +55,18 @@ public static class LineParser
         var cursor = new LineParserCursor(input);
         cursor.SkipWhitespace();
         var value = ParseFloat(cursor);
+        AdvanceInput(ref input, cursor.Index);
+        return value;
+    }
+
+    /// <summary>
+    /// Parses a <see cref="double" /> value and moves forward.
+    /// </summary>
+    public static double ParseDouble(ref string input)
+    {
+        var cursor = new LineParserCursor(input);
+        cursor.SkipWhitespace();
+        var value = ParseDouble(cursor);
         AdvanceInput(ref input, cursor.Index);
         return value;
     }
@@ -131,6 +155,19 @@ public static class LineParser
         return value;
     }
 
+    private static long ParseLong(LineParserCursor cursor)
+    {
+        var token = ParseTokenSpan(cursor, "Expected long");
+
+        if (!IsIntToken(token)
+            || !long.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+        {
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid long token '{token}'");
+        }
+
+        return value;
+    }
+
     private static float ParseFloat(LineParserCursor cursor)
     {
         var token = ParseTokenSpan(cursor, "Expected float");
@@ -139,6 +176,19 @@ public static class LineParser
             || !float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
         {
             throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid float token '{token}'");
+        }
+
+        return value;
+    }
+
+    private static double ParseDouble(LineParserCursor cursor)
+    {
+        var token = ParseTokenSpan(cursor, "Expected double");
+
+        if (!IsFloatToken(token)
+            || !double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            throw cursor.CreateExceptionAt(cursor.LastTokenStartIndex, $"Invalid double token '{token}'");
         }
 
         return value;

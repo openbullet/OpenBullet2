@@ -22,6 +22,13 @@ public static class BoolExtensions
         => Convert.ToInt32(b);
 
     /// <summary>
+    /// Converts a <see cref="bool"/> to a <see cref="long"/>.
+    /// Returns 1 if true, 0 if false.
+    /// </summary>
+    public static long AsLong(this bool b)
+        => Convert.ToInt64(b);
+
+    /// <summary>
     /// Converts a <see cref="bool"/> to a <see cref="float"/>.
     /// Returns 1.0f if true, 0.0f if false.
     /// </summary>
@@ -29,6 +36,13 @@ public static class BoolExtensions
     /// <returns></returns>
     public static float AsFloat(this bool b)
         => Convert.ToSingle(b);
+
+    /// <summary>
+    /// Converts a <see cref="bool"/> to a <see cref="double"/>.
+    /// Returns 1.0 if true, 0.0 if false.
+    /// </summary>
+    public static double AsDouble(this bool b)
+        => Convert.ToDouble(b);
 
     /// <summary>
     /// Converts a <see cref="bool"/> to a <see cref="T:byte[]"/>.
