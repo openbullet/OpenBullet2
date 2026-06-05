@@ -354,7 +354,7 @@ public class LoliCodeParserTests
         var block = BlockFactory.GetBlock<AutoBlockInstance>("ConstantString");
         var input = "value";
 
-        Assert.Throws<Exception>(() => LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor));
+        Assert.Throws<LineParsingException>(() => LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor));
     }
 
     [Fact]
@@ -402,7 +402,7 @@ public class LoliCodeParserTests
     [Fact]
     public void DetectTokenType_InvalidFloat_Throws()
     {
-        Assert.Throws<Exception>(() => LoliCodeParser.DetectTokenType("1..2"));
+        Assert.Throws<LineParsingException>(() => LoliCodeParser.DetectTokenType("1..2"));
     }
 
     [Fact]

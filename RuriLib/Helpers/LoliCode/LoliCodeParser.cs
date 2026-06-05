@@ -8,6 +8,7 @@ using RuriLib.Models.Variables;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Conditions.Comparisons;
+using RuriLib.Exceptions;
 
 namespace RuriLib.Helpers.LoliCode;
 
@@ -27,6 +28,9 @@ public static class LoliCodeParser
         ArgumentNullException.ThrowIfNull(settings);
         ArgumentNullException.ThrowIfNull(descriptor);
 
+        var originalInput = input;
+        var leadingWhitespaceLength = input.Length - input.TrimStart().Length;
+
         input = input.TrimStart();
 
         // myParam = "myValue"
@@ -35,15 +39,17 @@ public static class LoliCodeParser
         if (!descriptor.Parameters.TryGetValue(name, out var param)
             || !settings.TryGetValue(name, out var setting))
         {
-            throw new Exception($"Incorrect setting name: {name}");
+            throw new LineParsingException(
+                leadingWhitespaceLength + 1,
+                $"Unknown setting '{name}' for block '{descriptor.Id}'");
         }
-
-        input = input.TrimStart();
 
         // = "myValue"
         if (input.Length == 0 || input[0] != '=')
         {
-            throw new Exception("Could not parse the setting");
+            throw new LineParsingException(
+                FindSettingAssignmentColumn(originalInput, leadingWhitespaceLength, name),
+                $"Expected '=' after setting name '{name}'");
         }
 
         input = input[1..];
@@ -201,7 +207,7 @@ public static class LoliCodeParser
 
         if (input.Length == 0)
         {
-            throw new Exception("Could not detect the token type");
+            throw new LineParsingException(1, "Expected token");
         }
 
         if (input.StartsWith('"'))
@@ -221,7 +227,7 @@ public static class LoliCodeParser
 
         if (tokenLength == 0)
         {
-            throw new Exception("Could not detect the token type");
+            throw new LineParsingException(1, "Expected token");
         }
 
         var token = input[..tokenLength];
@@ -242,7 +248,19 @@ public static class LoliCodeParser
         if (IsBase64Token(token))
             return VariableType.ByteArray;
 
-        throw new Exception("Could not detect the token type");
+        throw new LineParsingException(1, $"Could not detect the type of token '{token}'");
+    }
+
+    private static int FindSettingAssignmentColumn(string input, int leadingWhitespaceLength, string settingName)
+    {
+        var i = leadingWhitespaceLength + settingName.Length;
+
+        while (i < input.Length && char.IsWhiteSpace(input[i]))
+        {
+            i++;
+        }
+
+        return i + 1;
     }
 
     private static bool IsIntToken(string token)
