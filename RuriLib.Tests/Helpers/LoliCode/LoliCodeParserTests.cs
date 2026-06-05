@@ -70,6 +70,22 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseToken_TabSeparated_Parse()
+    {
+        var input = "token\tremaining";
+        Assert.Equal("token", LineParser.ParseToken(ref input));
+        Assert.Equal("remaining", input);
+    }
+
+    [Fact]
+    public void ParseToken_NewlineSeparated_Parse()
+    {
+        var input = "token\nremaining";
+        Assert.Equal("token", LineParser.ParseToken(ref input));
+        Assert.Equal("remaining", input);
+    }
+
+    [Fact]
     public void ParseList_EmptyList_Parse()
     {
         var input = "[] such emptiness";
@@ -211,6 +227,19 @@ public class LoliCodeParserTests
         LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor);
         Assert.Equal(SettingInputMode.Variable, valueSetting.InputMode);
         Assert.Equal("myVariable", valueSetting.InputVariableName);
+    }
+
+    [Fact]
+    public void ParseSetting_VariableFollowedByNewline_KeepsEmptyVariableName()
+    {
+        var block = BlockFactory.GetBlock<AutoBlockInstance>("ConstantString");
+        var valueSetting = block.Settings["value"];
+
+        var input = "value = @\nnext";
+        LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor);
+        Assert.Equal(SettingInputMode.Variable, valueSetting.InputMode);
+        Assert.Equal(string.Empty, valueSetting.InputVariableName);
+        Assert.Equal("\nnext", input);
     }
 
     [Fact]

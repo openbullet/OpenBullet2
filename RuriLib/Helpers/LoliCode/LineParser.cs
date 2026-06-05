@@ -12,23 +12,28 @@ namespace RuriLib.Helpers.LoliCode;
 public static partial class LineParser
 {
     /// <summary>
-    /// Parses a generic LoliCode token (anything until a space character) and moves forward.
+    /// Parses a generic LoliCode token (anything until a whitespace character) and moves forward.
     /// </summary>
     public static string ParseToken(ref string input)
     {
         input = input.TrimStart();
 
-        var match = TokenRegex().Match(input);
+        var tokenLength = 0;
+        while (tokenLength < input.Length && !char.IsWhiteSpace(input[tokenLength]))
+        {
+            tokenLength++;
+        }
 
-        if (!match.Success)
+        if (tokenLength == 0)
         {
             throw new Exception("Could not parse the token");
         }
 
-        input = input[match.Value.Length..];
+        var token = input[..tokenLength];
+        input = input[tokenLength..];
         input = input.TrimStart();
 
-        return match.Value;
+        return token;
     }
 
     /// <summary>
@@ -301,6 +306,4 @@ public static partial class LineParser
     [GeneratedRegex("^-?[0-9]+(?=\\s|$)")]
     private static partial Regex IntRegex();
 
-    [GeneratedRegex("[^ ]+")]
-    private static partial Regex TokenRegex();
 }

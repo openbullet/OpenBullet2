@@ -73,7 +73,7 @@ public static class LoliCodeParser
             // If there is just @ without anything after it,
             // the variable name is empty. Do not throw an exception here
             // or it will prevent saving the config (even if invalid)
-            var variableName = input.Length == 0 || input[0] == ' ' || input[0] == '\t'
+            var variableName = input.Length == 0 || char.IsWhiteSpace(input[0])
                 ? string.Empty
                 : LineParser.ParseToken(ref input);
 
