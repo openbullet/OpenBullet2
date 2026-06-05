@@ -99,6 +99,13 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseList_MissingCommaBetweenItems_Throws()
+    {
+        var input = "[\"one\" \"two\"]";
+        Assert.Throws<Exception>(() => LineParser.ParseList(ref input));
+    }
+
+    [Fact]
     public void ParseList_UnterminatedList_Throws()
     {
         var input = "[\"one\"";
@@ -165,6 +172,13 @@ public class LoliCodeParserTests
         var dict = LineParser.ParseDictionary(ref input);
         Assert.Equal("value1", dict["key1"]);
         Assert.Equal("value2", dict["key2"]);
+    }
+
+    [Fact]
+    public void ParseDictionary_MissingCommaBetweenEntries_Throws()
+    {
+        var input = "{ (\"key1\", \"value1\") (\"key2\", \"value2\") }";
+        Assert.Throws<Exception>(() => LineParser.ParseDictionary(ref input));
     }
 
     [Fact]

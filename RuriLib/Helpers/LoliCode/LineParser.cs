@@ -139,19 +139,22 @@ public static partial class LineParser
         {
             EnsureHasInput(input, "Could not parse the list");
 
-            // , "two"]
             list.Add(ParseLiteral(ref input));
             input = input.TrimStart();
 
             EnsureHasInput(input, "Could not parse the list");
 
-            //  "two"]
-            if (input[0] == ',')
+            if (input[0] == ']')
             {
-                input = input[1..];
+                continue;
             }
 
-            // "two"]
+            if (input[0] != ',')
+            {
+                throw new Exception("Could not parse the list");
+            }
+
+            input = input[1..];
             input = input.TrimStart();
         }
 
@@ -225,13 +228,17 @@ public static partial class LineParser
 
             EnsureHasInput(input, "Could not parse the dictionary");
 
-            // , ("key2", "value2") }
-            if (input[0] == ',')
+            if (input[0] == '}')
             {
-                input = input[1..];
+                continue;
             }
 
-            //  ("key2", "value2") }
+            if (input[0] != ',')
+            {
+                throw new Exception("Could not parse the dictionary");
+            }
+
+            input = input[1..];
             input = input.TrimStart();
         }
 
