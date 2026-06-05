@@ -1,6 +1,7 @@
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Functions.Networking;
+using RuriLib.Exceptions;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
@@ -59,6 +60,21 @@ public class AutoBlockInstanceTests
         Assert.Equal("myInput", input.InputVariableName);
         Assert.Equal(SettingInputMode.Fixed, index.InputMode);
         Assert.Equal(3, (index.FixedSetting as IntSetting)!.Value);
+    }
+
+    [Fact]
+    public void FromLC_InvalidSetting_PreservesLineParsingDetails()
+    {
+        var block = BlockFactory.GetBlock<AutoBlockInstance>("ConstantString");
+        var script = $"  value{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(1, ex.LineNumber);
+        Assert.Equal(6, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Expected '=' after setting name 'value'", ex.Message);
     }
 
     [Fact]

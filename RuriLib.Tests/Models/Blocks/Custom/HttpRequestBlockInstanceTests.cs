@@ -115,6 +115,21 @@ public class HttpRequestBlockInstanceTests
     }
 
     [Fact]
+    public void FromLC_InvalidStandardContent_PreservesLineParsingDetails()
+    {
+        var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
+        var script = $"  TYPE:STANDARD{_nl}  content{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(2, ex.LineNumber);
+        Assert.Equal(1, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Expected '\"' to start a string literal", ex.Message);
+    }
+
+    [Fact]
     public void ToSyntax_MultipartPost_OutputScript()
     {
         var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");

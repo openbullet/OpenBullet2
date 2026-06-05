@@ -112,6 +112,11 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
                     keychain.Mode = Enum.Parse<KeychainMode>(LineParser.ParseToken(ref line));
                     Keychains.Add(keychain);
                 }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Invalid keychain declaration: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
                 catch
                 {
                     throw new LoliCodeParsingException(lineNumber, $"Invalid keychain declaration: {lineCopy.TruncatePretty(50)}");
@@ -129,6 +134,11 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
                     var keyType = LineParser.ParseToken(ref line);
                     Keychains[^1].Keys.Add(LoliCodeParser.ParseKey(ref line, keyType));
                 }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Invalid key declaration: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
                 catch
                 {
                     throw new LoliCodeParsingException(lineNumber, $"Invalid key declaration: {lineCopy.TruncatePretty(50)}");
@@ -139,6 +149,11 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
                 try
                 {
                     LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
                 }
                 catch
                 {

@@ -121,6 +121,11 @@ public class AutoBlockInstance : BlockInstance
                 {
                     LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
                 }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
                 catch (Exception ex)
                 {
                     throw new LoliCodeParsingException(lineNumber,

@@ -180,6 +180,21 @@ public class KeycheckBlockInstanceTests
     }
 
     [Fact]
+    public void FromLC_InvalidKeyDeclaration_PreservesLineParsingDetails()
+    {
+        var block = BlockFactory.GetBlock<KeycheckBlockInstance>("Keycheck");
+        var script = $"  KEYCHAIN SUCCESS OR{_nl}    STRINGKEY @myString Contains{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(2, ex.LineNumber);
+        Assert.Equal(1, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Expected '\"' to start a string literal", ex.Message);
+    }
+
+    [Fact]
     public void ToSyntax_NormalBlock_OutputScript()
     {
         var block = CreateBlock();

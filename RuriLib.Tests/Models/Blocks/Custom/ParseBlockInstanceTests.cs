@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RuriLib.Exceptions;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.Parse;
@@ -69,6 +70,21 @@ public class ParseBlockInstanceTests
         Assert.Equal("you", (rightDelim.FixedSetting as StringSetting)!.Value);
         Assert.False((caseSensitive.FixedSetting as BoolSetting)!.Value);
         Assert.Equal(8, lineNumber);
+    }
+
+    [Fact]
+    public void FromLC_InvalidSetting_PreservesLineParsingDetails()
+    {
+        var block = CreateBlock();
+        var script = $"  SAFE{_nl}  input{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(2, ex.LineNumber);
+        Assert.Equal(6, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Expected '=' after setting name 'input'", ex.Message);
     }
 
     [Fact]

@@ -251,6 +251,11 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
                 {
                     throw;
                 }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
                 catch
                 {
                     throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
@@ -294,7 +299,7 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
                                 LoliCodeParser.ParseSettingValue(ref line, rawContent.Data,
                                     new ByteArrayParameter(string.Empty));
                             }
-                            catch
+                            catch (LineParsingException)
                             {
                                 line = lineCopyCache;
                             }
@@ -315,6 +320,11 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
                             throw new FormatException();
                     }
                 }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the multipart content: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
                 catch
                 {
                     throw new LoliCodeParsingException(lineNumber, $"Could not parse the multipart content: {lineCopy.TruncatePretty(50)}");
@@ -325,6 +335,11 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
                 try
                 {
                     LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
                 }
                 catch
                 {
