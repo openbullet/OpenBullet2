@@ -180,6 +180,22 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void ParseByteArray_InvalidLength_ThrowsWithoutConsumingInput()
+    {
+        var input = "abc remaining";
+        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+        Assert.Equal("abc remaining", input);
+    }
+
+    [Fact]
+    public void ParseByteArray_InvalidPadding_ThrowsWithoutConsumingInput()
+    {
+        var input = "ab=c remaining";
+        Assert.Throws<Exception>(() => LineParser.ParseByteArray(ref input));
+        Assert.Equal("ab=c remaining", input);
+    }
+
+    [Fact]
     public void ParseBool_NormalBool_Parse()
     {
         var input = "True indeed";

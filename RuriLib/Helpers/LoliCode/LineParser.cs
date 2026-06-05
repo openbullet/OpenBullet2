@@ -88,17 +88,38 @@ public static partial class LineParser
 
         input = input.TrimStart();
 
-        var match = ByteArrayRegex().Match(input);
+        var tokenLength = 0;
+        while (tokenLength < input.Length && !char.IsWhiteSpace(input[tokenLength]))
+        {
+            tokenLength++;
+        }
 
-        if (!match.Success)
+        if (tokenLength == 0)
         {
             throw new Exception("Could not parse the byte array");
         }
 
-        input = input[match.Value.Length..];
+        var token = input[..tokenLength];
+
+        if (!IsBase64Token(token))
+        {
+            throw new Exception("Could not parse the byte array");
+        }
+
+        byte[] bytes;
+        try
+        {
+            bytes = Convert.FromBase64String(token);
+        }
+        catch (FormatException)
+        {
+            throw new Exception("Could not parse the byte array");
+        }
+
+        input = input[tokenLength..];
         input = input.TrimStart();
 
-        return Convert.FromBase64String(match.Value);
+        return bytes;
     }
 
     /// <summary>
@@ -310,9 +331,6 @@ public static partial class LineParser
         return input[0] == c;
     }
 
-    [GeneratedRegex("^[A-Za-z0-9+/=]+(?=\\s|$)")]
-    private static partial Regex ByteArrayRegex();
-
     [GeneratedRegex("^(?:[Tt]rue|[Ff]alse)(?=\\s|$)")]
     private static partial Regex BoolRegex();
 
@@ -394,5 +412,45 @@ public static partial class LineParser
 
         index += length;
         return ((char)code).ToString();
+    }
+
+    private static bool IsBase64Token(string token)
+    {
+        if (token.Length == 0 || token.Length % 4 != 0)
+        {
+            return false;
+        }
+
+        var paddingStart = token.IndexOf('=');
+        var contentLength = paddingStart >= 0 ? paddingStart : token.Length;
+
+        for (var i = 0; i < contentLength; i++)
+        {
+            if (!char.IsAsciiLetterOrDigit(token[i]) && token[i] is not '+' and not '/')
+            {
+                return false;
+            }
+        }
+
+        if (paddingStart < 0)
+        {
+            return true;
+        }
+
+        var paddingLength = token.Length - paddingStart;
+        if (paddingLength > 2)
+        {
+            return false;
+        }
+
+        for (var i = paddingStart; i < token.Length; i++)
+        {
+            if (token[i] != '=')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
