@@ -4,6 +4,7 @@ using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
+using RuriLib.Models.Variables;
 using Xunit;
 
 namespace RuriLib.Tests.Helpers.LoliCode;
@@ -286,5 +287,35 @@ public class LoliCodeParserTests
         var input = "value";
 
         Assert.Throws<Exception>(() => LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor));
+    }
+
+    [Fact]
+    public void DetectTokenType_ValidBool_ReturnsBool()
+    {
+        Assert.Equal(VariableType.Bool, LoliCodeParser.DetectTokenType("True"));
+    }
+
+    [Fact]
+    public void DetectTokenType_BoolPrefixIdentifier_ReturnsNull()
+    {
+        Assert.Null(LoliCodeParser.DetectTokenType("TrueValue"));
+    }
+
+    [Fact]
+    public void DetectTokenType_ValidFloat_ReturnsFloat()
+    {
+        Assert.Equal(VariableType.Float, LoliCodeParser.DetectTokenType("-1.5"));
+    }
+
+    [Fact]
+    public void DetectTokenType_InvalidFloat_Throws()
+    {
+        Assert.Throws<Exception>(() => LoliCodeParser.DetectTokenType("1..2"));
+    }
+
+    [Fact]
+    public void DetectTokenType_Base64Token_ReturnsByteArray()
+    {
+        Assert.Equal(VariableType.ByteArray, LoliCodeParser.DetectTokenType("/wA="));
     }
 }

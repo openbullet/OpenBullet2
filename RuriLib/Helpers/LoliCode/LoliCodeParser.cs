@@ -1,7 +1,7 @@
 using RuriLib.Models.Blocks;
-using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Variables;
@@ -192,17 +192,13 @@ public static class LoliCodeParser
     {
         ArgumentNullException.ThrowIfNull(input);
 
+        if (input.Length == 0)
+        {
+            throw new Exception("Could not detect the token type");
+        }
+
         if (input.StartsWith('"'))
             return VariableType.String;
-
-        if (Regex.IsMatch(input, "^([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])( |$)"))
-            return VariableType.Bool;
-
-        if (Regex.IsMatch(input, "^-?[0-9]+( |$)"))
-            return VariableType.Int;
-
-        if (Regex.IsMatch(input, "^-?[0-9\\.]+( |$)"))
-            return VariableType.Float;
 
         if (input.StartsWith('['))
             return VariableType.ListOfStrings;
@@ -210,13 +206,121 @@ public static class LoliCodeParser
         if (input.StartsWith('{'))
             return VariableType.DictionaryOfStrings;
 
-        if (Regex.IsMatch(input, "^[A-Za-z][A-Za-z0-9]*"))
+        var tokenLength = 0;
+        while (tokenLength < input.Length && !char.IsWhiteSpace(input[tokenLength]))
+        {
+            tokenLength++;
+        }
+
+        if (tokenLength == 0)
+        {
+            throw new Exception("Could not detect the token type");
+        }
+
+        var token = input[..tokenLength];
+
+        if (token.Equals("true", StringComparison.OrdinalIgnoreCase)
+            || token.Equals("false", StringComparison.OrdinalIgnoreCase))
+            return VariableType.Bool;
+
+        if (IsIntToken(token))
+            return VariableType.Int;
+
+        if (IsFloatToken(token))
+            return VariableType.Float;
+
+        if (IsIdentifierToken(token))
             return null;
 
-        if (Regex.IsMatch(input, "^[A-Za-z0-9+/=]+"))
+        if (IsBase64Token(token))
             return VariableType.ByteArray;
 
         throw new Exception("Could not detect the token type");
+    }
+
+    private static bool IsIntToken(string token)
+    {
+        var startIndex = token.StartsWith('-') ? 1 : 0;
+
+        if (startIndex == token.Length)
+        {
+            return false;
+        }
+
+        for (var i = startIndex; i < token.Length; i++)
+        {
+            if (!char.IsAsciiDigit(token[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsFloatToken(string token)
+    {
+        var startIndex = token.StartsWith('-') ? 1 : 0;
+
+        if (startIndex == token.Length)
+        {
+            return false;
+        }
+
+        var sawDigit = false;
+        var sawDot = false;
+
+        for (var i = startIndex; i < token.Length; i++)
+        {
+            if (char.IsAsciiDigit(token[i]))
+            {
+                sawDigit = true;
+                continue;
+            }
+
+            if (token[i] == '.' && !sawDot)
+            {
+                sawDot = true;
+                continue;
+            }
+
+            return false;
+        }
+
+        return sawDigit
+            && sawDot
+            && float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out _);
+    }
+
+    private static bool IsIdentifierToken(string token)
+    {
+        if (token.Length == 0 || !char.IsAsciiLetter(token[0]))
+        {
+            return false;
+        }
+
+        for (var i = 1; i < token.Length; i++)
+        {
+            if (!char.IsAsciiLetterOrDigit(token[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsBase64Token(string token)
+    {
+        foreach (var c in token)
+        {
+            if (!char.IsAsciiLetterOrDigit(c) && c is not '+' and not '/' and not '=')
+            {
+                return false;
+            }
+        }
+
+        return token.Length > 0;
     }
 
     /// <summary>
