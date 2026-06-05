@@ -153,7 +153,35 @@ public static class LoliCodeParser
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        return Regex.IsMatch(input, "^( |\t)+([0-9A-Za-z]+) = .+$");
+        var i = 0;
+
+        // Must start with at least one space or tab
+        if (i >= input.Length || (input[i] != ' ' && input[i] != '\t'))
+        {
+            return false;
+        }
+
+        while (i < input.Length && (input[i] == ' ' || input[i] == '\t'))
+        {
+            i++;
+        }
+
+        // Must have at least one alphanumeric character (parameter name)
+        if (i >= input.Length || !char.IsAsciiLetterOrDigit(input[i]))
+        {
+            return false;
+        }
+
+        while (i < input.Length && char.IsAsciiLetterOrDigit(input[i]))
+        {
+            i++;
+        }
+
+        // Must have " = " followed by at least one value character
+        return i + 3 < input.Length
+            && input[i] == ' '
+            && input[i + 1] == '='
+            && input[i + 2] == ' ';
     }
 
     /// <summary>
