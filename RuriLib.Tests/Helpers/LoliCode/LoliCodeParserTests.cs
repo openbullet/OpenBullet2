@@ -325,6 +325,30 @@ public class LoliCodeParserTests
     }
 
     [Fact]
+    public void IsSetting_WithoutIndentation_ReturnsTrue()
+    {
+        Assert.True(LoliCodeParser.IsSetting("value = \"hello\""));
+    }
+
+    [Fact]
+    public void IsSetting_WithoutSpacesAroundEquals_ReturnsTrue()
+    {
+        Assert.True(LoliCodeParser.IsSetting("  value=\"hello\""));
+    }
+
+    [Fact]
+    public void IsSetting_WithTabsAroundEquals_ReturnsTrue()
+    {
+        Assert.True(LoliCodeParser.IsSetting("\tvalue\t=\t@variable"));
+    }
+
+    [Fact]
+    public void IsSetting_WithMissingValue_ReturnsFalse()
+    {
+        Assert.False(LoliCodeParser.IsSetting("value =   "));
+    }
+
+    [Fact]
     public void DetectTokenType_ValidBool_ReturnsBool()
     {
         Assert.Equal(VariableType.Bool, LoliCodeParser.DetectTokenType("True"));

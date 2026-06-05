@@ -155,13 +155,7 @@ public static class LoliCodeParser
 
         var i = 0;
 
-        // Must start with at least one space or tab
-        if (i >= input.Length || (input[i] != ' ' && input[i] != '\t'))
-        {
-            return false;
-        }
-
-        while (i < input.Length && (input[i] == ' ' || input[i] == '\t'))
+        while (i < input.Length && char.IsWhiteSpace(input[i]))
         {
             i++;
         }
@@ -177,11 +171,24 @@ public static class LoliCodeParser
             i++;
         }
 
-        // Must have " = " followed by at least one value character
-        return i + 3 < input.Length
-            && input[i] == ' '
-            && input[i + 1] == '='
-            && input[i + 2] == ' ';
+        while (i < input.Length && char.IsWhiteSpace(input[i]))
+        {
+            i++;
+        }
+
+        if (i >= input.Length || input[i] != '=')
+        {
+            return false;
+        }
+
+        i++;
+
+        while (i < input.Length && char.IsWhiteSpace(input[i]))
+        {
+            i++;
+        }
+
+        return i < input.Length;
     }
 
     /// <summary>
