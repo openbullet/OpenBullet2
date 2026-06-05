@@ -78,5 +78,17 @@ public class TranspilerTests
         Assert.Contains("Invalid StrComparison value 'BadComparison'", ex.Message);
     }
 
+    [Fact]
+    public void Transpile_InvalidBlockDirective_PreservesLineAndColumn()
+    {
+        var script = "  BLOCK:123";
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => Loli2StackTranspiler.Transpile(script));
+
+        Assert.Equal(1, ex.LineNumber);
+        Assert.Equal(3, ex.ColumnNumber);
+        Assert.Contains("Could not parse the block id: BLOCK:123", ex.Message);
+    }
+
     private static string NormalizeLineEndings(string value) => value.Replace("\r\n", "\n");
 }

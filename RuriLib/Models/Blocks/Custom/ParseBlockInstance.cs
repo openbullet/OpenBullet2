@@ -126,7 +126,19 @@ public class ParseBlockInstance(ParseBlockDescriptor descriptor) : BlockInstance
             {
                 try
                 {
-                    Mode = Enum.Parse<ParseMode>(Regex.Match(line, "MODE:([A-Za-z]+)").Groups[1].Value);
+                    var mode = Regex.Match(line, "^MODE:([^ ]+)$");
+
+                    if (!mode.Success)
+                    {
+                        throw new LineParsingException(1, "Expected MODE:<mode>");
+                    }
+
+                    Mode = ParseEnumValue<ParseMode>(mode.Groups[1].Value, "MODE:".Length + 1);
+                }
+                catch (LineParsingException ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not understand the parsing mode: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
                 }
                 catch
                 {
@@ -315,5 +327,17 @@ public class ParseBlockInstance(ParseBlockDescriptor descriptor) : BlockInstance
         arguments.Add(CSharpWriter.FromSettingSyntax(Settings["urlEncodeOutput"]));
 
         return Id(methodName).Call(arguments);
+    }
+
+    private static T ParseEnumValue<T>(string token, int columnNumber) where T : struct, Enum
+    {
+        if (!Enum.TryParse<T>(token, ignoreCase: false, out var value)
+            || !Enum.IsDefined(value))
+        {
+            throw new LineParsingException(columnNumber,
+                $"Invalid {typeof(T).Name} value '{token}'. Valid values: {string.Join(", ", Enum.GetNames<T>())}");
+        }
+
+        return value;
     }
 }

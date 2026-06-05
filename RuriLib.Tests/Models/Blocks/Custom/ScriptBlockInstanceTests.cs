@@ -86,6 +86,35 @@ public class ScriptBlockInstanceTests
     }
 
     [Fact]
+    public void FromLC_InvalidInterpreter_PreservesLineParsingDetails()
+    {
+        var block = CreateBlock();
+        var script = $"INTERPRETER:Nope{_nl}INPUT x,y{_nl}BEGIN SCRIPT{_nl}END SCRIPT";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(1, ex.LineNumber);
+        Assert.Equal(13, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Invalid Interpreter value 'Nope'", ex.Message);
+    }
+
+    [Fact]
+    public void FromLC_InvalidInputDefinition_PreservesLineAndColumn()
+    {
+        var block = CreateBlock();
+        var script = $"INTERPRETER:NodeJS{_nl}IN x,y{_nl}BEGIN SCRIPT{_nl}END SCRIPT";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(2, ex.LineNumber);
+        Assert.Equal(1, ex.ColumnNumber);
+        Assert.Contains("Invalid input variables definition", ex.Message);
+    }
+
+    [Fact]
     public void ToSyntax_NodeJs_DeclaresOutputsAndSanitizesInputs()
     {
         var block = CreateBlock();

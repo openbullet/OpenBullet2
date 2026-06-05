@@ -47,7 +47,10 @@ public static class Loli2StackTranspiler
                 var match = Regex.Match(trimmedLine, $"^BLOCK:({validTokenRegex})$");
 
                 if (!match.Success)
-                    throw new LoliCodeParsingException(lineNumber, "Could not parse the block id");
+                {
+                    throw new LoliCodeParsingException(lineNumber, line.IndexOf("BLOCK:", System.StringComparison.Ordinal) + 1,
+                        $"Could not parse the block id: {trimmedLine}");
+                }
 
                 var blockId = match.Groups[1].Value;
                 var canonicalBlockId = Globals.DescriptorsRepository.TryResolveDescriptorId(blockId, out var resolvedBlockId)

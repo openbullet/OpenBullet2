@@ -110,8 +110,19 @@ public class ScriptBlockInstance : BlockInstance
 
         try
         {
-            Interpreter = Enum.Parse<Interpreter>(
-                Regex.Match(interpreterLine, "INTERPRETER:([^ ]+)$").Groups[1].Value);
+            var interpreter = Regex.Match(interpreterLine, "^INTERPRETER:([^ ]+)$");
+
+            if (!interpreter.Success)
+            {
+                throw new LineParsingException(1, "Expected INTERPRETER:<interpreter>");
+            }
+
+            Interpreter = ParseEnumValue<Interpreter>(interpreter.Groups[1].Value, "INTERPRETER:".Length + 1);
+        }
+        catch (LineParsingException ex)
+        {
+            throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                $"Invalid interpreter definition: {interpreterLine.TruncatePretty(50)} ({ex.Message})", ex);
         }
         catch
         {
@@ -135,11 +146,18 @@ public class ScriptBlockInstance : BlockInstance
 
         try
         {
-            InputVariables = Regex.Match(inputVariablesLine, "INPUT (.*)$").Groups[1].Value;
+            var inputVariables = Regex.Match(inputVariablesLine, "^INPUT (.*)$");
+
+            if (!inputVariables.Success)
+            {
+                throw new LoliCodeParsingException(lineNumber, 1, "Invalid input variables definition");
+            }
+
+            InputVariables = inputVariables.Groups[1].Value;
         }
-        catch
+        catch (LoliCodeParsingException)
         {
-            throw new LoliCodeParsingException(lineNumber, "Invalid input variables definition");
+            throw;
         }
 
         var beginScriptLine = reader.ReadLine();
@@ -497,5 +515,17 @@ public class ScriptBlockInstance : BlockInstance
                 "SetDebuggerVariable",
                 output.Name);
         }
+    }
+
+    private static T ParseEnumValue<T>(string token, int columnNumber) where T : struct, Enum
+    {
+        if (!Enum.TryParse<T>(token, ignoreCase: false, out var value)
+            || !Enum.IsDefined(value))
+        {
+            throw new LineParsingException(columnNumber,
+                $"Invalid {typeof(T).Name} value '{token}'. Valid values: {string.Join(", ", Enum.GetNames<T>())}");
+        }
+
+        return value;
     }
 }

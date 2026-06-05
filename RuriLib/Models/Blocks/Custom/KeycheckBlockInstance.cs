@@ -109,12 +109,12 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
                     var keychain = new Keychain();
                     LineParser.ParseToken(ref line);
                     keychain.ResultStatus = LineParser.ParseToken(ref line);
-                    keychain.Mode = Enum.Parse<KeychainMode>(LineParser.ParseToken(ref line));
+                    keychain.Mode = ParseEnumValue<KeychainMode>(ref line);
                     Keychains.Add(keychain);
                 }
                 catch (LineParsingException ex)
                 {
-                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                    throw new LoliCodeParsingException(lineNumber, GetColumnInOriginalLine(lineCopy, line, ex),
                         $"Invalid keychain declaration: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
                 }
                 catch
@@ -136,7 +136,7 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
                 }
                 catch (LineParsingException ex)
                 {
-                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                    throw new LoliCodeParsingException(lineNumber, GetColumnInOriginalLine(lineCopy, line, ex),
                         $"Invalid key declaration: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
                 }
                 catch
@@ -246,4 +246,24 @@ public class KeycheckBlockInstance(KeycheckBlockDescriptor descriptor) : BlockIn
         => Id(methodName)
             .Call(Id("data"))
             .If(BlockSyntaxFactory.CreateStatusBlock(status, shouldReturn));
+
+    private static T ParseEnumValue<T>(ref string input) where T : struct, Enum
+    {
+        var tokenColumn = input.Length - input.TrimStart().Length + 1;
+        var remainingInput = input;
+        var token = LineParser.ParseToken(ref remainingInput);
+
+        if (!Enum.TryParse<T>(token, ignoreCase: false, out var value)
+            || !Enum.IsDefined(value))
+        {
+            throw new LineParsingException(tokenColumn,
+                $"Invalid {typeof(T).Name} value '{token}'. Valid values: {string.Join(", ", Enum.GetNames<T>())}");
+        }
+
+        input = remainingInput;
+        return value;
+    }
+
+    private static int GetColumnInOriginalLine(string originalLine, string remainingLine, LineParsingException ex)
+        => originalLine.Length - remainingLine.Length + (ex.ColumnNumber ?? 1);
 }

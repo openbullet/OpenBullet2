@@ -189,9 +189,24 @@ public class KeycheckBlockInstanceTests
         var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
 
         Assert.Equal(2, ex.LineNumber);
-        Assert.Equal(1, ex.ColumnNumber);
+        Assert.Equal(29, ex.ColumnNumber);
         Assert.IsType<LineParsingException>(ex.InnerException);
         Assert.Contains("Expected '\"' to start a string literal", ex.Message);
+    }
+
+    [Fact]
+    public void FromLC_InvalidKeychainMode_PreservesLineParsingDetails()
+    {
+        var block = BlockFactory.GetBlock<KeycheckBlockInstance>("Keycheck");
+        var script = $"  KEYCHAIN SUCCESS XOR{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(1, ex.LineNumber);
+        Assert.Equal(18, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Invalid KeychainMode value 'XOR'", ex.Message);
     }
 
     [Fact]

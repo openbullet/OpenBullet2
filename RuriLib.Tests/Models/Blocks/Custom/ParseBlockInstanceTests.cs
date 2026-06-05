@@ -88,6 +88,21 @@ public class ParseBlockInstanceTests
     }
 
     [Fact]
+    public void FromLC_InvalidMode_PreservesLineParsingDetails()
+    {
+        var block = CreateBlock();
+        var script = $"  MODE:Bad{_nl}";
+        var lineNumber = 0;
+
+        var ex = Assert.Throws<LoliCodeParsingException>(() => block.FromLC(ref script, ref lineNumber));
+
+        Assert.Equal(1, ex.LineNumber);
+        Assert.Equal(6, ex.ColumnNumber);
+        Assert.IsType<LineParsingException>(ex.InnerException);
+        Assert.Contains("Invalid ParseMode value 'Bad'", ex.Message);
+    }
+
+    [Fact]
     public void ToSyntax_SafeRegexCapture_WritesExpectedCode()
     {
         var block = CreateBlock();
