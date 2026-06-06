@@ -488,37 +488,37 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         return;
 
-        static bool TryParseCookie(string cookieHeader, out string? cookieName, out string? cookieValue)
-        {
-            cookieName = null;
-            cookieValue = null;
-
-            if (cookieHeader.Length == 0)
-            {
-                return false;
-            }
-
-            var endCookiePos = cookieHeader.IndexOf(';');
-            var separatorPos = cookieHeader.IndexOf('=');
-
-            if (separatorPos == -1)
-            {
-                // Invalid cookie, simply don't add it
-                return false;
-            }
-
-            cookieName = cookieHeader[..separatorPos];
-            cookieValue = endCookiePos == -1
-                ? cookieHeader[(separatorPos + 1)..]
-                : cookieHeader.Substring(separatorPos + 1, endCookiePos - separatorPos - 1);
-
-            return true;
-        }
-
         static string GetHeaderValue(KeyValuePair<string, IEnumerable<string>> header)
         {
             var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
             return string.Join(separator, header.Value);
         }
+    }
+
+    internal static bool TryParseCookie(string cookieHeader, out string? cookieName, out string? cookieValue)
+    {
+        cookieName = null;
+        cookieValue = null;
+
+        if (cookieHeader.Length == 0)
+        {
+            return false;
+        }
+
+        var endCookiePos = cookieHeader.IndexOf(';');
+        var separatorPos = cookieHeader.IndexOf('=');
+
+        if (separatorPos == -1 || endCookiePos != -1 && separatorPos > endCookiePos)
+        {
+            // Invalid cookie, simply don't add it
+            return false;
+        }
+
+        cookieName = cookieHeader[..separatorPos];
+        cookieValue = endCookiePos == -1
+            ? cookieHeader[(separatorPos + 1)..]
+            : cookieHeader.Substring(separatorPos + 1, endCookiePos - separatorPos - 1);
+
+        return true;
     }
 }

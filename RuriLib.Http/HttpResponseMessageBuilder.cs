@@ -269,7 +269,7 @@ internal class HttpResponseMessageBuilder
         var endCookiePos = value.IndexOf(';');
         var separatorPos = value.IndexOf('=');
 
-        if (separatorPos == -1)
+        if (separatorPos == -1 || endCookiePos != -1 && separatorPos > endCookiePos)
         {
             // Invalid cookie, simply don't add it
             return;

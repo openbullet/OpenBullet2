@@ -13,6 +13,7 @@ public class CookieTests
     [InlineData("undefined")]
     [InlineData("cookie1")]
     [InlineData(";")]
+    [InlineData("HttpOnly;Secure;SameSite=None;")]
     public void SetCookie_EmptyString_DoNothing(string cookie)
     {
         var cookies = new CookieContainer();
@@ -22,6 +23,17 @@ public class CookieTests
 
         var cookieCollection = cookies.GetCookies(uri);
         Assert.Empty(cookieCollection);
+    }
+
+    [Fact]
+    public void SetCookies_InvalidCookieAttributes_DoNothing()
+    {
+        var request = new Models.HttpRequest();
+        var response = new Models.HttpResponse { Request = request };
+
+        HttpResponseBuilder.SetCookies("HttpOnly;Secure;SameSite=None;", response);
+
+        Assert.Empty(request.Cookies);
     }
 
     [Theory]
