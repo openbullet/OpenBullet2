@@ -1,3 +1,1 @@
-Please remember to keep your OB2 client updated. Updates usually fix bugs, add features and improve performance.
-
-If you plan to update to **version 0.3.3 or newer**, please make sure you have **.NET 10** installed first.
+OpenBullet 2 is finally out of beta, and the **2.0.0 stable** version has been released. Please check the [official docs site](https://docs.openbullet.dev/docs/intro) on how to upgrade, and make sure to not update using your existing updater as it won't work. You need to download a new updater following the documentation.
