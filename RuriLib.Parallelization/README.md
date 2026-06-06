@@ -7,7 +7,11 @@ Features:
 - Pausing and resuming
 - Soft stop and hard abort
 - Automatic CPM calculation
+- Cancellation tokens for start, wait, pause, resume, stop, abort and DoP changes
 - Events
+
+# Requirements
+Version 2.x targets .NET 10.
 
 # Installation
 [NuGet](https://nuget.org/packages/RuriLib.Parallelization): `dotnet add package RuriLib.Parallelization`
@@ -76,20 +80,23 @@ namespace ParallelizationDemo
 ```
 To change the degree of parallelism while it's running, for example to speed up or slow down the work, you can write
 ```cs
-await parallelizer.ChangeDegreeOfParallelism(10);
+await parallelizer.ChangeDegreeOfParallelism(10, cts.Token);
 ```
 You can also pause and resume work. Notice that pausing will wait until all the tasks that are being worked on will end, so it will not have immediate action since there is no support for pausing tasks half-way.
 ```cs
-await parallelizer.Pause();
+await parallelizer.Pause(cts.Token);
 // Do something
-await parallelizer.Resume();
+await parallelizer.Resume(cts.Token);
 ```
 Finally, there are two ways to stop the parallelizer. You can either stop it (which, like pause, waits until all current tasks have ended) or abort it, which will cancel the cancellation token passed to the tasks. You should constantly check if the cancellation token has been cancelled inside your work function.
 ```cs
-await parallelizer.Stop();
-await parallelizer.Abort();
+await parallelizer.Stop(cts.Token);
+await parallelizer.Abort(cts.Token);
 ```
 You can check how fast the parallelizer is processing items or how much time is remaining by accessing the corresponding properties
 ```cs
 Console.WriteLine($"Doing {parallelizer.CPM} checks per minute and the remaining time is {parallelizer.Remaining}");
 ```
+
+# Changelog
+See [CHANGELOG.md](CHANGELOG.md) for release notes.

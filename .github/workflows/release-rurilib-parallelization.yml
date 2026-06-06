@@ -1,0 +1,47 @@
+name: Release RuriLib.Parallelization
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release. Must match RuriLib.Parallelization.csproj.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Validate version
+      shell: pwsh
+      run: |
+        [xml]$project = Get-Content RuriLib.Parallelization/RuriLib.Parallelization.csproj
+        $actualVersion = $project.Project.PropertyGroup.Version | Select-Object -First 1
+        if ($actualVersion -ne '${{ inputs.version }}') {
+          throw "Requested version '${{ inputs.version }}' does not match project version '$actualVersion'."
+        }
+
+    - name: Restore
+      run: dotnet restore RuriLib.Parallelization.Tests/RuriLib.Parallelization.Tests.csproj
+
+    - name: Build
+      run: dotnet build RuriLib.Parallelization.Tests/RuriLib.Parallelization.Tests.csproj --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test RuriLib.Parallelization.Tests/RuriLib.Parallelization.Tests.csproj --configuration Release --no-build
+
+    - name: Create NuGet package
+      run: dotnet pack RuriLib.Parallelization/RuriLib.Parallelization.csproj --output nupkgs --configuration Release --no-build
+
+    - name: Upload NuGet package
+      run: dotnet nuget push "nupkgs/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
