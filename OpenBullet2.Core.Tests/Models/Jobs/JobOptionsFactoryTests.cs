@@ -18,6 +18,7 @@ public class JobOptionsFactoryTests
         var groupSource = Assert.IsType<GroupProxySourceOptions>(source);
         Assert.Equal(-1, groupSource.GroupId);
         Assert.False(options.NeverMarkProxiesAsBad);
+        Assert.True(options.CacheHits);
     }
 
     [Fact]
@@ -37,6 +38,7 @@ public class JobOptionsFactoryTests
         {
             Name = "original",
             Skip = 12,
+            CacheHits = false,
             HitOutputs = [new FileSystemHitOutputOptions { BaseDir = "hits" }]
         };
 
@@ -45,6 +47,7 @@ public class JobOptionsFactoryTests
         Assert.NotSame(options, clone);
         Assert.Equal("original", clone.Name);
         Assert.Equal(0, clone.Skip);
+        Assert.False(clone.CacheHits);
         Assert.NotSame(options.HitOutputs, clone.HitOutputs);
         Assert.IsType<FileSystemHitOutputOptions>(Assert.Single(clone.HitOutputs));
     }

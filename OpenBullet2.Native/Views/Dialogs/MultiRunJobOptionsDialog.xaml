@@ -152,6 +152,11 @@
                 IsChecked="{Binding MarkAsToCheckOnAbort}" />
                         <CheckBox
                 Margin="5 5 0 0"
+                Content="Cache hits in memory for this job"
+                ToolTip="Disable for high-throughput jobs. Hit counters and configured outputs remain active."
+                IsChecked="{Binding CacheHits}" />
+                        <CheckBox
+                Margin="5 5 0 0"
                 Content="Never ban proxies"
                 IsChecked="{Binding NeverBanProxies}" />
                         <CheckBox

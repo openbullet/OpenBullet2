@@ -28,6 +28,7 @@ export interface MultiRunJobOptionsDto {
   neverMarkProxiesAsBad: boolean;
   concurrentProxyMode: boolean;
   periodicReloadIntervalSeconds: number;
+  cacheHits: boolean;
   dataPool: DataPoolTypes;
   proxySources: ProxySourceTypes[];
   hitOutputs: HitOutputTypes[];

@@ -110,6 +110,7 @@ public class JobFactoryService
             ProxyBanTime = TimeSpan.FromSeconds(options.ProxyBanTimeSeconds),
             ConcurrentProxyMode = options.ConcurrentProxyMode,
             PeriodicReloadInterval = TimeSpan.FromSeconds(options.PeriodicReloadIntervalSeconds),
+            CacheHits = options.CacheHits,
             StartCondition = options.StartCondition,
             Name = options.Name,
             Bots = options.Bots,

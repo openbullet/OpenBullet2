@@ -74,6 +74,8 @@ public class MultiRunJob : Job
     public bool ConcurrentProxyMode { get; set; }
     /// <summary>Gets or sets the periodic proxy reload interval.</summary>
     public TimeSpan PeriodicReloadInterval { get; set; } = TimeSpan.Zero;
+    /// <summary>Gets or sets a value indicating whether hits should be retained and published in memory.</summary>
+    public bool CacheHits { get; set; } = true;
     /// <summary>Gets or sets the hit outputs used to persist results.</summary>
     public List<IHitOutput> HitOutputs { get; set; } = [];
     /// <summary>Gets or sets the runtime providers used by worker bots.</summary>
@@ -1265,13 +1267,15 @@ public class MultiRunJob : Job
             OwnerId = OwnerId
         };
 
-        // Add it to the local list of hits
-        lock (hitsLock)
+        if (CacheHits)
         {
-            Hits.Add(hit);
-        }
+            lock (hitsLock)
+            {
+                Hits.Add(hit);
+            }
 
-        OnHit?.Invoke(this, hit);
+            OnHit?.Invoke(this, hit);
+        }
 
         foreach (var hitOutput in HitOutputs)
         {

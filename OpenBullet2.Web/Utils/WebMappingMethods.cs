@@ -161,6 +161,7 @@ internal static class WebMappingMethods
             NeverMarkProxiesAsBad = dto.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = dto.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = dto.PeriodicReloadIntervalSeconds,
+            CacheHits = dto.CacheHits,
             DataPool = PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
             (JsonElement)dto.DataPool!, config)!,
             ProxySources = PolyMapper.MapBetween<ProxySourceOptionsDto, ProxySourceOptions>(
@@ -187,6 +188,7 @@ internal static class WebMappingMethods
             NeverMarkProxiesAsBad = dto.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = dto.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = dto.PeriodicReloadIntervalSeconds,
+            CacheHits = dto.CacheHits,
             DataPool = PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
             (JsonElement)dto.DataPool!, config)!,
             ProxySources = PolyMapper.MapBetween<ProxySourceOptionsDto, ProxySourceOptions>(
@@ -226,6 +228,7 @@ internal static class WebMappingMethods
             NeverMarkProxiesAsBad = options.NeverMarkProxiesAsBad,
             ConcurrentProxyMode = options.ConcurrentProxyMode,
             PeriodicReloadIntervalSeconds = options.PeriodicReloadIntervalSeconds,
+            CacheHits = options.CacheHits,
             DataPool = PolyMapper.MapFrom(options.DataPool, config)!,
             ProxySources = PolyMapper.MapAllFrom(options.ProxySources, config),
             HitOutputs = PolyMapper.MapAllFrom(options.HitOutputs, config)

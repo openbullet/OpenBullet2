@@ -35,6 +35,7 @@ public class MultiRunJobTests
         Assert.Empty(job.CustomInputsAnswers);
         Assert.Empty(job.CurrentBotDatas);
         Assert.Null(job.Providers);
+        Assert.True(job.CacheHits);
         Assert.False(job.ShouldUseProxies());
     }
 
@@ -494,6 +495,48 @@ public class MultiRunJobTests
         Assert.Same(hit, found);
     }
 
+    [Fact]
+    public void DataProcessed_WithHitCachingDisabled_CountsAndOutputsHitWithoutRetainingOrPublishingIt()
+    {
+        var settings = CreateSettingsService();
+        var output = new RecordingHitOutput();
+        var dataPool = new TestDataPool(["user:pass"], settings.Environment.WordlistTypes[0].Name);
+        var job = new MultiRunJob(settings, CreatePluginRepository())
+        {
+            CacheHits = false,
+            Config = new Config
+            {
+                Id = "cfg",
+                Metadata = new ConfigMetadata { Name = "Config", Category = "Cat" }
+            },
+            DataPool = dataPool,
+            HitOutputs = [output]
+        };
+        var botData = new global::RuriLib.Models.Bots.BotData(
+            new global::RuriLib.Models.Bots.Providers(settings),
+            job.Config.Settings,
+            new BotLogger(),
+            new DataLine("user:pass", settings.Environment.WordlistTypes[0]))
+        {
+            STATUS = "SUCCESS"
+        };
+        var details = new global::RuriLib.Parallelization.Models.ResultDetails<MultiRunInput, CheckResult>(
+            new MultiRunInput { Job = job, BotData = botData },
+            new CheckResult { BotData = botData, OutputVariables = new Dictionary<string, object>() });
+        var hitPublished = false;
+        job.OnHit += (_, _) => hitPublished = true;
+
+        typeof(MultiRunJob)
+            .GetMethod("DataProcessed", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(job, [null, details]);
+
+        Assert.Equal(1, job.DataHits);
+        Assert.Empty(job.GetHitsSnapshot());
+        Assert.False(hitPublished);
+        Assert.NotNull(output.Hit);
+        Assert.Equal("SUCCESS", output.Hit.Type);
+    }
+
     private static MultiRunJob CreateJob()
         => new(CreateSettingsService(), CreatePluginRepository());
 
@@ -612,6 +655,17 @@ public class MultiRunJobTests
 
         public override void Reload()
         {
+        }
+    }
+
+    private sealed class RecordingHitOutput : global::RuriLib.Models.Hits.IHitOutput
+    {
+        public global::RuriLib.Models.Hits.Hit? Hit { get; private set; }
+
+        public Task Store(global::RuriLib.Models.Hits.Hit hit)
+        {
+            Hit = hit;
+            return Task.CompletedTask;
         }
     }
 

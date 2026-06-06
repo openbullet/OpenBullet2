@@ -83,6 +83,11 @@ public class MultiRunJobOptionsDto
     public int PeriodicReloadIntervalSeconds { get; set; } = 0;
 
     /// <summary>
+    /// Whether to retain hits in memory and publish them to connected job viewers.
+    /// </summary>
+    public bool CacheHits { get; set; } = true;
+
+    /// <summary>
     /// The options for the data pool that provides data lines to the job.
     /// </summary>
     public object DataPool { get; set; } = new RangeDataPoolOptionsDto();

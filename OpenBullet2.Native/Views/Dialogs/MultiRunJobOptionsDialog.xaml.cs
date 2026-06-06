@@ -428,6 +428,16 @@ public class MultiRunJobOptionsViewModel : ViewModelBase
         }
     }
 
+    public bool CacheHits
+    {
+        get => Options.CacheHits;
+        set
+        {
+            Options.CacheHits = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool NeverBanProxies
     {
         get => Options.NeverBanProxies;

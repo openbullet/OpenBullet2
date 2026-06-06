@@ -239,6 +239,7 @@ public class WebMappingTests
             ConfigId = "cfg-id",
             Bots = 12,
             NeverMarkProxiesAsBad = true,
+            CacheHits = false,
             DataPool = SerializePoly(new RangeDataPoolOptionsDto
             {
                 Start = 100,
@@ -267,6 +268,7 @@ public class WebMappingTests
 
         Assert.Equal("cfg-id", options.ConfigId);
         Assert.True(options.NeverMarkProxiesAsBad);
+        Assert.False(options.CacheHits);
         Assert.IsType<AbsoluteTimeStartCondition>(options.StartCondition);
         Assert.IsType<RangeDataPoolOptions>(options.DataPool);
         Assert.IsType<GroupProxySourceOptions>(options.ProxySources[0]);
@@ -281,6 +283,7 @@ public class WebMappingTests
         Assert.IsType<GroupProxySourceOptionsDto>(dto.ProxySources[0]);
         Assert.IsType<TelegramBotHitOutputOptionsDto>(dto.HitOutputs[1]);
         Assert.True(dto.NeverMarkProxiesAsBad);
+        Assert.False(dto.CacheHits);
     }
 
     [Fact]
