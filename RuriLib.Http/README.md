@@ -1,5 +1,16 @@
 # RuriLib.Http
-This is a library that provides a custom HTTP client, in addition to an `HttpMessageHandler` to be used with the default `HttpClient` of `System.Net`. It sits on top of [RuriLib.Proxies](https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Proxies) which provides a layer 4 proxied connection.
+This is a library that provides a custom HTTP client, an `HttpMessageHandler` to be used with the default `HttpClient` of `System.Net`, and a curl-impersonate-backed HTTP client for browser-like TLS and HTTP fingerprints. It sits on top of [RuriLib.Proxies](https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Proxies) which provides a layer 4 proxied connection.
+
+Features:
+- Custom proxied HTTP client
+- `HttpMessageHandler` integration with `System.Net.Http.HttpClient`
+- curl-impersonate integration with packaged native runtime assets
+- HTTP, SOCKS and proxiless connections through `RuriLib.Proxies`
+- gzip, deflate, brotli and zstd response decoding
+- Cookie parsing and cookie container support
+
+# Requirements
+Version 2.x targets .NET 10.
 
 # Installation
 [NuGet](https://nuget.org/packages/RuriLib.Http): `dotnet add package RuriLib.Http`
@@ -129,6 +140,51 @@ namespace HttpDemo
 }
 
 ```
+
+# Example (curl-impersonate)
+This example uses curl-impersonate for browser-like TLS and HTTP fingerprints.
+
+```csharp
+using RuriLib.Http.Curl;
+using RuriLib.Http.Models;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace HttpDemo
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            _ = MainAsync(args);
+            Console.ReadLine();
+        }
+
+        static async Task MainAsync(string[] args)
+        {
+            var options = new CurlImpersonateHandlerOptions
+            {
+                BrowserProfile = CurlImpersonateBrowserProfile.Chrome142
+            };
+
+            using var client = new CurlImpersonateHttpClient(options);
+            using var request = new HttpRequest
+            {
+                Uri = new Uri("https://example.com"),
+                Method = HttpMethod.Get
+            };
+
+            using var response = await client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+        }
+    }
+}
+```
+
+# Changelog
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 # Credits
 Some portions of the code were the work of Ruslan Khuduev and Artem Dontsov, to which I am grateful, all rights are reserved to them. Their work is under the MIT license.

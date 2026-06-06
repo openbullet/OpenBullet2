@@ -8,9 +8,15 @@
     <PackageProjectUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Parallelization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Parallelization</RepositoryUrl>
     <PackageTags>parallelization; task; tasks; manager; taskmanager; multithreading; parallel; multithread; async;</PackageTags>
-    <Version>1.0.6</Version>
+    <Version>2.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath="\" />
+    <None Update="CHANGELOG.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>

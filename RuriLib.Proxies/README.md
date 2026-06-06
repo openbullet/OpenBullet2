@@ -10,6 +10,9 @@ All proxy clients derive from the same `ProxyClient` class, so it's really easy 
 
 If you are planning to use this library to send HTTP requests via proxy servers, you should look into the [RuriLib.Http](https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Http) library, which depends on this. Only use this library if you are okay with working with raw TCP connections or if you are able to feed the `TcpClient` into another library that provides support for higher layer protocols.
 
+# Requirements
+Version 2.x targets .NET 10.
+
 # Installation
 [NuGet](https://nuget.org/packages/RuriLib.Proxies): `dotnet add package RuriLib.Proxies`
 
@@ -21,6 +24,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProxiesDemo
@@ -51,11 +55,14 @@ namespace ProxiesDemo
             var httpProxyClient = new HttpProxyClient(settings); // HTTP proxies
             var socks4ProxyClient = new Socks4ProxyClient(settings); // Socks4 proxies
             var socks4aProxyClient = new Socks4aProxyClient(settings); // Socks4a proxies
-            var socks5ProxyClient = new Socks5ProxyClient(settings); // Socks5a proxies
+            var socks5ProxyClient = new Socks5ProxyClient(settings); // SOCKS5 proxies
             var noProxyClient = new NoProxyClient(settings); // No proxy
 
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+
             // Connect to the website via the proxy, we will get a TCP client that we can use
-            using var tcpClient = await httpProxyClient.ConnectAsync("example.com", 80);
+            using var tcpClient = await httpProxyClient.ConnectAsync("example.com", 80,
+                cancellationToken: cts.Token);
 
             // Now you can send messages on the raw TCP socket
             using var netStream = tcpClient.GetStream();
@@ -74,6 +81,9 @@ namespace ProxiesDemo
     }
 }
 ```
+
+# Changelog
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 # Credits
 Some portions of the code were the work of Ruslan Khuduev and Artem Dontsov, to which I am grateful, all rights are reserved to them. Their work is under the MIT license.
