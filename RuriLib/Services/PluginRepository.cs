@@ -238,6 +238,11 @@ public class PluginRepository
         // Find the corresponding assembly file
         foreach (var dir in folders)
         {
+            if (!Directory.Exists(dir))
+            {
+                continue;
+            }
+
             assy = new[] { "*.dll", "*.exe" }.SelectMany(g => Directory.EnumerateFiles(dir, g)).FirstOrDefault(f =>
             {
                 try { return string.Equals(n.Name, AssemblyName.GetAssemblyName(f).Name, StringComparison.OrdinalIgnoreCase); }
