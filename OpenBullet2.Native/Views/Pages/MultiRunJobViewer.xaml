@@ -186,18 +186,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition>
-                    <ColumnDefinition.Style>
-                        <Style TargetType="{x:Type ColumnDefinition}">
-                            <Setter Property="Width" Value="*" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ShowHits}" Value="False">
-                                    <Setter Property="Width" Value="0" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ColumnDefinition.Style>
-                </ColumnDefinition>
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Bots List View -->
@@ -292,7 +281,14 @@
 
                 <!-- Show Headers by overriding the default style -->
                 <ListView.Style>
-                    <Style TargetType="{x:Type ListView}" />
+                    <Style TargetType="{x:Type ListView}">
+                        <Setter Property="Grid.ColumnSpan" Value="1" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowHits}" Value="False">
+                                <Setter Property="Grid.ColumnSpan" Value="3" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
                 </ListView.Style>
 
                 <ListView.View>
