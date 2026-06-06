@@ -479,7 +479,7 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-6 pl-0">
+        <div [className]="job.cacheHits ? 'col-6 pl-0' : 'col-12 px-0'">
             <div class="named-card">
                 <div class="named-card-key">
                     Log
@@ -502,7 +502,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 pr-0">
+        <div class="col-6 pr-0" *ngIf="job.cacheHits">
             <div class="named-card">
                 <div class="named-card-key">
                     Hits

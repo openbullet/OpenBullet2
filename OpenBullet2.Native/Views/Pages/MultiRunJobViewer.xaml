@@ -186,7 +186,18 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition>
+                    <ColumnDefinition.Style>
+                        <Style TargetType="{x:Type ColumnDefinition}">
+                            <Setter Property="Width" Value="*" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowHits}" Value="False">
+                                    <Setter Property="Width" Value="0" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ColumnDefinition.Style>
+                </ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <!-- Bots List View -->
@@ -299,9 +310,10 @@
                 ResizeBehavior="PreviousAndNext"
                 Grid.Column="1"
                 Width="1"
-                VerticalAlignment="Stretch" />
+                VerticalAlignment="Stretch"
+                Visibility="{Binding ShowHits, Converter={StaticResource BoolToVis}}" />
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Visibility="{Binding ShowHits, Converter={StaticResource BoolToVis}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />

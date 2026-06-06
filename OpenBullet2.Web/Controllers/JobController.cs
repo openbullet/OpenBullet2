@@ -1026,6 +1026,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             DataPoolInfo = dataPoolInfo,
             Bots = job.Bots,
             Skip = job.Skip,
+            CacheHits = job.CacheHits,
             ProxyMode = job.ProxyMode,
             ProxySources = [.. proxySources],
             HitOutputs = hitOutputs,

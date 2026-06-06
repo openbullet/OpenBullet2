@@ -409,6 +409,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   onNewHit(hitMessage: MRJNewHitMessage) {
+    if (!this.job?.cacheHits) {
+      return;
+    }
+
     this.hits.push(hitMessage.hit);
 
     if (hitMessage.hit.type === this.selectedHitType) {

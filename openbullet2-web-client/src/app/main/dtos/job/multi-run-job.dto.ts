@@ -9,6 +9,7 @@ export interface MultiRunJobDto extends JobDto {
   dataPoolInfo: string;
   bots: number;
   skip: number;
+  cacheHits: boolean;
   proxyMode: JobProxyMode;
   proxySources: string[];
   hitOutputs: string[];

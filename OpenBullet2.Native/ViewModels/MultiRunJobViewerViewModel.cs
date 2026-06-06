@@ -104,6 +104,7 @@ public class MultiRunJobViewerViewModel : ViewModelBase, IDisposable
     public bool HasCustomInputs => MultiRunJob.Config?.Settings.InputSettings.CustomInputs.Any() == true;
 
     public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
+    public bool ShowHits => MultiRunJob.CacheHits;
     #endregion
 
     #region Properties that need to be updated every second

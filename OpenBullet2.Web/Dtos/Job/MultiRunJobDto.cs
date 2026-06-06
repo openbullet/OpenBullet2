@@ -34,6 +34,11 @@ public class MultiRunJobDto : JobDto
     public int Skip { get; set; } = 0;
 
     /// <summary>
+    /// Whether hits are retained in memory and published to connected job viewers.
+    /// </summary>
+    public bool CacheHits { get; set; } = true;
+
+    /// <summary>
     /// The proxy mode.
     /// </summary>
     public JobProxyMode ProxyMode { get; set; }
