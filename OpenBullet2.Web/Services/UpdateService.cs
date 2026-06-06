@@ -44,7 +44,7 @@ public class UpdateService : BackgroundService, IUpdateService
     }
 
     /// <inheritdoc />
-    public Version CurrentVersion { get; } = new(0, 3, 3);
+    public Version CurrentVersion { get; } = new(2, 0, 0);
 
     /// <inheritdoc />
     public Version RemoteVersion => SelectedChannel switch

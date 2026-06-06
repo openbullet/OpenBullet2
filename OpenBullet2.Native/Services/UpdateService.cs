@@ -17,10 +17,10 @@ public class UpdateService : IDisposable
     private readonly OpenBulletSettingsService _settingsService;
     private readonly string versionFile = "version.txt";
     private readonly Timer timer;
-    private Version latestReleaseVersion = new(0, 3, 3);
-    private Version latestStagingVersion = new(0, 3, 3);
+    private Version latestReleaseVersion = new(2, 0, 0);
+    private Version latestStagingVersion = new(2, 0, 0);
 
-    public Version CurrentVersion { get; private set; } = new(0, 3, 3);
+    public Version CurrentVersion { get; private set; } = new(2, 0, 0);
     public Version RemoteVersion => UpdateChannel switch
     {
         UpdateChannel.Staging => latestStagingVersion,
