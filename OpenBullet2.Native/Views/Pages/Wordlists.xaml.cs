@@ -142,7 +142,7 @@ public partial class Wordlists : Page
                     var entity = new WordlistEntity
                     {
                         Name = Path.GetFileNameWithoutExtension(file),
-                        FileName = path,
+                        FileName = path.Replace("\\", "/"),
                         Type = env.RecognizeWordlistType(firstLine),
                         Purpose = string.Empty,
                         Total = FileUtils.CountLines(path)

@@ -74,7 +74,10 @@ public class WordlistsViewModel : ViewModelBase
 
     public Task AddAsync(WordlistEntity wordlist)
     {
-        if (WordlistsCollection.Any(w => w.FileName == wordlist.FileName))
+        var normalizedFileName = NormalizePath(wordlist.FileName);
+
+        if (WordlistsCollection.Any(w =>
+            string.Equals(NormalizePath(w.FileName), normalizedFileName, StringComparison.OrdinalIgnoreCase)))
         {
             logger.LogWarning("Attempted to add duplicate wordlist {FileName}", wordlist.FileName);
             throw new Exception($"Wordlist already present: {wordlist.FileName}");
@@ -142,6 +145,8 @@ public class WordlistsViewModel : ViewModelBase
         var repo = scope.ServiceProvider.GetRequiredService<IWordlistRepository>();
         await action(repo);
     }
+
+    private static string NormalizePath(string? path) => path?.Replace("\\", "/") ?? string.Empty;
 
     private async Task<T> WithRepositoryAsync<T>(Func<IWordlistRepository, Task<T>> action)
     {
