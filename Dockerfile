@@ -4,7 +4,7 @@
 # -------
 # BACKEND
 # -------
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS backend
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 
 WORKDIR /code
 
@@ -40,7 +40,7 @@ RUN mkdir /build && mv dist/* /build
 # ---------
 # AGGREGATE
 # ---------
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
 
 ENV DEBIAN_FRONTEND=noninteractive
 

@@ -1,4 +1,4 @@
-﻿using RuriLib.Helpers.Blocks;
+using RuriLib.Helpers.Blocks;
 
 namespace RuriLib;
 

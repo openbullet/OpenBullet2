@@ -47,11 +47,18 @@
                 Foreground="Gainsboro"
                 />
 
-            <Button Click="Ok" x:Name="okButton"
-                Width="50"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Click="Copy" x:Name="copyButton"
+                    Margin="0 5 10 5" Style="{StaticResource StyledPrimaryButton}">
+                    <TextBlock VerticalAlignment="Center">Copy</TextBlock>
+                </Button>
+
+                <Button Click="Ok" x:Name="okButton"
+                    Width="50"
                     Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
-                <TextBlock VerticalAlignment="Center">Ok</TextBlock>
-            </Button>
+                    <TextBlock VerticalAlignment="Center">Ok</TextBlock>
+                </Button>
+            </StackPanel>
 
         </StackPanel>
     </Border>

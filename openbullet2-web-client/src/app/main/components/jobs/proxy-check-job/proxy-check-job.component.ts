@@ -13,6 +13,8 @@ import {
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { JobLastRunOutcome } from 'src/app/main/dtos/job/job-last-run-outcome';
+import { getJobDisplayColor, getJobDisplayLabel } from 'src/app/main/dtos/job/job-display';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { PCJNewResultMessage } from 'src/app/main/dtos/job/messages/proxy-check/new-result.dto';
 import { ProxyCheckJobDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
@@ -49,17 +51,6 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   Math = Math;
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
-
-  statusColor: Record<JobStatus, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   status: JobStatus = JobStatus.IDLE;
   bots = 0;
@@ -164,6 +155,12 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     this.errorSubscription = this.proxyCheckJobHubService.error$.subscribe((error) => {
       if (error !== null) {
+        this.writeLog({
+          timestamp: new Date(),
+          message: `Job error (${error.type}): ${error.message}`,
+          color: 'var(--fg-error)',
+        });
+
         this.messageService.add({
           severity: 'error',
           summary: `Error - ${error.type}`,
@@ -230,7 +227,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   onNewResult(result: PCJNewResultMessage) {
     const logMessage =
       result.workingStatus === ProxyWorkingStatus.Working
-        ? `Proxy ${result.proxyHost}:${result.proxyPort} is working with ping ${result.ping} ms and country ${result.country}`
+        ? `Proxy ${result.proxyHost}:${result.proxyPort} is working with ping ${result.ping} ms, country ${result.country} and quality ${result.quality}`
         : `Proxy ${result.proxyHost}:${result.proxyPort} is not working`;
 
     this.writeLog({
@@ -245,6 +242,10 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     if (status === JobStatus.WAITING) {
       this.startTime = moment();
+    }
+
+    if (status === JobStatus.IDLE) {
+      this.getJobData();
     }
 
     const logMessage = `Status changed to ${status}`;
@@ -332,6 +333,20 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   skipWait() {
     this.jobService.skipWait(this.jobId!).subscribe();
+  }
+
+  getDisplayStatusLabel() {
+    return getJobDisplayLabel({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
+  }
+
+  getDisplayStatusColor() {
+    return getJobDisplayColor({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
   }
 
   showEditBotsInput() {

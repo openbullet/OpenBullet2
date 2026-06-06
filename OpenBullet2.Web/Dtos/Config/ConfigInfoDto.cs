@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Configs;
+using RuriLib.Models.Configs;
 
 namespace OpenBullet2.Web.Dtos.Config;
 
@@ -66,7 +66,7 @@ public class ConfigInfoDto
     /// Whether the config is dangerous and might contain malicious code.
     /// </summary>
     public bool Dangerous { get; set; }
-    
+
     /// <summary>
     /// The number of bots that the config suggests to use.
     /// </summary>

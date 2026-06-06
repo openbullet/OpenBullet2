@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.User;
+namespace OpenBullet2.Web.Dtos.User;
 
 /// <summary>
 /// DTO that contains information about the user that owns a resource.

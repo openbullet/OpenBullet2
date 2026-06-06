@@ -1,29 +1,53 @@
-﻿using RuriLib.Functions.Networking;
+using System;
+using RuriLib.Functions.Networking;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
-namespace RuriLib.Functions.Pop3
+namespace RuriLib.Functions.Pop3;
+
+/// <summary>
+/// Parses POP3 Thunderbird-style autoconfig XML.
+/// </summary>
+public static class Pop3Autoconfig
 {
-    public static class Pop3Autoconfig
+    /// <summary>
+    /// Parses POP3 server entries from autoconfig XML.
+    /// </summary>
+    /// <param name="xml">The autoconfig XML.</param>
+    /// <returns>The parsed POP3 host entries.</returns>
+    public static List<HostEntry> Parse(string xml)
     {
-        public static List<HostEntry> Parse(string xml)
+        var doc = new XmlDocument();
+        doc.LoadXml(xml);
+
+        var servers = doc.DocumentElement?.SelectNodes(
+            "/clientConfig/emailProvider/incomingServer[contains(@type,'pop3')]");
+
+        var hosts = new List<HostEntry>();
+
+        if (servers is null)
         {
-            var doc = new XmlDocument();
-            doc.LoadXml(xml);
-
-            var servers = doc.DocumentElement.SelectNodes("/clientConfig/emailProvider/incomingServer[contains(@type,'pop3')]");
-
-            var hosts = new List<HostEntry>();
-
-            foreach (XmlNode server in servers)
-            {
-                var hostname = server.SelectSingleNode("hostname").FirstChild.Value;
-                var port = server.SelectSingleNode("port").FirstChild.Value;
-
-                hosts.Add(new HostEntry(hostname, int.Parse(port)));
-            }
-
             return hosts;
         }
+
+        foreach (XmlNode server in servers)
+        {
+            var hostname = GetRequiredNodeValue(server, "hostname");
+            var portValue = GetRequiredNodeValue(server, "port");
+
+            if (!int.TryParse(portValue, NumberStyles.None, CultureInfo.InvariantCulture, out var port))
+            {
+                throw new FormatException($"Invalid POP3 port '{portValue}' in autoconfig XML.");
+            }
+
+            hosts.Add(new HostEntry(hostname, port));
+        }
+
+        return hosts;
     }
+
+    private static string GetRequiredNodeValue(XmlNode server, string nodeName)
+        => server.SelectSingleNode(nodeName)?.InnerText
+            ?? throw new FormatException($"Missing {nodeName} in POP3 autoconfig XML.");
 }

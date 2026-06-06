@@ -1,9 +1,16 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-namespace RuriLib.Models.Hits
+namespace RuriLib.Models.Hits;
+
+/// <summary>
+/// Stores hits in an output sink.
+/// </summary>
+public interface IHitOutput
 {
-    public interface IHitOutput
-    {
-        Task Store(Hit hit);
-    }
+    /// <summary>
+    /// Stores a hit.
+    /// </summary>
+    /// <param name="hit">The hit to store.</param>
+    /// <returns>A task that completes when the hit has been stored.</returns>
+    Task Store(Hit hit);
 }

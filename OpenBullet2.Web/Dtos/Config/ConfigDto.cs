@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Configs;
+using RuriLib.Models.Configs;
 
 namespace OpenBullet2.Web.Dtos.Config;
 

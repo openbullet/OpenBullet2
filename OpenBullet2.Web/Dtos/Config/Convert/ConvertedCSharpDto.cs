@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Convert;
+namespace OpenBullet2.Web.Dtos.Config.Convert;
 
 /// <summary>
 /// DTO that contains information about a converted C# script.

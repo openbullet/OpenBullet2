@@ -1,7 +1,12 @@
-﻿namespace RuriLib.Models.Environment
+namespace RuriLib.Models.Environment;
+
+/// <summary>
+/// Defines an export format template.
+/// </summary>
+public class ExportFormat
 {
-    public class ExportFormat
-    {
-        public string Format { get; set; } = "";
-    }
+    /// <summary>
+    /// The format string used when exporting hits.
+    /// </summary>
+    public string Format { get; set; } = string.Empty;
 }

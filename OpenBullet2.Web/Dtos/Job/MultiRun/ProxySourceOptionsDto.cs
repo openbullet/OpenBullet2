@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Proxies;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Proxies;
 

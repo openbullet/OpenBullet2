@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { faCode, faCopy, faDownload, faEye } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 
@@ -20,34 +20,38 @@ export class ViewAsHtmlComponent implements OnChanges {
 
   showRawHtml = false;
   isJson = false;
+  prettyPrintJson = true;
+  highlightedSource = '';
+  private parsedJson: unknown = null;
 
   // TODO: We need to rework and improve this component
 
   constructor(private messageService: MessageService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // If html starts with '{' and ends with '}', it's probably JSON
-    this.isJson = this.html.trim().startsWith('{') && this.html.trim().endsWith('}');
+    this.parsedJson = null;
 
-    if (this.isJson) {
-      setTimeout(() => {
-        Prism.highlightAll();
-      });
+    try {
+      this.parsedJson = JSON.parse(this.html);
+      this.isJson = true;
+    } catch {
+      this.isJson = false;
     }
+
+    this.updateHighlightedSource();
   }
 
   toggleShowRawHtml() {
     this.showRawHtml = !this.showRawHtml;
+    this.updateHighlightedSource();
+  }
 
-    if (this.showRawHtml) {
-      setTimeout(() => {
-        Prism.highlightAll();
-      });
-    }
+  togglePrettyPrintJson() {
+    this.updateHighlightedSource();
   }
 
   copySource() {
-    navigator.clipboard.writeText(this.html);
+    navigator.clipboard.writeText(this.getDisplayedSource());
     this.messageService.add({
       severity: 'info',
       summary: 'Copied to clipboard',
@@ -56,7 +60,9 @@ export class ViewAsHtmlComponent implements OnChanges {
   }
 
   downloadSource() {
-    const blob = new Blob([this.html], { type: 'text/html' });
+    const blob = new Blob([this.getDisplayedSource()], {
+      type: this.isJson ? 'application/json' : 'text/html'
+    });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
@@ -65,5 +71,37 @@ export class ViewAsHtmlComponent implements OnChanges {
     a.click();
 
     URL.revokeObjectURL(url);
+  }
+
+  private getDisplayedSource(): string {
+    if (!this.isJson || !this.prettyPrintJson) {
+      return this.html;
+    }
+
+    return JSON.stringify(this.parsedJson, null, 2);
+  }
+
+  private updateHighlightedSource() {
+    if (this.isJson) {
+      this.highlightedSource = Prism.highlight(
+        this.getDisplayedSource(),
+        Prism.languages.json,
+        'json'
+      );
+
+      return;
+    }
+
+    if (this.showRawHtml) {
+      this.highlightedSource = Prism.highlight(
+        this.html,
+        Prism.languages.markup,
+        'markup'
+      );
+
+      return;
+    }
+
+    this.highlightedSource = '';
   }
 }

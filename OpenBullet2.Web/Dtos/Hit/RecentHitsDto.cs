@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Hit;
+namespace OpenBullet2.Web.Dtos.Hit;
 
 /// <summary>
 /// DTO that contains information about recent hits for the chart.

@@ -1,4 +1,4 @@
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -11,10 +11,10 @@ public class HealthIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         using var client = Factory.CreateClient();
-        
+
         // Act
-        var response = await client.GetAsync("/api/v1/health");
-        
+        var response = await client.GetAsync("/api/v1/health", TestCancellationToken);
+
         // Assert
         Assert.True(response.IsSuccessStatusCode);
     }

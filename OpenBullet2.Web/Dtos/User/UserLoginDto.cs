@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.User;
 

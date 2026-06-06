@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Jobs;
+using RuriLib.Models.Jobs;
 
 namespace OpenBullet2.Web.Dtos.Job;
 

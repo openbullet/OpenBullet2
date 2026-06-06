@@ -17,9 +17,12 @@ import {
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { JobLastRunOutcome } from 'src/app/main/dtos/job/job-last-run-outcome';
+import { getJobDisplayColor, getJobDisplayLabel } from 'src/app/main/dtos/job/job-display';
 import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { MRJNewHitMessage } from 'src/app/main/dtos/job/messages/multi-run/hit.dto';
+import { MRJNewLogMessage } from 'src/app/main/dtos/job/messages/multi-run/new-log.dto';
 import { MRJNewResultMessage } from 'src/app/main/dtos/job/messages/multi-run/new-result.dto';
 import { JobProxyMode } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { MRJDataStatsDto, MRJHitDto, MultiRunJobDto } from 'src/app/main/dtos/job/multi-run-job.dto';
@@ -78,17 +81,6 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
   settings: SafeOBSettingsDto | null = null;
   customInputs: CustomInputQuestionDto[] | null = null;
-
-  statusColor: Record<JobStatus, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   customStatuses: string[] = ['CUSTOM'];
   botLimit = 200;
@@ -151,6 +143,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   // Subscriptions
   resultSubscription: Subscription | null = null;
   hitSubscription: Subscription | null = null;
+  logSubscription: Subscription | null = null;
   tickSubscription: Subscription | null = null;
   statusSubscription: Subscription | null = null;
   botsSubscription: Subscription | null = null;
@@ -227,6 +220,12 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.logSubscription = this.multiRunJobHubService.log$.subscribe((log) => {
+      if (log !== null) {
+        this.onNewLogEntry(log);
+      }
+    });
+
     this.tickSubscription = this.multiRunJobHubService.tick$.subscribe((tick) => {
       if (tick !== null) {
         this.dataStats = tick.dataStats;
@@ -271,6 +270,12 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     this.errorSubscription = this.multiRunJobHubService.error$.subscribe((error) => {
       if (error !== null) {
+        this.writeLog({
+          timestamp: new Date(),
+          message: `Job error (${error.type}): ${error.message}`,
+          color: 'var(--fg-error)',
+        });
+
         this.messageService.add({
           key: 'tc',
           severity: 'error',
@@ -305,6 +310,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     this.resultSubscription?.unsubscribe();
     this.hitSubscription?.unsubscribe();
+    this.logSubscription?.unsubscribe();
     this.tickSubscription?.unsubscribe();
     this.statusSubscription?.unsubscribe();
     this.botsSubscription?.unsubscribe();
@@ -403,6 +409,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   onNewHit(hitMessage: MRJNewHitMessage) {
+    if (!this.job?.cacheHits) {
+      return;
+    }
+
     this.hits.push(hitMessage.hit);
 
     if (hitMessage.hit.type === this.selectedHitType) {
@@ -418,11 +428,23 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     }
   }
 
+  onNewLogEntry(log: MRJNewLogMessage) {
+    this.writeLog({
+      timestamp: new Date(log.newMessage.timestamp),
+      message: log.newMessage.message,
+      color: log.newMessage.color,
+    });
+  }
+
   onStatusChanged(status: JobStatus) {
     this.status = status;
 
     if (status === JobStatus.WAITING) {
       this.startTime = moment();
+    }
+
+    if (status === JobStatus.IDLE) {
+      this.getJobData();
     }
 
     const logMessage = `Status changed to ${status}`;
@@ -530,6 +552,20 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     return this.status === JobStatus.WAITING;
   }
 
+  getDisplayStatusLabel() {
+    return getJobDisplayLabel({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
+  }
+
+  getDisplayStatusColor() {
+    return getJobDisplayColor({
+      status: this.status,
+      lastRunOutcome: this.job?.lastRunOutcome ?? JobLastRunOutcome.NONE,
+    });
+  }
+
   skipWait() {
     this.jobService.skipWait(this.jobId!, true).subscribe();
   }
@@ -627,7 +663,17 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   getTestedCount() {
-    return this.Math.min(this.dataStats.tested + this.job!.skip, this.dataStats.total);
+    if (!this.job) {
+      return 0;
+    }
+
+    if (this.status === JobStatus.IDLE) {
+      return this.job.lastRunOutcome === JobLastRunOutcome.COMPLETED
+        ? this.dataStats.total
+        : this.job.skip;
+    }
+
+    return this.Math.min(this.dataStats.tested + this.job.skip, this.dataStats.total);
   }
 
   chooseHitType(type: HitType) {

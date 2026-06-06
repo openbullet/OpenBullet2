@@ -1,5 +1,5 @@
-﻿using AutoMapper;
 using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
@@ -7,6 +7,8 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.JobMonitor;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Utils;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor;
 
@@ -23,15 +25,18 @@ public class JobMonitorController : ApiController
     private readonly JobManagerService _jobManagerService;
     private readonly JobMonitorService _jobMonitorService;
     private readonly ILogger<JobMonitorController> _logger;
-    private readonly IMapper _mapper;
+    private readonly TypeAdapterConfig _mapperConfig;
+    private readonly IObjectMapper _mapper;
 
     /// <summary></summary>
     public JobMonitorController(JobMonitorService jobMonitorService,
         JobManagerService jobManagerService,
-        IMapper mapper, ILogger<JobMonitorController> logger)
+        TypeAdapterConfig mapperConfig, IObjectMapper mapper,
+        ILogger<JobMonitorController> logger)
     {
         _jobMonitorService = jobMonitorService;
         _jobManagerService = jobManagerService;
+        _mapperConfig = mapperConfig;
         _mapper = mapper;
         _logger = logger;
     }
@@ -60,9 +65,13 @@ public class JobMonitorController : ApiController
     /// </summary>
     [HttpPost("triggered-action")]
     [MapToApiVersion("1.0")]
-    public ActionResult<TriggeredActionDto> Create(
-        CreateTriggeredActionDto dto)
+    public async Task<ActionResult<TriggeredActionDto>> Create(
+        CreateTriggeredActionDto dto,
+        [FromServices] IValidator<CreateTriggeredActionDto> validator,
+        CancellationToken cancellationToken)
     {
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         var actions = _jobMonitorService.TriggeredActions;
 
         var newAction = _mapper.Map<TriggeredAction>(dto);
@@ -81,13 +90,17 @@ public class JobMonitorController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<TriggeredActionDto>> Update(
         UpdateTriggeredActionDto dto,
-        [FromServices] IValidator<UpdateTriggeredActionDto> validator)
+        [FromServices] IValidator<UpdateTriggeredActionDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         var targetAction = GetTriggeredAction(dto.Id);
 
-        var newAction = _mapper.Map(dto, targetAction);
+        var newAction = WebMappingMethods.ApplyTriggeredAction(
+            dto, targetAction, _mapperConfig);
+        _jobMonitorService.TriggeredActions[
+            _jobMonitorService.TriggeredActions.IndexOf(targetAction)] = newAction;
         _jobMonitorService.SaveStateIfChanged();
 
         _logger.LogInformation("Updated triggered action {Id}", newAction.Id);
@@ -178,7 +191,8 @@ public class JobMonitorController : ApiController
     }
 
     private static JobType GetJobType(Job job) =>
-        job switch {
+        job switch
+        {
             MultiRunJob => JobType.MultiRun,
             ProxyCheckJob => JobType.ProxyCheck,
             _ => throw new NotImplementedException()

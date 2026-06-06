@@ -1,4 +1,4 @@
-﻿namespace RuriLib.Functions.Captchas;
+namespace RuriLib.Functions.Captchas;
 
 /// <summary>
 /// The available captcha solving service providers.
@@ -7,7 +7,7 @@ public enum CaptchaServiceType
 {
     // IMPORTANT: The enum values should not be changed because they are
     // used to identify the service in the settings file.
-        
+
     /// <summary>The service provided by https://2captcha.com/</summary>
     TwoCaptcha = 0,
 
@@ -52,40 +52,40 @@ public enum CaptchaServiceType
 
     /// <summary>The service provided by https://capsolver.com/</summary>
     CapSolver = 16,
-        
+
     /// <summary>The service provided by https://capmonster.cloud/</summary>
     CapMonsterCloud = 17,
-        
+
     /// <summary>The service provided by https://humancoder.com/</summary>
     HumanCoder = 18,
-        
+
     /// <summary>The service provided by https://nopecha.com/</summary>
     Nopecha = 19,
-        
+
     /// <summary>The service provided by https://nocaptchaai.com/</summary>
     NoCaptchaAi = 20,
-        
+
     /// <summary>The service provided by https://metabypass.tech/</summary>
     MetaBypassTech = 21,
-        
+
     /// <summary>The service provided by https://captchai.com/</summary>
     CaptchaAi = 22,
-        
+
     /// <summary>The service provided by https://nextcaptcha.com/</summary>
     NextCaptcha = 23,
-        
+
     /// <summary>The service provided by https://ez-captcha.com/</summary>
     EzCaptcha = 24,
-        
+
     /// <summary>The service provided by https://endcaptcha.com/</summary>
     EndCaptcha = 25,
-        
+
     /// <summary>The service provided by https://bestcaptchasolver.com/</summary>
     BestCaptchaSolver = 26,
-        
+
     /// <summary>The service provided by https://cap.guru/</summary>
     CapGuru = 27,
-    
+
     /// <summary>The service provided by https://aycd.io/</summary>
     Aycd = 28,
 }

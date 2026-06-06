@@ -51,6 +51,14 @@
                 <div class="d-flex flex-row">
                     <div class="d-flex align-items-center mr-2">
                         <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Immediate"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="immediate"></p-radioButton>
+                        <label for="immediate" class="ml-2 text-small">Start immediately</label>
+                    </div>
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
                             [value]="StartConditionMode.Relative"
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
@@ -67,6 +75,10 @@
                     </div>
                 </div>
             </div>
+            <span class="text-small color-inactive"
+                *ngIf="startConditionMode === StartConditionMode.Immediate">
+                The job will start as soon as you run it.
+            </span>
             <span class="input-small"
                 *ngIf="startConditionMode === StartConditionMode.Relative">
                 <app-input-time-span [small]="true"
@@ -141,6 +153,15 @@
                 [(ngModel)]="options.checkOnlyUntested"
                 [binary]="true" inputId="checkOnlyUntested"
                 label="Check only untested proxies" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox class="text-small"
+                (onChange)="touched = true" ngDefaultControl
+                [(ngModel)]="options.useProxyJudge"
+                [binary]="true" inputId="useProxyJudge"
+                label="Use proxy judge for anonymity detection" />
         </div>
     </div>
     <div class="row mt-4 mb-2">

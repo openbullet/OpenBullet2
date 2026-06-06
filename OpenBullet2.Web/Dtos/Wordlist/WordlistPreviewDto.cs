@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Wordlist;
+namespace OpenBullet2.Web.Dtos.Wordlist;
 
 /// <summary>
 /// DTO that contains the preview of the contents of a wordlist.

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Jobs;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 

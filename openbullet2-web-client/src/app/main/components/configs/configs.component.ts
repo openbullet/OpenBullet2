@@ -10,7 +10,8 @@ import {
   faX,
 } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService, TableState } from 'primeng/api';
+import { Table, TablePageEvent } from 'primeng/table';
 import { saveFile } from 'src/app/shared/utils/files';
 import { ConfigInfoDto, ConfigMode } from '../../dtos/config/config-info.dto';
 import { ConfigDto } from '../../dtos/config/config.dto';
@@ -29,6 +30,9 @@ export class ConfigsComponent implements OnInit {
   configs: ConfigInfoDto[] | null = null;
   obSettings: OBSettingsDto | null = null;
 
+  @ViewChild('configDt')
+  configDt: Table | undefined = undefined;
+
   @ViewChild('uploadConfigsComponent')
   uploadConfigsComponent: UploadConfigsComponent | undefined = undefined;
 
@@ -45,6 +49,9 @@ export class ConfigsComponent implements OnInit {
 
   displayMode = 'grid';
   uploadConfigsModalVisible = false;
+  tableFirst = 0;
+  tableRows = 10;
+  searchTerm = '';
 
   configMenuItems: MenuItem[] = [
     {
@@ -120,6 +127,7 @@ export class ConfigsComponent implements OnInit {
   refreshConfigs(reload: boolean) {
     this.configService.getAllConfigs(reload).subscribe((configs) => {
       this.configs = configs;
+      this.reapplyTableState();
 
       if (reload) {
         this.messageService.add({
@@ -134,6 +142,32 @@ export class ConfigsComponent implements OnInit {
   changeDisplayMode(mode: string) {
     this.displayMode = mode;
     this.volatileSettings.configsDisplayMode = mode;
+  }
+
+  onTablePageChange(event: TablePageEvent) {
+    this.tableFirst = event.first;
+    this.tableRows = event.rows;
+  }
+
+  onTableStateRestore(state: TableState) {
+    this.tableFirst = state.first ?? 0;
+    this.tableRows = state.rows ?? 10;
+
+    const globalFilter = state.filters?.['global'];
+    if (globalFilter && !Array.isArray(globalFilter) && globalFilter.value) {
+      this.searchTerm = String(globalFilter.value);
+    }
+  }
+
+  applyGlobalFilter() {
+    this.tableFirst = 0;
+    this.configDt?.filterGlobal(this.searchTerm, 'contains');
+  }
+
+  clearTable() {
+    this.searchTerm = '';
+    this.tableFirst = 0;
+    this.configDt?.clear();
   }
 
   openUploadConfigsModal() {
@@ -171,7 +205,7 @@ export class ConfigsComponent implements OnInit {
         summary: 'Selected',
         detail: `Selected config ${resp.metadata.name}`,
       });
-      if (config.dangerous) {
+      if (config.dangerous && this.obSettings?.generalSettings.warnDangerousConfig !== false) {
         this.messageService.add({
           key: 'br',
           severity: 'warn',
@@ -345,7 +379,34 @@ export class ConfigsComponent implements OnInit {
         summary: 'Deleted',
         detail: `Config ${config.name} was deleted`,
       });
-      this.refreshConfigs(false);
+
+      if (this.configs !== null) {
+        this.configs = this.configs.filter((c) => c.id !== config.id);
+      }
+
+      this.reapplyTableState();
+    });
+  }
+
+  private reapplyTableState() {
+    setTimeout(() => {
+      if (!this.configDt) {
+        return;
+      }
+
+      if (this.searchTerm) {
+        this.configDt.filterGlobal(this.searchTerm, 'contains');
+      }
+
+      const filteredCount = this.configDt.filteredValue?.length ?? this.configs?.length ?? 0;
+
+      if (filteredCount === 0) {
+        this.tableFirst = 0;
+        return;
+      }
+
+      const maxFirst = Math.floor((filteredCount - 1) / this.tableRows) * this.tableRows;
+      this.tableFirst = Math.min(this.tableFirst, maxFirst);
     });
   }
 }

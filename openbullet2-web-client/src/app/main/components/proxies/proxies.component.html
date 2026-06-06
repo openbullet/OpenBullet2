@@ -86,6 +86,18 @@
                     <span>{{item | pascalcase : true}}</span>
                 </ng-template>
             </p-dropdown>
+            <p-dropdown
+                class="ml-2"
+                [(ngModel)]="proxyQuality"
+                (ngModelChange)="refreshProxies()"
+                [options]="proxyQualities">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
         </div>
         <div class="col-4 pr-0 text-right">
             <button class="button button-secondary mr-2" [style]="{ height: '41px'}"
@@ -161,6 +173,9 @@
                         <th style="min-width:10rem">
                             Status
                         </th>
+                        <th style="min-width:10rem">
+                            Quality
+                        </th>
                         <th style="min-width:7rem" pSortableColumn="ping">
                             <div class="d-flex align-items-center">
                                 Ping <p-sortIcon field="ping" />
@@ -208,6 +223,7 @@
                         
                         <td [class]="proxy.country === 'Unknown' ? 'color-inactive' : ''">{{ proxy.country }}</td>
                         <td [class]="getWorkingClass(proxy.status)">{{ proxy.status | pascalcase : true }}</td>
+                        <td [class]="proxy.quality === 'unknown' ? 'color-inactive' : ''">{{ proxy.quality | pascalcase : true }}</td>
                         <td [class]="proxy.ping === 0 ? 'color-inactive' : ''">{{ proxy.ping }} ms</td>
 
                         <!-- Last checked -->
@@ -221,6 +237,9 @@
                     </tr>
                 </ng-template>
             </p-table>
+            <small class="color-inactive d-block mt-2">
+                Working status reflects the target URL and success key used by the Proxy Check Job at the time the proxy was checked.
+            </small>
         </div>
     </div>
 </div>
@@ -253,6 +272,21 @@
     <app-update-proxy-group
         [proxyGroup]="selectedProxyGroup"
         (confirm)="updateProxyGroup($event)" />
+</p-dialog>
+
+<p-dialog 
+    #deleteLowQualityProxiesModal
+    [header]="'Delete low-quality proxies in group ' + selectedProxyGroup.name" 
+    [(visible)]="deleteLowQualityProxiesModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-delete-low-quality-proxies
+        [proxyGroup]="selectedProxyGroup"
+        (confirm)="deleteLowQualityProxies($event)" />
 </p-dialog>
 
 <p-dialog 

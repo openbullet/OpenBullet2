@@ -15,26 +15,26 @@ public class LoliCodeAutocompletionService
     /// The block snippets.
     /// </summary>
     public FrozenDictionary<string, string> BlockSnippets { get; private set; }
-    
+
     /// <summary></summary>
     public LoliCodeAutocompletionService()
     {
         BlockSnippets = ImmutableDictionary<string, string>.Empty.ToFrozenDictionary();
     }
-    
+
     /// <summary>
     /// Initializes the autocompletion service.
     /// </summary>
     public void Init()
     {
         var blockSnippets = new Dictionary<string, string>();
-        
+
         foreach (var id in RuriLib.Globals.DescriptorsRepository.Descriptors.Keys)
         {
             var block = BlockFactory.GetBlock<BlockInstance>(id);
             blockSnippets[id] = block.ToLC(true);
         }
-        
+
         BlockSnippets = blockSnippets.ToFrozenDictionary();
     }
 }

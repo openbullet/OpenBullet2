@@ -1,0 +1,16 @@
+<div class="log-message" [ngStyle]="{ color: log.color }"><ng-container *ngIf="!isLongMessage || isExpanded; else collapsedLogMessage">{{ log.message }}<button
+        *ngIf="isLongMessage"
+        type="button"
+        class="log-message-toggle"
+        (click)="collapse()">click to collapse</button></ng-container><ng-template #collapsedLogMessage>{{ collapsedMessage }}...<button
+        type="button"
+        class="log-message-toggle"
+        (click)="expand()">click to expand</button></ng-template>
+    <button class="button button-secondary mt-2 d-block"
+        *ngIf="log.canViewAsHtml"
+        pTooltip="View content" tooltipPosition="bottom"
+        (click)="openHtmlViewer()">
+        <fa-icon [icon]="faWindowMaximize" [fixedWidth]="true"></fa-icon>
+        View Content
+    </button>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Proxy;
+namespace OpenBullet2.Web.Dtos.Proxy;
 
 /// <summary>
 /// DTO used to move proxies between groups.

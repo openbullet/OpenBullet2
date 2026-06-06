@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace RuriLib.Models.Blocks.Settings.Interpolated
+namespace RuriLib.Models.Blocks.Settings.Interpolated;
+
+/// <summary>
+/// Represents an interpolated dictionary-of-strings block setting.
+/// </summary>
+public class InterpolatedDictionaryOfStringsSetting : InterpolatedSetting
 {
-    public class InterpolatedDictionaryOfStringsSetting : InterpolatedSetting
-    {
-        public Dictionary<string, string> Value { get; set; } = new Dictionary<string, string>();
-    }
+    /// <summary>
+    /// The value of the setting.
+    /// </summary>
+    public Dictionary<string, string> Value { get; set; } = [];
 }

@@ -1,159 +1,202 @@
-﻿using System.Threading;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Helpers
+namespace RuriLib.Helpers;
+
+// PauseTokenSource. Code from https://stackoverflow.com/questions/19613444/a-pattern-to-pause-resume-an-async-task
+/// <summary>
+/// Coordinates pause and resume requests between a producer and a consumer.
+/// </summary>
+public class PauseTokenSource
 {
-    // PauseTokenSource. Code from https://stackoverflow.com/questions/19613444/a-pattern-to-pause-resume-an-async-task
-    public class PauseTokenSource
+    private bool paused;
+    private bool pauseRequested;
+
+    private TaskCompletionSource<bool>? resumeRequestTcs;
+    private TaskCompletionSource<bool>? pauseConfirmationTcs;
+
+    private readonly SemaphoreSlim stateAsyncLock = new(1);
+    private readonly SemaphoreSlim pauseRequestAsyncLock = new(1);
+
+    /// <summary>
+    /// Gets the consumer-side pause token.
+    /// </summary>
+    public PauseToken Token => new(this);
+
+    /// <summary>
+    /// Returns whether the source is currently paused.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns><c>true</c> if paused; otherwise <c>false</c>.</returns>
+    public async Task<bool> IsPausedAsync(CancellationToken token = default)
     {
-        private bool paused = false;
-        private bool pauseRequested = false;
+        await stateAsyncLock.WaitAsync(token);
 
-        private TaskCompletionSource<bool> resumeRequestTcs;
-        private TaskCompletionSource<bool> pauseConfirmationTcs;
-
-        private readonly SemaphoreSlim stateAsyncLock = new(1);
-        private readonly SemaphoreSlim pauseRequestAsyncLock = new(1);
-
-        public PauseToken Token => new(this);
-
-        public async Task<bool> IsPausedAsync(CancellationToken token = default)
+        try
         {
-            await stateAsyncLock.WaitAsync(token);
-
-            try
-            {
-                return paused;
-            }
-            finally
-            {
-                stateAsyncLock.Release();
-            }
+            return paused;
         }
-
-        public async Task ResumeAsync(CancellationToken token = default)
+        finally
         {
-            await stateAsyncLock.WaitAsync(token);
-
-            try
-            {
-                if (!paused)
-                {
-                    return;
-                }
-
-                await pauseRequestAsyncLock.WaitAsync(token);
-
-                try
-                {
-                    var resumeRequestTcs = this.resumeRequestTcs;
-                    paused = false;
-                    pauseRequested = false;
-                    this.resumeRequestTcs = null;
-                    pauseConfirmationTcs = null;
-                    resumeRequestTcs.TrySetResult(true);
-                }
-                finally
-                {
-                    pauseRequestAsyncLock.Release();
-                }
-            }
-            finally
-            {
-                stateAsyncLock.Release();
-            }
+            stateAsyncLock.Release();
         }
+    }
 
-        public async Task PauseAsync(CancellationToken token = default)
+    /// <summary>
+    /// Resumes the paused consumer if one is waiting.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    public async Task ResumeAsync(CancellationToken token = default)
+    {
+        await stateAsyncLock.WaitAsync(token);
+
+        try
         {
-            await stateAsyncLock.WaitAsync(token);
-
-            try
+            if (!paused)
             {
-                if (paused)
-                {
-                    return;
-                }
-
-                Task pauseConfirmationTask = null;
-                await pauseRequestAsyncLock.WaitAsync(token);
-
-                try
-                {
-                    pauseRequested = true;
-                    resumeRequestTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    pauseConfirmationTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    pauseConfirmationTask = WaitForPauseConfirmationAsync(token);
-                }
-                finally
-                {
-                    pauseRequestAsyncLock.Release();
-                }
-
-                await pauseConfirmationTask;
-
-                paused = true;
+                return;
             }
-            finally
-            {
-                stateAsyncLock.Release();
-            }
-        }
-
-        private async Task WaitForResumeRequestAsync(CancellationToken token)
-        {
-            await using (token.Register(() => resumeRequestTcs.TrySetCanceled(), useSynchronizationContext: false))
-            {
-                await resumeRequestTcs.Task;
-            }
-        }
-
-        private async Task WaitForPauseConfirmationAsync(CancellationToken token)
-        {
-            await using (token.Register(() => pauseConfirmationTcs.TrySetCanceled(), useSynchronizationContext: false))
-            {
-                await pauseConfirmationTcs.Task;
-            }
-        }
-
-        public async Task PauseIfRequestedAsync(CancellationToken token = default)
-        {
-            Task resumeRequestTask = null;
 
             await pauseRequestAsyncLock.WaitAsync(token);
 
             try
             {
-                if (!pauseRequested)
-                {
-                    return;
-                }
+                var pendingResumeRequest = resumeRequestTcs;
+                paused = false;
+                pauseRequested = false;
+                resumeRequestTcs = null;
+                pauseConfirmationTcs = null;
+                pendingResumeRequest?.TrySetResult(true);
+            }
+            finally
+            {
+                pauseRequestAsyncLock.Release();
+            }
+        }
+        finally
+        {
+            stateAsyncLock.Release();
+        }
+    }
 
-                resumeRequestTask = WaitForResumeRequestAsync(token);
-                pauseConfirmationTcs.TrySetResult(true);
+    /// <summary>
+    /// Requests the consumer to pause and waits for confirmation.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    public async Task PauseAsync(CancellationToken token = default)
+    {
+        await stateAsyncLock.WaitAsync(token);
+
+        try
+        {
+            if (paused)
+            {
+                return;
+            }
+
+            Task? pauseConfirmationTask = null;
+            await pauseRequestAsyncLock.WaitAsync(token);
+
+            try
+            {
+                pauseRequested = true;
+                resumeRequestTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                pauseConfirmationTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                pauseConfirmationTask = WaitForPauseConfirmationAsync(token);
             }
             finally
             {
                 pauseRequestAsyncLock.Release();
             }
 
-            await resumeRequestTask;
+            await pauseConfirmationTask;
+            paused = true;
         }
-    }
-
-    // PauseToken - consumer side
-    public struct PauseToken
-    {
-        private readonly PauseTokenSource source;
-
-        public PauseToken(PauseTokenSource source)
+        finally
         {
-            this.source = source;
+            stateAsyncLock.Release();
+        }
+    }
+
+    private async Task WaitForResumeRequestAsync(CancellationToken token)
+    {
+        var pendingResumeRequest = resumeRequestTcs
+            ?? throw new InvalidOperationException("A resume request cannot be awaited before pause is requested.");
+
+        await using (token.Register(() => pendingResumeRequest.TrySetCanceled(token), useSynchronizationContext: false))
+        {
+            await pendingResumeRequest.Task;
+        }
+    }
+
+    private async Task WaitForPauseConfirmationAsync(CancellationToken token)
+    {
+        var pendingPauseConfirmation = pauseConfirmationTcs
+            ?? throw new InvalidOperationException("Pause confirmation cannot be awaited before pause is requested.");
+
+        await using (token.Register(() => pendingPauseConfirmation.TrySetCanceled(token), useSynchronizationContext: false))
+        {
+            await pendingPauseConfirmation.Task;
+        }
+    }
+
+    /// <summary>
+    /// Waits until pause is requested, then blocks until resumed.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    public async Task PauseIfRequestedAsync(CancellationToken token = default)
+    {
+        Task? resumeRequestTask = null;
+
+        await pauseRequestAsyncLock.WaitAsync(token);
+
+        try
+        {
+            if (!pauseRequested)
+            {
+                return;
+            }
+
+            // Confirm that the producer observed the pause request, then wait for resume.
+            pauseConfirmationTcs?.TrySetResult(true);
+            resumeRequestTask = WaitForResumeRequestAsync(token);
+        }
+        finally
+        {
+            pauseRequestAsyncLock.Release();
         }
 
-        public Task<bool> IsPaused() => source.IsPausedAsync();
-
-        public Task PauseIfRequestedAsync(CancellationToken token = default)
-            => source.PauseIfRequestedAsync(token);
+        await resumeRequestTask;
     }
+}
+
+// PauseToken - consumer side
+/// <summary>
+/// Represents the consumer side of a <see cref="PauseTokenSource"/>.
+/// </summary>
+public readonly struct PauseToken
+{
+    private readonly PauseTokenSource source;
+
+    /// <summary>
+    /// Creates a consumer-side pause token.
+    /// </summary>
+    /// <param name="source">The underlying source.</param>
+    public PauseToken(PauseTokenSource source)
+    {
+        this.source = source;
+    }
+
+    /// <summary>
+    /// Returns whether the source is currently paused.
+    /// </summary>
+    public Task<bool> IsPaused() => source.IsPausedAsync();
+
+    /// <summary>
+    /// Waits if pause has been requested.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    public Task PauseIfRequestedAsync(CancellationToken token = default)
+        => source.PauseIfRequestedAsync(token);
 }

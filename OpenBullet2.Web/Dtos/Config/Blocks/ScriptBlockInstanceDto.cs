@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Blocks.Custom.Script;
+using RuriLib.Models.Blocks.Custom.Script;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks;
 

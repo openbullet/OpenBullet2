@@ -1,45 +1,61 @@
-﻿using RuriLib.Helpers;
+using RuriLib.Helpers;
 using System;
+using System.Linq;
 using Xunit;
 
-namespace RuriLib.Tests.Helpers
+namespace RuriLib.Tests.Helpers;
+
+public class VariableNamesTests
 {
-    public class VariableNamesTests
+    [Fact]
+    public void MakeValid_Null_Exception()
     {
-        [Fact]
-        public void MakeValid_Null_Exception()
-        {
-            Assert.Throws<ArgumentNullException>(() => VariableNames.MakeValid(null));
-        }
+        Assert.Throws<ArgumentNullException>(() => VariableNames.MakeValid(null!));
+    }
 
-        [Fact]
-        public void MakeValid_Empty_Random()
-        {
-            Assert.True(VariableNames.IsValid(VariableNames.MakeValid(string.Empty)));
-        }
+    [Fact]
+    public void MakeValid_Empty_Random()
+    {
+        Assert.True(VariableNames.IsValid(VariableNames.MakeValid(string.Empty)));
+    }
 
-        [Fact]
-        public void MakeValid_AllInvalid_Random()
-        {
-            Assert.True(VariableNames.IsValid(VariableNames.MakeValid("$<&/")));
-        }
+    [Fact]
+    public void MakeValid_AllInvalid_Random()
+    {
+        Assert.True(VariableNames.IsValid(VariableNames.MakeValid("$<&/")));
+    }
 
-        [Fact]
-        public void MakeValid_SomeInvalid_OnlyValid()
-        {
-            Assert.Equal("hello", VariableNames.MakeValid("!h£ello?"));
-        }
+    [Fact]
+    public void MakeValid_SomeInvalid_OnlyValid()
+    {
+        Assert.Equal("hello", VariableNames.MakeValid("!h£ello?"));
+    }
 
-        [Fact]
-        public void MakeValid_StartingNumber_StartingUnderscore()
-        {
-            Assert.Equal("_2pac", VariableNames.MakeValid("2pac"));
-        }
+    [Fact]
+    public void MakeValid_StartingNumber_StartingUnderscore()
+    {
+        Assert.Equal("_2pac", VariableNames.MakeValid("2pac"));
+    }
 
-        [Fact]
-        public void MakeValid_Dots_AllValid()
-        {
-            Assert.Equal("data.SOURCE", VariableNames.MakeValid("data.SOURCE"));
-        }
+    [Fact]
+    public void MakeValid_Dots_AllValid()
+    {
+        Assert.Equal("data.SOURCE", VariableNames.MakeValid("data.SOURCE"));
+    }
+
+    [Fact]
+    public void MakeValid_Dots_InvalidSegments_AllSegmentsSanitized()
+    {
+        Assert.Equal("data._2SOURCE.hello", VariableNames.MakeValid("data.2SOURCE.!hello?"));
+    }
+
+    [Fact]
+    public void RandomName_LengthAndCharset_Valid()
+    {
+        var name = VariableNames.RandomName(8);
+
+        Assert.Equal(8, name.Length);
+        Assert.All(name, c => Assert.InRange(c, 'a', 'z'));
+        Assert.True(VariableNames.IsValid(name));
     }
 }

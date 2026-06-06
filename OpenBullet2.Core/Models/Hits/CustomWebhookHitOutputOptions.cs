@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Hits.HitOutputs;
+using RuriLib.Models.Hits.HitOutputs;
 
 namespace OpenBullet2.Core.Models.Hits;
 

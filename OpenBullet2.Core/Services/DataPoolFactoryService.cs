@@ -1,4 +1,7 @@
-﻿using OpenBullet2.Core.Models.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Data;
 using RuriLib.Models.Data.DataPools;
@@ -15,13 +18,18 @@ namespace OpenBullet2.Core.Services;
 /// </summary>
 public class DataPoolFactoryService
 {
-    private readonly IWordlistRepository _wordlistRepo;
     private readonly RuriLibSettingsService _ruriLibSettings;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<DataPoolFactoryService> _logger;
 
-    public DataPoolFactoryService(IWordlistRepository wordlistRepo, RuriLibSettingsService ruriLibSettings)
+    public DataPoolFactoryService(
+        IServiceScopeFactory scopeFactory,
+        RuriLibSettingsService ruriLibSettings,
+        ILogger<DataPoolFactoryService>? logger = null)
     {
-        _wordlistRepo = wordlistRepo;
+        _scopeFactory = scopeFactory;
         _ruriLibSettings = ruriLibSettings;
+        _logger = logger ?? NullLogger<DataPoolFactoryService>.Instance;
     }
 
     /// <summary>
@@ -43,14 +51,17 @@ public class DataPoolFactoryService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Exception while loading data pool. {ex.Message}");
+            _logger.LogWarning(ex, "Failed to load data pool from options type {OptionsType}, falling back to InfiniteDataPool",
+                options.GetType().Name);
             return new InfiniteDataPool();
         }
     }
 
     private async Task<DataPool> MakeWordlistDataPoolAsync(WordlistDataPoolOptions options)
     {
-        var entity = await _wordlistRepo.GetAsync(options.WordlistId);
+        using var scope = _scopeFactory.CreateScope();
+        var wordlistRepo = scope.ServiceProvider.GetRequiredService<IWordlistRepository>();
+        var entity = await wordlistRepo.GetAsync(options.WordlistId);
 
         // If the entity was deleted
         if (entity == null)

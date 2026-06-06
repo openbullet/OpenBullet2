@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Blocks.Parameters;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.Parameters;

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Attributes;
 using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web.Dtos;

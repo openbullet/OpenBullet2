@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Wordlist;
+namespace OpenBullet2.Web.Dtos.Wordlist;
 
 /// <summary>
 /// DTO that represents the file referenced by a wordlist.

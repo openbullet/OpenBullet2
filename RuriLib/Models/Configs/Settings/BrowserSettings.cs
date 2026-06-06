@@ -1,16 +1,66 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace RuriLib.Models.Configs.Settings
+namespace RuriLib.Models.Configs.Settings;
+
+/// <summary>
+/// Configures browser-based execution.
+/// </summary>
+public class BrowserSettings
 {
-    public class BrowserSettings
+    private BrowserGhostCursorSettings ghostCursor = new();
+
+    /// <summary>
+    /// The browser automation engine that should execute generic browser blocks.
+    /// </summary>
+    public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
+
+    /// <summary>
+    /// Controls how generic browser blocks should move and click the mouse.
+    /// </summary>
+    public BrowserMouseAutomationMode MouseAutomationMode { get; set; } = BrowserMouseAutomationMode.Native;
+
+    /// <summary>
+    /// Statuses that should force the browser to close.
+    /// </summary>
+    public string[] QuitBrowserStatuses { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Whether the browser should run headless.
+    /// </summary>
+    public bool Headless { get; set; } = true;
+
+    /// <summary>
+    /// Additional browser command-line arguments.
+    /// </summary>
+    public string CommandLineArgs { get; set; } = "--disable-notifications";
+
+    /// <summary>
+    /// Whether HTTPS certificate errors should be ignored.
+    /// </summary>
+    public bool IgnoreHttpsErrors { get; set; }
+
+    /// <summary>
+    /// Whether only document and script requests should be loaded.
+    /// </summary>
+    public bool LoadOnlyDocumentAndScript { get; set; }
+
+    /// <summary>
+    /// Whether JavaScript dialogs should be dismissed automatically.
+    /// </summary>
+    public bool DismissDialogs { get; set; }
+
+    /// <summary>
+    /// URL patterns that should be blocked.
+    /// </summary>
+    public List<string> BlockedUrls { get; set; } = [];
+
+    /// <summary>
+    /// Configures GhostCursor behavior when mouse automation is enabled.
+    /// </summary>
+    public BrowserGhostCursorSettings GhostCursor
     {
-        public string[] QuitBrowserStatuses { get; set; } = Array.Empty<string>();
-        public bool Headless { get; set; } = true;
-        public string CommandLineArgs { get; set; } = "--disable-notifications";
-        public bool IgnoreHttpsErrors { get; set; } = false;
-        public bool LoadOnlyDocumentAndScript { get; set; } = false;
-        public bool DismissDialogs { get; set; } = false;
-        public List<string> BlockedUrls { get; set; } = new();
+        get => ghostCursor;
+        set => ghostCursor = value ?? new();
     }
 }

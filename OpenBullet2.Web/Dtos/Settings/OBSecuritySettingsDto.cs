@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Settings;
+namespace OpenBullet2.Web.Dtos.Settings;
 
 /// <summary>
 /// Settings related to security.
@@ -21,7 +21,7 @@ public class OBSecuritySettingsDto
     /// The username for the admin user.
     /// </summary>
     public string AdminUsername { get; set; } = "admin";
-    
+
     /// <summary>
     /// The API key that the admin can use to authenticate to the API.
     /// If empty, the admin will not be able to use the API.

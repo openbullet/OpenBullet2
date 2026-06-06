@@ -5,7 +5,14 @@
         </div>
         <div class="col-auto text-right pr-0">
             <button class="button button-accent ml-2"
-                *ngIf="status === 'idle'"
+                *ngIf="isStarting"
+                pTooltip="Starting the debugger" tooltipPosition="bottom"
+                [disabled]="true">
+                <fa-icon [icon]="faSpinner" [fixedWidth]="true" [spin]="true"></fa-icon>
+                Starting
+            </button>
+            <button class="button button-accent ml-2"
+                *ngIf="status === 'idle' && !isStarting"
                 pTooltip="Start the debugger" tooltipPosition="bottom"
                 (click)="start()">
                 <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
@@ -115,17 +122,10 @@
     <div class="row mt-2">
         <div class="col-12 px-0 w-100">
             <div class="logs-container" *ngIf="!displayVariables">
-                <div *ngFor="let log of logs"
-                    class="log-message"
-                    [ngStyle]="{ color: log.color }">{{ log.message }}
-                    <button class="button button-secondary mt-2 d-block"
-                        *ngIf="log.canViewAsHtml"
-                        pTooltip="View as HTML" tooltipPosition="bottom"
-                        (click)="viewAsHtml(log)">
-                        <fa-icon [icon]="faWindowMaximize" [fixedWidth]="true"></fa-icon>
-                        View as HTML
-                    </button>
-                </div>
+                <app-bot-log-entry
+                    *ngFor="let log of logs"
+                    [log]="log"
+                    (viewAsHtml)="viewAsHtml($event)" />
             </div>
             <div class="logs-container" *ngIf="displayVariables">
                 <div *ngFor="let variable of variables"
@@ -139,7 +139,7 @@
 
 <p-dialog 
     #viewAsHtmlModal
-    header="HTML Viewer" 
+    header="Content Viewer"
     [(visible)]="viewAsHtmlModalVisible" 
     [modal]="true" 
     [style]="{ width: '80vw' }" 

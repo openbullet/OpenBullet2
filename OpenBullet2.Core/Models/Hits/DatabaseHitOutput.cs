@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Services;
+using OpenBullet2.Core.Services;
 using RuriLib.Models.Hits;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-﻿using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Drawing;

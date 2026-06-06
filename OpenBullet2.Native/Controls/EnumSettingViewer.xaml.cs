@@ -1,65 +1,67 @@
-﻿using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.ViewModels;
 using RuriLib.Extensions;
 using RuriLib.Models.Blocks.Settings;
 using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Controls
+namespace OpenBullet2.Native.Controls;
+
+/// <summary>
+/// Interaction logic for BlockSettingViewer.xaml
+/// </summary>
+public partial class EnumSettingViewer : UserControl
 {
-    /// <summary>
-    /// Interaction logic for BlockSettingViewer.xaml
-    /// </summary>
-    public partial class EnumSettingViewer : UserControl
+    private EnumSettingViewerViewModel? vm;
+    private EnumSettingViewerViewModel ViewModel => vm
+        ?? throw new InvalidOperationException("The setting viewer has not been initialized");
+
+    public event EventHandler? ValueChanged;
+
+    public BlockSetting Setting
     {
-        private EnumSettingViewerViewModel vm;
-
-        public BlockSetting Setting
+        get => ViewModel.Setting;
+        set
         {
-            get => vm?.Setting;
-            set
+            if (value.FixedSetting is not EnumSetting)
             {
-                if (value.FixedSetting is not EnumSetting)
-                {
-                    throw new Exception("Invalid setting type for this UC");
-                }
-
-                vm = new EnumSettingViewerViewModel(value);
-                DataContext = vm;
+                throw new Exception("Invalid setting type for this UC");
             }
-        }
 
-        public EnumSettingViewer()
-        {
-            InitializeComponent();
+            vm = new EnumSettingViewerViewModel(value);
+            vm.ValueChanged += (_, _) => ValueChanged?.Invoke(this, EventArgs.Empty);
+            DataContext = vm;
         }
     }
 
-    public class EnumSettingViewerViewModel : ViewModelBase
+    public EnumSettingViewer()
     {
-        public BlockSetting Setting { get; init; }
+        InitializeComponent();
+    }
+}
 
-        private EnumSetting FixedSetting => Setting.FixedSetting as EnumSetting;
+public class EnumSettingViewerViewModel(BlockSetting setting) : ViewModelBase
+{
+    public BlockSetting Setting { get; init; } = setting;
 
-        public string Name => Setting.ReadableName;
+    public event EventHandler? ValueChanged;
 
-        public string Description => Setting.Description;
+    private EnumSetting FixedSetting => (EnumSetting)Setting.FixedSetting!;
 
-        public IEnumerable<string> Values => FixedSetting.PrettyNames;
+    public string Name => Setting.ReadableName;
 
-        public string Value
+    public string Description => Setting.Description ?? string.Empty;
+
+    public IEnumerable<string> Values => FixedSetting.PrettyNames;
+
+    public string Value
+    {
+        get => FixedSetting.PrettyName ?? string.Empty;
+        set
         {
-            get => FixedSetting.PrettyName;
-            set
-            {
-                FixedSetting.SetFromPrettyName(value);
-                OnPropertyChanged();
-            }
-        }
-
-        public EnumSettingViewerViewModel(BlockSetting setting)
-        {
-            Setting = setting;
+            FixedSetting.SetFromPrettyName(value);
+            OnPropertyChanged();
+            ValueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

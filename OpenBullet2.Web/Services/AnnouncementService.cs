@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.Services;
 

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Entities;
 using System;
 using System.IO;
 using System.Linq;

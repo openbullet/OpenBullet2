@@ -1,48 +1,52 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Controls
+namespace OpenBullet2.Native.Controls;
+
+/// <summary>
+/// Interaction logic for TimeSpanPicker.xaml
+/// </summary>
+public partial class TimeSpanPicker : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TimeSpanPicker.xaml
-    /// </summary>
-    public partial class TimeSpanPicker : UserControl
+    public TimeSpan TimeSpan
     {
-        public TimeSpan TimeSpan
+        get => (TimeSpan)GetValue(TimeSpanProperty);
+        set => SetValue(TimeSpanProperty, value);
+    }
+
+    public static readonly DependencyProperty TimeSpanProperty =
+    DependencyProperty.Register(
+        nameof(TimeSpan),
+        typeof(TimeSpan),
+        typeof(TimeSpanPicker),
+        new PropertyMetadata(default(TimeSpan), OnTimeSpanPropertyChanged));
+
+    private static void OnTimeSpanPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var newValue = (TimeSpan)e.NewValue;
+        if (d is not TimeSpanPicker source)
         {
-            get => (TimeSpan)GetValue(TimeSpanProperty);
-            set => SetValue(TimeSpanProperty, value);
+            return;
         }
 
-        public static readonly DependencyProperty TimeSpanProperty =
-        DependencyProperty.Register(
-            nameof(TimeSpan),
-            typeof(TimeSpan),
-            typeof(TimeSpanPicker),
-            new PropertyMetadata(default(TimeSpan), OnTimeSpanPropertyChanged));
+        source.hours.Value = newValue.Hours;
+        source.minutes.Value = newValue.Minutes;
+        source.seconds.Value = newValue.Seconds;
+    }
 
-        private static void OnTimeSpanPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public TimeSpanPicker()
+    {
+        InitializeComponent();
+    }
+
+    private void NumberChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+    {
+        if (hours?.Value is double hoursValue
+            && minutes?.Value is double minutesValue
+            && seconds?.Value is double secondsValue)
         {
-            var newValue = (TimeSpan)e.NewValue;
-            var source = d as TimeSpanPicker;
-
-            source.hours.Value = newValue.Hours;
-            source.minutes.Value = newValue.Minutes;
-            source.seconds.Value = newValue.Seconds;
-        }
-
-        public TimeSpanPicker()
-        {
-            InitializeComponent();
-        }
-
-        private void NumberChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
-        {
-            if (hours is not null && minutes is not null && seconds is not null)
-            {
-                TimeSpan = new TimeSpan((int)hours.Value, (int)minutes.Value, (int)seconds.Value);
-            }
+            TimeSpan = new TimeSpan((int)hoursValue, (int)minutesValue, (int)secondsValue);
         }
     }
 }

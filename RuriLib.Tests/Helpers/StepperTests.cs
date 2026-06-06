@@ -1,53 +1,58 @@
-﻿using RuriLib.Helpers;
+using RuriLib.Helpers;
 using System;
-using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RuriLib.Tests.Helpers
+namespace RuriLib.Tests.Helpers;
+
+public class StepperTests
 {
-    public class StepperTests
+    private static CancellationToken TestCancellationToken => TestContext.Current.CancellationToken;
+
+    [Fact]
+    public async Task WaitForStepAsync_TakeStep_CompletesAndResetsWaitingState()
     {
-        // This test is temporarily disabled until I figure out why it works perfectly fine on a
-        // local machine but fails on half the GitHub Actions runs...
-        // [Fact]
-        public async Task TryTakeStep_StepperWaiting_Proceed()
-        {
-            var stepper = new Stepper();
-            var sw = new Stopwatch();
-            sw.Start();
+        var stepper = new Stepper();
+        // Use the event to deterministically detect when the stepper starts waiting.
+        var waiting = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        stepper.WaitingForStep += (_, _) => waiting.TrySetResult();
 
-            // Start a task that would take 1000 ms to complete, but waits
-            // for a step twice
-            var task = Task.Run(async () =>
-            {
-                await stepper.WaitForStepAsync();
-                await Task.Delay(500);
+        var task = stepper.WaitForStepAsync(TestCancellationToken);
+        await waiting.Task.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken);
 
-                await stepper.WaitForStepAsync();
-                await Task.Delay(500);
-            });
+        Assert.True(stepper.IsWaiting);
+        Assert.True(stepper.TryTakeStep());
 
-            // Wait 300 ms, then take the first step
-            await Task.Delay(300);
-            var tookStep = stepper.TryTakeStep();
+        await task.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken);
+        Assert.False(stepper.IsWaiting);
+    }
 
-            Assert.True(tookStep);
+    [Fact]
+    public async Task WaitForStepAsync_Cancelled_ThrowsAndResetsWaitingState()
+    {
+        var stepper = new Stepper();
+        // Use the event to avoid racing the cancellation against stepper initialization.
+        var waiting = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        stepper.WaitingForStep += (_, _) => waiting.TrySetResult();
 
-            // Wait 800 ms (500 + 300), then take the last step
-            await Task.Delay(800);
-            tookStep = stepper.TryTakeStep();
+        using var cts = new CancellationTokenSource();
+        var task = stepper.WaitForStepAsync(cts.Token);
 
-            Assert.True(tookStep);
+        await waiting.Task.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken);
+        Assert.True(stepper.IsWaiting);
 
-            // Wait until the task completes
-            await task.WaitAsync(TimeSpan.FromSeconds(5));
+        cts.Cancel();
 
-            sw.Stop();
-            var elapsed = sw.Elapsed;
+        await Assert.ThrowsAsync<OperationCanceledException>(() => task);
+        Assert.False(stepper.IsWaiting);
+    }
 
-            // Make sure the elapsed time is over 1500 ms
-            Assert.True(elapsed > TimeSpan.FromMilliseconds(1500));
-        }
+    [Fact]
+    public void TryTakeStep_WhenNotWaiting_ReturnsFalse()
+    {
+        var stepper = new Stepper();
+
+        Assert.False(stepper.TryTakeStep());
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job;
+namespace OpenBullet2.Web.Dtos.Job;
 
 /// <summary>
 /// A command sent to a job.

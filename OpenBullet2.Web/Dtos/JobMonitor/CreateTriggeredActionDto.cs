@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+using System.Text.Json;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -39,4 +40,18 @@ public class CreateTriggeredActionDto
     /// triggering conditions are verified.
     /// </summary>
     public List<JsonElement> Actions { get; set; } = new();
+}
+
+internal class CreateTriggeredActionDtoValidator : AbstractValidator<CreateTriggeredActionDto>
+{
+    public CreateTriggeredActionDtoValidator()
+    {
+        RuleFor(x => x.Triggers)
+            .Must(t => t.Count > 0)
+            .WithMessage("At least one trigger is required");
+
+        RuleFor(x => x.Actions)
+            .Must(a => a.Count > 0)
+            .WithMessage("At least one action is required");
+    }
 }

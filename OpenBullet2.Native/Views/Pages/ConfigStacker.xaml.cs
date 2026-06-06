@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Controls;
 using OpenBullet2.Native.Helpers;
@@ -8,108 +8,162 @@ using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Configs;
+using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
-namespace OpenBullet2.Native.Views.Pages
+namespace OpenBullet2.Native.Views.Pages;
+
+/// <summary>
+/// Interaction logic for ConfigStacker.xaml
+/// </summary>
+public partial class ConfigStacker : Page
 {
-    /// <summary>
-    /// Interaction logic for ConfigStacker.xaml
-    /// </summary>
-    public partial class ConfigStacker : Page
+    private readonly IUiFactory uiFactory;
+    private readonly MainWindow mainWindow;
+    private readonly OpenBulletSettingsService obSettingsService;
+    private readonly RuriLibSettingsService rlSettingsService;
+    private readonly ConfigService configService;
+    private readonly IConfigRepository configRepo;
+    private readonly ConfigStackerViewModel vm;
+
+    public ConfigStacker(
+        IUiFactory uiFactory,
+        MainWindow mainWindow,
+        OpenBulletSettingsService obSettingsService,
+        RuriLibSettingsService rlSettingsService,
+        ConfigService configService,
+        IConfigRepository configRepo,
+        ConfigStackerViewModel vm)
     {
-        private readonly ConfigService configService;
-        private readonly IConfigRepository configRepo;
-        private readonly ConfigStackerViewModel vm;
+        this.uiFactory = uiFactory;
+        this.mainWindow = mainWindow;
+        this.obSettingsService = obSettingsService;
+        this.rlSettingsService = rlSettingsService;
+        this.configService = configService;
+        this.configRepo = configRepo;
+        this.vm = vm;
+        vm.SelectionChanged += SelectionChanged;
+        DataContext = vm;
 
-        public ConfigStacker()
+        InitializeComponent();
+    }
+
+    public void UpdateViewModel()
+    {
+        if (configService.SelectedConfig is null)
         {
-            configService = SP.GetService<ConfigService>();
-            configRepo = SP.GetService<IConfigRepository>();
-            vm = SP.GetService<ViewModelsService>().ConfigStacker;
-            vm.SelectionChanged += SelectionChanged;
-            DataContext = vm;
-
-            InitializeComponent();
+            mainWindow.NavigateTo(MainWindowPage.Configs);
+            return;
         }
 
-        public void UpdateViewModel()
+        try
         {
-            try
-            {
-                // Try to change the mode to Stack
-                configService.SelectedConfig.ChangeMode(ConfigMode.Stack);
-            }
-            catch (Exception ex)
-            {
-                // On fail, prompt it to the user and go back to the configs page
-                Alert.Exception(ex);
-                SP.GetService<MainWindow>().NavigateTo(MainWindowPage.Configs);
-            }
-
-            vm.SelectBlock(null, false);
-            vm.UpdateViewModel();
+            // Try to change the mode to Stack
+            configService.SelectedConfig.ChangeMode(ConfigMode.Stack);
+        }
+        catch (Exception ex)
+        {
+            // On fail, prompt it to the user and go back to the configs page
+            Alert.Exception(ex);
+            mainWindow.NavigateTo(MainWindowPage.Configs);
         }
 
-        public void CreateBlock(BlockDescriptor descriptor) => vm.CreateBlock(descriptor);
+        vm.SelectBlock(null, false);
+        vm.UpdateViewModel();
+    }
 
-        private void AddBlock(object sender, RoutedEventArgs e)
-            => new MainDialog(new AddBlockDialog(this), "Add block").ShowDialog();
+    public void CreateBlock(BlockDescriptor descriptor) => vm.CreateBlock(descriptor);
 
-        private void RemoveBlock(object sender, RoutedEventArgs e) => vm.RemoveSelected();
-        private void MoveBlockUp(object sender, RoutedEventArgs e) => vm.MoveSelectedUp();
-        private void MoveBlockDown(object sender, RoutedEventArgs e) => vm.MoveSelectedDown();
-        private void CloneBlock(object sender, RoutedEventArgs e) => vm.CloneSelected();
-        private void EnableDisableBlock(object sender, RoutedEventArgs e) => vm.EnableDisableSelected();
-        private void Undo(object sender, RoutedEventArgs e) => vm.Undo();
+    public int? GetSelectedBlockIndex() => vm.GetSelectedBlockIndex();
 
-        private void SelectBlock(object sender, MouseEventArgs e) => SelectBlock(sender);
-        private void SelectBlock(object sender, RoutedEventArgs e) => SelectBlock(sender);
-        private void SelectBlock(object sender)
+    public void SelectBlockByIndex(int blockIndex)
+    {
+        if (blockIndex < 0 || blockIndex >= vm.Stack.Count)
         {
-            var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            var shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            var block = (BlockViewModel)(sender as FrameworkElement).Tag;
-            vm.SelectBlock(block, ctrl, shift);
+            return;
         }
 
-        private void SelectionChanged(IEnumerable<BlockViewModel> selected)
+        var block = vm.Stack[blockIndex];
+        vm.SelectBlock(block, false);
+
+        Dispatcher.BeginInvoke(() =>
         {
-            var first = selected.FirstOrDefault();
+            blocksItemsControl.UpdateLayout();
 
-            if (first is null)
+            if (blocksItemsControl.ItemContainerGenerator.ContainerFromIndex(blockIndex) is FrameworkElement container)
             {
-                blockInfo.Content = null;
+                container.BringIntoView();
             }
-            else
-            {
-                UserControl content = first.Block switch
-                {
-                    AutoBlockInstance => new AutoBlockSettingsViewer(first),
-                    ParseBlockInstance => new ParseBlockSettingsViewer(first),
-                    ScriptBlockInstance => new ScriptBlockSettingsViewer(first),
-                    HttpRequestBlockInstance => new HttpRequestBlockSettingsViewer(first),
-                    KeycheckBlockInstance => new KeycheckBlockSettingsViewer(first),
-                    LoliCodeBlockInstance => new LoliCodeBlockSettingsViewer(first),
-                    _ => null
-                };
+        }, DispatcherPriority.Loaded);
+    }
 
-                blockInfo.Content = content;
-            }
+    private void AddBlock(object sender, RoutedEventArgs e)
+        => new MainDialog(uiFactory.Create<AddBlockDialog>(this), "Add block").ShowDialog();
+
+    private void RemoveBlock(object sender, RoutedEventArgs e) => vm.RemoveSelected();
+    private void MoveBlockUp(object sender, RoutedEventArgs e) => vm.MoveSelectedUp();
+    private void MoveBlockDown(object sender, RoutedEventArgs e) => vm.MoveSelectedDown();
+    private void CloneBlock(object sender, RoutedEventArgs e) => vm.CloneSelected();
+    private void EnableDisableBlock(object sender, RoutedEventArgs e) => vm.EnableDisableSelected();
+    private void Undo(object sender, RoutedEventArgs e) => vm.Undo();
+
+    private void SelectBlock(object sender, MouseEventArgs e) => SelectBlock(sender);
+    private void SelectBlock(object sender, RoutedEventArgs e) => SelectBlock(sender);
+    private void SelectBlock(object sender)
+    {
+        if (sender is not FrameworkElement { Tag: BlockViewModel block })
+        {
+            return;
         }
 
-        private async void PageKeyDown(object sender, KeyEventArgs e)
+        var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+        var shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+        vm.SelectBlock(block, ctrl, shift);
+    }
+
+    private void SelectionChanged(IEnumerable<BlockViewModel> selected)
+    {
+        var first = selected.FirstOrDefault();
+
+        if (first is null)
         {
-            // Save on CTRL+S
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+            blockInfo.Content = null;
+        }
+        else
+        {
+            UserControl? content = first.Block switch
             {
-                await configRepo.SaveAsync(configService.SelectedConfig);
-                Alert.Success("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
+                AutoBlockInstance => new AutoBlockSettingsViewer(first),
+                ParseBlockInstance => new ParseBlockSettingsViewer(first),
+                ScriptBlockInstance => new ScriptBlockSettingsViewer(first, obSettingsService),
+                HttpRequestBlockInstance => new HttpRequestBlockSettingsViewer(first),
+                KeycheckBlockInstance => new KeycheckBlockSettingsViewer(first, rlSettingsService),
+                LoliCodeBlockInstance => new LoliCodeBlockSettingsViewer(first, obSettingsService),
+                _ => null
+            };
+
+            blockInfo.Content = content;
+        }
+    }
+
+    private async void PageKeyDown(object sender, KeyEventArgs e)
+    {
+        // Save on CTRL+S
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+        {
+            if (configService.SelectedConfig is null)
+            {
+                return;
             }
+
+            await configRepo.SaveAsync(configService.SelectedConfig);
+            Alert.ToastSuccess("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
         }
     }
 }

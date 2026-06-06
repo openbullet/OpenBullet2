@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.ConfigDebugger;
+namespace OpenBullet2.Web.Dtos.ConfigDebugger;
 
 static internal class ConfigDebuggerMethods
 {

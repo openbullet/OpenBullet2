@@ -1,9 +1,9 @@
-﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Shared;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
 using Endpoint = OpenBullet2.Core.Models.Sharing.Endpoint;
 
@@ -17,11 +17,11 @@ public class SharedController : ApiController
 {
     private readonly ConfigSharingService _configSharingService;
     private readonly ILogger<SharedController> _logger;
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
 
     /// <summary></summary>
     public SharedController(ConfigSharingService configSharingService,
-        IMapper mapper, ILogger<SharedController> logger)
+        IObjectMapper mapper, ILogger<SharedController> logger)
     {
         _configSharingService = configSharingService;
         _mapper = mapper;
@@ -47,10 +47,11 @@ public class SharedController : ApiController
     [HttpPost("endpoint")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<EndpointDto>> CreateEndpoint(EndpointDto dto,
-        [FromServices] IValidator<EndpointDto> validator)
+        [FromServices] IValidator<EndpointDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         var existing = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 
@@ -77,10 +78,11 @@ public class SharedController : ApiController
     [HttpPut("endpoint")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<EndpointDto>> UpdateEndpoint(EndpointDto dto,
-        [FromServices] IValidator<EndpointDto> validator)
+        [FromServices] IValidator<EndpointDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         var endpoint = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 
@@ -117,7 +119,7 @@ public class SharedController : ApiController
 
         _configSharingService.Endpoints.Remove(endpoint);
         _configSharingService.Save();
-        
+
         _logger.LogInformation("Deleted shared endpoint at route {Route}", route);
 
         return Ok();
@@ -130,7 +132,8 @@ public class SharedController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DownloadConfigs(
         string endpointName,
-        [FromHeader(Name = "Api-Key")] string apiKey)
+        [FromHeader(Name = "Api-Key")] string apiKey,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -143,7 +146,7 @@ public class SharedController : ApiController
                     "Invalid api key");
             }
 
-            return File(await _configSharingService.GetArchiveAsync(endpointName),
+            return File(await _configSharingService.GetArchiveAsync(endpointName, cancellationToken),
                 "application/zip", "configs.zip");
         }
         catch (UnauthorizedException)

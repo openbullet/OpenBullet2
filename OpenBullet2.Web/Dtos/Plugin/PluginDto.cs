@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Plugin;
+namespace OpenBullet2.Web.Dtos.Plugin;
 
 /// <summary>
 /// DTO that represents a plugin.

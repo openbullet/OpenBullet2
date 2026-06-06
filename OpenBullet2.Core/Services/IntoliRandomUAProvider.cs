@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using RuriLib.Providers.UserAgents;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace OpenBullet2.Core.Services;
 /// </summary>
 public class IntoliRandomUAProvider : IRandomUAProvider
 {
-    private readonly Dictionary<UAPlatform, UserAgent[]> distributions = new Dictionary<UAPlatform, UserAgent[]>();
+    private readonly Dictionary<UAPlatform, UserAgent[]> distributions = [];
     private readonly Random rand;
 
     /// <inheritdoc/>
@@ -27,17 +27,24 @@ public class IntoliRandomUAProvider : IRandomUAProvider
         var agents = new List<UserAgent>();
         foreach (var elem in array)
         {
-            agents.Add(new UserAgent(elem.Value<string>("userAgent"),
-                ConvertPlatform(elem.Value<string>("platform")), elem.Value<double>("weight"), 0));
+            var userAgent = elem.Value<string>("userAgent");
+            var platform = elem.Value<string>("platform");
+
+            if (string.IsNullOrWhiteSpace(userAgent) || string.IsNullOrWhiteSpace(platform))
+            {
+                continue;
+            }
+
+            agents.Add(new UserAgent(userAgent, ConvertPlatform(platform), elem.Value<double>("weight"), 0));
         }
-        
+
         rand = new Random();
-        
+
         if (agents.Count == 0)
         {
             throw new MissingUserAgentsException("No valid user agents found in user-agents.json");
         }
-        
+
         foreach (var platform in (UAPlatform[])Enum.GetValues(typeof(UAPlatform)))
         {
             distributions[platform] = ComputeDistribution(agents, platform);
@@ -75,7 +82,7 @@ public class IntoliRandomUAProvider : IRandomUAProvider
             distribution.Add(new UserAgent(elem.userAgentString, elem.platform, elem.weight, cumulative));
         }
 
-        return distribution.ToArray();
+        return [.. distribution];
     }
 
     private static UAPlatform ConvertPlatform(string platform) => platform switch

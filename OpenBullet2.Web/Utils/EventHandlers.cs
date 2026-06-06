@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Utils;
+namespace OpenBullet2.Web.Utils;
 
 // https://www.devleader.ca/2023/02/14/async-eventhandlers-a-simple-safety-net-to-the-rescue/
 static internal class EventHandlers

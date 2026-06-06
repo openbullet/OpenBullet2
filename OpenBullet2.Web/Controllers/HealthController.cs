@@ -16,5 +16,5 @@ public class HealthController : ApiController
     public IActionResult HealthCheck()
     {
         return Ok();
-    }    
+    }
 }

@@ -1,15 +1,14 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Dialogs
+namespace OpenBullet2.Native.Views.Dialogs;
+
+/// <summary>
+/// Interaction logic for License.xaml
+/// </summary>
+public partial class LicenseDialog : Page
 {
-    /// <summary>
-    /// Interaction logic for License.xaml
-    /// </summary>
-    public partial class LicenseDialog : Page
+    public LicenseDialog()
     {
-        public LicenseDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

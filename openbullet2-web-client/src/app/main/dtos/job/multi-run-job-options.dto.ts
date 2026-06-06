@@ -25,8 +25,10 @@ export interface MultiRunJobOptionsDto {
   proxyBanTimeSeconds: number;
   markAsToCheckOnAbort: boolean;
   neverBanProxies: boolean;
+  neverMarkProxiesAsBad: boolean;
   concurrentProxyMode: boolean;
   periodicReloadIntervalSeconds: number;
+  cacheHits: boolean;
   dataPool: DataPoolTypes;
   proxySources: ProxySourceTypes[];
   hitOutputs: HitOutputTypes[];

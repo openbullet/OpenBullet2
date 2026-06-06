@@ -1,10 +1,18 @@
-﻿using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
+namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+
+/// <summary>
+/// Base settings group for a multipart content entry.
+/// </summary>
+public class HttpContentSettingsGroup
 {
-    public class HttpContentSettingsGroup
-    {
-        public BlockSetting Name { get; set; } = BlockSettingFactory.CreateStringSetting("name");
-        public BlockSetting ContentType { get; set; } = BlockSettingFactory.CreateStringSetting("contentType");
-    }
+    /// <summary>
+    /// Gets or sets the content name.
+    /// </summary>
+    public BlockSetting Name { get; set; } = BlockSettingFactory.CreateStringSetting("name");
+    /// <summary>
+    /// Gets or sets the content type.
+    /// </summary>
+    public BlockSetting ContentType { get; set; } = BlockSettingFactory.CreateStringSetting("contentType");
 }

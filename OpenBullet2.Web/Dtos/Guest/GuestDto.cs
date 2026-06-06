@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Guest;
+namespace OpenBullet2.Web.Dtos.Guest;
 
 /// <summary>
 /// DTO that represents a guest user.

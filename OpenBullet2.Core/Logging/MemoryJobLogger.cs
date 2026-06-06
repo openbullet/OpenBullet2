@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using RuriLib.Logging;
 using System;
@@ -6,36 +6,23 @@ using System.Collections.Generic;
 
 namespace OpenBullet2.Logging;
 
-public struct JobLogEntry
+public struct JobLogEntry(LogKind kind, string message, string color)
 {
-    public LogKind kind;
-    public string message;
-    public string color;
-    public DateTime date;
-
-    public JobLogEntry(LogKind kind, string message, string color)
-    {
-        this.kind = kind;
-        this.message = message;
-        this.color = color;
-        date = DateTime.Now;
-    }
+    public LogKind kind = kind;
+    public string message = message;
+    public string color = color;
+    public DateTime date = DateTime.Now;
 }
 
 /// <summary>
 /// An in-memory logger for job operations.
 /// </summary>
-public class MemoryJobLogger
+public class MemoryJobLogger(OpenBulletSettingsService settingsService)
 {
-    private readonly Dictionary<int, List<JobLogEntry>> logs = new();
+    private readonly Dictionary<int, List<JobLogEntry>> logs = [];
     private readonly object locker = new();
-    private readonly OpenBulletSettings settings;
-    public event EventHandler<int> NewLog; // The integer is the id of the job for which a new log came
-
-    public MemoryJobLogger(OpenBulletSettingsService settingsService)
-    {
-        settings = settingsService.Settings;
-    }
+    private readonly OpenBulletSettings settings = settingsService.Settings;
+    public event EventHandler<int>? NewLog; // The integer is the id of the job for which a new log came
 
     public IEnumerable<JobLogEntry> GetLog(int jobId)
     {
@@ -60,7 +47,7 @@ public class MemoryJobLogger
         {
             if (!logs.ContainsKey(jobId))
             {
-                logs[jobId] = new List<JobLogEntry> { entry };
+                logs[jobId] = [entry];
             }
             else
             {

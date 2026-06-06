@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.User;
+namespace OpenBullet2.Web.Dtos.User;
 
 /// <summary>
 /// DTO that contains post-login information of a user.

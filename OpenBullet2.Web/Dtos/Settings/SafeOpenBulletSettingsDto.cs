@@ -11,7 +11,7 @@ public class SafeOpenBulletSettingsDto
     /// Safe general settings.
     /// </summary>
     public SafeOBGeneralSettingsDto GeneralSettings { get; set; } = new();
-    
+
     /// <summary>
     /// Safe customization settings.
     /// </summary>
@@ -27,13 +27,13 @@ public class SafeOBGeneralSettingsDto
     /// Which page to navigate to on config load.
     /// </summary>
     public ConfigSection ConfigSectionOnLoad { get; set; } = ConfigSection.Stacker;
-    
+
     /// <summary>
     /// The refresh interval for periodically displaying all jobs' progress and information
     /// in the job manager page (in milliseconds).
     /// </summary>
     public int JobManagerUpdateInterval { get; set; } = 1000;
-    
+
     /// <summary>
     /// The default display mode for job information.
     /// </summary>
@@ -49,7 +49,7 @@ public class SafeOBCustomizationSettingsDto
     /// Whether to play a sound when a hit is found.
     /// </summary>
     public bool PlaySoundOnHit { get; set; } = false;
-    
+
     /// <summary>
     /// Whether to wrap words at viewport width in the code editor.
     /// </summary>

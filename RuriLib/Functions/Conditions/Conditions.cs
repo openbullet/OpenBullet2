@@ -1,111 +1,190 @@
-﻿using RuriLib.Models.Conditions.Comparisons;
+using RuriLib.Models.Conditions.Comparisons;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace RuriLib.Functions.Conditions
+namespace RuriLib.Functions.Conditions;
+
+/// <summary>
+/// Provides methods to check conditions.
+/// </summary>
+public static class Conditions
 {
-    public static class Conditions
+    /// <summary>
+    /// Compares two <see cref="bool"/> values.
+    /// </summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(bool leftTerm, BoolComparison comparison, bool rightTerm)
     {
-        /// <summary>Compares two <see cref="bool"/> values.</summary>
-        public static bool Check(bool leftTerm, BoolComparison comparison, bool rightTerm)
+        return comparison switch
         {
-            return comparison switch
-            {
-                BoolComparison.Is => leftTerm == rightTerm,
-                BoolComparison.IsNot => leftTerm != rightTerm,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
+            BoolComparison.Is => leftTerm == rightTerm,
+            BoolComparison.IsNot => leftTerm != rightTerm,
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>
+    /// Compares two <see cref="string"/> values.
+    /// </summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(string? leftTerm, StrComparison comparison, string? rightTerm)
+    {
+        // These comparisons don't require the terms to be non-null
+        switch (comparison)
+        {
+            case StrComparison.Exists:
+                return leftTerm is not null;
+            case StrComparison.DoesNotExist:
+                return leftTerm is null;
+            case StrComparison.EqualTo:
+                return leftTerm == rightTerm;
+            case StrComparison.NotEqualTo:
+                return leftTerm != rightTerm;
         }
 
-        /// <summary>Compares two <see cref="string"/> values.</summary>
-        public static bool Check(string leftTerm, StrComparison comparison, string rightTerm)
+        ArgumentNullException.ThrowIfNull(leftTerm, nameof(leftTerm));
+        ArgumentNullException.ThrowIfNull(rightTerm, nameof(rightTerm));
+
+        return comparison switch
         {
-            return comparison switch
-            {
-                StrComparison.EqualTo => leftTerm == rightTerm,
-                StrComparison.NotEqualTo => leftTerm != rightTerm,
-                StrComparison.Contains => leftTerm.Contains(rightTerm),
-                StrComparison.DoesNotContain => !leftTerm.Contains(rightTerm),
-                StrComparison.Exists => leftTerm != null,
-                StrComparison.DoesNotExist => leftTerm == null,
-                StrComparison.MatchesRegex => Regex.Match(leftTerm, rightTerm).Success,
-                StrComparison.DoesNotMatchRegex => !Regex.Match(leftTerm, rightTerm).Success,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
+            StrComparison.Contains => leftTerm.Contains(rightTerm),
+            StrComparison.DoesNotContain => !leftTerm.Contains(rightTerm),
+            StrComparison.MatchesRegex => Regex.Match(leftTerm, rightTerm).Success,
+            StrComparison.DoesNotMatchRegex => !Regex.Match(leftTerm, rightTerm).Success,
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>Compares a <see cref="List{T}"/> of <see cref="string"/> with a <see cref="string"/>.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(List<string>? leftTerm, ListComparison comparison, string? rightTerm)
+    {
+        // These comparisons don't require the left term to be non-null
+        switch (comparison)
+        {
+            case ListComparison.Exists:
+                return leftTerm is not null;
+            case ListComparison.DoesNotExist:
+                return leftTerm is null;
         }
 
-        /// <summary>Compares a <see cref="List{T}"/> of <see cref="string"/> with a <see cref="string"/>.</summary>
-        public static bool Check(List<string> leftTerm, ListComparison comparison, string rightTerm)
+        ArgumentNullException.ThrowIfNull(leftTerm, nameof(leftTerm));
+
+        return comparison switch
         {
-            return comparison switch
-            {
-                ListComparison.Contains => leftTerm.Contains(rightTerm),
-                ListComparison.DoesNotContain => !leftTerm.Contains(rightTerm),
-                ListComparison.Exists => leftTerm != null,
-                ListComparison.DoesNotExist => leftTerm == null,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
+            ListComparison.Contains => leftTerm.Contains(rightTerm!),
+            ListComparison.DoesNotContain => !leftTerm.Contains(rightTerm!),
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>Compares two <see cref="int"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(int leftTerm, NumComparison comparison, int rightTerm)
+        => Check((long)leftTerm, comparison, rightTerm);
+
+    /// <summary>Compares two <see cref="long"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(long leftTerm, NumComparison comparison, long rightTerm)
+    {
+        return comparison switch
+        {
+            NumComparison.EqualTo => leftTerm == rightTerm,
+            NumComparison.NotEqualTo => leftTerm != rightTerm,
+            NumComparison.LessThan => leftTerm < rightTerm,
+            NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
+            NumComparison.GreaterThan => leftTerm > rightTerm,
+            NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>Compares two <see cref="TimeSpan"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(TimeSpan leftTerm, NumComparison comparison, TimeSpan rightTerm)
+    {
+        return comparison switch
+        {
+            NumComparison.EqualTo => leftTerm == rightTerm,
+            NumComparison.NotEqualTo => leftTerm != rightTerm,
+            NumComparison.LessThan => leftTerm < rightTerm,
+            NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
+            NumComparison.GreaterThan => leftTerm > rightTerm,
+            NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>Compares two <see cref="float"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(float leftTerm, NumComparison comparison, float rightTerm)
+        => Check((double)leftTerm, comparison, rightTerm);
+
+    /// <summary>Compares two <see cref="double"/> values.</summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(double leftTerm, NumComparison comparison, double rightTerm)
+    {
+        return comparison switch
+        {
+            NumComparison.EqualTo => Math.Abs(leftTerm - rightTerm) < double.Epsilon,
+            NumComparison.NotEqualTo => Math.Abs(leftTerm - rightTerm) > double.Epsilon,
+            NumComparison.LessThan => leftTerm < rightTerm,
+            NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
+            NumComparison.GreaterThan => leftTerm > rightTerm,
+            NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
+    }
+
+    /// <summary>Compares a <see cref="Dictionary{TKey, TValue}"/> of (<see cref="string"/>,<see cref="string"/>) with a <see cref="string"/></summary>
+    /// <param name="leftTerm">The left operand.</param>
+    /// <param name="comparison">The comparison operator.</param>
+    /// <param name="rightTerm">The right operand.</param>
+    /// <returns><see langword="true"/> if the comparison succeeds.</returns>
+    public static bool Check(Dictionary<string, string>? leftTerm, DictComparison comparison, string? rightTerm)
+    {
+        switch (comparison)
+        {
+            case DictComparison.Exists:
+                return leftTerm is not null;
+            case DictComparison.DoesNotExist:
+                return leftTerm is null;
         }
 
-        /// <summary>Compares two <see cref="int"/> values.</summary>
-        public static bool Check(int leftTerm, NumComparison comparison, int rightTerm)
-        {
-            return comparison switch
-            {
-                NumComparison.EqualTo => leftTerm == rightTerm,
-                NumComparison.NotEqualTo => leftTerm != rightTerm,
-                NumComparison.LessThan => leftTerm < rightTerm,
-                NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
-                NumComparison.GreaterThan => leftTerm > rightTerm,
-                NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
-        }
+        ArgumentNullException.ThrowIfNull(leftTerm, nameof(leftTerm));
 
-        /// <summary>Compares two <see cref="TimeSpan"/> values.</summary>
-        public static bool Check(TimeSpan leftTerm, NumComparison comparison, TimeSpan rightTerm)
+        return comparison switch
         {
-            return comparison switch
-            {
-                NumComparison.EqualTo => leftTerm == rightTerm,
-                NumComparison.NotEqualTo => leftTerm != rightTerm,
-                NumComparison.LessThan => leftTerm < rightTerm,
-                NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
-                NumComparison.GreaterThan => leftTerm > rightTerm,
-                NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
-        }
-
-        /// <summary>Compares two <see cref="float"/> values.</summary>
-        public static bool Check(float leftTerm, NumComparison comparison, float rightTerm)
-        {
-            return comparison switch
-            {
-                NumComparison.EqualTo => leftTerm == rightTerm,
-                NumComparison.NotEqualTo => leftTerm != rightTerm,
-                NumComparison.LessThan => leftTerm < rightTerm,
-                NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
-                NumComparison.GreaterThan => leftTerm > rightTerm,
-                NumComparison.GreaterThanOrEqualTo => leftTerm >= rightTerm,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
-        }
-
-        /// <summary>Compares a <see cref="Dictionary{TKey, TValue}"/> of (<see cref="string"/>,<see cref="string"/>) with a <see cref="string"/></summary>
-        public static bool Check(Dictionary<string, string> leftTerm, DictComparison comparison, string rightTerm)
-        {
-            return comparison switch
-            {
-                DictComparison.HasKey => leftTerm.ContainsKey(rightTerm),
-                DictComparison.DoesNotHaveKey => !leftTerm.ContainsKey(rightTerm),
-                DictComparison.HasValue => leftTerm.ContainsValue(rightTerm),
-                DictComparison.DoesNotHaveValue => !leftTerm.ContainsValue(rightTerm),
-                DictComparison.Exists => leftTerm != null,
-                DictComparison.DoesNotExist => leftTerm == null,
-                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
-            };
-        }
+            DictComparison.HasKey => leftTerm.ContainsKey(rightTerm!),
+            DictComparison.DoesNotHaveKey => !leftTerm.ContainsKey(rightTerm!),
+            DictComparison.HasValue => leftTerm.ContainsValue(rightTerm!),
+            DictComparison.DoesNotHaveValue => !leftTerm.ContainsValue(rightTerm!),
+            _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+        };
     }
 }

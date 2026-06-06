@@ -1,28 +1,32 @@
-﻿using RuriLib.Models.Blocks.Parameters;
-using System.Collections.Generic;
+using RuriLib.Models.Blocks.Parameters;
 
-namespace RuriLib.Models.Blocks.Custom
+namespace RuriLib.Models.Blocks.Custom;
+
+/// <summary>
+/// Descriptor for the keycheck block.
+/// </summary>
+public class KeycheckBlockDescriptor : BlockDescriptor
 {
-    public class KeycheckBlockDescriptor : BlockDescriptor
+    /// <summary>
+    /// Initializes a new <see cref="KeycheckBlockDescriptor"/>.
+    /// </summary>
+    public KeycheckBlockDescriptor()
     {
-        public KeycheckBlockDescriptor()
+        Id = "Keycheck";
+        Name = Id;
+        Description = "Modifies the bot's status by checking conditions";
+        Category = new()
         {
-            Id = "Keycheck";
-            Name = Id;
-            Description = "Modifies the bot's status by checking conditions";
-            Category = new BlockCategory
-            {
-                Name = "Conditions",
-                BackgroundColor = "#1e90ff",
-                ForegroundColor = "#000",
-                Path = "RuriLib.Blocks.Conditions",
-                Namespace = "RuriLib.Blocks.Conditions.Methods",
-                Description = "Blocks that have to do with checking conditions"
-            };
-            Parameters = new Dictionary<string, BlockParameter>
-            {
-                { "banIfNoMatch", new BoolParameter("banIfNoMatch", true) }
-            };
-        }
+            Name = "Conditions",
+            BackgroundColor = "#1e90ff",
+            ForegroundColor = "#000",
+            Path = "RuriLib.Blocks.Conditions",
+            Namespace = "RuriLib.Blocks.Conditions.Methods",
+            Description = "Blocks that have to do with checking conditions"
+        };
+        Parameters = new()
+        {
+            ["banIfNoMatch"] = new BoolParameter("banIfNoMatch", true)
+        };
     }
 }

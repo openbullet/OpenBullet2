@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Job.MultiRun;
+using OpenBullet2.Web.Dtos.Job.MultiRun;
 using RuriLib.Models.Jobs;
 
 namespace OpenBullet2.Web.Dtos.Job;
@@ -32,6 +32,11 @@ public class MultiRunJobDto : JobDto
     /// How many lines to skip from the start of the data pool.
     /// </summary>
     public int Skip { get; set; } = 0;
+
+    /// <summary>
+    /// Whether hits are retained in memory and published to connected job viewers.
+    /// </summary>
+    public bool CacheHits { get; set; } = true;
 
     /// <summary>
     /// The proxy mode.

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -14,7 +14,7 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -45,24 +45,24 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             ]
         };
         jobMonitorService.TriggeredActions.Add(triggeredAction);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<TriggeredActionDto>>(
             client, "api/v1/job-monitor/triggered-action/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
-        
+
         var dto = result.Value.First();
-        
+
         Assert.Equal(triggeredAction.Id, dto.Id);
         Assert.Equal(triggeredAction.Name, dto.Name);
         Assert.Equal(triggeredAction.JobId, dto.JobId);
         Assert.Equal(triggeredAction.Triggers.Count, dto.Triggers.Count);
         Assert.Equal(triggeredAction.Actions.Count, dto.Actions.Count);
     }
-    
+
     [Fact]
     public async Task GetAllTriggeredActions_Guest_Forbidden()
     {
@@ -71,21 +71,21 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<TriggeredActionDto>>(
             client, "api/v1/job-monitor/triggered-action/all");
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task GetTriggeredAction_Admin_Success()
     {
@@ -109,24 +109,24 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             ]
         };
         jobMonitorService.TriggeredActions.Add(triggeredAction);
-        
+
         // Act
         var queryParams = new { id = triggeredAction.Id };
         var result = await GetJsonAsync<TriggeredActionDto>(
             client, "api/v1/job-monitor/triggered-action".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var dto = result.Value;
-        
+
         Assert.Equal(triggeredAction.Id, dto.Id);
         Assert.Equal(triggeredAction.Name, dto.Name);
         Assert.Equal(triggeredAction.JobId, dto.JobId);
         Assert.Equal(triggeredAction.Triggers.Count, dto.Triggers.Count);
         Assert.Equal(triggeredAction.Actions.Count, dto.Actions.Count);
     }
-    
+
     [Fact]
     public async Task GetTriggeredAction_Guest_Forbidden()
     {
@@ -135,22 +135,22 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new { id = 1 };
         var result = await GetJsonAsync<TriggeredActionDto>(
             client, "api/v1/job-monitor/triggered-action".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task CreateTriggeredAction_Admin_Success()
     {
@@ -169,7 +169,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             new WaitActionDto { TimeSpan = TimeSpan.FromSeconds(10) },
             new StartJobActionDto { JobId = 1 }
         };
-        
+
         var dto = new CreateTriggeredActionDto
         {
             Name = "Test",
@@ -177,11 +177,11 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             Triggers = triggers.Select(Serialize).ToList(),
             Actions = actions.Select(Serialize).ToList()
         };
-        
+
         // Act
         var result = await PostJsonAsync<TriggeredActionDto>(
             client, "api/v1/job-monitor/triggered-action", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.NotEmpty(result.Value.Id);
@@ -189,9 +189,9 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.JobId, result.Value.JobId);
         Assert.Equal(dto.Triggers.Count, result.Value.Triggers.Count);
         Assert.Equal(dto.Actions.Count, result.Value.Actions.Count);
-        
+
         Assert.Single(jobMonitorService.TriggeredActions);
-        
+
         var triggeredAction = jobMonitorService.TriggeredActions[0];
         Assert.Equal(result.Value.Id, triggeredAction.Id);
         Assert.Equal(dto.Name, triggeredAction.Name);
@@ -199,7 +199,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.Triggers.Count, triggeredAction.Triggers.Count);
         Assert.Equal(dto.Actions.Count, triggeredAction.Actions.Count);
     }
-    
+
     [Fact]
     public async Task CreateTriggeredAction_Guest_Forbidden()
     {
@@ -208,33 +208,55 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         var dto = new CreateTriggeredActionDto
         {
             JobId = 1
         };
-        
+
         // Act
         var result = await PostJsonAsync<TriggeredActionDto>(
             client, "api/v1/job-monitor/triggered-action", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
+    [Fact]
+    public async Task CreateTriggeredAction_Admin_WithoutTriggersOrActions_BadRequest()
+    {
+        using var client = Factory.CreateClient();
+
+        var dto = new CreateTriggeredActionDto
+        {
+            Name = "Invalid",
+            JobId = 1,
+            Triggers = [],
+            Actions = []
+        };
+
+        var result = await PostJsonAsync<TriggeredActionDto>(
+            client, "api/v1/job-monitor/triggered-action", dto);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ValidationError, result.Error.Content!.ErrorCode);
+    }
+
     [Fact]
     public async Task UpdateTriggeredAction_Admin_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
         var jobMonitorService = GetRequiredService<JobMonitorService>();
-        var triggeredAction = new TriggeredAction {
+        var triggeredAction = new TriggeredAction
+        {
             Id = Guid.NewGuid().ToString(),
             Name = "Test",
             JobId = 1,
@@ -260,7 +282,8 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             new StopJobActionDto { JobId = 2 }
         };
 
-        var dto = new UpdateTriggeredActionDto {
+        var dto = new UpdateTriggeredActionDto
+        {
             Id = triggeredAction.Id,
             Name = "Test2",
             JobId = 2,
@@ -287,7 +310,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.Triggers.Count, updatedAction.Triggers.Count);
         Assert.Equal(dto.Actions.Count, updatedAction.Actions.Count);
     }
-    
+
     [Fact]
     public async Task UpdateTriggeredAction_Guest_Forbidden()
     {
@@ -296,8 +319,8 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
 
@@ -305,17 +328,49 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             JobId = 1
         };
-        
+
         // Act
         var result = await PutJsonAsync<TriggeredActionDto>(
             client, "api/v1/job-monitor/triggered-action", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
+    [Fact]
+    public async Task UpdateTriggeredAction_Admin_WithoutTriggersOrActions_BadRequest()
+    {
+        using var client = Factory.CreateClient();
+        var jobMonitorService = GetRequiredService<JobMonitorService>();
+        var triggeredAction = new TriggeredAction
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Test",
+            JobId = 1,
+            Triggers = [new JobFinishedTrigger()],
+            Actions = [new WaitAction { Seconds = 1 }]
+        };
+        jobMonitorService.TriggeredActions.Add(triggeredAction);
+
+        var dto = new UpdateTriggeredActionDto
+        {
+            Id = triggeredAction.Id,
+            Name = "Invalid",
+            JobId = 1,
+            Triggers = [],
+            Actions = []
+        };
+
+        var result = await PutJsonAsync<TriggeredActionDto>(
+            client, "api/v1/job-monitor/triggered-action", dto);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ValidationError, result.Error.Content!.ErrorCode);
+    }
+
     [Fact]
     public async Task ResetTriggeredAction_Admin_Success()
     {
@@ -331,17 +386,17 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             Executions = 5
         };
         jobMonitorService.TriggeredActions.Add(triggeredAction);
-        
+
         // Act
         var queryParams = new { id = triggeredAction.Id };
         var error = await PostAsync(
             client, "api/v1/job-monitor/triggered-action/reset".ToUri(queryParams), null);
-        
+
         // Assert
         Assert.Null(error);
         Assert.Equal(0, triggeredAction.Executions);
     }
-    
+
     [Fact]
     public async Task ResetTriggeredAction_Guest_Forbidden()
     {
@@ -350,22 +405,22 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new { id = 1 };
         var error = await PostAsync(
             client, "api/v1/job-monitor/triggered-action/reset".ToUri(queryParams), null);
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.Forbidden, error!.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task SetActive_Admin_Success()
     {
@@ -380,17 +435,17 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             IsActive = true
         };
         jobMonitorService.TriggeredActions.Add(triggeredAction);
-        
+
         // Act
         var queryParams = new { id = triggeredAction.Id, active = false };
         var error = await PostAsync(
             client, "api/v1/job-monitor/triggered-action/set-active".ToUri(queryParams), null);
-        
+
         // Assert
         Assert.Null(error);
         Assert.False(triggeredAction.IsActive);
     }
-    
+
     [Fact]
     public async Task SetActive_Guest_Forbidden()
     {
@@ -399,22 +454,22 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new { id = 1, active = false };
         var error = await PostAsync(
             client, "api/v1/job-monitor/triggered-action/set-active".ToUri(queryParams), null);
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.Forbidden, error!.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task Delete_Admin_Success()
     {
@@ -428,17 +483,17 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             JobId = 1
         };
         jobMonitorService.TriggeredActions.Add(triggeredAction);
-        
+
         // Act
         var queryParams = new { id = triggeredAction.Id };
         var error = await DeleteAsync(
             client, "api/v1/job-monitor/triggered-action".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(error);
         Assert.Empty(jobMonitorService.TriggeredActions);
     }
-    
+
     [Fact]
     public async Task Delete_Guest_Forbidden()
     {
@@ -447,22 +502,22 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new { id = 1 };
         var error = await DeleteAsync(
             client, "api/v1/job-monitor/triggered-action".ToUri(queryParams));
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.Forbidden, error!.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-    
+
     private JsonElement Serialize<T>(T obj) where T : class
     {
         var node = JsonNode.Parse(
@@ -470,7 +525,8 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
 
         node["_polyTypeName"] = obj.GetType()
             .GetCustomAttribute<PolyTypeAttribute>()!.PolyType;
-        
+
         return JsonSerializer.SerializeToElement(node, JsonSerializerOptions);
     }
 }
+

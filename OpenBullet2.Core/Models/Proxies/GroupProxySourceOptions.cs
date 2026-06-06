@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Proxies.Sources;
+using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Repositories;
 
 namespace OpenBullet2.Core.Models.Proxies;

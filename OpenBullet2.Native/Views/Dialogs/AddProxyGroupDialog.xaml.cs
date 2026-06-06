@@ -1,38 +1,41 @@
-﻿using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Views.Pages;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Dialogs
+namespace OpenBullet2.Native.Views.Dialogs;
+
+/// <summary>
+/// Interaction logic for AddProxyGroupDialog.xaml
+/// </summary>
+public partial class AddProxyGroupDialog : Page
 {
-    /// <summary>
-    /// Interaction logic for AddProxyGroupDialog.xaml
-    /// </summary>
-    public partial class AddProxyGroupDialog : Page
+    private readonly object caller;
+    private ProxyGroupEntity? entity;
+
+    public AddProxyGroupDialog(object caller)
     {
-        private readonly object caller;
-        private ProxyGroupEntity entity;
+        this.caller = caller;
+        InitializeComponent();
+    }
 
-        public AddProxyGroupDialog(object caller)
-        {
-            this.caller = caller;
-            InitializeComponent();
-        }
+    /// <summary>
+    /// Use this constructor for edit mode.
+    /// </summary>
+    public AddProxyGroupDialog(object caller, ProxyGroupEntity entity)
+    {
+        this.caller = caller;
+        InitializeComponent();
 
-        /// <summary>
-        /// Use this constructor for edit mode.
-        /// </summary>
-        public AddProxyGroupDialog(object caller, ProxyGroupEntity entity)
-        {
-            this.caller = caller;
-            InitializeComponent();
+        this.entity = entity;
+        nameTextbox.Text = entity.Name;
+    }
 
-            this.entity = entity;
-            nameTextbox.Text = entity.Name;
-        }
-
-        private void Accept(object sender, RoutedEventArgs e)
+    private async void Accept(object sender, RoutedEventArgs e)
+    {
+        try
         {
             if (string.IsNullOrWhiteSpace(nameTextbox.Text))
             {
@@ -44,16 +47,20 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 if (entity is null)
                 {
-                    page.AddGroup(new ProxyGroupEntity { Name = nameTextbox.Text });
+                    await page.AddGroupAsync(new ProxyGroupEntity { Name = nameTextbox.Text });
                 }
                 else
                 {
                     entity.Name = nameTextbox.Text;
-                    page.EditGroup(entity);
+                    await page.EditGroupAsync(entity);
                 }
             }
 
             ((MainDialog)Parent).Close();
+        }
+        catch (Exception ex)
+        {
+            Alert.Exception(ex);
         }
     }
 }

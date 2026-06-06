@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Web.Dtos.Proxy;
 
@@ -53,6 +53,11 @@ public class ProxyDto
     public int Ping { get; set; }
 
     /// <summary>
+    /// The anonymity quality reported by a proxy judge.
+    /// </summary>
+    public ProxyQuality Quality { get; set; } = ProxyQuality.Unknown;
+
+    /// <summary>
     /// The last time the proxy was checked, if it was checked at all.
     /// </summary>
     public DateTime? LastChecked { get; set; }
@@ -61,7 +66,7 @@ public class ProxyDto
     /// The id of the proxy group to which the proxy belongs to.
     /// </summary>
     public int GroupId { get; set; }
-    
+
     /// <summary>
     /// The name of the proxy group to which the proxy belongs to.
     /// </summary>

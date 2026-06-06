@@ -12,6 +12,7 @@ import {
   OBSettingsDto,
   ProxyCheckTarget,
   RemoteConfigsEndpoint,
+  UpdateChannel,
 } from '../../dtos/settings/ob-settings.dto';
 import { SettingsService } from '../../services/settings.service';
 
@@ -80,6 +81,11 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     ConfigSection.LoliScript,
   ];
   jobDisplayModes: JobDisplayMode[] = [JobDisplayMode.Standard, JobDisplayMode.Detailed];
+  updateChannels: UpdateChannel[] = [
+    UpdateChannel.Release,
+    UpdateChannel.Staging,
+    UpdateChannel.Disabled,
+  ];
   selectedProxyCheckTarget: ProxyCheckTarget | null = null;
   selectedCustomSnippet: CustomSnippet | null = null;
   selectedRemoteConfigsEndpoint: RemoteConfigsEndpoint | null = null;

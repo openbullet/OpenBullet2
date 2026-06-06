@@ -19,6 +19,11 @@
                             [maxFileSize]="10 * 1000 * 1000">
         
                         </p-fileUpload>
+                        <button class="button button-secondary mt-2"
+                            (click)="pasteImageFromClipboard()">
+                            <fa-icon [icon]="faPaste" [fixedWidth]="true"></fa-icon>
+                            <span class="ml-2">Paste from clipboard</span>
+                        </button>
                     </div>
                 </div>
             </div>

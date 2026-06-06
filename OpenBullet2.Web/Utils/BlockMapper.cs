@@ -1,4 +1,3 @@
-﻿using AutoMapper;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
@@ -8,17 +7,17 @@ using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Settings;
-using RuriLib.Models.Blocks.Settings.Interpolated;
 using System.Text.Json;
+using OpenBullet2.Web.Exceptions;
 
 namespace OpenBullet2.Web.Utils;
 
-static internal class BlockMapper
+internal static class BlockMapper
 {
     // Here I did the dto -> block mappings manually while I find
     // a way to make automapper work properly on BlockSetting...
-    static internal List<BlockInstance> MapStack(
-        this List<JsonElement> jsonElements, IMapper mapper)
+    internal static List<BlockInstance> MapStack(
+        this List<JsonElement> jsonElements)
     {
         var stack = new List<BlockInstance>();
 
@@ -27,6 +26,11 @@ static internal class BlockMapper
             // Get the id of the block
             var id = jsonElement.GetProperty("id").GetString();
             BlockInstance block;
+
+            if (id is null)
+            {
+                throw new MappingException("Block id not found");
+            }
 
             switch (id)
             {
@@ -139,7 +143,8 @@ static internal class BlockMapper
             foreach (var k in keychainDto.Keys)
             {
                 var keyDto = PolyMapper.ConvertPolyDto<KeyDto>((JsonElement)k);
-                Key key = keyDto switch {
+                Key key = keyDto switch
+                {
                     StringKeyDto x => new StringKey { Comparison = x.Comparison },
                     IntKeyDto x => new IntKey { Comparison = x.Comparison },
                     FloatKeyDto x => new FloatKey { Comparison = x.Comparison },
@@ -212,7 +217,7 @@ static internal class BlockMapper
         foreach (var c in dto.Contents)
         {
             var contentDto = PolyMapper.ConvertPolyDto<HttpContentSettingsGroupDto>(
-                (JsonElement)c!);
+                (JsonElement)c);
 
             HttpContentSettingsGroup content;
 
@@ -261,57 +266,6 @@ static internal class BlockMapper
         }
     }
 
-    private static void MapSetting(BlockSettingDto? dto, BlockSetting setting)
-    {
-        if (dto is null)
-        {
-            return;
-        }
-
-        setting.InputMode = dto.InputMode;
-        setting.InputVariableName = dto.InputVariableName;
-        var value = (JsonElement)dto.Value!;
-
-        switch (dto.Type)
-        {
-            case BlockSettingType.String:
-                ((StringSetting)setting.FixedSetting).Value = value.GetString();
-                ((InterpolatedStringSetting)setting.InterpolatedSetting).Value = value.GetString();
-                break;
-
-            case BlockSettingType.Int:
-                ((IntSetting)setting.FixedSetting).Value = value.GetInt32();
-                break;
-
-            case BlockSettingType.Float:
-                ((FloatSetting)setting.FixedSetting).Value = value.GetSingle();
-                break;
-
-            case BlockSettingType.Bool:
-                ((BoolSetting)setting.FixedSetting).Value = value.GetBoolean();
-                break;
-
-            case BlockSettingType.ByteArray:
-                ((ByteArraySetting)setting.FixedSetting).Value = value.GetBytesFromBase64();
-                break;
-
-            case BlockSettingType.ListOfStrings:
-                ((ListOfStringsSetting)setting.FixedSetting).Value = value
-                    .Deserialize<List<string>>(Globals.JsonOptions);
-                ((InterpolatedListOfStringsSetting)setting.InterpolatedSetting).Value = value
-                    .Deserialize<List<string>>(Globals.JsonOptions);
-                break;
-
-            case BlockSettingType.DictionaryOfStrings:
-                ((DictionaryOfStringsSetting)setting.FixedSetting).Value = value
-                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
-                ((InterpolatedDictionaryOfStringsSetting)setting.InterpolatedSetting).Value = value
-                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
-                break;
-
-            case BlockSettingType.Enum:
-                ((EnumSetting)setting.FixedSetting).Value = value.GetString();
-                break;
-        }
-    }
+    private static void MapSetting(BlockSettingDto? dto, BlockSetting setting) =>
+        BlockSettingMapper.Apply(dto, setting);
 }

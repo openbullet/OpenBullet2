@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Debugging;
+namespace OpenBullet2.Web.Dtos.Debugging;
 
 /// <summary>
 /// DTO used to specify how to perform garbage collection.

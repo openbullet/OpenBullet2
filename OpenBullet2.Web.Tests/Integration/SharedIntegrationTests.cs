@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Net;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
@@ -11,7 +11,7 @@ using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -67,15 +67,15 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         configSharingService.Endpoints.Add(endpoint1);
         configSharingService.Endpoints.Add(endpoint2);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<EndpointDto>>(
             client, "/api/v1/shared/endpoint/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count());
-        
+
         var endpoints = result.Value.ToList();
         Assert.Equal("test", endpoints[0].Route);
         Assert.Equal(2, endpoints[0].ApiKeys.Count());
@@ -84,7 +84,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(endpoints[1].ApiKeys);
         Assert.Single(endpoints[1].ConfigIds);
     }
-    
+
     [Fact]
     public async Task GetAllEndpoints_Guest_Forbidden()
     {
@@ -93,21 +93,21 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<EndpointDto>>(
             client, "/api/v1/shared/endpoint/all");
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task CreateEndpoint_Admin_Success()
     {
@@ -123,11 +123,11 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
             ApiKeys = ["apikey1", "apikey2"],
             ConfigIds = [config.Id]
         };
-        
+
         // Act
         var result = await PostJsonAsync<EndpointDto>(
             client, "/api/v1/shared/endpoint", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         var endpoint = configSharingService.GetEndpoint("test");
@@ -136,7 +136,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(2, endpoint.ApiKeys.Count);
         Assert.Single(endpoint.ConfigIds);
     }
-    
+
     [Fact]
     public async Task CreateEndpoint_Guest_Forbidden()
     {
@@ -145,27 +145,27 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var dto = new EndpointDto
         {
             Route = "test",
             ApiKeys = ["apikey1", "apikey2"],
             ConfigIds = []
         };
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await PostJsonAsync<EndpointDto>(
             client, "/api/v1/shared/endpoint", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task UpdateEndpoint_Admin_Success()
     {
@@ -188,11 +188,11 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
             ApiKeys = ["apikey3"],
             ConfigIds = [config.Id]
         };
-        
+
         // Act
         var result = await PutJsonAsync<EndpointDto>(
             client, "/api/v1/shared/endpoint", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         var updatedEndpoint = configSharingService.GetEndpoint("test");
@@ -201,7 +201,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(updatedEndpoint.ApiKeys);
         Assert.Single(updatedEndpoint.ConfigIds);
     }
-    
+
     [Fact]
     public async Task UpdateEndpoint_Guest_Forbidden()
     {
@@ -224,20 +224,20 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
             ApiKeys = ["apikey3"],
             ConfigIds = [config.Id]
         };
-        
+
         RequireLogin();
         ImpersonateGuest(client, new GuestEntity { Username = "guest" });
-        
+
         // Act
         var result = await PutJsonAsync<EndpointDto>(
             client, "/api/v1/shared/endpoint", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DeleteEndpoint_Admin_Success()
     {
@@ -254,17 +254,17 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
             ConfigIds = [config.Id]
         };
         configSharingService.Endpoints.Add(endpoint);
-        
+
         // Act
         var queryParams = new { route = "test" };
         var error = await DeleteAsync(
             client, "/api/v1/shared/endpoint".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(error);
         Assert.Null(configSharingService.GetEndpoint("test"));
     }
-    
+
     [Fact]
     public async Task DeleteEndpoint_Guest_Forbidden()
     {
@@ -281,21 +281,21 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
             ConfigIds = [config.Id]
         };
         configSharingService.Endpoints.Add(endpoint);
-        
+
         RequireLogin();
         ImpersonateGuest(client, new GuestEntity { Username = "guest" });
-        
+
         // Act
         var queryParams = new { route = "test" };
         var error = await DeleteAsync(
             client, "/api/v1/shared/endpoint".ToUri(queryParams));
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.Forbidden, error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DownloadConfigs_CorrectApiKey_Success()
     {
@@ -316,33 +316,33 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         configSharingService.Endpoints.Add(endpoint);
         client.DefaultRequestHeaders.Add("Api-Key", "apikey1");
-        
+
         // Since this endpoint can be called by anybody, we
         // make sure it doesn't error out if login is required and
         // no form of authentication is provided
         RequireLogin();
-        
+
         // Act
-        var result = await client.GetAsync("/api/v1/shared/configs/test");
-        
+        var result = await client.GetAsync("/api/v1/shared/configs/test", TestCancellationToken);
+
         // Assert
         Assert.True(result.IsSuccessStatusCode);
         Assert.Equal("application/zip", result.Content.Headers.ContentType!.MediaType);
         Assert.Equal("attachment", result.Content.Headers.ContentDisposition!.DispositionType);
         Assert.Equal("configs.zip", result.Content.Headers.ContentDisposition!.FileName);
-        
+
         // Open the zip stream and unpack the config, make sure the ID is correct
-        var archive = new ZipArchive(await result.Content.ReadAsStreamAsync());
+        var archive = new ZipArchive(await result.Content.ReadAsStreamAsync(TestCancellationToken));
         Assert.Single(archive.Entries);
         var entry = archive.Entries[0];
-        await using var stream = entry.Open();
+        await using var stream = await entry.OpenAsync(TestCancellationToken);
         var unpackedConfig = await ConfigPacker.UnpackAsync(stream);
-        
+
         // The id is randomized on the downloaded configs, so
         // we check the name instead
         Assert.Equal("myConfig", unpackedConfig.Metadata.Name);
     }
-    
+
     [Fact]
     public async Task DownloadConfigs_IncorrectApiKey_Unauthorized()
     {
@@ -363,11 +363,12 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         configSharingService.Endpoints.Add(endpoint);
         client.DefaultRequestHeaders.Add("Api-Key", "invalid");
-        
+
         // Act
-        var result = await client.GetAsync("/api/v1/shared/configs/test");
-        
+        var result = await client.GetAsync("/api/v1/shared/configs/test", TestCancellationToken);
+
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using RuriLib.Logging;
+using RuriLib.Logging;
 
 namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 

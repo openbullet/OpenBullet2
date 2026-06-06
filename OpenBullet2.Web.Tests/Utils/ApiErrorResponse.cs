@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Models.Errors;
+using OpenBullet2.Web.Models.Errors;
 
 namespace OpenBullet2.Web.Tests.Utils;
 

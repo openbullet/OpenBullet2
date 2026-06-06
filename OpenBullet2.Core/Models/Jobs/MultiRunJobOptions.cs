@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Proxies;
 using RuriLib.Models.Jobs;
@@ -15,7 +15,7 @@ public class MultiRunJobOptions : JobOptions
     /// <summary>
     /// The ID of the config to use.
     /// </summary>
-    public string ConfigId { get; set; }
+    public string ConfigId { get; set; } = string.Empty;
 
     /// <summary>
     /// The amount of bots that will process the data lines concurrently.
@@ -41,7 +41,7 @@ public class MultiRunJobOptions : JobOptions
     /// The behaviour that should be applied when no more valid proxies are present in the pool.
     /// </summary>
     public NoValidProxyBehaviour NoValidProxyBehaviour { get; set; } = NoValidProxyBehaviour.Reload;
-    
+
     /// <summary>
     /// How long should proxies be banned for. ONLY use this when <see cref="NoValidProxyBehaviour"/>
     /// is set to <see cref="NoValidProxyBehaviour.Unban"/>.
@@ -60,6 +60,11 @@ public class MultiRunJobOptions : JobOptions
     public bool NeverBanProxies { get; set; } = false;
 
     /// <summary>
+    /// Whether bad proxy connection failures should keep the legacy ban behavior instead of marking proxies as bad.
+    /// </summary>
+    public bool NeverMarkProxiesAsBad { get; set; } = false;
+
+    /// <summary>
     /// Whether to allow multiple bots to use the same proxy. Use this for rotating proxy services.
     /// </summary>
     public bool ConcurrentProxyMode { get; set; } = false;
@@ -72,6 +77,12 @@ public class MultiRunJobOptions : JobOptions
     public int PeriodicReloadIntervalSeconds { get; set; } = 0;
 
     /// <summary>
+    /// Whether to retain hits in memory and publish them to connected job viewers.
+    /// Disable this for high-throughput jobs to prevent unbounded memory usage.
+    /// </summary>
+    public bool CacheHits { get; set; } = true;
+
+    /// <summary>
     /// The options for the data pool that provides data lines to the job.
     /// </summary>
     public DataPoolOptions DataPool { get; set; } = new WordlistDataPoolOptions();
@@ -79,10 +90,15 @@ public class MultiRunJobOptions : JobOptions
     /// <summary>
     /// The options for the proxy sources that will be used to fill the proxy pool whenever it requests a reload.
     /// </summary>
-    public List<ProxySourceOptions> ProxySources { get; set; } = new List<ProxySourceOptions>();
+    public List<ProxySourceOptions> ProxySources { get; set; } = [];
 
     /// <summary>
     /// The options for the outputs where hits will be stored.
     /// </summary>
-    public List<HitOutputOptions> HitOutputs { get; set; } = new List<HitOutputOptions>();
+    public List<HitOutputOptions> HitOutputs { get; set; } = [];
+
+    /// <summary>
+    /// The answers provided for the config custom inputs.
+    /// </summary>
+    public Dictionary<string, string> CustomInputsAnswers { get; set; } = [];
 }

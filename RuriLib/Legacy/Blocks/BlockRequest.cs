@@ -1,4 +1,4 @@
-﻿using RuriLib.Functions.Http;
+using RuriLib.Functions.Http;
 using RuriLib.Legacy.LS;
 using System;
 using System.Collections.Generic;
@@ -13,463 +13,183 @@ using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Logging;
 using System.IO;
 
-namespace RuriLib.Legacy.Blocks
+namespace RuriLib.Legacy.Blocks;
+
+/// <summary>
+/// A block that can perform HTTP requests.
+/// </summary>
+public class BlockRequest : BlockBase
 {
+    #region Variables
+    /// <summary>The URL to call, including additional GET query parameters.</summary>
+    public string Url { get; set; } = "https://google.com";
+
+    /// <summary>The request type.</summary>
+    public RequestType RequestType { get; set; } = RequestType.Standard;
+
+    // Basic Auth
+    /// <summary>The username for basic auth requests.</summary>
+    public string AuthUser { get; set; } = "";
+
+    /// <summary>The password for basic auth requests.</summary>
+    public string AuthPass { get; set; } = "";
+
+    // Standard
+    /// <summary>The content of the request, sent after the headers. Use '\n' to input a linebreak.</summary>
+    public string PostData { get; set; } = "";
+
+    // Raw
+    /// <summary>The content of the request as a raw HEX string that will be sent as a bytestream.</summary>
+    public string RawData { get; set; } = "";
+
+    /// <summary>The method of the HTTP request.</summary>
+    public HttpMethod Method { get; set; } = HttpMethod.GET;
+
+    /// <summary>The security protocol(s) to use for the HTTPS request.</summary>
+    public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
+
+    /// <summary>The custom headers that are sent in the HTTP request.</summary>
+    public Dictionary<string, string> CustomHeaders { get; set; } = new Dictionary<string, string>() {
+        { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" },
+        { "Pragma", "no-cache" },
+        { "Accept", "*/*" }
+    };
+
+    /// <summary>The custom cookies that are sent in the HTTP request.</summary>
+    public Dictionary<string, string> CustomCookies { get; set; } = new();
+
+    /// <summary>The type of content the server should expect.</summary>
+    public string ContentType { get; set; } = "application/x-www-form-urlencoded";
+
+    /// <summary>Whether to perform automatic redirection in the case of 3xx headers.</summary>
+    public bool AutoRedirect { get; set; } = true;
+
+    /// <summary>Whether to read the stream of data from the HTTP response. Set to false if only the headers are needed, in order to speed up the process.</summary>
+    public bool ReadResponseSource { get; set; } = true;
+
+    /// <summary>Whether to URL encode the content before sending it.</summary>
+    public bool EncodeContent { get; set; } = false;
+
+    /// <summary>Whether to automatically generate an Accept-Encoding header.</summary>
+    public bool AcceptEncoding { get; set; } = true;
+
+    // Multipart
+    /// <summary>The boundary that separates multipart contents.</summary>
+    public string MultipartBoundary { get; set; } = "";
+
+    /// <summary>The list of contents to send in a multipart request.</summary>
+    public List<MultipartContent> MultipartContents { get; set; } = new();
+
+    /// <summary>The type of response expected from the server.</summary>
+    public ResponseType ResponseType { get; set; } = ResponseType.String;
+
+    /// <summary>The path of the file where a FILE response needs to be stored.</summary>
+    public string DownloadPath { get; set; } = "";
+
+    /// <summary>The variable name for Base64String response.</summary>
+    public string OutputVariable { get; set; } = "";
+
+    /// <summary>Whether to add the downloaded image to the default screenshot path.</summary>
+    public bool SaveAsScreenshot { get; set; } = false;
+    #endregion
+
     /// <summary>
-    /// A block that can perform HTTP requests.
+    /// Creates a Request block.
     /// </summary>
-    public class BlockRequest : BlockBase
+    public BlockRequest()
     {
-        #region Variables
-        /// <summary>The URL to call, including additional GET query parameters.</summary>
-        public string Url { get; set; } = "https://google.com";
+        Label = "REQUEST";
+    }
 
-        /// <summary>The request type.</summary>
-        public RequestType RequestType { get; set; } = RequestType.Standard;
+    /// <summary>
+    /// Parses the block from a legacy LoliScript line.
+    /// </summary>
+    /// <param name="line">The line to parse.</param>
+    /// <returns>The current block instance.</returns>
+    public override BlockBase FromLS(string line)
+    {
+        // Trim the line
+        var input = line.Trim();
 
-        // Basic Auth
-        /// <summary>The username for basic auth requests.</summary>
-        public string AuthUser { get; set; } = "";
+        // Parse the label
+        if (input.StartsWith("#"))
+            Label = LineParser.ParseLabel(ref input);
 
-        /// <summary>The password for basic auth requests.</summary>
-        public string AuthPass { get; set; } = "";
+        Method = (HttpMethod)LineParser.ParseEnum(ref input, "METHOD", typeof(HttpMethod));
+        Url = LineParser.ParseLiteral(ref input, "URL");
 
-        // Standard
-        /// <summary>The content of the request, sent after the headers. Use '\n' to input a linebreak.</summary>
-        public string PostData { get; set; } = "";
+        while (LineParser.Lookahead(ref input) == TokenType.Boolean)
+            LineParser.SetBool(ref input, this);
 
-        // Raw
-        /// <summary>The content of the request as a raw HEX string that will be sent as a bytestream.</summary>
-        public string RawData { get; set; } = "";
+        CustomHeaders.Clear(); // Remove the default headers
 
-        /// <summary>The method of the HTTP request.</summary>
-        public HttpMethod Method { get; set; } = HttpMethod.GET;
-
-        /// <summary>The security protocol(s) to use for the HTTPS request.</summary>
-        public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
-
-        /// <summary>The custom headers that are sent in the HTTP request.</summary>
-        public Dictionary<string, string> CustomHeaders { get; set; } = new Dictionary<string, string>() {
-            { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" },
-            { "Pragma", "no-cache" },
-            { "Accept", "*/*" }
-        };
-
-        /// <summary>The custom cookies that are sent in the HTTP request.</summary>
-        public Dictionary<string, string> CustomCookies { get; set; } = new();
-
-        /// <summary>The type of content the server should expect.</summary>
-        public string ContentType { get; set; } = "application/x-www-form-urlencoded";
-
-        /// <summary>Whether to perform automatic redirection in the case of 3xx headers.</summary>
-        public bool AutoRedirect { get; set; } = true;
-
-        /// <summary>Whether to read the stream of data from the HTTP response. Set to false if only the headers are needed, in order to speed up the process.</summary>
-        public bool ReadResponseSource { get; set; } = true;
-
-        /// <summary>Whether to URL encode the content before sending it.</summary>
-        public bool EncodeContent { get; set; } = false;
-
-        /// <summary>Whether to automatically generate an Accept-Encoding header.</summary>
-        public bool AcceptEncoding { get; set; } = true;
-
-        // Multipart
-        /// <summary>The boundary that separates multipart contents.</summary>
-        public string MultipartBoundary { get; set; } = "";
-
-        /// <summary>The list of contents to send in a multipart request.</summary>
-        public List<MultipartContent> MultipartContents { get; set; } = new();
-
-        /// <summary>The type of response expected from the server.</summary>
-        public ResponseType ResponseType { get; set; } = ResponseType.String;
-
-        /// <summary>The path of the file where a FILE response needs to be stored.</summary>
-        public string DownloadPath { get; set; } = "";
-
-        /// <summary>The variable name for Base64String response.</summary>
-        public string OutputVariable { get; set; } = "";
-
-        /// <summary>Whether to add the downloaded image to the default screenshot path.</summary>
-        public bool SaveAsScreenshot { get; set; } = false;
-        #endregion
-
-        /// <summary>
-        /// Creates a Request block.
-        /// </summary>
-        public BlockRequest()
+        while (input != string.Empty && !input.StartsWith("->"))
         {
-            Label = "REQUEST";
-        }
-
-        /// <inheritdoc />
-        public override BlockBase FromLS(string line)
-        {
-            // Trim the line
-            var input = line.Trim();
-
-            // Parse the label
-            if (input.StartsWith("#"))
-                Label = LineParser.ParseLabel(ref input);
-
-            Method = (HttpMethod)LineParser.ParseEnum(ref input, "METHOD", typeof(HttpMethod));
-            Url = LineParser.ParseLiteral(ref input, "URL");
-
-            while (LineParser.Lookahead(ref input) == TokenType.Boolean)
-                LineParser.SetBool(ref input, this);
-
-            CustomHeaders.Clear(); // Remove the default headers
-
-            while (input != string.Empty && !input.StartsWith("->"))
+            var parsed = LineParser.ParseToken(ref input, TokenType.Parameter, true).ToUpper();
+            switch (parsed)
             {
-                var parsed = LineParser.ParseToken(ref input, TokenType.Parameter, true).ToUpper();
-                switch (parsed)
-                {
-                    case "MULTIPART":
-                        RequestType = RequestType.Multipart;
-                        break;
-
-                    case "BASICAUTH":
-                        RequestType = RequestType.BasicAuth;
-                        break;
-
-                    case "STANDARD":
-                        RequestType = RequestType.Standard;
-                        break;
-
-                    case "RAW":
-                        RequestType = RequestType.Raw;
-                        break;
-
-                    case "CONTENT":
-                        PostData = LineParser.ParseLiteral(ref input, "POST DATA");
-                        break;
-
-                    case "RAWDATA":
-                        RawData = LineParser.ParseLiteral(ref input, "RAW DATA");
-                        break;
-
-                    case "STRINGCONTENT":
-                        var stringContentPair = ParseString(LineParser.ParseLiteral(ref input, "STRING CONTENT"), ':', 2);
-                        MultipartContents.Add(new MultipartContent() { Type = MultipartContentType.String, Name = stringContentPair[0], Value = stringContentPair[1] });
-                        break;
-
-                    case "FILECONTENT":
-                        var fileContentTriplet = ParseString(LineParser.ParseLiteral(ref input, "FILE CONTENT"), ':', 3);
-                        MultipartContents.Add(new MultipartContent() { Type = MultipartContentType.File, Name = fileContentTriplet[0], Value = fileContentTriplet[1], ContentType = fileContentTriplet[2] });
-                        break;
-
-                    case "COOKIE":
-                        var cookiePair = ParseString(LineParser.ParseLiteral(ref input, "COOKIE VALUE"), ':', 2);
-                        CustomCookies[cookiePair[0]] = cookiePair[1];
-                        break;
-
-                    case "HEADER":
-                        var headerPair = ParseString(LineParser.ParseLiteral(ref input, "HEADER VALUE"), ':', 2);
-                        CustomHeaders[headerPair[0]] = headerPair[1];
-                        break;
-
-                    case "CONTENTTYPE":
-                        ContentType = LineParser.ParseLiteral(ref input, "CONTENT TYPE");
-                        break;
-
-                    case "USERNAME":
-                        AuthUser = LineParser.ParseLiteral(ref input, "USERNAME");
-                        break;
-
-                    case "PASSWORD":
-                        AuthPass = LineParser.ParseLiteral(ref input, "PASSWORD");
-                        break;
-
-                    case "BOUNDARY":
-                        MultipartBoundary = LineParser.ParseLiteral(ref input, "BOUNDARY");
-                        break;
-
-                    case "SECPROTO":
-                        SecurityProtocol = LineParser.ParseEnum(ref input, "Security Protocol", typeof(SecurityProtocol));
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            if (input.StartsWith("->"))
-            {
-                LineParser.EnsureIdentifier(ref input, "->");
-                var outType = LineParser.ParseToken(ref input, TokenType.Parameter, true);
-                if (outType.ToUpper() == "STRING") ResponseType = ResponseType.String;
-                else if (outType.ToUpper() == "FILE")
-                {
-                    ResponseType = ResponseType.File;
-                    DownloadPath = LineParser.ParseLiteral(ref input, "DOWNLOAD PATH");
-                    while (LineParser.Lookahead(ref input) == TokenType.Boolean)
-                    {
-                        LineParser.SetBool(ref input, this);
-                    }
-                }
-                else if (outType.ToUpper() == "BASE64")
-                {
-                    ResponseType = ResponseType.Base64String;
-                    OutputVariable = LineParser.ParseLiteral(ref input, "OUTPUT VARIABLE");
-                }
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Parses values from a string.
-        /// </summary>
-        /// <param name="input">The string to parse</param>
-        /// <param name="separator">The character that separates the elements</param>
-        /// <param name="count">The number of elements to return</param>
-        /// <returns>The array of the parsed elements.</returns>
-        public static string[] ParseString(string input, char separator, int count)
-            => input.Split(new[] { separator }, count).Select(s => s.Trim()).ToArray();
-
-        /// <inheritdoc />
-        public override string ToLS(bool indent = true)
-        {
-            var writer = new BlockWriter(GetType(), indent, Disabled);
-            writer
-                .Label(Label)
-                .Token("REQUEST")
-                .Token(Method)
-                .Literal(Url)
-                .Boolean(AcceptEncoding, "AcceptEncoding")
-                .Boolean(AutoRedirect, "AutoRedirect")
-                .Boolean(ReadResponseSource, "ReadResponseSource")
-                .Boolean(EncodeContent, "EncodeContent")
-                .Token(RequestType, "RequestType")
-                .Indent();
-
-            switch (RequestType)
-            {
-                case RequestType.BasicAuth:
-                    writer
-                        .Token("USERNAME")
-                        .Literal(AuthUser)
-                        .Token("PASSWORD")
-                        .Literal(AuthPass)
-                        .Indent();
+                case "MULTIPART":
+                    RequestType = RequestType.Multipart;
                     break;
 
-                case RequestType.Standard:
-                    writer
-                        .Token("CONTENT")
-                        .Literal(PostData)
-                        .Indent()
-                        .Token("CONTENTTYPE")
-                        .Literal(ContentType);
+                case "BASICAUTH":
+                    RequestType = RequestType.BasicAuth;
                     break;
 
-                case RequestType.Multipart:
-                    foreach(var c in MultipartContents)
-                    {
-                        writer
-                            .Indent()
-                            .Token($"{c.Type.ToString().ToUpper()}CONTENT");
-
-                        if (c.Type == MultipartContentType.String)
-                        {
-                            writer.Literal($"{c.Name}: {c.Value}");
-                        }
-                        else if (c.Type == MultipartContentType.File)
-                        {
-                            writer.Literal($"{c.Name}: {c.Value}: {c.ContentType}");
-                        }
-                    }
-                    if (!writer.CheckDefault(MultipartBoundary, "MultipartBoundary"))
-                    {
-                        writer
-                            .Indent()
-                            .Token("BOUNDARY")
-                            .Literal(MultipartBoundary);
-                    }
+                case "STANDARD":
+                    RequestType = RequestType.Standard;
                     break;
 
-                case RequestType.Raw:
-                    writer
-                        .Token("RAWDATA")
-                        .Literal(RawData)
-                        .Indent()
-                        .Token("CONTENTTYPE")
-                        .Literal(ContentType);
-                    break;
-            }
-
-            if (SecurityProtocol != SecurityProtocol.SystemDefault)
-            {
-                writer
-                    .Indent()
-                    .Token("SECPROTO")
-                    .Token(SecurityProtocol, "SecurityProtocol");
-            }
-
-            foreach (var c in CustomCookies)
-            {
-                writer
-                    .Indent()
-                    .Token("COOKIE")
-                    .Literal($"{c.Key}: {c.Value}");
-            }
-
-            foreach (var h in CustomHeaders)
-            {
-                writer
-                    .Indent()
-                    .Token("HEADER")
-                    .Literal($"{h.Key}: {h.Value}");
-            }
-
-            if (ResponseType == ResponseType.File)
-            {
-                writer
-                    .Indent()
-                    .Arrow()
-                    .Token("FILE")
-                    .Literal(DownloadPath)
-                    .Boolean(SaveAsScreenshot, "SaveAsScreenshot");
-            }
-            else if (ResponseType == ResponseType.Base64String)
-            {
-                writer
-                    .Indent()
-                    .Arrow()
-                    .Token("BASE64")
-                    .Literal(OutputVariable);
-            }
-
-            return writer.ToString();
-        }
-
-        /// <inheritdoc />
-        public override async Task Process(LSGlobals ls)
-        {
-            var data = ls.BotData;
-            await base.Process(ls);
-
-            var headers = ReplaceValues(CustomHeaders, ls);
-
-            // If no Connection header was specified, add keep-alive by default
-            if (!headers.Keys.Any(k => k.Equals("connection", StringComparison.OrdinalIgnoreCase)))
-            {
-                headers.Add("Connection", "keep-alive");
-            }
-
-            // Override the default for Accept-Encoding (default behaviour in OB1)
-            foreach (var key in headers.Keys.Where(k => k.Equals("accept-encoding", StringComparison.OrdinalIgnoreCase)).ToArray())
-            {
-                headers.Remove(key);
-            }
-
-            headers["Accept-Encoding"] = "gzip,deflate";
-
-            // Remove Content-Length because it was disregarded in OB1
-            var contentLengthHeader = headers.Keys.FirstOrDefault(k => k.Equals("Content-Length", StringComparison.OrdinalIgnoreCase));
-            if (contentLengthHeader != null)
-            {
-                headers.Remove(contentLengthHeader);
-            }
-
-            switch (RequestType)
-            {
-                case RequestType.Standard:
-                    var standardOptions = new StandardHttpRequestOptions
-                    {
-                        AutoRedirect = AutoRedirect,
-                        MaxNumberOfRedirects = 8,
-                        ReadResponseContent = ReadResponseSource,
-                        SecurityProtocol = SecurityProtocol,
-                        Content = ReplaceValues(PostData, ls),
-                        ContentType = ReplaceValues(ContentType, ls),
-                        CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = headers,
-                        Method = Method,
-                        Url = ReplaceValues(Url, ls),
-                        TimeoutMilliseconds = 10000,
-                        UrlEncodeContent = EncodeContent
-                    };
-
-                    await Methods.HttpRequestStandard(data, standardOptions);
+                case "RAW":
+                    RequestType = RequestType.Raw;
                     break;
 
-                case RequestType.Raw:
-                    var rawOptions = new RawHttpRequestOptions
-                    {
-                        AutoRedirect = AutoRedirect,
-                        MaxNumberOfRedirects = 8,
-                        ReadResponseContent = ReadResponseSource,
-                        SecurityProtocol = SecurityProtocol,
-                        Content = HexConverter.ToByteArray(ReplaceValues(RawData, ls)),
-                        ContentType = ReplaceValues(ContentType, ls),
-                        CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = headers,
-                        Method = Method,
-                        Url = ReplaceValues(Url, ls),
-                        TimeoutMilliseconds = 10000
-                    };
-
-                    await Methods.HttpRequestRaw(data, rawOptions);
+                case "CONTENT":
+                    PostData = LineParser.ParseLiteral(ref input, "POST DATA");
                     break;
 
-                case RequestType.BasicAuth:
-                    var basicAuthOptions = new BasicAuthHttpRequestOptions
-                    {
-                        AutoRedirect = AutoRedirect,
-                        MaxNumberOfRedirects = 8,
-                        ReadResponseContent = ReadResponseSource,
-                        SecurityProtocol = SecurityProtocol,
-                        Username = ReplaceValues(AuthUser, ls),
-                        Password = ReplaceValues(AuthPass, ls),
-                        CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = headers,
-                        Method = Method,
-                        Url = ReplaceValues(Url, ls),
-                        TimeoutMilliseconds = 10000
-                    };
-
-                    await Methods.HttpRequestBasicAuth(data, basicAuthOptions);
+                case "RAWDATA":
+                    RawData = LineParser.ParseLiteral(ref input, "RAW DATA");
                     break;
 
-                case RequestType.Multipart:
-                    var multipartOptions = new MultipartHttpRequestOptions
-                    {
-                        AutoRedirect = AutoRedirect,
-                        MaxNumberOfRedirects = 8,
-                        ReadResponseContent = ReadResponseSource,
-                        SecurityProtocol = SecurityProtocol,
-                        Boundary = ReplaceValues(MultipartBoundary, ls),
-                        Contents = MultipartContents.Select(mpc => MapMultipartContent(mpc, ls)).ToList(),
-                        CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = headers,
-                        Method = Method,
-                        Url = ReplaceValues(Url, ls),
-                        TimeoutMilliseconds = 10000
-                    };
-
-                    await Methods.HttpRequestMultipart(data, multipartOptions);
-                    break;
-            }
-
-            // Save the response content
-            switch (ResponseType)
-            {
-                case ResponseType.File:
-                    if (SaveAsScreenshot)
-                    {
-                        Utils.SaveScreenshot(data.RAWSOURCE, data);
-                        data.Logger.Log("File saved as screenshot", LogColors.Green);
-                    }
-                    else
-                    {
-                        await File.WriteAllBytesAsync(ReplaceValues(DownloadPath, ls), data.RAWSOURCE).ConfigureAwait(false);
-                    }
+                case "STRINGCONTENT":
+                    var stringContentPair = ParseString(LineParser.ParseLiteral(ref input, "STRING CONTENT"), ':', 2);
+                    MultipartContents.Add(new MultipartContent() { Type = MultipartContentType.String, Name = stringContentPair[0], Value = stringContentPair[1] });
                     break;
 
-                case ResponseType.Base64String:
-                    var base64 = Convert.ToBase64String(data.RAWSOURCE);
-                    InsertVariable(ls, false, base64, OutputVariable);
+                case "FILECONTENT":
+                    var fileContentTriplet = ParseString(LineParser.ParseLiteral(ref input, "FILE CONTENT"), ':', 3);
+                    MultipartContents.Add(new MultipartContent() { Type = MultipartContentType.File, Name = fileContentTriplet[0], Value = fileContentTriplet[1], ContentType = fileContentTriplet[2] });
+                    break;
+
+                case "COOKIE":
+                    var cookiePair = ParseString(LineParser.ParseLiteral(ref input, "COOKIE VALUE"), ':', 2);
+                    CustomCookies[cookiePair[0]] = cookiePair[1];
+                    break;
+
+                case "HEADER":
+                    var headerPair = ParseString(LineParser.ParseLiteral(ref input, "HEADER VALUE"), ':', 2);
+                    CustomHeaders[headerPair[0]] = headerPair[1];
+                    break;
+
+                case "CONTENTTYPE":
+                    ContentType = LineParser.ParseLiteral(ref input, "CONTENT TYPE");
+                    break;
+
+                case "USERNAME":
+                    AuthUser = LineParser.ParseLiteral(ref input, "USERNAME");
+                    break;
+
+                case "PASSWORD":
+                    AuthPass = LineParser.ParseLiteral(ref input, "PASSWORD");
+                    break;
+
+                case "BOUNDARY":
+                    MultipartBoundary = LineParser.ParseLiteral(ref input, "BOUNDARY");
+                    break;
+
+                case "SECPROTO":
+                    SecurityProtocol = LineParser.ParseEnum(ref input, "Security Protocol", typeof(SecurityProtocol));
                     break;
 
                 default:
@@ -477,169 +197,508 @@ namespace RuriLib.Legacy.Blocks
             }
         }
 
-        #region Custom Cookies, Headers and Multipart Contents
-        /// <summary>
-        /// Builds a string containing custom cookies.
-        /// </summary>
-        /// <returns>One cookie per line, with name and value separated by a colon</returns>
-        public string GetCustomCookies()
+        if (input.StartsWith("->"))
         {
-            var sb = new StringBuilder();
-            foreach (var pair in CustomCookies)
+            LineParser.EnsureIdentifier(ref input, "->");
+            var outType = LineParser.ParseToken(ref input, TokenType.Parameter, true);
+            if (outType.ToUpper() == "STRING") ResponseType = ResponseType.String;
+            else if (outType.ToUpper() == "FILE")
             {
-                sb.Append($"{pair.Key}: {pair.Value}");
-                if (!pair.Equals(CustomCookies.Last())) sb.Append(Environment.NewLine);
-            }
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Sets custom cookies from an array of lines.
-        /// </summary>
-        /// <param name="lines">The lines containing the colon-separated name and value of the cookies</param>
-        public void SetCustomCookies(string[] lines)
-        {
-            CustomCookies.Clear();
-            foreach (var line in lines)
-            {
-                if (line.Contains(':'))
+                ResponseType = ResponseType.File;
+                DownloadPath = LineParser.ParseLiteral(ref input, "DOWNLOAD PATH");
+                while (LineParser.Lookahead(ref input) == TokenType.Boolean)
                 {
-                    var split = line.Split(new[] { ':' }, 2);
-                    CustomCookies[split[0].Trim()] = split[1].Trim();
+                    LineParser.SetBool(ref input, this);
                 }
             }
-        }
-
-        /// <summary>
-        /// Builds a string containing custom headers.
-        /// </summary>
-        /// <returns>One header per line, with name and value separated by a colon</returns>
-        public string GetCustomHeaders()
-        {
-            var sb = new StringBuilder();
-            foreach (var pair in CustomHeaders)
+            else if (outType.ToUpper() == "BASE64")
             {
-                sb.Append($"{pair.Key}: {pair.Value}");
-                if (!pair.Equals(CustomHeaders.Last())) sb.Append(Environment.NewLine);
+                ResponseType = ResponseType.Base64String;
+                OutputVariable = LineParser.ParseLiteral(ref input, "OUTPUT VARIABLE");
             }
-            return sb.ToString();
         }
 
-        /// <summary>
-        /// Sets custom headers from an array of lines.
-        /// </summary>
-        /// <param name="lines">The lines containing the colon-separated name and value of the headers</param>
-        public void SetCustomHeaders(string[] lines)
+        return this;
+    }
+
+    /// <summary>
+    /// Splits a delimited legacy token into a fixed number of pieces.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="separator">The separator character.</param>
+    /// <param name="count">The expected number of parts.</param>
+    /// <returns>The parsed parts.</returns>
+    public static string[] ParseString(string input, char separator, int count)
+        => input.Split(new[] { separator }, count).Select(s => s.Trim()).ToArray();
+
+    /// <summary>
+    /// Serializes the block to legacy LoliScript.
+    /// </summary>
+    /// <param name="indent">Whether the output should be indented.</param>
+    /// <returns>The serialized block.</returns>
+    public override string ToLS(bool indent = true)
+    {
+        var writer = new BlockWriter(GetType(), indent, Disabled);
+        writer
+            .Label(Label)
+            .Token("REQUEST")
+            .Token(Method)
+            .Literal(Url)
+            .Boolean(AcceptEncoding, "AcceptEncoding")
+            .Boolean(AutoRedirect, "AutoRedirect")
+            .Boolean(ReadResponseSource, "ReadResponseSource")
+            .Boolean(EncodeContent, "EncodeContent")
+            .Token(RequestType, "RequestType")
+            .Indent();
+
+        switch (RequestType)
         {
-            CustomHeaders.Clear();
-            foreach (var line in lines)
-            {
-                if (line.Contains(':'))
+            case RequestType.BasicAuth:
+                writer
+                    .Token("USERNAME")
+                    .Literal(AuthUser)
+                    .Token("PASSWORD")
+                    .Literal(AuthPass)
+                    .Indent();
+                break;
+
+            case RequestType.Standard:
+                writer
+                    .Token("CONTENT")
+                    .Literal(PostData)
+                    .Indent()
+                    .Token("CONTENTTYPE")
+                    .Literal(ContentType);
+                break;
+
+            case RequestType.Multipart:
+                foreach (var c in MultipartContents)
                 {
-                    var split = line.Split(new[] { ':' }, 2);
-                    CustomHeaders[split[0].Trim()] = split[1].Trim();
+                    writer
+                        .Indent()
+                        .Token($"{c.Type.ToString().ToUpper()}CONTENT");
+
+                    if (c.Type == MultipartContentType.String)
+                    {
+                        writer.Literal($"{c.Name}: {c.Value}");
+                    }
+                    else if (c.Type == MultipartContentType.File)
+                    {
+                        writer.Literal($"{c.Name}: {c.Value}: {c.ContentType}");
+                    }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Builds a string containing multipart content.
-        /// </summary>
-        /// <returns>One content per line, with type, name and value separated by a colon</returns>
-        public string GetMultipartContents()
-        {
-            var sb = new StringBuilder();
-            foreach (var c in MultipartContents)
-            {
-                sb.Append($"{c.Type.ToString().ToUpper()}: {c.Name}: {c.Value}");
-                if (!c.Equals(MultipartContents.Last())) sb.Append(Environment.NewLine);
-            }
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Sets multipart contents from an array of lines.
-        /// </summary>
-        /// <param name="lines">The lines containing the colon-separated type, name and value of the multipart contents</param>
-        public void SetMultipartContents(string[] lines)
-        {
-            MultipartContents.Clear();
-            foreach(var line in lines)
-            {
-                try
+                if (!writer.CheckDefault(MultipartBoundary, "MultipartBoundary"))
                 {
-                    var split = line.Split(new[] { ':' }, 3);
-                    MultipartContents.Add(new MultipartContent() {
-                        Type = (MultipartContentType)Enum.Parse(typeof(MultipartContentType), split[0].Trim(), true),
-                        Name = split[1].Trim(),
-                        Value = split[2].Trim()
-                    });
+                    writer
+                        .Indent()
+                        .Token("BOUNDARY")
+                        .Literal(MultipartBoundary);
                 }
-                catch { }
-            }
+                break;
+
+            case RequestType.Raw:
+                writer
+                    .Token("RAWDATA")
+                    .Literal(RawData)
+                    .Indent()
+                    .Token("CONTENTTYPE")
+                    .Literal(ContentType);
+                break;
         }
 
-        #endregion
-
-        private MyHttpContent MapMultipartContent(MultipartContent mpc, LSGlobals ls)
+        if (SecurityProtocol != SecurityProtocol.SystemDefault)
         {
-            switch (mpc.Type)
+            writer
+                .Indent()
+                .Token("SECPROTO")
+                .Token(SecurityProtocol, "SecurityProtocol");
+        }
+
+        foreach (var c in CustomCookies)
+        {
+            writer
+                .Indent()
+                .Token("COOKIE")
+                .Literal($"{c.Key}: {c.Value}");
+        }
+
+        foreach (var h in CustomHeaders)
+        {
+            writer
+                .Indent()
+                .Token("HEADER")
+                .Literal($"{h.Key}: {h.Value}");
+        }
+
+        if (ResponseType == ResponseType.File)
+        {
+            writer
+                .Indent()
+                .Arrow()
+                .Token("FILE")
+                .Literal(DownloadPath)
+                .Boolean(SaveAsScreenshot, "SaveAsScreenshot");
+        }
+        else if (ResponseType == ResponseType.Base64String)
+        {
+            writer
+                .Indent()
+                .Arrow()
+                .Token("BASE64")
+                .Literal(OutputVariable);
+        }
+
+        return writer.ToString();
+    }
+
+    /// <inheritdoc />
+    /// <summary>
+    /// Executes the configured HTTP request.
+    /// </summary>
+    /// <param name="ls">The legacy globals used while executing the block.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public override async Task Process(LSGlobals ls)
+    {
+        var data = ls.BotData;
+        await base.Process(ls);
+
+        var headers = ReplaceValues(CustomHeaders, ls);
+
+        // If no Connection header was specified, add keep-alive by default
+        if (!headers.Keys.Any(k => k.Equals("connection", StringComparison.OrdinalIgnoreCase)))
+        {
+            headers.Add("Connection", "keep-alive");
+        }
+
+        // Override the default for Accept-Encoding (default behaviour in OB1)
+        foreach (var key in headers.Keys.Where(k => k.Equals("accept-encoding", StringComparison.OrdinalIgnoreCase)).ToArray())
+        {
+            headers.Remove(key);
+        }
+
+        headers["Accept-Encoding"] = "gzip,deflate";
+
+        // Remove Content-Length because it was disregarded in OB1
+        var contentLengthHeader = headers.Keys.FirstOrDefault(k => k.Equals("Content-Length", StringComparison.OrdinalIgnoreCase));
+        if (contentLengthHeader != null)
+        {
+            headers.Remove(contentLengthHeader);
+        }
+
+        switch (RequestType)
+        {
+            case RequestType.Standard:
+                var standardOptions = new StandardHttpRequestOptions
+                {
+                    AutoRedirect = AutoRedirect,
+                    MaxNumberOfRedirects = 8,
+                    ReadResponseContent = ReadResponseSource,
+                    SecurityProtocol = SecurityProtocol,
+                    Content = ReplaceValues(PostData, ls),
+                    ContentType = ReplaceValues(ContentType, ls),
+                    CustomCookies = ReplaceValues(CustomCookies, ls),
+                    CustomHeaders = headers,
+                    Method = Method,
+                    Url = ReplaceValues(Url, ls),
+                    TimeoutMilliseconds = 10000,
+                    UrlEncodeContent = EncodeContent
+                };
+
+                await Methods.HttpRequestStandard(data, standardOptions);
+                break;
+
+            case RequestType.Raw:
+                var rawOptions = new RawHttpRequestOptions
+                {
+                    AutoRedirect = AutoRedirect,
+                    MaxNumberOfRedirects = 8,
+                    ReadResponseContent = ReadResponseSource,
+                    SecurityProtocol = SecurityProtocol,
+                    Content = HexConverter.ToByteArray(ReplaceValues(RawData, ls)),
+                    ContentType = ReplaceValues(ContentType, ls),
+                    CustomCookies = ReplaceValues(CustomCookies, ls),
+                    CustomHeaders = headers,
+                    Method = Method,
+                    Url = ReplaceValues(Url, ls),
+                    TimeoutMilliseconds = 10000
+                };
+
+                await Methods.HttpRequestRaw(data, rawOptions);
+                break;
+
+            case RequestType.BasicAuth:
+                var basicAuthOptions = new BasicAuthHttpRequestOptions
+                {
+                    AutoRedirect = AutoRedirect,
+                    MaxNumberOfRedirects = 8,
+                    ReadResponseContent = ReadResponseSource,
+                    SecurityProtocol = SecurityProtocol,
+                    Username = ReplaceValues(AuthUser, ls),
+                    Password = ReplaceValues(AuthPass, ls),
+                    CustomCookies = ReplaceValues(CustomCookies, ls),
+                    CustomHeaders = headers,
+                    Method = Method,
+                    Url = ReplaceValues(Url, ls),
+                    TimeoutMilliseconds = 10000
+                };
+
+                await Methods.HttpRequestBasicAuth(data, basicAuthOptions);
+                break;
+
+            case RequestType.Multipart:
+                var multipartOptions = new MultipartHttpRequestOptions
+                {
+                    AutoRedirect = AutoRedirect,
+                    MaxNumberOfRedirects = 8,
+                    ReadResponseContent = ReadResponseSource,
+                    SecurityProtocol = SecurityProtocol,
+                    Boundary = ReplaceValues(MultipartBoundary, ls),
+                    Contents = MultipartContents.Select(mpc => MapMultipartContent(mpc, ls)).ToList(),
+                    CustomCookies = ReplaceValues(CustomCookies, ls),
+                    CustomHeaders = headers,
+                    Method = Method,
+                    Url = ReplaceValues(Url, ls),
+                    TimeoutMilliseconds = 10000
+                };
+
+                await Methods.HttpRequestMultipart(data, multipartOptions);
+                break;
+        }
+
+        // Save the response content
+        switch (ResponseType)
+        {
+            case ResponseType.File:
+                if (SaveAsScreenshot)
+                {
+                    Utils.SaveScreenshot(data.RAWSOURCE, data);
+                    data.Logger.Log("File saved as screenshot", LogColors.Green);
+                }
+                else
+                {
+                    await File.WriteAllBytesAsync(ReplaceValues(DownloadPath, ls), data.RAWSOURCE).ConfigureAwait(false);
+                }
+                break;
+
+            case ResponseType.Base64String:
+                var base64 = Convert.ToBase64String(data.RAWSOURCE);
+                InsertVariable(ls, false, base64, OutputVariable);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    #region Custom Cookies, Headers and Multipart Contents
+    /// <summary>
+    /// Builds a string containing custom cookies.
+    /// </summary>
+    /// <returns>One cookie per line, with name and value separated by a colon</returns>
+    /// <summary>
+    /// Serializes the custom cookies to the legacy editor format.
+    /// </summary>
+    /// <returns>The serialized cookies.</returns>
+    public string GetCustomCookies()
+    {
+        var sb = new StringBuilder();
+        foreach (var pair in CustomCookies)
+        {
+            sb.Append($"{pair.Key}: {pair.Value}");
+            if (!pair.Equals(CustomCookies.Last())) sb.Append(Environment.NewLine);
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Loads custom cookies from the legacy editor format.
+    /// </summary>
+    /// <param name="lines">The serialized cookie lines.</param>
+    public void SetCustomCookies(string[] lines)
+    {
+        CustomCookies.Clear();
+        foreach (var line in lines)
+        {
+            if (line.Contains(':'))
             {
-                case MultipartContentType.String:
-                    return new StringHttpContent(
-                        ReplaceValues(mpc.Name, ls),
-                        ReplaceValues(mpc.Value, ls),
-                        string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
-
-                case MultipartContentType.File:
-                    return new FileHttpContent(
-                        ReplaceValues(mpc.Name, ls),
-                        ReplaceValues(mpc.Value, ls),
-                        string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
+                var split = line.Split(new[] { ':' }, 2);
+                CustomCookies[split[0].Trim()] = split[1].Trim();
             }
-
-            throw new NotSupportedException();
         }
     }
 
     /// <summary>
-    /// The types of request that can be performed.
+    /// Serializes the custom headers to the legacy editor format.
     /// </summary>
-    public enum RequestType
+    /// <returns>The serialized headers.</returns>
+    public string GetCustomHeaders()
     {
-        Standard,
-        BasicAuth,
-        Multipart,
-        Raw
+        var sb = new StringBuilder();
+        foreach (var pair in CustomHeaders)
+        {
+            sb.Append($"{pair.Key}: {pair.Value}");
+            if (!pair.Equals(CustomHeaders.Last())) sb.Append(Environment.NewLine);
+        }
+        return sb.ToString();
     }
 
     /// <summary>
-    /// The available types of multipart contents.
+    /// Loads custom headers from the legacy editor format.
     /// </summary>
-    public enum MultipartContentType
+    /// <param name="lines">The serialized header lines.</param>
+    public void SetCustomHeaders(string[] lines)
     {
-        String,
-        File
+        CustomHeaders.Clear();
+        foreach (var line in lines)
+        {
+            if (line.Contains(':'))
+            {
+                var split = line.Split(new[] { ':' }, 2);
+                CustomHeaders[split[0].Trim()] = split[1].Trim();
+            }
+        }
     }
 
     /// <summary>
-    /// The type of data expected inside the HTTP response.
+    /// Serializes multipart contents to the legacy editor format.
     /// </summary>
-    public enum ResponseType
+    /// <returns>The serialized multipart entries.</returns>
+    public string GetMultipartContents()
     {
-        String,
-        File,
-        Base64String
+        var sb = new StringBuilder();
+        foreach (var c in MultipartContents)
+        {
+            sb.Append($"{c.Type.ToString().ToUpper()}: {c.Name}: {c.Value}");
+            if (!c.Equals(MultipartContents.Last())) sb.Append(Environment.NewLine);
+        }
+        return sb.ToString();
     }
 
     /// <summary>
-    /// Represents a Multipart Content
+    /// Loads multipart contents from the legacy editor format.
     /// </summary>
-    public struct MultipartContent
+    /// <param name="lines">The serialized multipart lines.</param>
+    public void SetMultipartContents(string[] lines)
     {
-        public MultipartContentType Type { get; set; }
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string ContentType { get; set; }
+        MultipartContents.Clear();
+        foreach (var line in lines)
+        {
+            try
+            {
+                var split = line.Split(new[] { ':' }, 3);
+                MultipartContents.Add(new MultipartContent()
+                {
+                    Type = (MultipartContentType)Enum.Parse(typeof(MultipartContentType), split[0].Trim(), true),
+                    Name = split[1].Trim(),
+                    Value = split[2].Trim()
+                });
+            }
+            catch { }
+        }
     }
+
+    #endregion
+
+    private MyHttpContent MapMultipartContent(MultipartContent mpc, LSGlobals ls)
+    {
+        switch (mpc.Type)
+        {
+            case MultipartContentType.String:
+                return new StringHttpContent(
+                    ReplaceValues(mpc.Name, ls),
+                    ReplaceValues(mpc.Value, ls),
+                    string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
+
+            case MultipartContentType.File:
+                return new FileHttpContent(
+                    ReplaceValues(mpc.Name, ls),
+                    ReplaceValues(mpc.Value, ls),
+                    string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
+        }
+
+        throw new NotSupportedException();
+    }
+}
+
+/// <summary>
+/// The types of request that can be performed.
+/// </summary>
+public enum RequestType
+{
+    /// <summary>
+    /// Standard form or body request.
+    /// </summary>
+    Standard,
+    /// <summary>
+    /// Basic authentication request.
+    /// </summary>
+    BasicAuth,
+    /// <summary>
+    /// Multipart form-data request.
+    /// </summary>
+    Multipart,
+    /// <summary>
+    /// Raw byte-stream request.
+    /// </summary>
+    Raw
+}
+
+/// <summary>
+/// The available types of multipart contents.
+/// </summary>
+public enum MultipartContentType
+{
+    /// <summary>
+    /// Inline string content.
+    /// </summary>
+    String,
+    /// <summary>
+    /// File-backed content.
+    /// </summary>
+    File
+}
+
+/// <summary>
+/// The type of data expected inside the HTTP response.
+/// </summary>
+public enum ResponseType
+{
+    /// <summary>
+    /// Read the response as text.
+    /// </summary>
+    String,
+    /// <summary>
+    /// Save the response to a file.
+    /// </summary>
+    File,
+    /// <summary>
+    /// Store the response as a base64 string.
+    /// </summary>
+    Base64String
+}
+
+/// <summary>
+/// Represents a Multipart Content
+/// </summary>
+/// <summary>
+/// Represents a multipart content entry in a legacy request block.
+/// </summary>
+public struct MultipartContent
+{
+    /// <summary>
+    /// Gets or sets the multipart content kind.
+    /// </summary>
+    public MultipartContentType Type { get; set; }
+    /// <summary>
+    /// Gets or sets the multipart field name.
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
+    /// Gets or sets the content value or file path.
+    /// </summary>
+    public string Value { get; set; }
+    /// <summary>
+    /// Gets or sets the content type for file entries.
+    /// </summary>
+    public string ContentType { get; set; }
 }

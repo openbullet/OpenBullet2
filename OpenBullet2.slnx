@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="OpenBullet2.Console/OpenBullet2.Console.csproj" />
+  <Project Path="OpenBullet2.Console.Tests/OpenBullet2.Console.Tests.csproj" />
+  <Project Path="OpenBullet2.Core.Tests/OpenBullet2.Core.Tests.csproj" />
+  <Project Path="OpenBullet2.Core/OpenBullet2.Core.csproj" />
+  <Project Path="OpenBullet2.Native.Tests/OpenBullet2.Native.Tests.csproj" />
+  <Project Path="OpenBullet2.Native.Updater/OpenBullet2.Native.Updater.csproj" />
+  <Project Path="OpenBullet2.Native/OpenBullet2.Native.csproj" />
+  <Project Path="OpenBullet2.Updater.Core/OpenBullet2.Updater.Core.csproj" />
+  <Project Path="OpenBullet2.Updater.Tests/OpenBullet2.Updater.Tests.csproj" />
+  <Project Path="OpenBullet2.Web.Tests/OpenBullet2.Web.Tests.csproj" />
+  <Project Path="OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj" />
+  <Project Path="OpenBullet2.Web/OpenBullet2.Web.csproj" />
+  <Project Path="RuriLib.Http.Tests/RuriLib.Http.Tests.csproj" />
+  <Project Path="RuriLib.Http/RuriLib.Http.csproj" />
+  <Project Path="RuriLib.Parallelization.Tests/RuriLib.Parallelization.Tests.csproj" />
+  <Project Path="RuriLib.Parallelization/RuriLib.Parallelization.csproj" />
+  <Project Path="RuriLib.Proxies.Tests/RuriLib.Proxies.Tests.csproj" />
+  <Project Path="RuriLib.Proxies/RuriLib.Proxies.csproj" />
+  <Project Path="RuriLib.Tests/RuriLib.Tests.csproj" />
+  <Project Path="RuriLib/RuriLib.csproj" />
+</Solution>

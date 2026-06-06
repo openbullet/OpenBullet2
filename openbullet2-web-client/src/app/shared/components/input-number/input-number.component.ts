@@ -13,6 +13,7 @@ export class InputNumberComponent implements OnInit {
   @Input() max: number | null = null;
   @Input() step = 1.0;
   @Input() integer = true;
+  @Input() disabled = false;
   @Input() class: string | null = null;
   // biome-ignore lint/suspicious/noExplicitAny: any
   @Input() style: { [id: string]: any } = {};

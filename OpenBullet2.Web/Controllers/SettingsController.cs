@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Settings;
@@ -9,6 +8,7 @@ using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
+using OpenBullet2.Web.Utils;
 using RuriLib.Functions.Captchas;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
@@ -21,17 +21,17 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class SettingsController : ApiController
 {
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
     private readonly IAuthTokenService _authService;
     private readonly IConfiguration _configuration;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly RuriLibSettingsService _ruriLibSettingsService;
     private readonly ThemeService _themeService;
     private readonly ILogger<SettingsController> _logger;
-    
+
     /// <summary></summary>
     public SettingsController(RuriLibSettingsService ruriLibSettingsService,
-        OpenBulletSettingsService obSettingsService, IMapper mapper,
+        OpenBulletSettingsService obSettingsService, IObjectMapper mapper,
         IAuthTokenService authService, IConfiguration configuration,
         ThemeService themeService, ILogger<SettingsController> logger)
     {
@@ -43,7 +43,7 @@ public class SettingsController : ApiController
         _themeService = themeService;
         _logger = logger;
     }
-    
+
     /// <summary>
     /// Get the system settings.
     /// </summary>
@@ -53,14 +53,14 @@ public class SettingsController : ApiController
     public ActionResult<SystemSettingsDto> GetSystemSettings()
     {
         var systemSettings = new SystemSettingsDto();
-        
+
         var botLimit = _configuration.GetSection("Resources")["BotLimit"];
-        
+
         if (botLimit is not null)
         {
             systemSettings.BotLimit = int.Parse(botLimit);
         }
-        
+
         return systemSettings;
     }
 
@@ -107,9 +107,10 @@ public class SettingsController : ApiController
 
         // NOTE: To check this we can just print the hashcode before
         // and after this instruction.
-        _mapper.Map(settings, _ruriLibSettingsService.RuriLibSettings);
+        WebMappingMethods.ApplyRuriLibSettings(
+            settings, _ruriLibSettingsService.RuriLibSettings, _mapper);
         await _ruriLibSettingsService.Save();
-        
+
         _logger.LogInformation("Updated RuriLib settings");
 
         return _ruriLibSettingsService.RuriLibSettings;
@@ -158,25 +159,27 @@ public class SettingsController : ApiController
 
         var oldAdminUsername = _obSettingsService.Settings.SecuritySettings.AdminUsername;
         var newAdminUsername = settings.SecuritySettings.AdminUsername;
-        
+
         // NOTE: To check this we can just print the hashcodes before
         // and after this instruction.
-        _mapper.Map(settings, _obSettingsService.Settings);
+        WebMappingMethods.ApplyOpenBulletSettings(
+            settings, _obSettingsService.Settings, _mapper);
         await _obSettingsService.SaveAsync();
-        
+
         _logger.LogInformation("Updated OpenBullet settings");
-        
+
         // If the admin username has changed, sign a new JWT and send it back
         if (oldAdminUsername != newAdminUsername)
         {
             var claims = new[] {
                 new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
-                new Claim(ClaimTypes.Name, newAdminUsername), new Claim(ClaimTypes.Role, "Admin")
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, newAdminUsername),
+                new Claim(ClaimTypes.Role, "Admin")
             };
 
             var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
             var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
-            
+
             Response.Headers.Append("X-New-Jwt", token);
         }
 
@@ -191,14 +194,15 @@ public class SettingsController : ApiController
     [HttpPatch("admin/password")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> UpdateAdminPassword(UpdateAdminPasswordDto dto,
-        [FromServices] IValidator<UpdateAdminPasswordDto> validator)
+        [FromServices] IValidator<UpdateAdminPasswordDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         _obSettingsService.Settings.SecuritySettings
             .SetupAdminPassword(dto.Password);
         await _obSettingsService.SaveAsync();
-        
+
         _logger.LogInformation("Updated the password of the admin user");
 
         return Ok();
@@ -210,9 +214,9 @@ public class SettingsController : ApiController
     [TypeFilter<AdminFilter>]
     [HttpPost("theme")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> AddTheme(IFormFile file)
+    public async Task<ActionResult> AddTheme(IFormFile file, CancellationToken cancellationToken)
     {
-        await _themeService.SaveCssFileAsync(file.FileName, file.OpenReadStream());
+        await _themeService.SaveCssFileAsync(file.FileName, file.OpenReadStream(), cancellationToken);
         _logger.LogInformation("Added a new CSS theme from file {FileName}", file.FileName);
         return Ok();
     }
@@ -233,7 +237,7 @@ public class SettingsController : ApiController
     /// </summary>
     [HttpGet("theme")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> GetTheme(string? name = null)
+    public async Task<ActionResult> GetTheme(string? name = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -244,7 +248,7 @@ public class SettingsController : ApiController
 
         try
         {
-            bytes = await _themeService.GetCssFileAsync(name);
+            bytes = await _themeService.GetCssFileAsync(name, cancellationToken);
         }
         catch
         {
@@ -253,7 +257,7 @@ public class SettingsController : ApiController
 
         return File(bytes, "text/css", "theme.css");
     }
-    
+
     /// <summary>
     /// Get all custom snippets.
     /// </summary>
@@ -264,7 +268,7 @@ public class SettingsController : ApiController
         => _obSettingsService.Settings.GeneralSettings.CustomSnippets
             .Where(s => !string.IsNullOrWhiteSpace(s.Name))
             .ToDictionary(s => s.Name, s => s.Body);
-    
+
     /// <summary>
     /// Check captcha balance for the given service.
     /// </summary>
@@ -273,14 +277,16 @@ public class SettingsController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<CaptchaBalanceDto>> CheckCaptchaCredit(
         CaptchaSettings captchaSettings)
+        => await ExecuteCaptchaBalanceCheckAsync(captchaSettings);
+
+    private static async Task<ActionResult<CaptchaBalanceDto>> ExecuteCaptchaBalanceCheckAsync(
+        CaptchaSettings captchaSettings)
     {
-        var service = CaptchaServiceFactory.GetService(captchaSettings);
-        
         try
         {
             return new CaptchaBalanceDto
             {
-                Balance = await service.GetBalanceAsync()
+                Balance = await CaptchaBalanceCache.RefreshBalanceAsync(captchaSettings)
             };
         }
         catch (Exception ex)

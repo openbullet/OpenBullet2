@@ -12,6 +12,7 @@ UserData/
 # RuriLib API Documentation
 RuriLib/_site/
 RuriLib/log.txt
+RuriLib.Http/runtimes/
 
 # User-specific files
 *.suo
@@ -35,11 +36,14 @@ bld/
 [Ll]og/
 
 Mocks/
-Scripts/
+**/Scripts/
+!/Scripts/
+!/Scripts/**
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 .vscode/
+.dotnet/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 

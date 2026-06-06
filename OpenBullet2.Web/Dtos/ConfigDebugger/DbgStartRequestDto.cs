@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Web.Dtos.ConfigDebugger;
 

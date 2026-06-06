@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 
 namespace OpenBullet2.Core.Extensions;
@@ -21,7 +21,7 @@ public static class IPAddressExtensions
         {
             broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255));
         }
-        
+
         return new IPAddress(broadcastAddress);
     }
 
@@ -41,7 +41,7 @@ public static class IPAddressExtensions
         {
             broadcastAddress[i] = (byte)(ipAdressBytes[i] & (subnetMaskBytes[i]));
         }
-        
+
         return new IPAddress(broadcastAddress);
     }
 

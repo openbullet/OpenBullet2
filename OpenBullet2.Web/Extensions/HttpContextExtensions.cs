@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Identity;
 
 namespace OpenBullet2.Web.Extensions;

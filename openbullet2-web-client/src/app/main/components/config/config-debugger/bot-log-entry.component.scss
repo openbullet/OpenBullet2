@@ -1,0 +1,27 @@
+@import "../../../../../styles/variables.scss";
+
+.log-message {
+    width: 100%;
+    display: block;
+    font-family: Chivo Mono;
+    font-variant-ligatures: none;
+    margin-bottom: 5px;
+    font-size: 14px;
+    white-space: break-spaces;
+    word-break: break-all;
+}
+
+.log-message-toggle {
+    background: transparent;
+    border: 0;
+    color: var(--fg-accent-light);
+    cursor: pointer;
+    font: inherit;
+    margin-left: 4px;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.log-message-toggle:hover {
+    color: var(--fg-accent);
+}

@@ -10,6 +10,7 @@ export enum ActionType {
   DiscordWebhook = 'discordWebhookAction',
   TelegramBot = 'telegramBotAction',
   SetBots = 'setBotsAction',
+  SetSkip = 'setSkipAction',
   ReloadProxies = 'reloadProxiesAction',
 }
 
@@ -58,6 +59,11 @@ export interface SetBotsActionDto {
   amount: number;
 }
 
+export interface SetSkipActionDto {
+  _polyTypeName: ActionType.SetSkip;
+  skip: number;
+}
+
 export interface ReloadProxiesActionDto {
   _polyTypeName: ActionType.ReloadProxies;
 }
@@ -71,6 +77,7 @@ export type ActionDto =
   | DiscordWebhookActionDto
   | TelegramBotActionDto
   | SetBotsActionDto
+  | SetSkipActionDto
   | ReloadProxiesActionDto;
 
 export function getActionText(action: ActionDto): string {
@@ -95,6 +102,8 @@ export function getActionText(action: ActionDto): string {
       return 'Send message via Telegram bot';
     case ActionType.SetBots:
       return `Set bots to ${action.amount}`;
+    case ActionType.SetSkip:
+      return `Set skip to ${action.skip}`;
     case ActionType.ReloadProxies:
       return 'Reload proxies';
     default:

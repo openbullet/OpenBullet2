@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Info;
+namespace OpenBullet2.Web.Dtos.Info;
 
 static internal class SystemPerformanceMethods
 {

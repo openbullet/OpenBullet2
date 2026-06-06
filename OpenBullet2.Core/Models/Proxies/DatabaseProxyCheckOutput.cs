@@ -1,9 +1,11 @@
-﻿using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Proxies;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace OpenBullet2.Core.Models.Proxies;
 
@@ -12,14 +14,16 @@ namespace OpenBullet2.Core.Models.Proxies;
 /// </summary>
 public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
 {
-    private readonly IServiceScope _scope;
-    private readonly IProxyRepository _proxyRepo;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<DatabaseProxyCheckOutput> _logger;
     private readonly SemaphoreSlim _semaphore;
 
     public DatabaseProxyCheckOutput(IServiceScopeFactory scopeFactory)
     {
-        _scope = scopeFactory.CreateScope();
-        _proxyRepo = _scope.ServiceProvider.GetRequiredService<IProxyRepository>();
+        _scopeFactory = scopeFactory;
+        using var scope = _scopeFactory.CreateScope();
+        _logger = scope.ServiceProvider.GetService<ILogger<DatabaseProxyCheckOutput>>()
+            ?? NullLogger<DatabaseProxyCheckOutput>.Instance;
         _semaphore = new SemaphoreSlim(1, 1);
     }
 
@@ -28,19 +32,27 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
     {
         try
         {
-            var entity = await _proxyRepo.GetAsync(proxy.Id);
-            entity.Country = proxy.Country;
-            entity.LastChecked = proxy.LastChecked;
-            entity.Ping = proxy.Ping;
-            entity.Status = proxy.WorkingStatus;
-
             // Only allow updating one proxy at a time (multiple threads should
             // not use the same DbContext at the same time).
             await _semaphore.WaitAsync();
 
             try
             {
-                await _proxyRepo.UpdateAsync(entity);
+                using var scope = _scopeFactory.CreateScope();
+                var proxyRepo = scope.ServiceProvider.GetRequiredService<IProxyRepository>();
+                var entity = await proxyRepo.GetAsync(proxy.Id);
+                if (entity is null)
+                {
+                    return;
+                }
+
+                entity.Country = proxy.Country;
+                entity.LastChecked = proxy.LastChecked ?? default;
+                entity.Ping = proxy.Ping;
+                entity.Quality = proxy.Quality;
+                entity.Status = proxy.WorkingStatus;
+
+                await proxyRepo.UpdateAsync(entity);
             }
             finally
             {
@@ -57,16 +69,15 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
              * 
              * In any case we don't want to save anything to the database.
              */
-            
-            // TODO: Turn this into a log message using a logger
-            Console.WriteLine($"Error while saving proxy {proxy.Id} to the database: {ex.Message}");
+            _logger.LogDebug(ex,
+                "Skipped saving proxy {ProxyId} to the database because the proxy, job or scope was no longer available",
+                proxy.Id);
         }
     }
 
     public void Dispose()
     {
         _semaphore?.Dispose();
-        _scope?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

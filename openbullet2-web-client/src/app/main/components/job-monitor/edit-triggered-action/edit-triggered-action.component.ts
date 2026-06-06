@@ -154,7 +154,9 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       this.touched &&
       Object.values(this.fieldsValidity).every((v) => v) &&
       this.jobId !== null &&
-      (this.jobs?.find((j) => j.id === this.jobId) ?? false)
+      (this.jobs?.find((j) => j.id === this.jobId) ?? false) &&
+      this.triggers.length > 0 &&
+      this.actions.length > 0
     );
   }
 
@@ -399,6 +401,12 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
         action = {
           _polyTypeName: ActionType.SetBots,
           amount: 0,
+        };
+        break;
+      case ActionType.SetSkip:
+        action = {
+          _polyTypeName: ActionType.SetSkip,
+          skip: 0,
         };
         break;
       case ActionType.ReloadProxies:

@@ -46,6 +46,12 @@
                         <Label Content="Start condition" Foreground="{DynamicResource ForegroundCustom}" />
                         <StackPanel Orientation="Horizontal" Background="Transparent">
                             <RadioButton 
+                Content="Start immediately"
+                x:Name="startImmediatelyButton"
+                IsChecked="{Binding StartImmediatelyMode}"
+                Background="Transparent"
+                Margin="5 0"/>
+                            <RadioButton 
                 Content="Start in"
                 x:Name="startInButton"
                 IsChecked="{Binding StartInMode}"
@@ -65,6 +71,9 @@
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                 </Style>
                             </TabControl.ItemContainerStyle>
+                            <TabItem>
+                                <TextBlock Text="The job will start as soon as you run it." />
+                            </TabItem>
                             <TabItem>
                                 <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
                             </TabItem>
@@ -143,8 +152,17 @@
                 IsChecked="{Binding MarkAsToCheckOnAbort}" />
                         <CheckBox
                 Margin="5 5 0 0"
+                Content="Cache hits in memory for this job"
+                ToolTip="Disable for high-throughput jobs. Hit counters and configured outputs remain active."
+                IsChecked="{Binding CacheHits}" />
+                        <CheckBox
+                Margin="5 5 0 0"
                 Content="Never ban proxies"
                 IsChecked="{Binding NeverBanProxies}" />
+                        <CheckBox
+                Margin="5 5 0 0"
+                Content="Never mark proxies as bad"
+                IsChecked="{Binding NeverMarkProxiesAsBad}" />
                         <CheckBox
                 Margin="5 5 0 0"
                 Content="Concurrent mode (tick when using rotating proxy services)"
@@ -608,10 +626,11 @@
                                                 <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center"
-                                            Content="Base folder"/>
+                                            Content="Folder template"/>
                                                 <TextBox
                                             Grid.Column="2"
-                                            Text="{Binding BaseDir}" />
+                                            Text="{Binding BaseDir}"
+                                            ToolTip="Available placeholders: &lt;CONFIG&gt;, &lt;WORDLIST&gt;, &lt;DATE&gt;" />
                                                 <Button Tag="{Binding}" Grid.Column="3" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
@@ -716,8 +735,8 @@
                                             Content="Chat ID"/>
                                                 <mah:NumericUpDown 
                                             Grid.Column="6"
-                                            Minimum="-2147483648"
-                                            Maximum="2147483647"
+                                            Minimum="-9223372036854775808"
+                                            Maximum="9223372036854775807"
                                             Interval="1"
                                             Value="{Binding ChatId}"/>
                                                 <CheckBox

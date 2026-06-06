@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config;
+namespace OpenBullet2.Web.Dtos.Config;
 
 /// <summary>
 /// DTO used to update a config's metadata.

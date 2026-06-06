@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.ViewModels;
 using RuriLib.Extensions;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
@@ -8,153 +8,147 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace OpenBullet2.Native.Controls
+namespace OpenBullet2.Native.Controls;
+
+/// <summary>
+/// Interaction logic for BlockSettingViewer.xaml
+/// </summary>
+public partial class StringSettingViewer : UserControl
 {
-    /// <summary>
-    /// Interaction logic for BlockSettingViewer.xaml
-    /// </summary>
-    public partial class StringSettingViewer : UserControl
+    private StringSettingViewerViewModel? vm;
+    private StringSettingViewerViewModel ViewModel => vm
+        ?? throw new InvalidOperationException("The setting viewer has not been initialized");
+
+    public BlockSetting Setting
     {
-        private StringSettingViewerViewModel vm;
-
-        public BlockSetting Setting
+        get => ViewModel.Setting;
+        set
         {
-            get => vm?.Setting;
-            set
+            if (value.FixedSetting is not StringSetting)
             {
-                if (value.FixedSetting is not StringSetting)
-                {
-                    throw new Exception("Invalid setting type for this UC");
-                }
-
-                vm = new StringSettingViewerViewModel(value);
-                DataContext = vm;
-
-                tabControl.SelectedIndex = vm.Mode switch
-                {
-                    SettingInputMode.Variable => 0,
-                    SettingInputMode.Fixed => 1,
-                    SettingInputMode.Interpolated => 2,
-                    _ => throw new NotImplementedException()
-                };
-
-                buttonTabControl.SelectedIndex = vm.Mode switch
-                {
-                    SettingInputMode.Variable => 0,
-                    SettingInputMode.Fixed => 1,
-                    SettingInputMode.Interpolated => 2,
-                    _ => throw new NotImplementedException()
-                };
+                throw new Exception("Invalid setting type for this UC");
             }
-        }
 
-        public StringSettingViewer()
-        {
-            InitializeComponent();
-        }
+            vm = new StringSettingViewerViewModel(value);
+            DataContext = vm;
 
-        // Interpolated -> Variable
-        private void VariableMode(object sender, RoutedEventArgs e)
-        {
-            vm.Mode = SettingInputMode.Variable;
-            vm.VariableName = vm.InterpValue;
-            tabControl.SelectedIndex = 0;
-            buttonTabControl.SelectedIndex = 0;
-        }
+            tabControl.SelectedIndex = vm.Mode switch
+            {
+                SettingInputMode.Variable => 0,
+                SettingInputMode.Fixed => 1,
+                SettingInputMode.Interpolated => 2,
+                _ => throw new NotImplementedException()
+            };
 
-        // Variable -> Constant
-        private void ConstantMode(object sender, RoutedEventArgs e)
-        {
-            vm.Mode = SettingInputMode.Fixed;
-            vm.Value = vm.VariableName;
-            tabControl.SelectedIndex = 1;
-            buttonTabControl.SelectedIndex = 1;
-        }
-
-        // Constant -> Interpolated
-        private void InterpMode(object sender, RoutedEventArgs e)
-        {
-            vm.Mode = SettingInputMode.Interpolated;
-            vm.InterpValue = vm.Value;
-            tabControl.SelectedIndex = 2;
-            buttonTabControl.SelectedIndex = 2;
-        }
-
-        private void SwitchToInterpolatedMode(object sender, MouseButtonEventArgs e)
-        {
-            vm.Mode = SettingInputMode.Interpolated;
-            vm.InterpValue = vm.Value;
-            tabControl.SelectedIndex = 2;
-            buttonTabControl.SelectedIndex = 2;
+            buttonTabControl.SelectedIndex = vm.Mode switch
+            {
+                SettingInputMode.Variable => 0,
+                SettingInputMode.Fixed => 1,
+                SettingInputMode.Interpolated => 2,
+                _ => throw new NotImplementedException()
+            };
         }
     }
 
-    public class StringSettingViewerViewModel : ViewModelBase
+    public StringSettingViewer()
     {
-        public BlockSetting Setting { get; init; }
+        InitializeComponent();
+    }
 
-        private StringSetting FixedSetting => Setting.FixedSetting as StringSetting;
-        private InterpolatedStringSetting InterpolatedSetting => Setting.InterpolatedSetting as InterpolatedStringSetting;
+    // Interpolated -> Variable
+    private void VariableMode(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Mode = SettingInputMode.Variable;
+        ViewModel.VariableName = ViewModel.InterpValue;
+        tabControl.SelectedIndex = 0;
+        buttonTabControl.SelectedIndex = 0;
+    }
 
-        public string Name => Setting.ReadableName;
+    // Variable -> Constant
+    private void ConstantMode(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Mode = SettingInputMode.Fixed;
+        ViewModel.Value = ViewModel.VariableName;
+        tabControl.SelectedIndex = 1;
+        buttonTabControl.SelectedIndex = 1;
+    }
 
-        public string Description => Setting.Description;
+    // Constant -> Interpolated
+    private void InterpMode(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Mode = SettingInputMode.Interpolated;
+        ViewModel.InterpValue = ViewModel.Value;
+        tabControl.SelectedIndex = 2;
+        buttonTabControl.SelectedIndex = 2;
+    }
 
-        public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
+    private void SwitchToInterpolatedMode(object sender, MouseButtonEventArgs e)
+    {
+        ViewModel.Mode = SettingInputMode.Interpolated;
+        ViewModel.InterpValue = ViewModel.Value;
+        tabControl.SelectedIndex = 2;
+        buttonTabControl.SelectedIndex = 2;
+    }
+}
 
-        public bool CanSwitchToInterpolatedMode => Mode == SettingInputMode.Fixed && Value.Contains('<') && Value.Contains('>');
+public class StringSettingViewerViewModel(BlockSetting setting) : ViewModelBase
+{
+    public BlockSetting Setting { get; init; } = setting;
 
-        public bool MultiLine => FixedSetting.MultiLine;
-        public VerticalAlignment VerticalAlignment => MultiLine ? VerticalAlignment.Top : VerticalAlignment.Center;
-        public int Height => MultiLine ? 100 : 30;
+    private StringSetting FixedSetting => (StringSetting)Setting.FixedSetting!;
+    private InterpolatedStringSetting InterpolatedSetting => (InterpolatedStringSetting)Setting.InterpolatedSetting!;
 
-        public SettingInputMode Mode
+    public string Name => Setting.ReadableName;
+
+    public string Description => Setting.Description ?? string.Empty;
+
+    public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
+
+    public bool CanSwitchToInterpolatedMode => Mode == SettingInputMode.Fixed && Value.Contains('<') && Value.Contains('>');
+
+    public bool MultiLine => FixedSetting.MultiLine;
+    public VerticalAlignment VerticalAlignment => MultiLine ? VerticalAlignment.Top : VerticalAlignment.Center;
+    public int Height => MultiLine ? 100 : 30;
+
+    public SettingInputMode Mode
+    {
+        get => Setting.InputMode;
+        set
         {
-            get => Setting.InputMode;
-            set
-            {
-                Setting.InputMode = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
-            }
+            Setting.InputMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
         }
+    }
 
-        public string VariableName
+    public string VariableName
+    {
+        get => Setting.InputVariableName ?? string.Empty;
+        set
         {
-            get => Setting.InputVariableName;
-            set
-            {
-                Setting.InputVariableName = value;
-                OnPropertyChanged();
-            }
+            Setting.InputVariableName = value;
+            OnPropertyChanged();
         }
+    }
 
-        public string InterpValue
+    public string InterpValue
+    {
+        get => InterpolatedSetting.Value ?? string.Empty;
+        set
         {
-            get => (Setting.InterpolatedSetting as InterpolatedStringSetting).Value;
-            set
-            {
-                var s = Setting.InterpolatedSetting as InterpolatedStringSetting;
-                s.Value = value;
-                OnPropertyChanged();
-            }
+            InterpolatedSetting.Value = value;
+            OnPropertyChanged();
         }
+    }
 
-        public string Value
+    public string Value
+    {
+        get => FixedSetting.Value ?? string.Empty;
+        set
         {
-            get => (Setting.FixedSetting as StringSetting).Value;
-            set
-            {
-                var s = Setting.FixedSetting as StringSetting;
-                s.Value = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
-            }
-        }
-
-        public StringSettingViewerViewModel(BlockSetting setting)
-        {
-            Setting = setting;
+            FixedSetting.Value = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
         }
     }
 }

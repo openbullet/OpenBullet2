@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.SignalR;
@@ -10,13 +10,19 @@ namespace OpenBullet2.Web.Services;
 /// <summary>
 /// Service that monitors the system's performance.
 /// </summary>
-public class PerformanceMonitorService : IHostedService
+public sealed class PerformanceMonitorService : IHostedService, IDisposable
 {
     private readonly List<string> _connections = new();
+    private readonly Process _currentProcess = Process.GetCurrentProcess();
     private readonly IHubContext<SystemPerformanceHub> _hub;
     private readonly ILogger<PerformanceMonitorService> _logger;
     private readonly SemaphoreSlim _semaphore = new(1);
     private CancellationTokenSource _cts = new();
+    private bool _disposed;
+    private long? _previousSampleTimestamp;
+    private TimeSpan? _previousCpuTime;
+    private long? _previousUploadBytes;
+    private long? _previousDownloadBytes;
 
     /// <summary></summary>
     public PerformanceMonitorService(ILogger<PerformanceMonitorService> logger,
@@ -29,20 +35,20 @@ public class PerformanceMonitorService : IHostedService
     /// <inheritdoc />
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        ReadMetricsLoopAsync().Forget(e =>
+        // Dispose the old cancellation token source and create a new one
+        _cts.Dispose();
+        _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        ReadMetricsLoopAsync(_cts.Token).Forget(e =>
         {
             // Don't log OperationCanceledException
             if (e is OperationCanceledException)
             {
                 return;
             }
-            
+
             _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
         });
-
-        // Dispose the old cancellation token source and create a new one
-        _cts.Dispose();
-        _cts = new CancellationTokenSource();
 
         return Task.CompletedTask;
     }
@@ -53,6 +59,26 @@ public class PerformanceMonitorService : IHostedService
         _cts.Cancel();
 
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed || !disposing)
+        {
+            return;
+        }
+
+        _cts.Dispose();
+        _semaphore.Dispose();
+        _currentProcess.Dispose();
+        _disposed = true;
     }
 
     /// <summary>
@@ -89,58 +115,101 @@ public class PerformanceMonitorService : IHostedService
         }
     }
 
-    private async Task ReadMetricsLoopAsync()
+    private async Task ReadMetricsLoopAsync(CancellationToken cancellationToken)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
 
         do
         {
-            var memory = Process.GetCurrentProcess().WorkingSet64;
-            var cpu = await ReadCpuUsageAsync(_cts.Token);
-            var (upload, download) = await ReadNetworkUsage();
+            string[] connectionIds;
 
-            var metrics = new PerformanceMetrics {
-                MemoryUsage = memory,
-                CpuUsage = cpu,
-                NetworkDownload = download,
-                NetworkUpload = upload,
-                Time = DateTime.UtcNow
-            };
-
-            // Send the metrics to all connected clients
-            await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync(cancellationToken);
 
             try
             {
-                await _hub.Clients.Clients(_connections).SendAsync(
-                    SystemPerformanceMethods.NewMetrics, metrics);
+                connectionIds = [.. _connections];
             }
             finally
             {
                 _semaphore.Release();
             }
-        } while (await timer.WaitForNextTickAsync(_cts.Token));
+
+            if (connectionIds.Length == 0)
+            {
+                ResetSampleState();
+                continue;
+            }
+
+            var metrics = ReadMetrics();
+            await _hub.Clients.Clients(connectionIds).SendAsync(
+                SystemPerformanceMethods.NewMetrics, metrics, cancellationToken);
+        } while (await timer.WaitForNextTickAsync(cancellationToken));
     }
 
-    private static async Task<double> ReadCpuUsageAsync(CancellationToken cancellationToken)
+    private PerformanceMetrics ReadMetrics()
     {
-        var sw = new Stopwatch();
+        var sampleTimestamp = Stopwatch.GetTimestamp();
+        _currentProcess.Refresh();
 
-        sw.Start();
-        var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+        var memory = _currentProcess.PrivateMemorySize64;
+        var cpuTime = _currentProcess.TotalProcessorTime;
+        var (uploadBytes, downloadBytes) = ReadCurrentNetworkTotals();
+        var cpuUsage = 0d;
+        var networkUpload = 0L;
+        var networkDownload = 0L;
 
-        await Task.Delay(100, cancellationToken);
+        if (_previousSampleTimestamp is long previousTimestamp
+            && _previousCpuTime is TimeSpan previousCpuTime
+            && _previousUploadBytes is long previousUploadBytes
+            && _previousDownloadBytes is long previousDownloadBytes)
+        {
+            var elapsed = Stopwatch.GetElapsedTime(previousTimestamp, sampleTimestamp);
 
-        sw.Stop();
-        var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+            if (elapsed > TimeSpan.Zero)
+            {
+                var cpuUsedMs = (cpuTime - previousCpuTime).TotalMilliseconds;
+                var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * elapsed.TotalMilliseconds);
+                cpuUsage = Math.Round(cpuUsageTotal * 100, 2);
 
-        var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
-        var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * sw.ElapsedMilliseconds);
+                networkUpload = CalculateBytesPerSecond(previousUploadBytes, uploadBytes, elapsed);
+                networkDownload = CalculateBytesPerSecond(previousDownloadBytes, downloadBytes, elapsed);
+            }
+        }
 
-        return Math.Round(cpuUsageTotal * 100, 2);
+        _previousSampleTimestamp = sampleTimestamp;
+        _previousCpuTime = cpuTime;
+        _previousUploadBytes = uploadBytes;
+        _previousDownloadBytes = downloadBytes;
+
+        return new PerformanceMetrics
+        {
+            MemoryUsage = memory,
+            CpuUsage = cpuUsage,
+            NetworkDownload = networkDownload,
+            NetworkUpload = networkUpload,
+            Time = DateTime.UtcNow
+        };
     }
 
-    private static async Task<(long upload, long download)> ReadNetworkUsage()
+    private void ResetSampleState()
+    {
+        _previousSampleTimestamp = null;
+        _previousCpuTime = null;
+        _previousUploadBytes = null;
+        _previousDownloadBytes = null;
+    }
+
+    private static long CalculateBytesPerSecond(long previousBytes, long currentBytes, TimeSpan elapsed)
+    {
+        if (elapsed <= TimeSpan.Zero || currentBytes < previousBytes)
+        {
+            return 0;
+        }
+
+        return (long)Math.Round((currentBytes - previousBytes) / elapsed.TotalSeconds);
+    }
+
+    private static (long upload, long download) ReadCurrentNetworkTotals()
     {
         try
         {
@@ -148,44 +217,23 @@ public class PerformanceMonitorService : IHostedService
             {
                 return (0, 0);
             }
-            
+
             var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            var startUpload = GetCurrentNetUpload(interfaces);
-            var startDownload = GetCurrentNetDownload(interfaces);
+            long upload = 0;
+            long download = 0;
 
-            await Task.Delay(100);
+            foreach (var netInterface in interfaces)
+            {
+                var stats = netInterface.GetIPv4Statistics();
+                upload += stats.BytesSent;
+                download += stats.BytesReceived;
+            }
 
-            var netUpload = GetCurrentNetUpload(interfaces) - startUpload;
-            var netDownload = GetCurrentNetDownload(interfaces) - startDownload;
-            return (netUpload * 10, netDownload * 10);    
+            return (upload, download);
         }
         catch
         {
             return (0, 0);
-        }
-    }
-
-    private static long GetCurrentNetUpload(NetworkInterface[] interfaces)
-    {
-        try
-        {
-            return interfaces.Select(i => i.GetIPv4Statistics().BytesSent).Sum();
-        }
-        catch
-        {
-            return 0;
-        }
-    }
-
-    private static long GetCurrentNetDownload(NetworkInterface[] interfaces)
-    {
-        try
-        {
-            return interfaces.Select(i => i.GetIPv4Statistics().BytesReceived).Sum();
-        }
-        catch
-        {
-            return 0;
         }
     }
 }
@@ -196,7 +244,7 @@ public class PerformanceMonitorService : IHostedService
 public struct PerformanceMetrics
 {
     /// <summary>
-    /// The memory usage for this process, in bytes.
+    /// The private memory usage for this process, in bytes.
     /// </summary>
     public long MemoryUsage { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Scripting.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Scripting.Utils;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Configs;
@@ -11,6 +13,7 @@ using System.IO.Compression;
 using RuriLib.Helpers;
 using System.IO;
 using RuriLib.Functions.Conversion;
+using System.Threading;
 
 namespace OpenBullet2.Core.Services;
 
@@ -20,24 +23,38 @@ namespace OpenBullet2.Core.Services;
 /// </summary>
 public class ConfigService
 {
+    private readonly object configsLock = new();
+    private int reloadVersion;
+    private readonly ILogger<ConfigService> logger;
+
     /// <summary>
     /// The list of available configs.
     /// </summary>
-    public List<Config> Configs { get; set; } = new();
+    public List<Config> Configs { get; set; } = [];
 
     /// <summary>
     /// Called when a new config is selected.
     /// </summary>
-    public event EventHandler<Config> OnConfigSelected;
+    public event EventHandler<Config>? OnConfigSelected;
 
     /// <summary>
     /// Called when all configs from configured remote endpoints are loaded.
     /// </summary>
-    public event EventHandler OnRemotesLoaded;
+    public event EventHandler? OnRemotesLoaded;
 
-    private Config selectedConfig = null;
+    private Config selectedConfig = null!;
     private readonly IConfigRepository configRepo;
     private readonly OpenBulletSettingsService openBulletSettingsService;
+
+    public ConfigService(
+        IConfigRepository configRepo,
+        OpenBulletSettingsService openBulletSettingsService,
+        ILogger<ConfigService>? logger = null)
+    {
+        this.configRepo = configRepo;
+        this.openBulletSettingsService = openBulletSettingsService;
+        this.logger = logger ?? NullLogger<ConfigService>.Instance;
+    }
 
     /// <summary>
     /// The currently selected config.
@@ -52,37 +69,44 @@ public class ConfigService
         }
     }
 
-    public ConfigService(IConfigRepository configRepo, OpenBulletSettingsService openBulletSettingsService)
-    {
-        this.configRepo = configRepo;
-        this.openBulletSettingsService = openBulletSettingsService;
-    }
-
     /// <summary>
     /// Reloads all configs from the <see cref="IConfigRepository"/> and remote endpoints.
     /// </summary>
     public async Task ReloadConfigsAsync()
+        => await ReloadConfigsAsync(CancellationToken.None);
+
+    /// <summary>
+    /// Reloads all configs from the <see cref="IConfigRepository"/> and remote endpoints.
+    /// </summary>
+    public async Task ReloadConfigsAsync(CancellationToken cancellationToken)
     {
+        var currentReloadVersion = Interlocked.Increment(ref reloadVersion);
+        logger.LogDebug("Reloading configs using reload version {ReloadVersion}", currentReloadVersion);
+
         // Load from the main repository
-        Configs = (await configRepo.GetAllAsync()).ToList();
-        SelectedConfig = null;
+        var localConfigs = (await configRepo.GetAllAsync()).ToList();
+
+        if (!TryPublishLocalConfigs(localConfigs, currentReloadVersion))
+        {
+            return;
+        }
 
         // Load from remotes (fire and forget)
-        LoadFromRemotes();
+        _ = LoadFromRemotesAsync(currentReloadVersion, cancellationToken);
     }
 
-    private async void LoadFromRemotes()
+    private async Task LoadFromRemotesAsync(int currentReloadVersion, CancellationToken cancellationToken)
     {
-        List<Config> remoteConfigs = new();
+        List<Config> remoteConfigs = [];
 
-        var func = new Func<RemoteConfigsEndpoint, Task>(async endpoint => 
+        var func = new Func<RemoteConfigsEndpoint, Task>(async endpoint =>
         {
             try
             {
                 // Get the file
                 using HttpClient client = new();
                 client.DefaultRequestHeaders.Add("Api-Key", endpoint.ApiKey);
-                using var response = await client.GetAsync(endpoint.Url);
+                using var response = await client.GetAsync(endpoint.Url, cancellationToken);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -94,10 +118,10 @@ public class ConfigService
                     throw new FileNotFoundException();
                 }
 
-                var fileStream = await response.Content.ReadAsStreamAsync();
+                var fileStream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
                 // Unpack the archive in memory
-                using ZipArchive archive = new(fileStream, ZipArchiveMode.Read);
+                await using ZipArchive archive = new(fileStream, ZipArchiveMode.Read);
                 foreach (var entry in archive.Entries)
                 {
                     if (!entry.Name.EndsWith(".opk"))
@@ -107,7 +131,7 @@ public class ConfigService
 
                     try
                     {
-                        using var entryStream = entry.Open();
+                        await using var entryStream = await entry.OpenAsync(cancellationToken);
                         var config = await ConfigPacker.UnpackAsync(entryStream);
 
                         // Calculate the hash of the metadata of the remote config to use as id.
@@ -123,16 +147,17 @@ public class ConfigService
                             remoteConfigs.Add(config);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        logger.LogDebug(ex, "Skipped invalid remote config entry {EntryName} from endpoint {EndpointUrl}",
+                            entry.Name, endpoint.Url);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[{endpoint.Url}] Failed to pull configs from endpoint: {ex.Message}");
+                logger.LogWarning(ex, "Failed to pull configs from remote endpoint {EndpointUrl}", endpoint.Url);
             }
         });
 
@@ -141,11 +166,76 @@ public class ConfigService
 
         await Task.WhenAll(tasks).ConfigureAwait(false);
 
-        lock (Configs)
+        if (!TryPublishRemoteConfigs(remoteConfigs, currentReloadVersion))
         {
-            Configs.AddRange(remoteConfigs);
+            return;
         }
 
+        logger.LogDebug("Loaded {RemoteConfigCount} remote config(s) for reload version {ReloadVersion}",
+            remoteConfigs.Count, currentReloadVersion);
         OnRemotesLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    private bool TryPublishLocalConfigs(List<Config> localConfigs, int currentReloadVersion)
+    {
+        lock (configsLock)
+        {
+            if (!IsLatestReload(currentReloadVersion))
+            {
+                return false;
+            }
+
+            Configs = localConfigs;
+            selectedConfig = null!;
+        }
+
+        logger.LogDebug("Published {LocalConfigCount} local config(s) for reload version {ReloadVersion}",
+            localConfigs.Count, currentReloadVersion);
+        OnConfigSelected?.Invoke(this, selectedConfig);
+        return true;
+    }
+
+    private bool TryPublishRemoteConfigs(List<Config> remoteConfigs, int currentReloadVersion)
+    {
+        lock (configsLock)
+        {
+            if (!IsLatestReload(currentReloadVersion))
+            {
+                return false;
+            }
+
+            var existingIds = Configs.Select(c => c.Id).ToHashSet();
+            foreach (var config in remoteConfigs)
+            {
+                if (existingIds.Add(config.Id))
+                {
+                    Configs.Add(config);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private bool IsLatestReload(int currentReloadVersion)
+        => Volatile.Read(ref reloadVersion) == currentReloadVersion;
+
+    /// <summary>
+    /// Saves a config through the configured repository.
+    /// </summary>
+    public Task SaveAsync(Config config)
+        => configRepo.SaveAsync(config);
+
+    /// <summary>
+    /// Saves the currently selected config.
+    /// </summary>
+    public Task SaveSelectedConfigAsync()
+    {
+        if (selectedConfig is null)
+        {
+            throw new InvalidOperationException("No config selected");
+        }
+
+        return configRepo.SaveAsync(selectedConfig);
     }
 }

@@ -160,6 +160,12 @@
                     <Style TargetType="{x:Type iconPacks:PackIconFontAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome}}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
                     </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFontAwesome5}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome5}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFontAwesome6}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome6}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
                     <Style TargetType="{x:Type iconPacks:PackIconForkAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconForkAwesome}}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
                     </Style>
@@ -267,6 +273,12 @@
                                 <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
                             </Style>
                             <Style TargetType="{x:Type iconPacks:PackIconFontAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFontAwesome5}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome5}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFontAwesome6}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome6}}">
                                 <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
                             </Style>
                             <Style TargetType="{x:Type iconPacks:PackIconForkAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconForkAwesome}}">

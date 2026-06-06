@@ -11,119 +11,119 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace OpenBullet2.Native.Views.Dialogs
+namespace OpenBullet2.Native.Views.Dialogs;
+
+/// <summary>
+/// Interaction logic for ImportProxiesDialog.xaml
+/// </summary>
+public partial class ImportProxiesDialog : Page
 {
-    /// <summary>
-    /// Interaction logic for ImportProxiesDialog.xaml
-    /// </summary>
-    public partial class ImportProxiesDialog : Page
+    private readonly object caller;
+
+    public ImportProxiesDialog(object caller)
     {
-        private readonly object caller;
+        this.caller = caller;
+        InitializeComponent();
 
-        public ImportProxiesDialog(object caller)
+        proxyTypeCombobox.ItemsSource = Enum.GetNames(typeof(ProxyType));
+        proxyTypeCombobox.SelectedIndex = 0;
+    }
+
+    private void SearchInFolder(object sender, MouseButtonEventArgs e)
+    {
+        var ofd = new OpenFileDialog
         {
-            this.caller = caller;
-            InitializeComponent();
+            Filter = "Proxy files | *.txt",
+            FilterIndex = 1
+        };
 
-            proxyTypeCombobox.ItemsSource = Enum.GetNames(typeof(ProxyType));
-            proxyTypeCombobox.SelectedIndex = 0;
-        }
+        ofd.ShowDialog();
+        locationTextbox.Text = ofd.FileName;
+    }
 
-        private void SearchInFolder(object sender, MouseButtonEventArgs e)
+    private async void Accept(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            var ofd = new OpenFileDialog
+            switch (modeTabControl.SelectedIndex)
             {
-                Filter = "Proxy files | *.txt",
-                FilterIndex = 1
-            };
+                // File
+                case 0:
+                    await ReturnLinesAsync(await File.ReadAllTextAsync(locationTextbox.Text).ConfigureAwait(false));
+                    break;
 
-            ofd.ShowDialog();
-            locationTextbox.Text = ofd.FileName;
-        }
+                // Paste
+                case 1:
+                    await ReturnLinesAsync(proxiesBox.Text);
+                    break;
 
-        private async void Accept(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                switch (modeTabControl.SelectedIndex)
-                {
-                    // File
-                    case 0:
-                        await ReturnLinesAsync(await File.ReadAllTextAsync(locationTextbox.Text).ConfigureAwait(false));
-                        break;
-
-                    // Paste
-                    case 1:
-                        await ReturnLinesAsync(proxiesBox.Text);
-                        break;
-
-                    // Remote
-                    case 2:
-                        await ImportFromUrlAsync(urlTextbox.Text);
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Alert.Exception(ex);
+                // Remote
+                case 2:
+                    await ImportFromUrlAsync(urlTextbox.Text);
+                    break;
             }
         }
-
-        private async Task ImportFromUrlAsync(string url)
+        catch (Exception ex)
         {
-            using var client = new HttpClient();
-            using var request = new HttpRequestMessage();
+            Alert.Exception(ex);
+        }
+    }
 
-            request.RequestUri = new Uri(url);
-            request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+    private async Task ImportFromUrlAsync(string url)
+    {
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage();
 
-            using var response = await client.SendAsync(request);
-            var text = await response.Content.ReadAsStringAsync();
-            await ReturnLinesAsync(text);
+        request.RequestUri = new Uri(url);
+        request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+
+        using var response = await client.SendAsync(request);
+        var text = await response.Content.ReadAsStringAsync();
+        await ReturnLinesAsync(text);
+    }
+
+    private async Task ReturnLinesAsync(string text)
+    {
+        var lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+        var dto = await Dispatcher.InvokeAsync(() => new DTOs.ProxiesForImportDto
+        {
+            Lines = lines,
+            DefaultType = proxyTypeCombobox.SelectedItem.AsEnum<ProxyType>(),
+            DefaultUsername = usernameTextbox.Text,
+            DefaultPassword = passwordTextbox.Text
+        });
+
+
+        if (caller is Proxies page)
+        {
+            await page.AddProxiesAsync(dto);
         }
 
-        private async Task ReturnLinesAsync(string text)
-        {
-            var lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        await Dispatcher.InvokeAsync(() => ((MainDialog)Parent).Close());
+    }
 
-            var dto = await Dispatcher.InvokeAsync(() => new DTOs.ProxiesForImportDto {
-                Lines = lines,
-                DefaultType = proxyTypeCombobox.SelectedItem.AsEnum<ProxyType>(),
-                DefaultUsername = usernameTextbox.Text,
-                DefaultPassword = passwordTextbox.Text
-            });
+    private void SelectFileMode(object sender, MouseButtonEventArgs e)
+    {
+        fileMode.Foreground = Brush.Get("ForegroundMenuSelected");
+        pasteMode.Foreground = Brush.Get("ForegroundMain");
+        remoteMode.Foreground = Brush.Get("ForegroundMain");
+        modeTabControl.SelectedIndex = 0;
+    }
 
+    private void SelectPasteMode(object sender, MouseButtonEventArgs e)
+    {
+        fileMode.Foreground = Brush.Get("ForegroundMain");
+        pasteMode.Foreground = Brush.Get("ForegroundMenuSelected");
+        remoteMode.Foreground = Brush.Get("ForegroundMain");
+        modeTabControl.SelectedIndex = 1;
+    }
 
-            if (caller is Proxies page)
-            {
-                page.AddProxies(dto);
-            }
-
-            await Dispatcher.InvokeAsync(() => ((MainDialog)Parent).Close());
-        }
-
-        private void SelectFileMode(object sender, MouseButtonEventArgs e)
-        {
-            fileMode.Foreground = Brush.Get("ForegroundMenuSelected");
-            pasteMode.Foreground = Brush.Get("ForegroundMain");
-            remoteMode.Foreground = Brush.Get("ForegroundMain");
-            modeTabControl.SelectedIndex = 0;
-        }
-
-        private void SelectPasteMode(object sender, MouseButtonEventArgs e)
-        {
-            fileMode.Foreground = Brush.Get("ForegroundMain");
-            pasteMode.Foreground = Brush.Get("ForegroundMenuSelected");
-            remoteMode.Foreground = Brush.Get("ForegroundMain");
-            modeTabControl.SelectedIndex = 1;
-        }
-
-        private void SelectRemoteMode(object sender, MouseButtonEventArgs e)
-        {
-            fileMode.Foreground = Brush.Get("ForegroundMain");
-            pasteMode.Foreground = Brush.Get("ForegroundMain");
-            remoteMode.Foreground = Brush.Get("ForegroundMenuSelected");
-            modeTabControl.SelectedIndex = 2;
-        }
+    private void SelectRemoteMode(object sender, MouseButtonEventArgs e)
+    {
+        fileMode.Foreground = Brush.Get("ForegroundMain");
+        pasteMode.Foreground = Brush.Get("ForegroundMain");
+        remoteMode.Foreground = Brush.Get("ForegroundMenuSelected");
+        modeTabControl.SelectedIndex = 2;
     }
 }

@@ -1,0 +1,517 @@
+<Page x:Class="OpenBullet2.Native.Views.Dialogs.EditTriggeredActionDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
+      mc:Ignorable="d"
+      d:DesignHeight="850"
+      d:DesignWidth="1000"
+      Title="EditTriggeredActionDialog">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Name" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Margin="5 0 0 0"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Monitor job" />
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="5 5 0 0"
+                          ItemsSource="{Binding AvailableJobs}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding SelectedJobId}" />
+
+                <CheckBox Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="5 10 0 0"
+                          Content="Enabled"
+                          IsChecked="{Binding IsActive}" />
+
+                <CheckBox Grid.Row="3"
+                          Grid.Column="1"
+                          Margin="5 5 0 0"
+                          Content="Can be repeated multiple times"
+                          IsChecked="{Binding IsRepeatable}" />
+
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="0 20 0 5"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           Text="Triggers" />
+
+                <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <ComboBox Width="240"
+                              ItemsSource="{Binding AvailableTriggerTypes}"
+                              SelectedItem="{Binding SelectedTriggerType}" />
+                    <Button Click="AddTrigger"
+                            Margin="10 0 0 0"
+                            Style="{StaticResource StyledPrimaryButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Add Trigger</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Grid.Row="6"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="0 5 0 5"
+                           Foreground="{DynamicResource ForegroundCustom}"
+                           Text="All triggers must be true at the same time" />
+
+                <ItemsControl Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Triggers}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type local:JobStatusTriggerEditorViewModel}">
+                            <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="The status of the job is" />
+                                        <ComboBox Width="180"
+                                                  Margin="10 0 0 0"
+                                                  ItemsSource="{Binding JobStatuses}"
+                                                  SelectedItem="{Binding Status}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Tag="{Binding}"
+                                            Click="RemoveTrigger"
+                                            Style="{StaticResource StyledDangerButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:SimpleTriggerEditorViewModel}">
+                            <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Description}" />
+                                    <Button Grid.Column="1"
+                                            Tag="{Binding}"
+                                            Click="RemoveTrigger"
+                                            Style="{StaticResource StyledDangerButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:IntComparisonTriggerEditorViewModel}">
+                            <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
+                                        <ComboBox Width="180"
+                                                  Margin="10 0 0 0"
+                                                  ItemsSource="{Binding NumComparisons}"
+                                                  SelectedItem="{Binding Comparison}" />
+                                        <mah:NumericUpDown Width="120"
+                                                           Margin="10 0 0 0"
+                                                           Minimum="0"
+                                                           Maximum="2147483647"
+                                                           Interval="1"
+                                                           Value="{Binding Amount}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Tag="{Binding}"
+                                            Click="RemoveTrigger"
+                                            Style="{StaticResource StyledDangerButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:FloatComparisonTriggerEditorViewModel}">
+                            <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
+                                        <ComboBox Width="180"
+                                                  Margin="10 0 0 0"
+                                                  ItemsSource="{Binding NumComparisons}"
+                                                  SelectedItem="{Binding Comparison}" />
+                                        <mah:NumericUpDown Width="140"
+                                                           Margin="10 0 0 0"
+                                                           Minimum="0"
+                                                           Maximum="1000000"
+                                                           Interval="0.1"
+                                                           Value="{Binding Amount}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Tag="{Binding}"
+                                            Click="RemoveTrigger"
+                                            Style="{StaticResource StyledDangerButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:TimeComparisonTriggerEditorViewModel}">
+                            <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
+                                        <ComboBox Width="180"
+                                                  Margin="10 0 0 0"
+                                                  ItemsSource="{Binding NumComparisons}"
+                                                  SelectedItem="{Binding Comparison}" />
+                                        <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Tag="{Binding}"
+                                            Click="RemoveTrigger"
+                                            Style="{StaticResource StyledDangerButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                </ItemsControl>
+
+                <TextBlock Grid.Row="8"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="0 20 0 5"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           Text="Actions" />
+
+                <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2">
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox Width="240"
+                                  ItemsSource="{Binding AvailableActionTypes}"
+                                  SelectedItem="{Binding SelectedActionType}" />
+                        <Button Click="AddAction"
+                                Margin="10 0 0 0"
+                                Style="{StaticResource StyledPrimaryButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                <TextBlock VerticalAlignment="Center" Margin="5 0">Add Action</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBlock Margin="0 5 0 5"
+                               Foreground="{DynamicResource ForegroundCustom}"
+                               Text="Actions are executed in order, one after the other" />
+
+                    <ItemsControl ItemsSource="{Binding Actions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:WaitActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Wait" />
+                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:JobAndTimeSpanActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
+                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                            <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="on job" />
+                                            <ComboBox Width="250"
+                                                      Margin="10 0 0 0"
+                                                      ItemsSource="{Binding AvailableJobs}"
+                                                      DisplayMemberPath="DisplayName"
+                                                      SelectedValuePath="Id"
+                                                      SelectedValue="{Binding JobId}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:JobTargetActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
+                                            <ComboBox Width="250"
+                                                      Margin="10 0 0 0"
+                                                      ItemsSource="{Binding AvailableJobs}"
+                                                      DisplayMemberPath="DisplayName"
+                                                      SelectedValuePath="Id"
+                                                      SelectedValue="{Binding JobId}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:DiscordWebhookActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="Message" />
+                                                <TextBox Width="520"
+                                                         Margin="10 0 0 0"
+                                                         Text="{Binding Message}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
+                                                <TextBlock VerticalAlignment="Center" Text="Webhook" />
+                                                <TextBox Width="520"
+                                                         Margin="10 0 0 0"
+                                                         Text="{Binding Webhook}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:TelegramBotActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="Message" />
+                                                <TextBox Width="520"
+                                                         Margin="10 0 0 0"
+                                                         Text="{Binding Message}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
+                                                <TextBlock VerticalAlignment="Center" Text="Chat ID" />
+                                                <TextBox Width="200"
+                                                         Margin="10 0 0 0"
+                                                         Text="{Binding ChatIdText}" />
+                                                <TextBlock VerticalAlignment="Center" Margin="16 0 0 0" Text="Token" />
+                                                <TextBox Width="304"
+                                                         Margin="10 0 0 0"
+                                                         Text="{Binding Token}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:SetBotsActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Set bots to" />
+                                            <mah:NumericUpDown Width="120"
+                                                               Margin="10 0 0 0"
+                                                               Minimum="1"
+                                                               Maximum="200"
+                                                               Interval="1"
+                                                               Value="{Binding Amount}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:SetSkipActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Set skip to" />
+                                            <mah:NumericUpDown Width="120"
+                                                               Margin="10 0 0 0"
+                                                               Minimum="0"
+                                                               Maximum="2147483647"
+                                                               Interval="1"
+                                                               Value="{Binding Skip}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type local:SimpleActionEditorViewModel}">
+                                <Border Margin="0 0 0 8" Padding="8" BorderThickness="1" BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Description}" />
+                                        <Button Grid.Column="1"
+                                                Tag="{Binding}"
+                                                Click="RemoveAction"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                </StackPanel>
+
+                <Button Grid.Row="10"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Click="Accept"
+                        Margin="0 15 0 0"
+                        Style="{StaticResource StyledSuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconOcticons Kind="Check" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Accept</TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</Page>

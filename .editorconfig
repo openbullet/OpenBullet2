@@ -135,7 +135,7 @@ dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion
-csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_style_namespace_declarations = file_scoped:warning
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
 csharp_style_expression_bodied_operators = false:silent
@@ -328,6 +328,9 @@ dotnet_naming_rule.private_fields_should_be_camel_case_leading_underscore.style 
 # S2094: Remove this empty class, write its code or make it an "interface"
 dotnet_diagnostic.s2094.severity = none
 
+# Prefer file-scoped namespaces when possible
+dotnet_diagnostic.IDE0161.severity = warning
+
 [*]
 charset = utf-8
 end_of_line = crlf
@@ -348,3 +351,7 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 tab_width = 4
+
+[**/CSnakes.SourceGeneration/**/*.cs]
+generated_code = true
+dotnet_diagnostic.CS1591.severity = none

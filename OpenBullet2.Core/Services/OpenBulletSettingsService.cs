@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using OpenBullet2.Core.Models.Settings;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +22,7 @@ public class OpenBulletSettingsService
     /// <summary>
     /// The actual settings. After modifying them, call the <see cref="SaveAsync"/> method to persist them.
     /// </summary>
-    public OpenBulletSettings Settings { get; private set; }
+    public OpenBulletSettings Settings { get; private set; } = new();
 
     public OpenBulletSettingsService(string baseFolder)
     {
@@ -37,7 +37,8 @@ public class OpenBulletSettingsService
 
         if (File.Exists(FileName))
         {
-            Settings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(FileName), jsonSettings);
+            Settings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(FileName), jsonSettings)
+                ?? new OpenBulletSettings();
         }
         else
         {
@@ -56,7 +57,7 @@ public class OpenBulletSettingsService
     /// </summary>
     public void Recreate() => Settings = new OpenBulletSettings
     {
-        GeneralSettings = new GeneralSettings { ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() } },
+        GeneralSettings = new GeneralSettings { ProxyCheckTargets = [new()] },
         RemoteSettings = new RemoteSettings(),
         SecuritySettings = new SecuritySettings().GenerateJwtKey().SetupAdminPassword("admin"),
         CustomizationSettings = new CustomizationSettings()

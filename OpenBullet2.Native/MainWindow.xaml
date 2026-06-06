@@ -17,7 +17,7 @@
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         TitleCharacterCasing="Normal"
-        Icon="/Images/logohq_square_padded.png">
+        Icon="pack://application:,,,/Images/logohq_square_padded.png">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -129,6 +129,44 @@
         </StackPanel>
         
         <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
+
+        <Border x:Name="toastContainer"
+                Grid.Row="1"
+                Grid.Column="1"
+                Panel.ZIndex="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0 20 20 0"
+                MaxWidth="360"
+                Padding="12"
+                Background="{DynamicResource BackgroundSecondary}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Opacity="0.96"
+                Visibility="Collapsed"
+                IsHitTestVisible="False">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <iconPacks:PackIconOcticons x:Name="toastIcon"
+                                            Width="18"
+                                            Height="18"
+                                            Margin="0 2 10 0" />
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock x:Name="toastTitle"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource ForegroundMain}" />
+                    <TextBlock x:Name="toastMessage"
+                               Margin="0 2 0 0"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource ForegroundMain}" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 
 </mah:MetroWindow>

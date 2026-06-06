@@ -1,58 +1,55 @@
-﻿using OpenBullet2.Native.Services;
+using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using System.Net.Http;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Dialogs
-{
-    /// <summary>
-    /// Interaction logic for ShowChangelogDialog.xaml
-    /// </summary>
-    public partial class ShowChangelogDialog : Page
-    {
-        private ChangelogViewModel vm;
+namespace OpenBullet2.Native.Views.Dialogs;
 
-        public ShowChangelogDialog()
+/// <summary>
+/// Interaction logic for ShowChangelogDialog.xaml
+/// </summary>
+public partial class ShowChangelogDialog : Page
+{
+    private readonly ChangelogViewModel vm;
+
+    public ShowChangelogDialog(UpdateService updateService)
+    {
+        InitializeComponent();
+        vm = new ChangelogViewModel(updateService);
+        DataContext = vm;
+    }
+
+    public class ChangelogViewModel : ViewModelBase
+    {
+        private string text = "Loading...";
+        public string Text
         {
-            InitializeComponent();
-            vm = new ChangelogViewModel();
-            DataContext = vm;
+            get => text;
+            set
+            {
+                text = value;
+                OnPropertyChanged();
+            }
         }
 
-        public class ChangelogViewModel : ViewModelBase
+        public ChangelogViewModel(UpdateService updateService)
         {
-            private string text = "Loading...";
-            public string Text
+            FetchChangelog(updateService);
+        }
+
+        private async void FetchChangelog(UpdateService updateService)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+
+            try
             {
-                get => text;
-                set
-                {
-                    text = value;
-                    OnPropertyChanged();
-                }
+                var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{updateService.CurrentVersion}.md");
+                Text = await response.Content.ReadAsStringAsync();
             }
-
-            public ChangelogViewModel()
+            catch
             {
-                FetchChangelog();
-            }
-
-            private async void FetchChangelog()
-            {
-                var updateService = SP.GetService<UpdateService>();
-
-                using var client = new HttpClient();
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-
-                try
-                {
-                    var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{updateService.CurrentVersion}.md");
-                    Text = await response.Content.ReadAsStringAsync();
-                }
-                catch
-                {
-                    Text = "Could not retrieve the changelog";
-                }
+                Text = "Could not retrieve the changelog";
             }
         }
     }

@@ -7,6 +7,7 @@
       xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="780"
+      KeyDown="PageKeyDown"
       Title="Readme">
 
     <Grid>

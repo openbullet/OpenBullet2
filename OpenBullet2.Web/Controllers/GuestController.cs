@@ -1,4 +1,3 @@
-﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -20,11 +20,11 @@ public class GuestController : ApiController
 {
     private readonly IGuestRepository _guestRepo;
     private readonly ILogger<GuestController> _logger;
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
-    
+
     /// <summary></summary>
-    public GuestController(IGuestRepository guestRepo, IMapper mapper,
+    public GuestController(IGuestRepository guestRepo, IObjectMapper mapper,
         OpenBulletSettingsService obSettingsService,
         ILogger<GuestController> logger)
     {
@@ -40,12 +40,13 @@ public class GuestController : ApiController
     [HttpPost]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> Create(CreateGuestDto dto,
-        [FromServices] IValidator<CreateGuestDto> validator)
+        [FromServices] IValidator<CreateGuestDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         var existing = await _guestRepo.GetAll()
-            .FirstOrDefaultAsync(g => g.Username == dto.Username);
+            .FirstOrDefaultAsync(g => g.Username == dto.Username, cancellationToken);
 
         if (existing is not null)
         {
@@ -61,7 +62,7 @@ public class GuestController : ApiController
         }
 
         var entity = _mapper.Map<GuestEntity>(dto);
-        await _guestRepo.AddAsync(entity);
+        await _guestRepo.AddAsync(entity, cancellationToken);
 
         _logger.LogInformation("Created a new guest user with username {Username}",
             dto.Username);
@@ -75,17 +76,18 @@ public class GuestController : ApiController
     [HttpPatch("info")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto,
-        [FromServices] IValidator<UpdateGuestInfoDto> validator)
+        [FromServices] IValidator<UpdateGuestInfoDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
-        var entity = await GetEntityAsync(dto.Id);
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
+        var entity = await GetEntityAsync(dto.Id, cancellationToken);
 
         // If the username was changed, make sure it's not taken
         if (entity.Username != dto.Username)
         {
             var existing = await _guestRepo.GetAll()
-                .FirstOrDefaultAsync(g => g.Username == dto.Username);
+                .FirstOrDefaultAsync(g => g.Username == dto.Username, cancellationToken);
 
             if (existing is not null)
             {
@@ -102,7 +104,7 @@ public class GuestController : ApiController
         }
 
         _mapper.Map(dto, entity);
-        await _guestRepo.UpdateAsync(entity);
+        await _guestRepo.UpdateAsync(entity, cancellationToken);
 
         _logger.LogInformation(
             "Updated the information of guest user with username {Username}",
@@ -117,14 +119,15 @@ public class GuestController : ApiController
     [HttpPatch("password")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> UpdatePassword(UpdateGuestPasswordDto dto,
-        [FromServices] IValidator<UpdateGuestPasswordDto> validator)
+        [FromServices] IValidator<UpdateGuestPasswordDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
-        var entity = await GetEntityAsync(dto.Id);
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
+        var entity = await GetEntityAsync(dto.Id, cancellationToken);
 
         _mapper.Map(dto, entity);
-        await _guestRepo.UpdateAsync(entity);
+        await _guestRepo.UpdateAsync(entity, cancellationToken);
 
         _logger.LogInformation(
             "Updated the password of guest user with username {Username}",
@@ -138,9 +141,9 @@ public class GuestController : ApiController
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<IEnumerable<GuestDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<GuestDto>>> GetAll(CancellationToken cancellationToken)
     {
-        var entities = await _guestRepo.GetAll().ToListAsync();
+        var entities = await _guestRepo.GetAll().ToListAsync(cancellationToken);
         return Ok(_mapper.Map<IEnumerable<GuestDto>>(entities));
     }
 
@@ -149,9 +152,9 @@ public class GuestController : ApiController
     /// </summary>
     [HttpGet]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<GuestDto>> Get(int id)
+    public async Task<ActionResult<GuestDto>> Get(int id, CancellationToken cancellationToken)
     {
-        var entity = await GetEntityAsync(id);
+        var entity = await GetEntityAsync(id, cancellationToken);
 
         return _mapper.Map<GuestDto>(entity);
     }
@@ -161,11 +164,11 @@ public class GuestController : ApiController
     /// </summary>
     [HttpDelete]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var entity = await GetEntityAsync(id);
+        var entity = await GetEntityAsync(id, cancellationToken);
 
-        await _guestRepo.DeleteAsync(entity);
+        await _guestRepo.DeleteAsync(entity, cancellationToken);
 
         _logger.LogInformation("Deleted the guest user with username {Username}",
             entity.Username);
@@ -173,9 +176,9 @@ public class GuestController : ApiController
         return Ok();
     }
 
-    private async Task<GuestEntity> GetEntityAsync(int id)
+    private async Task<GuestEntity> GetEntityAsync(int id, CancellationToken cancellationToken)
     {
-        var entity = await _guestRepo.GetAsync(id);
+        var entity = await _guestRepo.GetAsync(id, cancellationToken);
 
         if (entity is null)
         {

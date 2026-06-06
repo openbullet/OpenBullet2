@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Conditions.Comparisons;
 

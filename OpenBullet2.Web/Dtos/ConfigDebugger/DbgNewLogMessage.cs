@@ -1,4 +1,4 @@
-﻿using RuriLib.Logging;
+using RuriLib.Logging;
 
 namespace OpenBullet2.Web.Dtos.ConfigDebugger;
 
@@ -10,5 +10,5 @@ public class DbgNewLogMessage
     /// <summary>
     /// The new log message.
     /// </summary>
-    public BotLoggerEntry? NewMessage { get; set; }
+    public required BotLoggerEntry NewMessage { get; set; }
 }

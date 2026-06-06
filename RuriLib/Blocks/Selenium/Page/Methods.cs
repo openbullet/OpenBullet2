@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using RuriLib.Attributes;
 using RuriLib.Logging;
@@ -6,238 +6,352 @@ using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RuriLib.Exceptions;
 
-namespace RuriLib.Blocks.Selenium.Page
+namespace RuriLib.Blocks.Selenium.Page;
+
+/// <summary>
+/// Blocks for interacting with a Selenium browser page.
+/// </summary>
+[BlockCategory("Page", "Blocks for interacting with a selenium browser page", "#bdda57")]
+public static class Methods
 {
-    [BlockCategory("Page", "Blocks for interacting with a selenium browser page", "#bdda57")]
-    public static class Methods
+    /// <summary>
+    /// Navigates to a given URL in the current page.
+    /// </summary>
+    [Block("Navigates to a given URL in the current page", name = "Navigate To")]
+    public static void SeleniumNavigateTo(BotData data, string url = "https://example.com", int timeout = 30000)
     {
-        [Block("Navigates to a given URL in the current page", name = "Navigate To")]
-        public static void SeleniumNavigateTo(BotData data, string url = "https://example.com", int timeout = 30000)
-        {
-            data.Logger.LogHeader();
+        data.Logger.LogHeader();
 
-            var browser = GetBrowser(data);
-            browser.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(timeout);
-            browser.Navigate().GoToUrl(url);
-            UpdateSeleniumData(data);
+        var browser = GetBrowser(data);
+        browser.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(timeout);
+        browser.Navigate().GoToUrl(url);
+        UpdateSeleniumData(data);
 
-            data.Logger.Log($"Navigated to {url}", LogColors.JuneBud);
-        }
+        data.Logger.Log($"Navigated to {url}", LogColors.JuneBud);
+    }
 
-        [Block("Clears the page cookies", name = "Clear Cookies")]
-        public static void SeleniumClearCookies(BotData data)
-        {
-            data.Logger.LogHeader();
+    /// <summary>
+    /// Clears the page cookies.
+    /// </summary>
+    [Block("Clears the page cookies", name = "Clear Cookies")]
+    public static void SeleniumClearCookies(BotData data)
+    {
+        data.Logger.LogHeader();
 
-            GetBrowser(data).Manage().Cookies.DeleteAllCookies();
-            data.Logger.Log($"Deleted all cookies from the page", LogColors.JuneBud);
-        }
+        GetBrowser(data).Manage().Cookies.DeleteAllCookies();
+        data.Logger.Log($"Deleted all cookies from the page", LogColors.JuneBud);
+    }
 
-        [Block("Sends a key to the page", name = "Page Type")]
-        public static void SeleniumPageType(BotData data, string text)
-        {
-            data.Logger.LogHeader();
+    /// <summary>
+    /// Sends a key to the page.
+    /// </summary>
+    [Block("Sends a key to the page", name = "Page Type")]
+    public static void SeleniumPageType(BotData data, string text)
+    {
+        data.Logger.LogHeader();
 
-            new Actions(GetBrowser(data))
-                .SendKeys(text)
-                .Perform();
+        new Actions(GetBrowser(data))
+            .SendKeys(text)
+            .Perform();
 
-            UpdateSeleniumData(data);
+        UpdateSeleniumData(data);
 
-            data.Logger.Log($"Typed {text}", LogColors.JuneBud);
-        }
+        data.Logger.Log($"Typed {text}", LogColors.JuneBud);
+    }
 
-        [Block("Presses and releases a key in the browser page", name = "Key Press in Page",
-            extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
-        public static void SeleniumPageKeyPress(BotData data, string key)
-        {
-            data.Logger.LogHeader();
+    /// <summary>
+    /// Presses and releases a key in the browser page.
+    /// </summary>
+    [Block("Presses and releases a key in the browser page", name = "Key Press in Page",
+        extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
+    public static void SeleniumPageKeyPress(BotData data, string key)
+    {
+        data.Logger.LogHeader();
 
-            new Actions(GetBrowser(data))
-                .SendKeys(GetKeyCode(key))
-                .Perform();
+        new Actions(GetBrowser(data))
+            .SendKeys(GetKeyCode(key))
+            .Perform();
 
-            UpdateSeleniumData(data);
+        UpdateSeleniumData(data);
 
-            data.Logger.Log($"Pressed and released {key}", LogColors.JuneBud);
+        data.Logger.Log($"Pressed and released {key}", LogColors.JuneBud);
 
-            // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
-        }
+        // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
+    }
 
-        [Block("Presses a key in the browser page without releasing it", name = "Key Down in Page",
-            extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
-        public static void SeleniumPageKeyDown(BotData data, string key)
-        {
-            data.Logger.LogHeader();
+    /// <summary>
+    /// Clicks the page at the given coordinates.
+    /// </summary>
+    [Block("Clicks the page at the given coordinates", name = "Click at Coordinates")]
+    public static void SeleniumClickAtCoordinates(BotData data, int x, int y)
+    {
+        data.Logger.LogHeader();
 
-            new Actions(GetBrowser(data))
-                .KeyDown(GetKeyCode(key))
-                .Perform();
+        var browser = GetBrowser(data);
+        var clicked = browser.ExecuteScript(
+            """
+            const x = arguments[0];
+            const y = arguments[1];
+            const target = document.elementFromPoint(x, y);
 
-            UpdateSeleniumData(data);
-
-            // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
-        }
-
-        [Block("Releases a key that was previously pressed in the browser page", name = "Key Up in Page",
-            extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
-        public static void SeleniumKeyUp(BotData data, string key)
-        {
-            data.Logger.LogHeader();
-
-            new Actions(GetBrowser(data))
-                .KeyUp(GetKeyCode(key))
-                .Perform();
-
-            UpdateSeleniumData(data);
-
-            data.Logger.Log($"Released {key}", LogColors.JuneBud);
-
-            // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
-        }
-
-        [Block("Takes a screenshot of the entire browser page and saves it to an output file", name = "Screenshot Page")]
-        public static void SeleniumScreenshotPage(BotData data, string file)
-        {
-            data.Logger.LogHeader();
-
-            var screenshot = GetBrowser(data).GetScreenshot();
-            screenshot.SaveAsFile(file);
-
-            data.Logger.Log($"Took a screenshot of the page and saved it to {file}", LogColors.JuneBud);
-        }
-
-        [Block("Takes a screenshot of the entire browser page and converts it to a base64 string", name = "Screenshot Page Base64")]
-        public static string SeleniumScreenshotPageBase64(BotData data)
-        {
-            data.Logger.LogHeader();
-
-            var screenshot = GetBrowser(data).GetScreenshot();
-
-            data.Logger.Log("Took a screenshot of the page as base64", LogColors.JuneBud);
-            return screenshot.AsBase64EncodedString;
-        }
-
-        [Block("Scrolls the page by a given amount of pixels", name = "Scroll by")]
-        public static void SeleniumScrollBy(BotData data, int x, int y)
-        {
-            data.Logger.LogHeader();
-
-            new Actions(GetBrowser(data))
-                .MoveByOffset(x, y)
-                .Perform();
-
-            data.Logger.Log($"Scrolled by {x} px to the right and {y} px to the bottom", LogColors.JuneBud);
-        }
-
-        [Block("Gets the full DOM of the page", name = "Get DOM")]
-        public static string SeleniumGetDOM(BotData data)
-        {
-            data.Logger.LogHeader();
-
-            var dom = GetBrowser(data).FindElement(By.TagName("body")).GetAttribute("innerHTML");
-
-            data.Logger.Log("Got the full page DOM", LogColors.JuneBud);
-            data.Logger.Log(dom, LogColors.JuneBud, true);
-            return dom;
-        }
-
-        [Block("Gets the cookies for a given domain from the browser", name = "Get Cookies")]
-        public static Dictionary<string, string> SeleniumGetCookies(BotData data, string domain)
-        {
-            data.Logger.LogHeader();
-
-            var cookies = GetBrowser(data).Manage().Cookies.AllCookies
-                .Where(c => c.Domain.Contains(domain, StringComparison.OrdinalIgnoreCase))
-                .ToArray();
-
-            data.Logger.Log($"Got {cookies.Length} cookies for {domain}", LogColors.JuneBud);
-            return cookies.ToDictionary(c => c.Name, c => c.Value);
-        }
-
-        [Block("Sets the cookies for a given domain in the browser page", name = "Set Cookies")]
-        public static void SeleniumSetCookies(BotData data, string domain, Dictionary<string, string> cookies)
-        {
-            data.Logger.LogHeader();
-
-            var browser = GetBrowser(data);
-
-            foreach (var cookie in cookies)
-            {
-                browser.Manage().Cookies.AddCookie(new Cookie(cookie.Key, cookie.Value, domain, "/", DateTime.MaxValue));
+            if (!target) {
+                return false;
             }
 
-            data.Logger.Log($"Set {cookies.Count} cookies for {domain}", LogColors.JuneBud);
-        }
+            const eventInit = {
+                bubbles: true,
+                cancelable: true,
+                clientX: x,
+                clientY: y,
+                button: 0,
+                buttons: 1,
+                detail: 1,
+                view: window
+            };
 
-        [Block("Switches to the main frame of the page", name = "Switch to Main Frame")]
-        public static void SeleniumSwitchToMainFrame(BotData data)
+            target.dispatchEvent(new MouseEvent('mousedown', eventInit));
+            target.dispatchEvent(new MouseEvent('mouseup', eventInit));
+            target.dispatchEvent(new MouseEvent('click', eventInit));
+            return true;
+            """,
+            x,
+            y);
+
+        if (clicked is not bool success || !success)
         {
-            data.Logger.LogHeader();
-
-            GetBrowser(data).SwitchTo().DefaultContent();
-            data.Logger.Log($"Switched to main frame", LogColors.JuneBud);
+            throw new BlockExecutionException($"Could not click at coordinates ({x}, {y})");
         }
 
-        [Block("Switches to the alert frame of the page", name = "Switch to Alert")]
-        public static void SeleniumSwitchToAlert(BotData data)
+        data.Logger.Log($"Clicked at ({x}, {y})", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Presses a key in the browser page without releasing it.
+    /// </summary>
+    [Block("Presses a key in the browser page without releasing it", name = "Key Down in Page",
+        extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
+    public static void SeleniumPageKeyDown(BotData data, string key)
+    {
+        data.Logger.LogHeader();
+
+        new Actions(GetBrowser(data))
+            .KeyDown(GetKeyCode(key))
+            .Perform();
+
+        UpdateSeleniumData(data);
+
+        // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
+    }
+
+    /// <summary>
+    /// Releases a key that was previously pressed in the browser page.
+    /// </summary>
+    [Block("Releases a key that was previously pressed in the browser page", name = "Key Up in Page",
+        extraInfo = "Full list of keys here: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs")]
+    public static void SeleniumKeyUp(BotData data, string key)
+    {
+        data.Logger.LogHeader();
+
+        new Actions(GetBrowser(data))
+            .KeyUp(GetKeyCode(key))
+            .Perform();
+
+        UpdateSeleniumData(data);
+
+        data.Logger.Log($"Released {key}", LogColors.JuneBud);
+
+        // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
+    }
+
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and saves it to an output file.
+    /// </summary>
+    [Block("Takes a screenshot of the entire browser page and saves it to an output file", name = "Screenshot Page")]
+    public static void SeleniumScreenshotPage(BotData data, string file)
+    {
+        data.Logger.LogHeader();
+
+        var screenshot = GetBrowser(data).GetScreenshot();
+        screenshot.SaveAsFile(file);
+
+        data.Logger.Log($"Took a screenshot of the page and saved it to {file}", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Takes a screenshot of the entire browser page and converts it to a base64 string.
+    /// </summary>
+    [Block("Takes a screenshot of the entire browser page and converts it to a base64 string", name = "Screenshot Page Base64")]
+    public static string SeleniumScreenshotPageBase64(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var screenshot = GetBrowser(data).GetScreenshot();
+
+        data.Logger.Log("Took a screenshot of the page as base64", LogColors.JuneBud);
+        return screenshot.AsBase64EncodedString;
+    }
+
+    /// <summary>
+    /// Scrolls the page by a given amount of pixels.
+    /// </summary>
+    [Block("Scrolls the page by a given amount of pixels", name = "Scroll by")]
+    public static void SeleniumScrollBy(BotData data, int x, int y)
+    {
+        data.Logger.LogHeader();
+
+        new Actions(GetBrowser(data))
+            .MoveByOffset(x, y)
+            .Perform();
+
+        data.Logger.Log($"Scrolled by {x} px to the right and {y} px to the bottom", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Gets the current URL of the page.
+    /// </summary>
+    [Block("Gets the current URL of the page", name = "Get Current URL")]
+    public static string SeleniumGetCurrentUrl(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var currentUrl = GetBrowser(data).Url;
+        data.ADDRESS = currentUrl;
+
+        data.Logger.Log($"Current URL: {currentUrl}", LogColors.JuneBud);
+        return currentUrl;
+    }
+
+    /// <summary>
+    /// Gets the full DOM of the page.
+    /// </summary>
+    [Block("Gets the full DOM of the page", name = "Get DOM")]
+    public static string SeleniumGetDOM(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var dom = GetBrowser(data).FindElement(By.TagName("body")).GetAttribute("innerHTML");
+
+        data.Logger.Log("Got the full page DOM", LogColors.JuneBud);
+        data.Logger.Log(dom, LogColors.JuneBud, true);
+        return dom!;
+    }
+
+    /// <summary>
+    /// Gets the cookies for a given domain from the browser.
+    /// </summary>
+    [Block("Gets the cookies for a given domain from the browser", name = "Get Cookies")]
+    public static Dictionary<string, string> SeleniumGetCookies(BotData data, string domain)
+    {
+        data.Logger.LogHeader();
+
+        var cookies = GetBrowser(data).Manage().Cookies.AllCookies
+            .Where(c => c.Domain?.Contains(domain, StringComparison.OrdinalIgnoreCase) == true)
+            .ToArray();
+
+        data.Logger.Log($"Got {cookies.Length} cookies for {domain}", LogColors.JuneBud);
+        return cookies.ToDictionary(c => c.Name, c => c.Value);
+    }
+
+    /// <summary>
+    /// Sets the cookies for a given domain in the browser page.
+    /// </summary>
+    [Block("Sets the cookies for a given domain in the browser page", name = "Set Cookies")]
+    public static void SeleniumSetCookies(BotData data, string domain, Dictionary<string, string> cookies)
+    {
+        data.Logger.LogHeader();
+
+        var browser = GetBrowser(data);
+
+        foreach (var cookie in cookies)
         {
-            data.Logger.LogHeader();
-
-            GetBrowser(data).SwitchTo().Alert();
-            data.Logger.Log($"Switched to alert frame", LogColors.JuneBud);
+            browser.Manage().Cookies.AddCookie(new Cookie(cookie.Key, cookie.Value, domain, "/", DateTime.MaxValue));
         }
 
-        [Block("Switches to the parent frame", name = "Switch to Parent Frame")]
-        public static void SeleniumSwitchToParent(BotData data)
+        data.Logger.Log($"Set {cookies.Count} cookies for {domain}", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Switches to the main frame of the page.
+    /// </summary>
+    [Block("Switches to the main frame of the page", name = "Switch to Main Frame")]
+    public static void SeleniumSwitchToMainFrame(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        GetBrowser(data).SwitchTo().DefaultContent();
+        data.Logger.Log($"Switched to main frame", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Switches to the alert frame of the page.
+    /// </summary>
+    [Block("Switches to the alert frame of the page", name = "Switch to Alert")]
+    public static void SeleniumSwitchToAlert(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        GetBrowser(data).SwitchTo().Alert();
+        data.Logger.Log($"Switched to alert frame", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Switches to the parent frame.
+    /// </summary>
+    [Block("Switches to the parent frame", name = "Switch to Parent Frame")]
+    public static void SeleniumSwitchToParent(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        GetBrowser(data).SwitchTo().ParentFrame();
+        data.Logger.Log($"Switched to parent frame", LogColors.JuneBud);
+    }
+
+    /// <summary>
+    /// Evaluates a js expression in the current browser context and returns a json response.
+    /// </summary>
+    [Block("Evaluates a js expression in the current browser context and returns a json response", name = "Execute JS")]
+    public static string SeleniumExecuteJs(BotData data, [MultiLine] string expression)
+    {
+        data.Logger.LogHeader();
+
+        var scriptResult = GetBrowser(data).ExecuteScript(expression);
+        var json = scriptResult?.ToString() ?? "undefined";
+        UpdateSeleniumData(data);
+
+        data.Logger.Log($"Evaluated {expression}", LogColors.JuneBud);
+        data.Logger.Log($"Got result: {json}", LogColors.JuneBud);
+
+        return json;
+    }
+
+    private static WebDriver GetBrowser(BotData data)
+        => data.TryGetObject<WebDriver>("selenium") ?? throw new BlockExecutionException("The browser is not open!");
+
+    private static void UpdateSeleniumData(BotData data)
+    {
+        var browser = data.TryGetObject<WebDriver>("selenium");
+
+        if (browser == null)
         {
-            data.Logger.LogHeader();
-
-            GetBrowser(data).SwitchTo().ParentFrame();
-            data.Logger.Log($"Switched to parent frame", LogColors.JuneBud);
+            return;
         }
 
-        [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
-        public static string SeleniumExecuteJs(BotData data, [MultiLine] string expression)
+        data.ADDRESS = browser.Url;
+        data.SOURCE = browser.PageSource;
+    }
+
+    private static string GetKeyCode(string key)
+    {
+        var keyFields = typeof(Keys).GetFields();
+        var matchingField = keyFields.FirstOrDefault(f => f.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+
+        if (matchingField is null)
         {
-            data.Logger.LogHeader();
-
-            var scriptResult = GetBrowser(data).ExecuteScript(expression);
-            var json = scriptResult?.ToString() ?? "undefined";
-            UpdateSeleniumData(data);
-
-            data.Logger.Log($"Evaluated {expression}", LogColors.JuneBud);
-            data.Logger.Log($"Got result: {json}", LogColors.JuneBud);
-
-            return json;
+            throw new BlockExecutionException($"Invalid key name: {key}");
         }
 
-        private static WebDriver GetBrowser(BotData data)
-                => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
-
-        private static void UpdateSeleniumData(BotData data)
-        {
-            var browser = data.TryGetObject<WebDriver>("selenium");
-
-            if (browser != null)
-            {
-                data.ADDRESS = browser.Url;
-                data.SOURCE = browser.PageSource;
-            }
-        }
-
-        private static string GetKeyCode(string key)
-        {
-            var keyFields = typeof(Keys).GetFields();
-            var matchingField = keyFields.FirstOrDefault(f => f.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-
-            if (matchingField == null)
-            {
-                throw new Exception($"Invalid key name: {key}");
-            }
-
-            return matchingField.GetValue(null).ToString();
-        }
+        return matchingField.GetValue(null)!.ToString()!;
     }
 }

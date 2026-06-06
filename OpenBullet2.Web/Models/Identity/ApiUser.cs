@@ -1,5 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OpenBullet2.Web.Models.Identity;
 
@@ -27,14 +29,40 @@ public class ApiUser
     /// Builds an <see cref="ApiUser" /> from a jwt.
     /// </summary>
     public static ApiUser FromToken(JwtSecurityToken jwt)
-        => new() {
+        => new()
+        {
             Id = int.Parse(jwt.Claims.FirstOrDefault(
-                c => c.Type == ClaimTypes.NameIdentifier || c.Type == "nameidentifier")?.Value ?? "-1"),
-            Username = jwt.Claims.FirstOrDefault(
-                c => c.Type == ClaimTypes.Name || c.Type == "name")?.Value,
+                c => c.Type == ClaimTypes.NameIdentifier
+                    || c.Type == "nameidentifier"
+                    || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub
+                    || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.NameId)?.Value ?? "-1"),
+            Username = GetUsername(jwt),
             Role = Enum.Parse<UserRole>(jwt.Claims.FirstOrDefault(
-                c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value ?? "Anonymous")
+                c => c.Type == ClaimTypes.Role
+                    || c.Type == "role"
+                    || c.Type == "roles")?.Value ?? "Anonymous")
         };
+
+    private static string? GetUsername(JwtSecurityToken jwt)
+    {
+        if (!string.IsNullOrEmpty(jwt.RawPayload))
+        {
+            var payloadJson = Base64UrlEncoder.Decode(jwt.RawPayload);
+            using var json = JsonDocument.Parse(payloadJson);
+
+            if (json.RootElement.TryGetProperty(
+                System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, out var nameProperty))
+            {
+                return nameProperty.GetString();
+            }
+        }
+
+        return jwt.Claims.FirstOrDefault(
+            c => c.Type == ClaimTypes.Name
+                || c.Type == "name"
+                || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name
+                || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName)?.Value;
+    }
 }
 
 /// <summary>

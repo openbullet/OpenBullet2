@@ -1,8 +1,17 @@
-﻿namespace RuriLib.Models.Conditions.Comparisons
+namespace RuriLib.Models.Conditions.Comparisons;
+
+/// <summary>
+/// Logical operators used to combine multiple conditions.
+/// </summary>
+public enum CompositeConditionOperator
 {
-    public enum CompositeConditionOperator
-    {
-        OR,
-        AND
-    }
+    /// <summary>
+    /// At least one condition must match.
+    /// </summary>
+    OR,
+
+    /// <summary>
+    /// All conditions must match.
+    /// </summary>
+    AND
 }

@@ -1,18 +1,24 @@
 @import "../../styles/variables.scss";
 
 $sidebarWidth: 230px;
+$sidebarHandleWidth: 26px;
 
 .wrapper {
     display: flex;
     min-height: 100vh;
+    position: relative;
 
     .sidebar {
         background-color: var(--bg-secondary);
         width: $sidebarWidth;
-        min-width: $sidebarWidth;
         overflow-y: auto;
         overflow-x: hidden;
-        flex: 0 1 $sidebarWidth;
+        flex: 0 0 $sidebarWidth;
+        transition: margin-left 0.2s ease;
+
+        &.sidebar-hidden {
+            margin-left: -$sidebarWidth;
+        }
     
         .sidebar-logo {
             padding: 40px 50px 0px 50px;
@@ -62,12 +68,40 @@ $sidebarWidth: 230px;
         }
     }
 
+    .sidebar-handle {
+        position: absolute;
+        top: 32px;
+        left: $sidebarWidth;
+        transform: translateX(-50%);
+        width: $sidebarHandleWidth;
+        height: 48px;
+        padding: 0;
+        border-radius: 999px;
+        background-color: var(--bg-secondary);
+        color: var(--fg-inactive);
+        line-height: 48px;
+        text-align: center;
+        z-index: 2;
+        transition: left 0.2s ease, color 0.2s ease;
+
+        &:hover {
+            color: var(--fg-primary);
+            background-color: var(--bg-tertiary);
+        }
+    }
+
     .content {
         background-color: var(--bg-primary);
         color: var(--fg-primary);
         flex: 1 1 auto;
+        min-width: 0;
         padding: 30px 50px;
-        width: calc(100vw - $sidebarWidth);
         overflow-x: hidden;
+    }
+
+    &.sidebar-collapsed {
+        .sidebar-handle {
+            left: 0;
+        }
     }
 }

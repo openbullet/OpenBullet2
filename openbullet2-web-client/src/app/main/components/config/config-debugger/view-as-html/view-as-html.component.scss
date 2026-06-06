@@ -1,3 +1,12 @@
 code {
     color: unset !important;
 }
+
+.source-container {
+    max-height: 70vh;
+    overflow: auto;
+}
+
+.source-container pre {
+    margin-bottom: 0;
+}

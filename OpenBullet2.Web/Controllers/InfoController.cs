@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -18,25 +18,26 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Get info about the server.
 /// </summary>
+/// <remarks></remarks>
 [TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
-public class InfoController : ApiController
+public class InfoController(IAnnouncementService announcementService,
+    IChangelogService changelogService, IUpdateService updateService,
+    JobManagerService jobManager, IProxyRepository proxyRepo,
+    IWordlistRepository wordlistRepo, IHitRepository hitRepo,
+    IGuestRepository guestRepo, ConfigService configService,
+    PluginRepository pluginRepository) : ApiController
 {
-    private readonly IAnnouncementService _announcementService;
-    private readonly HttpClient _httpClient;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IUpdateService _updateService;
-
-    /// <summary></summary>
-    public InfoController(IAnnouncementService announcementService,
-        HttpClient httpClient,
-        IUpdateService updateService, IServiceProvider serviceProvider)
-    {
-        _announcementService = announcementService;
-        _httpClient = httpClient;
-        _updateService = updateService;
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IAnnouncementService _announcementService = announcementService;
+    private readonly IChangelogService _changelogService = changelogService;
+    private readonly ConfigService _configService = configService;
+    private readonly IGuestRepository _guestRepo = guestRepo;
+    private readonly IHitRepository _hitRepo = hitRepo;
+    private readonly JobManagerService _jobManager = jobManager;
+    private readonly PluginRepository _pluginRepository = pluginRepository;
+    private readonly IProxyRepository _proxyRepo = proxyRepo;
+    private readonly IUpdateService _updateService = updateService;
+    private readonly IWordlistRepository _wordlistRepo = wordlistRepo;
 
     /// <summary>
     /// Get information about the server and the environment.
@@ -61,7 +62,8 @@ public class InfoController : ApiController
             ip = ip.MapToIPv4();
         }
 
-        return new ServerInfoDto {
+        return new ServerInfoDto
+        {
             LocalUtcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now),
             StartTime = Globals.StartTime,
             OperatingSystem = GetOperatingSystem(),
@@ -90,7 +92,7 @@ public class InfoController : ApiController
     /// </summary>
     [HttpGet("changelog")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ChangelogDto>> GetChangelog(string? v)
+    public async Task<ActionResult<ChangelogDto>> GetChangelog(string? v, CancellationToken cancellationToken)
     {
         // NOTE: We cannot call the query param "version" otherwise ASP.NET core
         // will set its value to the API version instead of what was passed :|
@@ -101,18 +103,7 @@ public class InfoController : ApiController
 
         try
         {
-            // The changelog is only present for stable builds in the master branch
-            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
-            using var response = await _httpClient.GetAsync(url);
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new ResourceNotFoundException(
-                    ErrorCode.RemoteResourceNotFound,
-                    $"Changelog for version {v}", url);
-            }
-
-            markdown = await response.Content.ReadAsStringAsync();
+            markdown = await _changelogService.FetchChangelogAsync(v, cancellationToken);
         }
         catch (ResourceNotFoundException)
         {
@@ -132,7 +123,8 @@ public class InfoController : ApiController
     /// </summary>
     [HttpGet("update")]
     [MapToApiVersion("1.0")]
-    public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto {
+    public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto
+    {
         CurrentVersion = _updateService.CurrentVersion.ToString(),
         RemoteVersion = _updateService.RemoteVersion.ToString(),
         IsUpdateAvailable = _updateService.IsUpdateAvailable,
@@ -145,52 +137,47 @@ public class InfoController : ApiController
     /// </summary>
     [HttpGet("collection")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<CollectionInfoDto>> GetCollectionInfo()
+    public async Task<ActionResult<CollectionInfoDto>> GetCollectionInfo(CancellationToken cancellationToken)
     {
         var apiUser = HttpContext.GetApiUser();
-        
+
         var jobCount = apiUser.Role is UserRole.Admin
-            ? _serviceProvider.GetRequiredService<JobManagerService>()
-                .Jobs.Count()
-            : _serviceProvider.GetRequiredService<JobManagerService>()
-                .Jobs.Count(j => j.OwnerId == apiUser.Id);
+            ? _jobManager.Jobs.Count()
+            : _jobManager.Jobs.Count(j => j.OwnerId == apiUser.Id);
 
         var proxyCount = apiUser.Role is UserRole.Admin
-            ? await _serviceProvider.GetRequiredService<IProxyRepository>()
-                .GetAll().CountAsync()
-            : await _serviceProvider.GetRequiredService<IProxyRepository>()
-                .GetAll().CountAsync(p => p.Group.Owner.Id == apiUser.Id);
+            ? await _proxyRepo.GetAll().CountAsync(cancellationToken)
+            : await _proxyRepo.GetAll().CountAsync(p => p.Group != null
+                    && p.Group.Owner != null
+                    && p.Group.Owner.Id == apiUser.Id, cancellationToken);
 
         var wordlistCount = apiUser.Role is UserRole.Admin
-            ? await _serviceProvider.GetRequiredService<IWordlistRepository>()
-                .GetAll().CountAsync()
-            : await _serviceProvider.GetRequiredService<IWordlistRepository>()
-                .GetAll().CountAsync(w => w.Owner.Id == apiUser.Id);
+            ? await _wordlistRepo.GetAll().CountAsync(cancellationToken)
+            : await _wordlistRepo.GetAll()
+                .CountAsync(w => w.Owner != null && w.Owner.Id == apiUser.Id, cancellationToken);
 
         var wordlistLines = apiUser.Role is UserRole.Admin
-            ? await _serviceProvider.GetRequiredService<IWordlistRepository>()
-                .GetAll().SumAsync(w => (long)w.Total)
-            : await _serviceProvider.GetRequiredService<IWordlistRepository>()
-                .GetAll().Where(w => w.Owner.Id == apiUser.Id).SumAsync(w => (long)w.Total);
+            ? await _wordlistRepo.GetAll().SumAsync(w => w.Total, cancellationToken)
+            : await _wordlistRepo.GetAll()
+                .Where(w => w.Owner != null && w.Owner.Id == apiUser.Id)
+                .SumAsync(w => w.Total, cancellationToken);
 
         var hitCount = apiUser.Role is UserRole.Admin
-            ? await _serviceProvider.GetRequiredService<IHitRepository>()
-                .GetAll().CountAsync()
-            : await _serviceProvider.GetRequiredService<IHitRepository>()
-                .GetAll().CountAsync(h => h.OwnerId == apiUser.Id);
+            ? await _hitRepo.GetAll().CountAsync(cancellationToken)
+            : await _hitRepo.GetAll().CountAsync(h => h.OwnerId == apiUser.Id, cancellationToken);
 
-        var configCount = _serviceProvider
-            .GetRequiredService<ConfigService>().Configs.Count;
+        var configCount = _configService.Configs.Count;
 
-        var guestCount = apiUser.Role is UserRole.Admin 
-            ? await _serviceProvider.GetRequiredService<IGuestRepository>().GetAll().CountAsync()
+        var guestCount = apiUser.Role is UserRole.Admin
+            ? await _guestRepo.GetAll().CountAsync(cancellationToken)
             : 1; // The guest shouldn't see the total number of guests
 
         var pluginCount = apiUser.Role is UserRole.Admin
-            ? _serviceProvider.GetRequiredService<PluginRepository>().GetPlugins().Count()
+            ? _pluginRepository.GetPlugins().Count()
             : 0; // The guest shouldn't see the total number of plugins
 
-        return new CollectionInfoDto {
+        return new CollectionInfoDto
+        {
             JobsCount = jobCount,
             ProxiesCount = proxyCount,
             WordlistsCount = wordlistCount,

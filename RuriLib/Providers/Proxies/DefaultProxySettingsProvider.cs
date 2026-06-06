@@ -1,49 +1,72 @@
-﻿using RuriLib.Models.Settings;
+using RuriLib.Models.Settings;
 using RuriLib.Services;
 using System;
 using System.Linq;
 
-namespace RuriLib.Providers.Proxies
+namespace RuriLib.Providers.Proxies;
+
+/// <summary>
+/// Default implementation of <see cref="IProxySettingsProvider"/>.
+/// </summary>
+public class DefaultProxySettingsProvider : IProxySettingsProvider
 {
-    public class DefaultProxySettingsProvider : IProxySettingsProvider
+    private readonly ProxySettings settings;
+
+    /// <summary>
+    /// Creates a provider from the persisted RuriLib settings.
+    /// </summary>
+    public DefaultProxySettingsProvider(RuriLibSettingsService settings)
     {
-        private readonly ProxySettings settings;
+        ArgumentNullException.ThrowIfNull(settings);
 
-        public DefaultProxySettingsProvider(RuriLibSettingsService settings)
+        this.settings = settings.RuriLibSettings.ProxySettings;
+    }
+
+    /// <summary>
+    /// Gets the proxy connection timeout.
+    /// </summary>
+    public TimeSpan ConnectTimeout => TimeSpan.FromMilliseconds(settings.ProxyConnectTimeoutMilliseconds);
+
+    /// <summary>
+    /// Gets the proxy read/write timeout.
+    /// </summary>
+    public TimeSpan ReadWriteTimeout => TimeSpan.FromMilliseconds(settings.ProxyReadWriteTimeoutMilliseconds);
+
+    /// <summary>
+    /// Checks whether the given text contains a global ban key.
+    /// </summary>
+    public bool ContainsBanKey(string text, out string matchedKey, bool caseSensitive = false)
+    {
+        if (string.IsNullOrWhiteSpace(text))
         {
-            this.settings = settings.RuriLibSettings.ProxySettings;
+            matchedKey = string.Empty;
+            return false;
         }
 
-        public TimeSpan ConnectTimeout => TimeSpan.FromMilliseconds(settings.ProxyConnectTimeoutMilliseconds);
+        matchedKey = settings.GlobalBanKeys
+            .FirstOrDefault(k => !string.IsNullOrEmpty(k) && text.Contains(k,
+                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase))
+            ?? string.Empty;
 
-        public TimeSpan ReadWriteTimeout => TimeSpan.FromMilliseconds(settings.ProxyReadWriteTimeoutMilliseconds);
+        return matchedKey.Length != 0;
+    }
 
-        public bool ContainsBanKey(string text, out string matchedKey, bool caseSensitive = false)
+    /// <summary>
+    /// Checks whether the given text contains a global retry key.
+    /// </summary>
+    public bool ContainsRetryKey(string text, out string matchedKey, bool caseSensitive = false)
+    {
+        if (string.IsNullOrWhiteSpace(text))
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                matchedKey = null;
-                return false;
-            }
-
-            matchedKey = settings.GlobalBanKeys.Where(k => !string.IsNullOrEmpty(k)).FirstOrDefault(k => text.Contains(k,
-                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
-
-            return matchedKey != null;
+            matchedKey = string.Empty;
+            return false;
         }
 
-        public bool ContainsRetryKey(string text, out string matchedKey, bool caseSensitive = false)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                matchedKey = null;
-                return false;
-            }
+        matchedKey = settings.GlobalRetryKeys
+            .FirstOrDefault(k => !string.IsNullOrEmpty(k) && text.Contains(k,
+                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase))
+            ?? string.Empty;
 
-            matchedKey = settings.GlobalRetryKeys.Where(k => !string.IsNullOrEmpty(k)).FirstOrDefault(k => text.Contains(k,
-                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
-
-            return matchedKey != null;
-        }
+        return matchedKey.Length != 0;
     }
 }

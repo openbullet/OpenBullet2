@@ -1,0 +1,29 @@
+<Page x:Class="OpenBullet2.Native.Views.Dialogs.DeleteLowQualityProxiesDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="180" d:DesignWidth="260"
+      Title="Delete low-quality proxies">
+
+    <Grid Width="260">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="10">
+            <CheckBox x:Name="deleteUnknownCheckbox" IsChecked="True" Content="Unknown" Margin="0 0 0 8" />
+            <CheckBox x:Name="deleteTransparentCheckbox" IsChecked="True" Content="Transparent" Margin="0 0 0 8" />
+            <CheckBox x:Name="deleteAnonymousCheckbox" IsChecked="True" Content="Anonymous" />
+        </StackPanel>
+
+        <Button Grid.Row="1"
+                x:Name="acceptButton"
+                Content="DELETE"
+                Click="Accept"
+                Style="{StaticResource StyledDangerButton}"
+                Margin="10"/>
+    </Grid>
+</Page>

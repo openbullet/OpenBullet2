@@ -1,5 +1,4 @@
 using System.Collections.Frozen;
-using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Repositories;
@@ -10,6 +9,7 @@ using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
@@ -18,6 +18,8 @@ using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Data;
+using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Debugger;
 using RuriLib.Models.Trees;
 using RuriLib.Services;
@@ -34,8 +36,9 @@ public class ConfigController : ApiController
     private readonly IConfigRepository _configRepo;
     private readonly ConfigService _configService;
     private readonly ILogger<ConfigController> _logger;
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
+    private readonly RuriLibSettingsService _rlSettingsService;
     private readonly LoliCodeAutocompletionService _loliCodeAutocompletionService;
     private readonly ConfigDebuggerService _configDebuggerService;
     private readonly PluginRepository _pluginRepository;
@@ -44,8 +47,9 @@ public class ConfigController : ApiController
     /// <summary></summary>
     public ConfigController(IConfigRepository configRepo,
         PluginRepository pluginRepository, HttpClient httpClient,
-        ConfigService configService, IMapper mapper,
+        ConfigService configService, IObjectMapper mapper,
         OpenBulletSettingsService obSettingsService,
+        RuriLibSettingsService rlSettingsService,
         LoliCodeAutocompletionService loliCodeAutocompletionService,
         ConfigDebuggerService configDebuggerService,
         ILogger<ConfigController> logger)
@@ -56,6 +60,7 @@ public class ConfigController : ApiController
         _configService = configService;
         _mapper = mapper;
         _obSettingsService = obSettingsService;
+        _rlSettingsService = rlSettingsService;
         _loliCodeAutocompletionService = loliCodeAutocompletionService;
         _configDebuggerService = configDebuggerService;
         _logger = logger;
@@ -67,11 +72,11 @@ public class ConfigController : ApiController
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<IEnumerable<ConfigInfoDto>>> GetAll(
-        bool reload = false)
+        bool reload = false, CancellationToken cancellationToken = default)
     {
         if (reload)
         {
-            await _configService.ReloadConfigsAsync();
+            await _configService.ReloadConfigsAsync(cancellationToken);
         }
 
         var configs = _configService.Configs
@@ -134,7 +139,7 @@ public class ConfigController : ApiController
     public ActionResult<ConfigDto> GetConfig(string id)
     {
         var config = GetConfigFromService(id);
-        
+
         // This is just a safety check for low-skill users
         // that might try to get the data of a remote config
         // through the API, but if they put enough effort they can
@@ -145,12 +150,12 @@ public class ConfigController : ApiController
         {
             _logger.LogWarning(
                 "Attempted to get a remote config with id {Id}", id);
-            
+
             throw new ActionNotAllowedException(
                 ErrorCode.ActionNotAllowedForRemoteConfig,
                 "You cannot get a remote config's data");
         }
-        
+
         return _mapper.Map<ConfigDto>(config);
     }
 
@@ -161,10 +166,11 @@ public class ConfigController : ApiController
     [HttpPut]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConfigDto>> UpdateConfig(UpdateConfigDto dto,
-        [FromServices] IValidator<UpdateConfigDto> validator)
+        [FromServices] IValidator<UpdateConfigDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         // Make sure a config with this id exists
         var config = GetConfigFromService(dto.Id);
 
@@ -186,7 +192,9 @@ public class ConfigController : ApiController
         if (config.Metadata.Plugins is not null)
         {
             var missingPlugins = config.Metadata.Plugins.Where(
-                p => !loadedPlugins.Any(lp => lp.FullName == p)).ToList();
+                p => !string.IsNullOrWhiteSpace(p) && !loadedPlugins.Any(lp => lp.FullName == p))
+                .Distinct()
+                .ToList();
 
             if (missingPlugins.Any())
             {
@@ -340,7 +348,7 @@ public class ConfigController : ApiController
     [HttpPost("upload/many")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Upload(
-        IFormFileCollection files)
+        IFormFileCollection files, CancellationToken cancellationToken)
     {
         foreach (var file in files)
         {
@@ -349,7 +357,7 @@ public class ConfigController : ApiController
         }
 
         // Reload from disk to get the new configs
-        await _configService.ReloadConfigsAsync();
+        await _configService.ReloadConfigsAsync(cancellationToken);
 
         _logger.LogInformation("Uploaded {FileCount} configs", files.Count);
 
@@ -399,7 +407,7 @@ public class ConfigController : ApiController
     public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
         ConvertStackToLoliCodeDto dto)
     {
-        var mapped = dto.Stack.MapStack(_mapper);
+        var mapped = dto.Stack.MapStack();
         var converted = Stack2LoliTranspiler.Transpile(mapped);
 
         return new ConvertedLoliCodeDto { LoliCode = converted };
@@ -468,7 +476,7 @@ public class ConfigController : ApiController
 
         return dto;
     }
-    
+
     /// <summary>
     /// Get the block snippets.
     /// </summary>
@@ -477,7 +485,7 @@ public class ConfigController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<FrozenDictionary<string, string>> GetBlockSnippets()
         => _loliCodeAutocompletionService.BlockSnippets;
-    
+
     /// <summary>
     /// Debug a config.
     /// </summary>
@@ -494,22 +502,23 @@ public class ConfigController : ApiController
             UseProxy = !string.IsNullOrWhiteSpace(dto.TestProxy),
             WordlistType = dto.WordlistType
         };
-        
+
         ErrorMessage? error = null;
 
         using var debugger = _configDebuggerService.Create(dto.ConfigId, options);
-        
+
         try
         {
             await debugger.Run();
         }
         catch (Exception ex)
         {
-            error = new ErrorMessage {
+            error = new ErrorMessage
+            {
                 Type = ex.GetType().Name, Message = ex.Message, StackTrace = ex.ToString()
             };
         }
-        
+
         return new DebugConfigResultDto
         {
             Log = debugger.Logger.Entries.ToList(),
@@ -517,24 +526,119 @@ public class ConfigController : ApiController
             Error = error
         };
     }
-    
+
+    /// <summary>
+    /// Test a data line against a wordlist type and a set of data rules.
+    /// </summary>
+    [TypeFilter<AdminFilter>]
+    [HttpPost("test-data-rules")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<TestDataRulesResultDto> TestDataRules(TestDataRulesDto dto)
+    {
+        var wordlistType = _rlSettingsService.Environment.WordlistTypes
+            .FirstOrDefault(w => w.Name == dto.WordlistType)
+            ?? throw new ApiException(ErrorCode.WordlistNotFound,
+                $"Wordlist type {dto.WordlistType} was not found");
+
+        var dataLine = new DataLine(dto.TestData, wordlistType);
+        var slices = dataLine.GetVariables()
+            .Select(v => new TestDataRuleSliceDto
+            {
+                Name = v.Name,
+                Value = v.AsString()
+            })
+            .ToList();
+
+        var rules = dto.DataRules.Simple
+            .Select(rule => (DataRule)_mapper.Map<SimpleDataRule>(rule))
+            .Concat(dto.DataRules.Regex.Select(rule => (DataRule)_mapper.Map<RegexDataRule>(rule)))
+            .ToList();
+
+        var results = new List<TestDataRuleResultDto>();
+
+        foreach (var rule in rules)
+        {
+            var slice = slices.FirstOrDefault(v => v.Name == rule.SliceName);
+
+            if (slice is null)
+            {
+                results.Add(new TestDataRuleResultDto
+                {
+                    Text = $"Invalid slice name: {rule.SliceName}",
+                    Passed = false
+                });
+                continue;
+            }
+
+            try
+            {
+                results.Add(new TestDataRuleResultDto
+                {
+                    Text = GetRuleText(rule),
+                    Passed = rule.IsSatisfied(slice.Value)
+                });
+            }
+            catch (Exception ex)
+            {
+                results.Add(new TestDataRuleResultDto
+                {
+                    Text = ex.Message,
+                    Passed = false
+                });
+            }
+        }
+
+        return new TestDataRulesResultDto
+        {
+            WordlistType = dto.WordlistType,
+            RegexValidation = new TestDataRegexValidationDto
+            {
+                Passed = dataLine.IsValid
+            },
+            Slices = slices,
+            Results = results
+        };
+    }
+
     /// <summary>
     /// Get a remote image (used to bypass CORS).
     /// </summary>
     [TypeFilter<AdminFilter>]
     [HttpGet("remote-image")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> GetRemoteImage(string url)
+    public async Task<ActionResult> GetRemoteImage(string url, CancellationToken cancellationToken)
     {
         // ASP.NET Core will automatically dispose the stream
-        var imageStream = await _httpClient.GetStreamAsync(url);
-        
+        var imageStream = await _httpClient.GetStreamAsync(url, cancellationToken);
+
         return File(imageStream, "image/png");
     }
 
+    private static string GetRuleText(DataRule rule)
+    {
+        return rule switch
+        {
+            RegexDataRule regexDataRule
+                => $"{regexDataRule.SliceName} must{(regexDataRule.Invert ? " not" : "")} match regex {regexDataRule.RegexToMatch}",
+            SimpleDataRule simpleDataRule
+                => $"{simpleDataRule.SliceName} must{(simpleDataRule.Invert ? " not" : "")} respect: {simpleDataRule.Comparison} {simpleDataRule.StringToCompare}",
+            _ => throw new NotImplementedException()
+        };
+    }
+
     private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
-        => new() {
+        => new()
+        {
             Name = node.Name,
+            Category = new()
+            {
+                Name = node.Category.Name,
+                Path = node.Category.Path,
+                Namespace = node.Category.Namespace,
+                Description = node.Category.Description,
+                BackgroundColor = node.Category.BackgroundColor,
+                ForegroundColor = node.Category.ForegroundColor
+            },
             SubCategories = node.SubCategories.Select(MapCategoryTreeNode).ToList(),
             DescriptorIds = node.Descriptors.Select(d => d.Id).ToList()
         };

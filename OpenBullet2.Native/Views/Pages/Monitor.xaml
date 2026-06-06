@@ -1,22 +1,261 @@
-﻿<Page x:Class="OpenBullet2.Native.Views.Pages.Monitor"
+<Page x:Class="OpenBullet2.Native.Views.Pages.Monitor"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      mc:Ignorable="d"
+      d:DesignHeight="650"
+      d:DesignWidth="1100"
       Title="Monitor">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
-    
+
     <Grid>
-        <Label
-            Content="Coming soon (TM)"
-            FontSize="20"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 5">
+            <Button Click="CreateTriggeredAction"
+                    Margin="0 0 5 0"
+                    Style="{StaticResource StyledSuccessButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Create</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Click="ReloadTriggeredActions"
+                    Margin="0 0 5 0"
+                    Style="{StaticResource StyledPrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome5 Kind="SyncAltSolid" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Reload</TextBlock>
+                </StackPanel>
+            </Button>
+            <Label Content="Triggered actions:" VerticalAlignment="Center" />
+            <Label Content="{Binding TriggeredActionsCollection.Count}" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <TextBlock Text="No triggered actions configured"
+                       FontSize="18"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Visibility="{Binding HasNoTriggeredActions, Converter={StaticResource BoolToVis}}" />
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Visibility="{Binding HasTriggeredActions, Converter={StaticResource BoolToVis}}">
+                <ItemsControl ItemsSource="{Binding TriggeredActionsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:TriggeredActionItemViewModel}">
+                            <Border Margin="0 0 0 8"
+                                    Padding="10"
+                                    BorderThickness="1"
+                                    BorderBrush="Gray"
+                                    Opacity="{Binding ItemOpacity}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0">
+                                        <TextBlock FontWeight="Bold"
+                                                   FontSize="16"
+                                                   Text="{Binding DisplayName}" />
+                                        <TextBlock Margin="0 4 0 0"
+                                                   Text="{Binding JobDisplayName}" />
+                                        <TextBlock Margin="0 4 0 0"
+                                                   Text="{Binding ExecutionText}" />
+                                    </StackPanel>
+
+                                    <WrapPanel Grid.Row="0"
+                                               Grid.Column="1"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Top">
+                                        <Button Tag="{Binding}"
+                                                Click="ViewJob"
+                                                Margin="0 0 5 0"
+                                                ToolTip="View the monitored job"
+                                                Style="{StaticResource StyledPrimaryButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconFontAwesome5 Kind="EyeSolid" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Tag="{Binding}"
+                                                Click="ToggleTriggeredAction"
+                                                Margin="0 0 5 0"
+                                                ToolTip="{Binding ToggleButtonToolTip}"
+                                                Style="{StaticResource StyledPrimaryButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconFontAwesome5 Kind="PowerOffSolid" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Tag="{Binding}"
+                                                Click="CloneTriggeredAction"
+                                                Margin="0 0 5 0"
+                                                ToolTip="Clone this triggered action"
+                                                Style="{StaticResource StyledPrimaryButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconFontAwesome Kind="CloneSolid" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Tag="{Binding}"
+                                                Click="EditTriggeredAction"
+                                                Margin="0 0 5 0"
+                                                ToolTip="Edit this triggered action"
+                                                Style="{StaticResource StyledPrimaryButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Tag="{Binding}"
+                                                Click="DeleteTriggeredAction"
+                                                ToolTip="Delete this triggered action"
+                                                Style="{StaticResource StyledDangerButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </WrapPanel>
+
+                                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 10 0 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="220" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Margin="0 0 12 0">
+                                            <TextBlock FontWeight="Bold" Text="State" />
+                                            <StackPanel Margin="0 6 0 0" Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="Enabled:" />
+                                                <iconPacks:PackIconOcticons Kind="Check"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundGood}"
+                                                                            Visibility="{Binding IsEnabled, Converter={StaticResource BoolToVis}}" />
+                                                <iconPacks:PackIconOcticons Kind="X"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundBad}">
+                                                    <iconPacks:PackIconOcticons.Style>
+                                                        <Style TargetType="{x:Type iconPacks:PackIconOcticons}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </iconPacks:PackIconOcticons.Style>
+                                                </iconPacks:PackIconOcticons>
+                                            </StackPanel>
+                                            <StackPanel Margin="0 4 0 0" Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="Repeatable:" />
+                                                <iconPacks:PackIconOcticons Kind="Check"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundGood}"
+                                                                            Visibility="{Binding IsRepeatable, Converter={StaticResource BoolToVis}}" />
+                                                <iconPacks:PackIconOcticons Kind="X"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundBad}">
+                                                    <iconPacks:PackIconOcticons.Style>
+                                                        <Style TargetType="{x:Type iconPacks:PackIconOcticons}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRepeatable}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </iconPacks:PackIconOcticons.Style>
+                                                </iconPacks:PackIconOcticons>
+                                            </StackPanel>
+                                            <StackPanel Margin="0 4 0 0" Orientation="Horizontal" Visibility="{Binding HasExecutedBoolean, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock VerticalAlignment="Center" Text="Executed:" />
+                                                <iconPacks:PackIconOcticons Kind="Check"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundGood}"
+                                                                            Visibility="{Binding WasExecuted, Converter={StaticResource BoolToVis}}" />
+                                                <iconPacks:PackIconOcticons Kind="X"
+                                                                            Margin="6 0 0 0"
+                                                                            Foreground="{DynamicResource ForegroundBad}">
+                                                    <iconPacks:PackIconOcticons.Style>
+                                                        <Style TargetType="{x:Type iconPacks:PackIconOcticons}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding WasExecuted}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </iconPacks:PackIconOcticons.Style>
+                                                </iconPacks:PackIconOcticons>
+                                            </StackPanel>
+                                            <TextBlock Margin="0 4 0 0"
+                                                       Visibility="{Binding HasExecutionCount, Converter={StaticResource BoolToVis}}"
+                                                       Text="{Binding ExecutionText}" />
+                                            <Button Tag="{Binding}"
+                                                    Click="ResetTriggeredAction"
+                                                    Margin="0 8 0 0"
+                                                    HorizontalAlignment="Left"
+                                                    Style="{StaticResource StyledPrimaryButton}"
+                                                    Visibility="{Binding CanReset, Converter={StaticResource BoolToVis}}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <iconPacks:PackIconFontAwesome5 Kind="UndoSolid" />
+                                                    <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Margin="0 0 12 0">
+                                            <TextBlock FontWeight="Bold" Text="Triggers" />
+                                            <TextBlock Margin="0 2 0 8"
+                                                       Foreground="{DynamicResource ForegroundCustom}"
+                                                       Text="All must be true at the same time" />
+                                            <ItemsControl ItemsSource="{Binding TriggerDescriptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0 0 0 4" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock FontWeight="Bold" Text="Actions" />
+                                            <TextBlock Margin="0 2 0 8"
+                                                       Foreground="{DynamicResource ForegroundCustom}"
+                                                       Text="Executed in order, one after the other" />
+                                            <ItemsControl ItemsSource="{Binding ActionDescriptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0 0 0 4" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Page>

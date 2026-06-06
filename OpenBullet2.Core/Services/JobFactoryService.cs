@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
@@ -30,7 +31,7 @@ public class JobFactoryService
     private readonly IRNGProvider _rngProvider;
     private readonly IJobLogger _logger;
     private readonly PluginRepository _pluginRepo;
-    
+
     /// <summary>
     /// The maximum amount of bots that a job can use.
     /// </summary>
@@ -51,7 +52,7 @@ public class JobFactoryService
         _randomUaProvider = randomUaProvider;
         _rngProvider = rngProvider;
         _logger = logger;
-        
+
         var botLimit = config.GetSection("Resources")["BotLimit"];
 
         if (botLimit is not null)
@@ -59,7 +60,7 @@ public class JobFactoryService
             BotLimit = int.Parse(botLimit);
         }
     }
-    
+
     /// <summary>
     /// Creates a <see cref="Job"/> with the provided <paramref name="id"/> and <paramref name="ownerId"/>
     /// from <see cref="JobOptions"/>.
@@ -67,7 +68,7 @@ public class JobFactoryService
     /// <param name="id">The ID of the newly created job, must be unique</param>
     /// <param name="ownerId">The ID of the user who owns the job. 0 for admin</param>
     /// <param name="options">The options to create the job from</param>
-    public Job FromOptions(int id, int ownerId, JobOptions options)
+    public Job FromOptions(int id, int ownerId, JobOptions options, JobLastRunOutcome lastRunOutcome = JobLastRunOutcome.None)
     {
         Job job = options switch
         {
@@ -78,6 +79,12 @@ public class JobFactoryService
 
         job.Id = id;
         job.OwnerId = ownerId;
+
+        if (lastRunOutcome != JobLastRunOutcome.None)
+        {
+            job.RestoreLastRunOutcome(lastRunOutcome);
+        }
+
         return job;
     }
 
@@ -86,21 +93,24 @@ public class JobFactoryService
         using var scope = _scopeFactory.CreateScope();
         var proxySourceFactory = scope.ServiceProvider.GetRequiredService<ProxySourceFactoryService>();
         var dataPoolFactory = scope.ServiceProvider.GetRequiredService<DataPoolFactoryService>();
+        var config = _configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId);
 
         var hitOutputsFactory = new HitOutputFactory(_hitStorage);
 
         var job = new MultiRunJob(_settingsService, _pluginRepo, _logger)
         {
-            Config = _configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
+            Config = config,
             CreationTime = DateTime.Now,
             ProxyMode = options.ProxyMode,
             ShuffleProxies = options.ShuffleProxies,
             NoValidProxyBehaviour = options.NoValidProxyBehaviour,
             NeverBanProxies = options.NeverBanProxies,
+            NeverMarkProxiesAsBad = options.NeverMarkProxiesAsBad,
             MarkAsToCheckOnAbort = options.MarkAsToCheckOnAbort,
             ProxyBanTime = TimeSpan.FromSeconds(options.ProxyBanTimeSeconds),
             ConcurrentProxyMode = options.ConcurrentProxyMode,
             PeriodicReloadInterval = TimeSpan.FromSeconds(options.PeriodicReloadIntervalSeconds),
+            CacheHits = options.CacheHits,
             StartCondition = options.StartCondition,
             Name = options.Name,
             Bots = options.Bots,
@@ -108,6 +118,7 @@ public class JobFactoryService
             CurrentBotDatas = new BotData[BotLimit],
             Skip = options.Skip,
             HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
+            CustomInputsAnswers = CustomInputAnswerHelper.FilterAnswers(config, options.CustomInputsAnswers),
             ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
             Providers = new(_settingsService)
             {
@@ -134,16 +145,18 @@ public class JobFactoryService
             Url = options.Target.Url,
             SuccessKey = options.Target.SuccessKey,
             Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds),
+            UseProxyJudge = options.UseProxyJudge,
+            ProxyJudge = new AzenvProxyJudge(),
             GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb")
         };
 
         job.Proxies = _proxyReloadService.ReloadAsync(options.GroupId, job.OwnerId).Result;
-        
+
         // Update the stats
         var proxies = options.CheckOnlyUntested
             ? job.Proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
             : job.Proxies;
-        
+
         var proxiesList = proxies.ToList();
         job.Total = proxiesList.Count;
         job.Tested = proxiesList.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);

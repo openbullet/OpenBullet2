@@ -1,15 +1,25 @@
-﻿using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
+namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+
+/// <summary>
+/// Settings group for file multipart content.
+/// </summary>
+public class FileHttpContentSettingsGroup : HttpContentSettingsGroup
 {
-    public class FileHttpContentSettingsGroup : HttpContentSettingsGroup
-    {
-        public BlockSetting FileName { get; set; }
+    /// <summary>
+    /// Gets or sets the file name or path.
+    /// </summary>
+    public BlockSetting FileName { get; set; } = BlockSettingFactory.CreateStringSetting("fileName");
 
-        public FileHttpContentSettingsGroup()
+    /// <summary>
+    /// Initializes a new <see cref="FileHttpContentSettingsGroup"/>.
+    /// </summary>
+    public FileHttpContentSettingsGroup()
+    {
+        if (ContentType.FixedSetting is StringSetting contentTypeSetting)
         {
-            FileName = BlockSettingFactory.CreateStringSetting("fileName");
-            ((StringSetting)ContentType.FixedSetting).Value = "application/octet-stream";
+            contentTypeSetting.Value = "application/octet-stream";
         }
     }
 }

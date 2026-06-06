@@ -1,9 +1,10 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace RuriLib.Legacy.Blocks;
@@ -75,7 +76,8 @@ public class BlockReportCaptcha : BlockBase
             {
                 if (ex is AggregateException { InnerException: not null } aggEx)
                 {
-                    throw aggEx.InnerException;
+                    var innerException = aggEx.InnerException ?? ex;
+                    ExceptionDispatchInfo.Capture(innerException).Throw();
                 }
 
                 throw;

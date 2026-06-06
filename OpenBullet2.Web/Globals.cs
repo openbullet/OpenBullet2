@@ -1,11 +1,12 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web;
 
 internal static class Globals
 {
-    public static readonly JsonSerializerOptions JsonOptions = new() {
+    public static readonly JsonSerializerOptions JsonOptions = new()
+    {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
@@ -14,11 +15,6 @@ internal static class Globals
     /// When the server was started.
     /// </summary>
     public static DateTime StartTime { get; set; }
-    
-    /// <summary>
-    /// The folder where user data is stored.
-    /// </summary>
-    public static string UserDataFolder { get; set; } = "UserData";
 
     /// <summary>
     /// An updated Win11 + Chrome user-agent to use for http calls.

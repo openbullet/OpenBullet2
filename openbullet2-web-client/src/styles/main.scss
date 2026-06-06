@@ -202,6 +202,10 @@ textarea {
     background-color: var(--fg-good) !important;
 }
 
+.bg-good-dark {
+    background-color: var(--fg-good-dark) !important;
+}
+
 .bg-custom {
     background-color: var(--fg-custom) !important;
 }
@@ -245,7 +249,15 @@ p-pickList.configs-picker > div > div.p-picklist-target-controls {
         .col, .col-1, .col-2, .col-3, .col-4, .col-6, .col-12 {
             padding: 0px;
         }
+
+        margin-left: 0px;
+        margin-right: 0px;
     }
+}
+
+.container-fluid.no-paddings {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 label {
@@ -311,12 +323,26 @@ p-table.no-header {
             padding: 0.3rem !important;
             color: var(--fg-primary) !important;
             font-size: 14px !important;
+
+            &.p-highlight {
+                background-color: var(--fg-accent) !important;
+                color: var(--fg-light) !important;
+            }
         }
     }
-
 }
 
-.code-editor * {
+p-autocomplete.w-100 {
+    .p-autocomplete {
+        width: 100%;
+    }
+}
+
+.code-editor .monaco-editor .view-lines,
+.code-editor .monaco-editor .view-line,
+.code-editor .monaco-editor .view-line span,
+.code-editor .monaco-editor .inputarea,
+.code-editor .monaco-editor textarea {
     font-family: 'Chivo Mono' !important;
     font-variant-ligatures: none !important;
 }
@@ -382,6 +408,12 @@ p-menubarsub > .p-submenu-list {
 
 .p-menubar .p-menuitem.p-highlight > .p-menuitem-content {
     background-color: unset;
+}
+
+app-changelog, .readme, .announcement {
+    ul {
+        margin-bottom: 1rem;
+    }
 }
 
 /* Scrollbar */

@@ -1,0 +1,29 @@
+.rule-test-panel {
+  padding: 1rem;
+  border: 1px solid var(--fg-inactive-light);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+}
+
+.rule-test-item {
+  margin-top: 0.5rem;
+  word-break: break-word;
+}
+
+.data-rule-error {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 12px;
+  color: var(--fg-bad);
+}
+
+.data-rule-field-invalid {
+  ::ng-deep input,
+  ::ng-deep .p-inputtext {
+    border-color: var(--fg-bad) !important;
+  }
+}
+
+.ghost-cursor-grid {
+  margin-top: 0.25rem;
+}

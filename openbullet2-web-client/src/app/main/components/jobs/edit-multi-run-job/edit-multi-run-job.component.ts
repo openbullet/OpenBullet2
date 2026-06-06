@@ -33,6 +33,7 @@ import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-for
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
+import { OBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { AddWordlistComponent } from '../../wordlists/add-wordlist/add-wordlist.component';
 import { UploadWordlistComponent } from '../../wordlists/upload-wordlist/upload-wordlist.component';
 import { SelectConfigComponent } from '../select-config/select-config.component';
@@ -102,11 +103,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   mode: EditMode = EditMode.Edit;
   jobId: number | null = null;
   options: MultiRunJobOptionsDto | null = null;
+  obSettings: OBSettingsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
   wordlistTypes: string[] = [];
   botLimit = 200;
 
-  startConditionMode: StartConditionMode = StartConditionMode.Absolute;
+  startConditionMode: StartConditionMode = StartConditionMode.Immediate;
   startAfter: TimeSpan = new TimeSpan(0);
   startAt: Date = moment().add(1, 'days').toDate();
 
@@ -181,6 +183,10 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       this.dataPoolWordlistType = settings.wordlistTypes[0].name;
     });
 
+    settingsService.getSettings().subscribe((settings) => {
+      this.obSettings = settings;
+    });
+
     settingsService.getSystemSettings().subscribe((settings) => {
       this.botLimit = settings.botLimit;
     });
@@ -223,7 +229,9 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.jobService.getMultiRunJobOptions(this.jobId ?? -1).subscribe((options) => {
       if (options.startCondition._polyTypeName === StartConditionType.Relative) {
         this.startAfter = parseTimeSpan(options.startCondition.startAfter);
-        this.startConditionMode = StartConditionMode.Relative;
+        this.startConditionMode = this.startAfter.totalMilliseconds === 0
+          ? StartConditionMode.Immediate
+          : StartConditionMode.Relative;
       } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
         this.startAt = moment(options.startCondition.startAt).toDate();
         this.startConditionMode = StartConditionMode.Absolute;
@@ -286,16 +294,22 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   onStartConditionModeChange(mode: StartConditionMode) {
     this.startConditionMode = mode;
     this.touched = true;
+
+    if (mode === StartConditionMode.Immediate) {
+      this.startAfter = TimeSpan.zero;
+      this.setRelativeStartCondition(this.startAfter);
+    } else if (mode === StartConditionMode.Relative) {
+      this.setRelativeStartCondition(this.startAfter);
+    } else if (mode === StartConditionMode.Absolute) {
+      this.setAbsoluteStartCondition(this.startAt);
+    }
   }
 
   onStartAfterChange(timeSpan: TimeSpan) {
     this.startAfter = timeSpan;
 
     if (this.startConditionMode === StartConditionMode.Relative) {
-      this.options!.startCondition = {
-        _polyTypeName: StartConditionType.Relative,
-        startAfter: this.startAfter.toString(),
-      };
+      this.setRelativeStartCondition(this.startAfter);
     }
   }
 
@@ -305,11 +319,22 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.touched = true;
 
     if (this.startConditionMode === StartConditionMode.Absolute) {
-      this.options!.startCondition = {
-        _polyTypeName: StartConditionType.Absolute,
-        startAt: this.startAt.toISOString(),
-      };
+      this.setAbsoluteStartCondition(this.startAt);
     }
+  }
+
+  private setRelativeStartCondition(startAfter: TimeSpan) {
+    this.options!.startCondition = {
+      _polyTypeName: StartConditionType.Relative,
+      startAfter: startAfter.toString(),
+    };
+  }
+
+  private setAbsoluteStartCondition(startAt: Date) {
+    this.options!.startCondition = {
+      _polyTypeName: StartConditionType.Absolute,
+      startAt: startAt.toISOString(),
+    };
   }
 
   configureDataPool() {
@@ -444,7 +469,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   selectConfig(config: ConfigInfoDto) {
-    if (config.dangerous) {
+    if (config.dangerous && this.obSettings?.generalSettings.warnDangerousConfig !== false) {
       this.messageService.add({
         key: 'br',
         severity: 'warn',
@@ -573,7 +598,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   addFileSystemHitOutput() {
     this.options!.hitOutputs.push({
       _polyTypeName: HitOutputType.FileSystem,
-      baseDir: '',
+      baseDir: 'UserData/Hits/<CONFIG>/<DATE>',
     });
     this.touched = true;
   }

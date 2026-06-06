@@ -1,11 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.User;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -22,47 +24,67 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
         obSettings.Settings.SecuritySettings.RequireAdminLogin = true;
         obSettings.Settings.SecuritySettings.AdminUsername = "admin_user";
         obSettings.Settings.SecuritySettings.AdminPasswordHash = BCrypt.Net.BCrypt.HashPassword("admin_pass");
-        
+
         var dto = new UserLoginDto
         {
             Username = "admin_user",
             Password = "admin_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.NotEmpty(result.Value.Token);
-        
+
         // Read the token and make sure the claims are correct
         var token = result.Value.Token;
-        var claims = GetClaimsFromToken(token).ToList();
-        
+        var jwt = ReadToken(token);
+        var claims = jwt.Claims.ToList();
+
         // Make sure there is a claim of type ClaimTypes.NameIdentifier with value 0
         var nameIdentifierClaim = claims.Find(c => c.Type == ClaimTypes.NameIdentifier);
         Assert.NotNull(nameIdentifierClaim);
         Assert.Equal("0", nameIdentifierClaim.Value);
-        
+
         // Make sure there is a claim of type ClaimTypes.Name with value admin_user
-        var nameClaim = claims.Find(c => c.Type == ClaimTypes.Name);
-        Assert.NotNull(nameClaim);
-        Assert.Equal("admin_user", nameClaim.Value);
-        
+        var username = GetNameValue(jwt);
+        Assert.NotNull(username);
+        Assert.Equal("admin_user", username);
+
         // Make sure there is a claim of type ClaimTypes.Role with value Admin
         var roleClaim = claims.Find(c => c.Type == ClaimTypes.Role);
         Assert.NotNull(roleClaim);
         Assert.Equal("Admin", roleClaim.Value);
     }
-    
-    private static IEnumerable<Claim> GetClaimsFromToken(string token)
+
+    private static JwtSecurityToken ReadToken(string token)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-        return jsonToken?.Claims ?? throw new ArgumentException("Invalid token", nameof(token));
+        return handler.ReadToken(token) as JwtSecurityToken
+            ?? throw new ArgumentException("Invalid token", nameof(token));
     }
-    
+
+    private static string? GetNameValue(JwtSecurityToken jwt)
+    {
+        if (!string.IsNullOrEmpty(jwt.RawPayload))
+        {
+            var payloadJson = Base64UrlEncoder.Decode(jwt.RawPayload);
+            using var json = JsonDocument.Parse(payloadJson);
+
+            if (json.RootElement.TryGetProperty(
+                System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, out var nameProperty))
+            {
+                return nameProperty.GetString();
+            }
+        }
+
+        return jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name
+            || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name
+            || c.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName)?.Value;
+    }
+
     [Fact]
     public async Task Login_AdminUser_Fail()
     {
@@ -72,21 +94,21 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
         obSettings.Settings.SecuritySettings.RequireAdminLogin = true;
         obSettings.Settings.SecuritySettings.AdminUsername = "admin_user";
         obSettings.Settings.SecuritySettings.AdminPasswordHash = BCrypt.Net.BCrypt.HashPassword("admin_pass");
-        
+
         var dto = new UserLoginDto
         {
             Username = "admin_user",
             Password = "wrong_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
     }
-    
+
     [Fact]
     public async Task Login_GuestUser_Success()
     {
@@ -100,40 +122,41 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.AddAsync(entity);
+        await guestRepo.AddAsync(entity, TestCancellationToken);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
             Password = "guest_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.NotEmpty(result.Value.Token);
-        
+
         // Read the token and make sure the claims are correct
         var token = result.Value.Token;
-        var claims = GetClaimsFromToken(token).ToList();
-        
+        var jwt = ReadToken(token);
+        var claims = jwt.Claims.ToList();
+
         // Make sure there is a claim of type ClaimTypes.NameIdentifier with value 0
         var nameIdentifierClaim = claims.Find(c => c.Type == ClaimTypes.NameIdentifier);
         Assert.NotNull(nameIdentifierClaim);
         Assert.Equal(entity.Id.ToString(), nameIdentifierClaim.Value);
-        
+
         // Make sure there is a claim of type ClaimTypes.Name with value guest_user
-        var nameClaim = claims.Find(c => c.Type == ClaimTypes.Name);
-        Assert.NotNull(nameClaim);
-        Assert.Equal("guest_user", nameClaim.Value);
-        
+        var username = GetNameValue(jwt);
+        Assert.NotNull(username);
+        Assert.Equal("guest_user", username);
+
         // Make sure there is a claim of type ClaimTypes.Role with value Guest
         var roleClaim = claims.Find(c => c.Type == ClaimTypes.Role);
         Assert.NotNull(roleClaim);
         Assert.Equal("Guest", roleClaim.Value);
     }
-    
+
     [Fact]
     public async Task Login_GuestUserInvalidIp_Fail()
     {
@@ -147,21 +170,21 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = "1.1.1.1",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.AddAsync(entity);
+        await guestRepo.AddAsync(entity, TestCancellationToken);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
             Password = "guest_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
     }
-    
+
     [Fact]
     public async Task Login_GuestUserExpired_Fail()
     {
@@ -175,21 +198,21 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.AddAsync(entity);
+        await guestRepo.AddAsync(entity, TestCancellationToken);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
             Password = "guest_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
     }
-    
+
     [Fact]
     public async Task Login_GuestUser_Fail()
     {
@@ -203,16 +226,16 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.AddAsync(entity);
+        await guestRepo.AddAsync(entity, TestCancellationToken);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
             Password = "wrong_pass"
         };
-        
+
         // Act
         var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);

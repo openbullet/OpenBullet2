@@ -1,0 +1,149 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using RuriLib.Helpers.Blocks;
+using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Custom;
+using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Trees;
+using RuriLib.Models.Variables;
+using Xunit;
+
+namespace RuriLib.Tests.Helpers.Blocks;
+
+public class DescriptorsRepositoryTests
+{
+    [Fact]
+    public void GetAs_ExistingDescriptor_ReturnsTypedDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        var descriptor = repository.GetAs<HttpRequestBlockDescriptor>("HttpRequest");
+
+        Assert.Equal("HttpRequest", descriptor.Id);
+    }
+
+    [Fact]
+    public void GetAs_WrongType_ThrowsInvalidCastException()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Throws<InvalidCastException>(() => repository.GetAs<LoliCodeBlockDescriptor>("ConstantString"));
+    }
+
+    [Fact]
+    public void ToVariableType_TaskString_ReturnsString()
+        => Assert.Equal(VariableType.String, DescriptorsRepository.ToVariableType(typeof(Task<string>)));
+
+    [Fact]
+    public void ToVariableType_InvalidType_Throws()
+        => Assert.Throws<InvalidCastException>(() => DescriptorsRepository.ToVariableType(typeof(DateTime)));
+
+    [Fact]
+    public void GetAs_BlockIdOverride_UsesStableIdAndAsyncMethodName()
+    {
+        var repository = new DescriptorsRepository();
+
+        var descriptor = repository.GetAs<AutoBlockDescriptor>("FileExists");
+
+        Assert.Equal("FileExists", descriptor.Id);
+        Assert.Equal("FileExistsAsync", descriptor.MethodName);
+        Assert.Equal("File Exists", descriptor.Name);
+        Assert.True(descriptor.Async);
+    }
+
+    [Fact]
+    public void GetAs_DnsLookup_ReturnsAutoDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        var descriptor = repository.GetAs<AutoBlockDescriptor>("DnsLookup");
+
+        Assert.Equal("DnsLookup", descriptor.Id);
+        Assert.Equal("LookupDnsAsync", descriptor.MethodName);
+        Assert.Equal("DNS Lookup", descriptor.Name);
+        Assert.Equal(new[] { "LookupDns", "LookupDnsAsync" }, descriptor.Aliases);
+        Assert.True(descriptor.Async);
+    }
+
+    [Fact]
+    public void Aliases_BlockAlias_MapsToCanonicalDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Equal("DnsLookup", repository.Aliases["LookupDns"]);
+        Assert.Equal("DnsLookup", repository.Aliases["LookupDnsAsync"]);
+    }
+
+    [Fact]
+    public void Aliases_PuppeteerBrowserAlias_MapsToGenericBrowserDescriptor()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.Equal("BrowserReload", repository.Aliases["PuppeteerReload"]);
+    }
+
+    [Fact]
+    public void GetAs_BrowserOpen_TaskReturningWrapper_IsMarkedAsync()
+    {
+        var repository = new DescriptorsRepository();
+
+        var descriptor = repository.GetAs<AutoBlockDescriptor>("BrowserOpen");
+
+        Assert.Equal("BrowserOpen", descriptor.Id);
+        Assert.Equal("BrowserOpen", descriptor.MethodName);
+        Assert.True(descriptor.Async);
+    }
+
+    [Fact]
+    public void AsTree_ContainsAutoBlockDescriptors()
+    {
+        var repository = new DescriptorsRepository();
+
+        var tree = repository.AsTree();
+
+        Assert.True(tree.IsRoot);
+        Assert.NotEmpty(tree.SubCategories);
+        Assert.Contains(Flatten(tree), descriptor => descriptor.Id == "ConstantString");
+    }
+
+    [Fact]
+    public void AsTree_ParentCategoriesUseScopedMetadata()
+    {
+        var repository = new DescriptorsRepository();
+
+        var tree = repository.AsTree();
+        var requestsCategory = tree.SubCategories
+            .First(sc => sc.Name == "RuriLib")
+            .SubCategories.First(sc => sc.Name == "Blocks")
+            .SubCategories.First(sc => sc.Name == "Requests")
+            .Category;
+
+        Assert.Equal("Requests", requestsCategory.Name);
+        Assert.Equal("Blocks for performing network requests",
+            requestsCategory.Description);
+    }
+
+    [Fact]
+    public void TimeBlocks_ExposeMillisecondsAsSettings()
+    {
+        var repository = new DescriptorsRepository();
+
+        Assert.False(repository.Descriptors.ContainsKey("CurrentUnixTimeMilliseconds"));
+        Assert.False(repository.Descriptors.ContainsKey("UnixTimeMillisecondsToDate"));
+        Assert.False(repository.Descriptors.ContainsKey("DateToUnixTimeMilliseconds"));
+
+        var currentUnixTime = repository.GetAs<AutoBlockDescriptor>("CurrentUnixTime");
+        var unixTimeToDate = repository.GetAs<AutoBlockDescriptor>("UnixTimeToDate");
+        var dateToUnixTime = repository.GetAs<AutoBlockDescriptor>("DateToUnixTime");
+
+        Assert.Equal("CurrentUnixTimeLong", currentUnixTime.MethodName);
+        Assert.IsType<BoolParameter>(currentUnixTime.Parameters["outputMilliseconds"]);
+        Assert.IsType<BoolParameter>(unixTimeToDate.Parameters["inputMilliseconds"]);
+        Assert.IsType<BoolParameter>(dateToUnixTime.Parameters["outputMilliseconds"]);
+    }
+
+    private static IEnumerable<BlockDescriptor> Flatten(CategoryTreeNode node)
+        => node.Descriptors.Concat(node.SubCategories.SelectMany(Flatten));
+}

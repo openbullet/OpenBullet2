@@ -13,12 +13,12 @@ public class DebugConfigResultDto
     /// The log history of the debugger.
     /// </summary>
     public IEnumerable<BotLoggerEntry> Log { get; set; } = Array.Empty<BotLoggerEntry>();
-    
+
     /// <summary>
     /// The list of variables.
     /// </summary>
     public IEnumerable<VariableDto> Variables { get; set; } = Array.Empty<VariableDto>();
-    
+
     /// <summary>
     /// The error message, if any.
     /// </summary>

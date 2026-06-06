@@ -1,68 +1,93 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Native.Helpers;
-using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Pages
+namespace OpenBullet2.Native.Views.Pages;
+
+/// <summary>
+/// Interaction logic for OBSettings.xaml
+/// </summary>
+public partial class OBSettings : Page
 {
-    /// <summary>
-    /// Interaction logic for OBSettings.xaml
-    /// </summary>
-    public partial class OBSettings : Page
+    private readonly OBSettingsViewModel vm;
+
+    public OBSettings(OBSettingsViewModel vm)
     {
-        private readonly OBSettingsViewModel vm;
+        this.vm = vm;
+        DataContext = vm;
 
-        public OBSettings()
+        InitializeComponent();
+
+        configSectionOnLoadCombobox.ItemsSource = Enum.GetValues(typeof(ConfigSection)).Cast<ConfigSection>();
+        updateChannelCombobox.ItemsSource = Enum.GetValues(typeof(UpdateChannel)).Cast<UpdateChannel>();
+    }
+
+    private async void Save(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            vm = SP.GetService<ViewModelsService>().OBSettings;
-            DataContext = vm;
-
-            InitializeComponent();
-
-            configSectionOnLoadCombobox.ItemsSource = Enum.GetValues(typeof(ConfigSection)).Cast<ConfigSection>();
+            await vm.Save();
+            Alert.ToastSuccess("Saved", "OB settings were saved successfully!");
         }
-
-        private async void Save(object sender, RoutedEventArgs e) => await vm.Save();
-        private void Reset(object sender, RoutedEventArgs e) => vm.Reset();
-        private void ResetCustomization(object sender, RoutedEventArgs e) => vm.ResetCustomization();
-        
-        private void AddProxyCheckTarget(object sender, RoutedEventArgs e) => vm.AddProxyCheckTarget();
-        private void RemoveProxyCheckTarget(object sender, RoutedEventArgs e) 
-            => vm.RemoveProxyCheckTarget((ProxyCheckTarget)(sender as Button).Tag);
-
-        private void AddCustomSnippet(object sender, RoutedEventArgs e) => vm.AddCustomSnippet();
-        private void RemoveCustomSnippet(object sender, RoutedEventArgs e)
-            => vm.RemoveCustomSnippet((CustomSnippet)(sender as Button).Tag);
-        
-        private void AddRemoteConfigsEndpoint(object sender, RoutedEventArgs e) => vm.AddRemoteConfigsEndpoint();
-        private void RemoveRemoteConfigsEndpoint(object sender, RoutedEventArgs e) 
-            => vm.RemoveRemoteConfigsEndpoint((RemoteConfigsEndpoint)(sender as Button).Tag);
-
-        private void ChooseBackgroundImage(object sender, RoutedEventArgs e)
+        catch (Exception ex)
         {
-            var ofd = new OpenFileDialog
-            {
-                Filter = "Images | *.jpg;*.jpeg;*.png;*.bmp",
-                FilterIndex = 1
-            };
+            Alert.Exception(ex);
+        }
+    }
+    private void Reset(object sender, RoutedEventArgs e) => vm.Reset();
+    private void ResetCustomization(object sender, RoutedEventArgs e) => vm.ResetCustomization();
 
-            ofd.ShowDialog();
+    private void AddProxyCheckTarget(object sender, RoutedEventArgs e) => vm.AddProxyCheckTarget();
+    private void RemoveProxyCheckTarget(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: ProxyCheckTarget target })
+        {
+            vm.RemoveProxyCheckTarget(target);
+        }
+    }
 
-            if (!string.IsNullOrEmpty(ofd.FileName))
+    private void AddCustomSnippet(object sender, RoutedEventArgs e) => vm.AddCustomSnippet();
+    private void RemoveCustomSnippet(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: CustomSnippet snippet })
+        {
+            vm.RemoveCustomSnippet(snippet);
+        }
+    }
+
+    private void AddRemoteConfigsEndpoint(object sender, RoutedEventArgs e) => vm.AddRemoteConfigsEndpoint();
+    private void RemoveRemoteConfigsEndpoint(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: RemoteConfigsEndpoint endpoint })
+        {
+            vm.RemoveRemoteConfigsEndpoint(endpoint);
+        }
+    }
+
+    private void ChooseBackgroundImage(object sender, RoutedEventArgs e)
+    {
+        var ofd = new OpenFileDialog
+        {
+            Filter = "Images | *.jpg;*.jpeg;*.png;*.bmp",
+            FilterIndex = 1
+        };
+
+        ofd.ShowDialog();
+
+        if (!string.IsNullOrEmpty(ofd.FileName))
+        {
+            try
             {
-                try
-                {
-                    vm.SetBackgroundImage(ofd.FileName);
-                }
-                catch (Exception ex)
-                {
-                    Alert.Exception(ex);
-                }
+                vm.SetBackgroundImage(ofd.FileName);
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
             }
         }
     }

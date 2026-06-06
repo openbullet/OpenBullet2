@@ -1,12 +1,18 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
-namespace RuriLib.Models.Data.Rules
+namespace RuriLib.Models.Data.Rules;
+
+/// <summary>
+/// Evaluates a value against a regular expression.
+/// </summary>
+public class RegexDataRule : DataRule
 {
-    public class RegexDataRule : DataRule
-    {
-        public string RegexToMatch { get; set; } = "^.*$";
+    /// <summary>
+    /// The regular expression to match.
+    /// </summary>
+    public string RegexToMatch { get; set; } = "^.*$";
 
-        public override bool IsSatisfied(string value)
-            => Invert ^ Regex.IsMatch(value, RegexToMatch);
-    }
+    /// <inheritdoc/>
+    public override bool IsSatisfied(string value)
+        => Invert ^ Regex.IsMatch(value, RegexToMatch);
 }

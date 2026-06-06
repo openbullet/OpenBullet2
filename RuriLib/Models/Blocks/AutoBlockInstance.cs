@@ -1,4 +1,6 @@
-﻿using RuriLib.Exceptions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RuriLib.Exceptions;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
@@ -10,226 +12,267 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static RuriLib.Helpers.CSharp.SyntaxDsl;
 
-namespace RuriLib.Models.Blocks
+namespace RuriLib.Models.Blocks;
+
+/// <summary>
+/// An instance of a block that was auto generated from exposed methods.
+/// </summary>
+public class AutoBlockInstance : BlockInstance
 {
+    private string outputVariable = "output";
+
     /// <summary>
-    /// An instance of a block that was auto generated from exposed methods.
+    /// Gets or sets the output variable written by the block.
     /// </summary>
-    public class AutoBlockInstance : BlockInstance
+    public string OutputVariable
     {
-        private string outputVariable = "output";
-        public string OutputVariable
+        get => outputVariable;
+        set => outputVariable = VariableNames.MakeValid(value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the output should be captured.
+    /// </summary>
+    public bool IsCapture { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether the block should run in safe mode.
+    /// </summary>
+    public bool Safe { get; set; }
+
+    /// <summary>
+    /// Initializes an auto-generated block instance.
+    /// </summary>
+    /// <param name="descriptor">The descriptor that defines the block.</param>
+    public AutoBlockInstance(AutoBlockDescriptor descriptor)
+        : base(descriptor)
+    {
+        OutputVariable = descriptor.Id[..1].ToLower() + descriptor.Id[1..] + "Output";
+    }
+
+    /// <inheritdoc />
+    public override string ToLC(bool printDefaultParams = false)
+    {
+        /*
+         *   SettingName = "my value"
+         *   SettingName = 0
+         *   SettingName = @myVariable
+         */
+
+        using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
+
+        if (Safe)
         {
-            get => outputVariable;
-            set => outputVariable = VariableNames.MakeValid(value);
+            writer.AppendLine("SAFE", 2);
         }
 
-        public bool IsCapture { get; set; } = false;
-        public bool Safe { get; set; } = false;
+        var outVarKind = IsCapture ? "CAP" : "VAR";
 
-        public AutoBlockInstance(AutoBlockDescriptor descriptor)
-            : base(descriptor)
+        // Write the output variable
+        if (Descriptor.ReturnType.HasValue)
         {
-            OutputVariable = descriptor.Id.Substring(0, 1).ToLower() + descriptor.Id[1..] + "Output";
+            writer.AppendLine($"=> {outVarKind} @{OutputVariable}", 2);
         }
 
-        public override string ToLC(bool printDefaultParams = false)
+        return writer.ToString();
+    }
+
+    /// <inheritdoc />
+    public override void FromLC(ref string script, ref int lineNumber)
+    {
+        // First parse the options that are common to every BlockInstance
+        base.FromLC(ref script, ref lineNumber);
+
+        using var reader = new StringReader(script);
+
+        while (reader.ReadLine() is { } line)
         {
-            /*
-             *   SettingName = "my value"
-             *   SettingName = 0
-             *   SettingName = @myVariable
-             */
+            line = line.Trim();
+            lineNumber++;
+            var lineCopy = line;
 
-            using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
-
-            if (Safe)
+            if (string.IsNullOrWhiteSpace(line))
             {
-                writer.AppendLine("SAFE", 2);
+                continue;
             }
 
-            var outVarKind = IsCapture ? "CAP" : "VAR";
-
-            // Write the output variable
-            if (Descriptor.ReturnType.HasValue)
-                writer.AppendLine($"=> {outVarKind} @{OutputVariable}", 2);
-
-            return writer.ToString();
-        }
-
-        public override void FromLC(ref string script, ref int lineNumber)
-        {
-            // First parse the options that are common to every BlockInstance
-            base.FromLC(ref script, ref lineNumber);
-
-            using var reader = new StringReader(script);
-
-            while (reader.ReadLine() is { } line)
+            if (line.StartsWith("SAFE"))
             {
-                line = line.Trim();
-                lineNumber++;
-                var lineCopy = line;
-
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                if (line.StartsWith("SAFE"))
-                {
-                    Safe = true;
-                }
-                else if (line.StartsWith("=>"))
-                {
-                    try
-                    {
-                        var match = Regex.Match(line, "^=> ([A-Za-z]{3}) (.*)$");
-                        IsCapture = match.Groups[1].Value.Equals("CAP", StringComparison.OrdinalIgnoreCase);
-                        OutputVariable = match.Groups[2].Value.Trim()[1..];
-                    }
-                    catch
-                    {
-                        throw new LoliCodeParsingException(lineNumber, $"The output variable declaration is in the wrong format: {lineCopy.TruncatePretty(50)}");
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})");
-                    }
-                }
+                Safe = true;
             }
-        }
-
-        public override string ToCSharp(List<string> declaredVariables, ConfigSettings settings)
-        {
-            // If disabled /* code here */
-
-            /*
-             * With return type:
-             * var myVar = MethodName(data, param1, param2 ...);
-             * 
-             * Async:
-             * await MethodName(data, param1, param2 ...);
-             * 
-             */
-
-            using var writer = new StringWriter();
-
-            // Safe mode, wrap method in try/catch but declare variable outside of it
-            if (Safe)
+            else if (line.StartsWith("=>"))
             {
-                // If not void, initialize the variable with default value
-                // Only do this if we haven't declared the variable yet!
-                if (Descriptor.ReturnType.HasValue && !declaredVariables.Contains(OutputVariable)
-                    && !OutputVariable.StartsWith("globals."))
+                try
                 {
-                    if (!Disabled)
-                        declaredVariables.Add(OutputVariable);
-
-                    writer.WriteLine($"{GetRuntimeReturnType()} {OutputVariable} = {GetDefaultReturnValue()};");
+                    var match = Regex.Match(line, "^=> ([A-Za-z]{3}) (.*)$");
+                    IsCapture = match.Groups[1].Value.Equals("CAP", StringComparison.OrdinalIgnoreCase);
+                    OutputVariable = match.Groups[2].Value.Trim()[1..];
                 }
-
-                writer.WriteLine("try {");
-
-                // Here we already know the variable exists so we just do the assignment
-                if (Descriptor.ReturnType.HasValue)
+                catch
                 {
-                    writer.Write($"{OutputVariable} = ");
+                    throw new LoliCodeParsingException(lineNumber,
+                        $"The output variable declaration is in the wrong format: {lineCopy.TruncatePretty(50)}");
                 }
-
-                WriteMethod(writer);
-
-                writer.WriteLine("} catch (Exception safeException) {");
-                writer.WriteLine("data.ERROR = safeException.PrettyPrint();");
-                writer.WriteLine("data.Logger.Log($\"[SAFE MODE] Exception caught and saved to data.ERROR: {data.ERROR}\", LogColors.Tomato); }");
             }
             else
             {
-                // If not void, do variable assignment
-                if (Descriptor.ReturnType.HasValue)
+                try
                 {
-                    if (declaredVariables.Contains(OutputVariable) || OutputVariable.StartsWith("globals."))
-                    {
-                        writer.Write($"{OutputVariable} = ");
-                    }
-                    else
-                    {
-                        if (!Disabled)
-                            declaredVariables.Add(OutputVariable);
-
-                        writer.Write($"{GetRuntimeReturnType()} {OutputVariable} = ");
-                    }
+                    LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
                 }
-
-                WriteMethod(writer);
-            }
-
-            return writer.ToString();
-        }
-
-        private void WriteMethod(StringWriter writer)
-        {
-            // If async, prepend the await keyword
-            if ((Descriptor as AutoBlockDescriptor).Async)
-                writer.Write("await ");
-
-            // Append MethodName(data, param1, "param2", param3);
-            var parameters = new List<string> { "data" }
-                .Concat(Settings.Values.Select(CSharpWriter.FromSetting));
-
-            writer.Write($"{Descriptor.Id}({string.Join(", ", parameters)})");
-
-            if ((Descriptor as AutoBlockDescriptor).Async)
-            {
-                writer.WriteLine(".ConfigureAwait(false);");
-            }
-            else
-            {
-                writer.WriteLine(";");
-            }
-
-            // If the block has a return type, log which variable was written
-            if (Descriptor.ReturnType.HasValue)
-            {
-                writer.WriteLine($"data.LogVariableAssignment(nameof({OutputVariable}));");
-
-                if (IsCapture)
+                catch (LineParsingException ex)
                 {
-                    writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");
+                    throw new LoliCodeParsingException(lineNumber, ex.ColumnNumber ?? 1,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new LoliCodeParsingException(lineNumber,
+                        $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})");
                 }
             }
         }
+    }
 
-        // This is needed otherwise when we have blocks made in other plugins they might reference
-        // types from different runtimes and our castings like .AsBool() or .AsInt() will throw a
-        // RuntimeBinderException, so we cannot just write 'var' but we need to explicitly write the type.
-        private string GetRuntimeReturnType() => Descriptor.ReturnType switch
-        {
-            VariableType.Bool => "bool",
-            VariableType.ByteArray => "byte[]",
-            VariableType.DictionaryOfStrings => "Dictionary<string, string>",
-            VariableType.Float => "float",
-            VariableType.Int => "int",
-            VariableType.ListOfStrings => "List<string>",
-            VariableType.String => "string",
-            _ => throw new NotSupportedException()
-        };
+    /// <inheritdoc />
+    public override IEnumerable<StatementSyntax> ToSyntax(BlockSyntaxGenerationContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
 
-        private string GetDefaultReturnValue() => Descriptor.ReturnType switch
+        var statements = new List<StatementSyntax>();
+
+        if (Safe)
         {
-            VariableType.Bool => "false",
-            VariableType.ByteArray => "Array.Empty<byte>()",
-            VariableType.DictionaryOfStrings => "new()",
-            VariableType.Float => "0",
-            VariableType.Int => "0",
-            VariableType.ListOfStrings => "new()",
-            VariableType.String => "string.Empty",
-            _ => throw new NotSupportedException()
-        };
+            if (Descriptor.ReturnType.HasValue
+                && !context.DefinedVariables.Contains(OutputVariable)
+                && !OutputVariable.StartsWith("globals."))
+            {
+                if (!Disabled)
+                {
+                    context.DefinedVariables.Add(OutputVariable);
+                }
+
+                statements.Add(BlockSyntaxFactory.CreateVariableDeclaration(
+                    GetRuntimeReturnType(),
+                    OutputVariable,
+                    Expr(GetDefaultReturnValue())));
+            }
+
+            var tryStatements = CreateExecutionStatements(context.DefinedVariables, true);
+            statements.Add(SyntaxFactory.TryStatement(
+                SyntaxFactory.Block(tryStatements),
+                SyntaxFactory.List([BlockSyntaxFactory.CreateSafeModeCatchClause()]),
+                null));
+
+            if (ShouldTrackDebuggerVariable(context))
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                    "SetDebuggerVariable",
+                    OutputVariable));
+            }
+
+            return statements;
+        }
+
+        statements.AddRange(CreateExecutionStatements(context.DefinedVariables, false, context.StepByStep));
+        return statements;
+    }
+
+    // This is needed otherwise when we have blocks made in other plugins they might reference
+    // types from different runtimes and our castings like .AsBool() or .AsInt() will throw a
+    // RuntimeBinderException, so we cannot just write 'var' but we need to explicitly write the type.
+    private string GetRuntimeReturnType() => Descriptor.ReturnType switch
+    {
+        VariableType.Bool => "bool",
+        VariableType.ByteArray => "byte[]",
+        VariableType.DictionaryOfStrings => "Dictionary<string, string>",
+        VariableType.Float => "double",
+        VariableType.Int => "long",
+        VariableType.ListOfStrings => "List<string>",
+        VariableType.String => "string",
+        _ => throw new NotSupportedException()
+    };
+
+    private string GetDefaultReturnValue() => Descriptor.ReturnType switch
+    {
+        VariableType.Bool => "false",
+        VariableType.ByteArray => "Array.Empty<byte>()",
+        VariableType.DictionaryOfStrings => "new()",
+        VariableType.Float => "0",
+        VariableType.Int => "0",
+        VariableType.ListOfStrings => "new()",
+        VariableType.String => "string.Empty",
+        _ => throw new NotSupportedException()
+    };
+
+    private List<StatementSyntax> CreateExecutionStatements(
+        List<string> declaredVariables,
+        bool assignmentOnly,
+        bool trackDebuggerVariable = false)
+    {
+        var statements = new List<StatementSyntax>();
+
+        if (Descriptor.ReturnType.HasValue)
+        {
+            var invocationExpression = BuildMethodInvocationExpression();
+            var assignToExistingVariable = assignmentOnly
+                || declaredVariables.Contains(OutputVariable)
+                || OutputVariable.StartsWith("globals.");
+
+            if (!assignToExistingVariable && !Disabled)
+            {
+                declaredVariables.Add(OutputVariable);
+            }
+
+            statements.Add(BlockSyntaxFactory.CreateVariableDeclarationOrAssignment(
+                GetRuntimeReturnType(),
+                OutputVariable,
+                invocationExpression,
+                assignToExistingVariable));
+
+            statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("LogVariableAssignment", OutputVariable));
+
+            if (trackDebuggerVariable && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal))
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofAndValueArgument(
+                    "SetDebuggerVariable",
+                    OutputVariable));
+            }
+
+            if (IsCapture)
+            {
+                statements.Add(BlockSyntaxFactory.CreateDataMethodWithNameofArgument("MarkForCapture", OutputVariable));
+            }
+        }
+        else
+        {
+            statements.Add(BuildMethodInvocationExpression().Stmt());
+        }
+
+        return statements;
+    }
+
+    private bool ShouldTrackDebuggerVariable(BlockSyntaxGenerationContext context)
+        => context.StepByStep
+            && Descriptor.ReturnType.HasValue
+            && !OutputVariable.StartsWith("globals.", StringComparison.Ordinal);
+
+    private ExpressionSyntax BuildMethodInvocationExpression()
+    {
+        var descriptor = (AutoBlockDescriptor)Descriptor;
+        var arguments = new List<ExpressionSyntax> { Id("data") };
+
+        arguments.AddRange(Settings.Values.Select(CSharpWriter.FromSettingSyntax));
+
+        var methodName = string.IsNullOrWhiteSpace(descriptor.MethodName)
+            ? descriptor.Id
+            : descriptor.MethodName;
+
+        ExpressionSyntax invocation = Id(methodName).Call(arguments);
+
+        return descriptor.Async
+            ? BlockSyntaxFactory.CreateAwaitConfigureAwaitFalse(invocation)
+            : invocation;
     }
 }

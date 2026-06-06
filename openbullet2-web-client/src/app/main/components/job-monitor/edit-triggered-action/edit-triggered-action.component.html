@@ -388,6 +388,24 @@
                 </button>
             </div>
         </ng-container>
+        <ng-container *ngIf="action._polyTypeName === ActionType.SetSkip">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>Set skip to</span>
+                <app-input-number [key]="'skip' + i"
+                    class="ml-1"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [(ngModel)]="action.skip" [min]="0"
+                    placeholder="1000" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent h-100 ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeAction(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
         <ng-container *ngIf="action._polyTypeName === ActionType.ReloadProxies">
             <div class="col align-self-stretch pr-2 pl-0">
                 <span>Reload the proxies</span>

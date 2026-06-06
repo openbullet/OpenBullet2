@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Blocks;
+
+namespace OpenBullet2.Web.Dtos.Config;
 
 /// <summary>
 /// DTO that contains information about a node
@@ -10,6 +12,11 @@ public class CategoryTreeNodeDto
     /// The name of the category.
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// The resolved category metadata for the node.
+    /// </summary>
+    public required BlockCategoryDto Category { get; set; }
 
     /// <summary>
     /// The subcategories.

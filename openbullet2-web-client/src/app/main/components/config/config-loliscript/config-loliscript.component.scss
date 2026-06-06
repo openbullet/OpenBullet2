@@ -1,0 +1,22 @@
+.editor-debugger-panel {
+    min-width: 0;
+    width: 100%;
+}
+
+.editor-debugger-panel-left {
+    padding-right: 0.25rem;
+}
+
+.editor-debugger-panel-right {
+    padding-left: 0.25rem;
+
+    app-config-debugger {
+        display: block;
+        width: 100%;
+    }
+}
+
+.editor-container {
+    height: 800px;
+    width: 100%;
+}

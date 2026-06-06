@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Settings;
+namespace OpenBullet2.Web.Dtos.Config.Settings;
 
 /// <summary>
 /// A custom input that can be provided to the config at runtime.

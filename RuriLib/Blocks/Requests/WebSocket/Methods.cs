@@ -1,186 +1,186 @@
-﻿using RuriLib.Attributes;
-using RuriLib.Functions.Conversion;
+using RuriLib.Attributes;
+using RuriLib.Exceptions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Websocket.Client;
 
-namespace RuriLib.Blocks.Requests.WebSocket
+namespace RuriLib.Blocks.Requests.WebSocket;
+
+/// <summary>
+/// Blocks for sending and receiving messages through web sockets.
+/// </summary>
+[BlockCategory("Web Sockets", "Blocks to send and receive messages through websockets", "#addfad")]
+public static class Methods
 {
-    [BlockCategory("Web Sockets", "Blocks to send and receive messages through websockets", "#addfad")]
-    public static class Methods
+    /// <summary>
+    /// Connects to a Web Socket.
+    /// </summary>
+    [Block("Connects to a Web Socket", name = "WebSocket Connect",
+        extraInfo = "Works with the proxy schemes supported by .NET ClientWebSocket")]
+    public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string>? customHeaders = null)
     {
-        [Block("Connects to a Web Socket", name = "WebSocket Connect",
-            extraInfo = "Only works with HTTP proxies or without any proxy")]
-        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string> customHeaders = null)
+        data.Logger.LogHeader();
+
+        var proxy = data is { UseProxy: true, Proxy: not null }
+            ? CreateProxy(data.Proxy)
+            : null;
+
+        var wsMessages = new List<string>();
+        data.SetObject("wsMessages", wsMessages);
+
+        var ws = new WebSocketConnection(wsMessages);
+
+        try
         {
-            data.Logger.LogHeader();
-
-            IWebProxy proxy = null;
-            if (data.UseProxy && data.Proxy is not null)
-            {
-                if (data.Proxy.Type != Models.Proxies.ProxyType.Http)
-                {
-                    throw new NotSupportedException("Only http proxies are supported");
-                }
-                else
-                {
-                    proxy = new WebProxy(data.Proxy.Host, data.Proxy.Port);
-
-                    if (data.Proxy.NeedsAuthentication)
-                    {
-                        proxy.Credentials = new NetworkCredential(data.Proxy.Username, data.Proxy.Password);
-                    }
-                }
-            }
-
-            var factory = new Func<ClientWebSocket>(() =>
-            {
-                var client = new ClientWebSocket
-                {
-                    Options =
-                    {
-                        KeepAliveInterval = TimeSpan.FromMilliseconds(keepAliveMilliseconds),
-                        Proxy = proxy
-                    }
-                };
-
-                if (customHeaders is not null)
-                {
-                    foreach (var header in customHeaders)
-                    {
-                        client.Options.SetRequestHeader(header.Key, header.Value);
-                    }
-                }
-                
-                return client;
-            });
-
-            var wsMessages = new List<string>();
-            data.SetObject("wsMessages", wsMessages);
-
-            var ws = new WebsocketClient(new Uri(url), factory)
-            {
-                IsReconnectionEnabled = false,
-                ErrorReconnectTimeout = null
-            };
-
-            ws.MessageReceived.Subscribe(msg =>
-            {
-                lock (wsMessages)
-                {
-                    switch (msg.MessageType)
-                    {
-                        case WebSocketMessageType.Text:
-                            wsMessages.Add(msg.Text);
-                            break;
-
-                        case WebSocketMessageType.Binary:
-                            // Binary responses will be encoded as base64 since there is no support for the
-                            // List<byte[]> type at the moment.
-                            wsMessages.Add(Base64Converter.ToBase64String(msg.Binary));
-                            break;
-                    }
-                }
-            });
-
-            ws.DisconnectionHappened.Subscribe(msg =>
-            {
-                if (msg.Exception != null)
-                {
-                    throw msg.Exception;
-                }
-            });
-
-            // Connect
-            await ws.Start().ConfigureAwait(false);
-
-            if (!ws.IsRunning)
-            {
-                throw new Exception("Failed to connect to the websocket");
-            }
-
-            data.SetObject("webSocket", ws);
-
-            data.Logger.Log($"The Web Socket client connected to {url}", LogColors.MossGreen);
+            await ws.ConnectAsync(
+                new Uri(url),
+                keepAliveMilliseconds,
+                proxy,
+                customHeaders,
+                data.CancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            ws.Dispose();
+            throw;
         }
 
-        [Block("Sends a message on the Web Socket", name = "WebSocket Send")]
-        public static void WsSend(BotData data, string message)
+        data.SetObject("webSocket", ws);
+
+        data.Logger.Log($"The Web Socket client connected to {url}", LogColors.MossGreen);
+    }
+
+    /// <summary>
+    /// Sends a message on the Web Socket.
+    /// </summary>
+    // Compatibility wrapper for existing direct C# callers; blocks use WsSendAsync.
+    public static void WsSend(BotData data, string message)
+        => WsSendAsync(data, message).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Sends a message on the Web Socket.
+    /// </summary>
+    [Block("Sends a message on the Web Socket", name = "WebSocket Send", id = nameof(WsSend))]
+    public static async Task WsSendAsync(BotData data, string message)
+    {
+        data.Logger.LogHeader();
+
+        var ws = GetSocket(data);
+        await ws.SendTextAsync(message, data.CancellationToken).ConfigureAwait(false);
+
+        data.Logger.Log($"Sent {message} to the server", LogColors.MossGreen);
+    }
+
+    /// <summary>
+    /// Sends a raw binary message on the Web Socket.
+    /// </summary>
+    // Compatibility wrapper for existing direct C# callers; blocks use WsSendRawAsync.
+    public static void WsSendRaw(BotData data, byte[] message)
+        => WsSendRawAsync(data, message).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Sends a raw binary message on the Web Socket.
+    /// </summary>
+    [Block("Sends a raw binary message on the Web Socket", name = "WebSocket Send Raw", id = nameof(WsSendRaw))]
+    public static async Task WsSendRawAsync(BotData data, byte[] message)
+    {
+        data.Logger.LogHeader();
+
+        var ws = GetSocket(data);
+        await ws.SendBinaryAsync(message, data.CancellationToken).ConfigureAwait(false);
+
+        data.Logger.Log($"Sent {message.Length} bytes to the server", LogColors.MossGreen);
+    }
+
+    /// <summary>
+    /// Gets unread messages that the server sent since the last read.
+    /// </summary>
+    [Block("Gets unread messages that the server sent since the last read", name = "WebSocket Read")]
+    public static async Task<List<string>> WsRead(BotData data, int pollIntervalInMilliseconds = 10, int timeoutMilliseconds = 10000)
+    {
+        data.Logger.LogHeader();
+
+        var ws = GetSocket(data);
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeoutMilliseconds));
+        var messages = new List<string>();
+
+        // Wait until a message actually arrives otherwise it will be empty when the block is executed
+        while (messages.Count == 0)
         {
-            data.Logger.LogHeader();
+            ws.ThrowIfFaulted();
+            messages = GetMessages(data);
+            await Task.Delay(pollIntervalInMilliseconds, cts.Token).ConfigureAwait(false);
 
-            var ws = GetSocket(data);
-            ws.Send(message);
-
-            data.Logger.Log($"Sent {message} to the server", LogColors.MossGreen);
-        }
-
-        [Block("Sends a raw binary message on the Web Socket", name = "WebSocket Send Raw")]
-        public static void WsSendRaw(BotData data, byte[] message)
-        {
-            data.Logger.LogHeader();
-
-            var ws = GetSocket(data);
-            ws.Send(message);
-
-            data.Logger.Log($"Sent {message.Length} bytes to the server", LogColors.MossGreen);
-        }
-
-        [Block("Gets unread messages that the server sent since the last read", name = "WebSocket Read")]
-        public static async Task<List<string>> WsRead(BotData data, int pollIntervalInMilliseconds = 10, int timeoutMilliseconds = 10000)
-        {
-            data.Logger.LogHeader();
-
-            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeoutMilliseconds));
-            var messages = new List<string>();
-
-            // Wait until a message actually arrives otherwise it will be empty when the block is executed
-            while (messages.Count == 0)
+            if (cts.IsCancellationRequested)
             {
-                messages = GetMessages(data);
-                await Task.Delay(pollIntervalInMilliseconds, cts.Token);
-
-                if (cts.IsCancellationRequested)
-                {
-                    break;
-                }
+                break;
             }
+        }
 
+        lock (messages)
+        {
             var cloned = messages.Select(m => m).ToList();
+            messages.Clear();
 
-            lock (messages)
-            {
-                messages.Clear();
-            }
-
-            data.Logger.Log($"Unread messages from server", LogColors.MossGreen);
+            data.Logger.Log("Unread messages from server", LogColors.MossGreen);
             data.Logger.Log(cloned, LogColors.MossGreen);
 
             return cloned;
         }
+    }
 
-        [Block("Disconnects the existing Web Socket", name = "WebSocket Disconnect")]
-        public static void WsDisconnect(BotData data)
+    /// <summary>
+    /// Disconnects the existing Web Socket.
+    /// </summary>
+    // Compatibility wrapper for existing direct C# callers; blocks use WsDisconnectAsync.
+    public static void WsDisconnect(BotData data)
+        => WsDisconnectAsync(data).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Disconnects the existing Web Socket.
+    /// </summary>
+    [Block("Disconnects the existing Web Socket", name = "WebSocket Disconnect", id = nameof(WsDisconnect))]
+    public static async Task WsDisconnectAsync(BotData data)
+    {
+        data.Logger.LogHeader();
+
+        var ws = GetSocket(data);
+        await ws.DisconnectAsync(data.CancellationToken).ConfigureAwait(false);
+        data.SetObject("webSocket", null, disposeExisting: false);
+
+        data.Logger.Log("Closed the WebSocket", LogColors.MossGreen);
+    }
+
+    private static WebSocketConnection GetSocket(BotData data)
+        => data.TryGetObject<WebSocketConnection>("webSocket") ?? throw new BlockExecutionException("You must open a websocket connection first");
+
+    private static List<string> GetMessages(BotData data)
+        => data.TryGetObject<List<string>>("wsMessages") ?? throw new BlockExecutionException("You must open a websocket connection first");
+
+    private static IWebProxy CreateProxy(Models.Proxies.Proxy proxyModel)
+    {
+        var proxy = new WebProxy(new UriBuilder(GetProxyScheme(proxyModel.Type), proxyModel.Host, proxyModel.Port).Uri);
+
+        if (proxyModel.NeedsAuthentication)
         {
-            data.Logger.LogHeader();
-
-            var ws = GetSocket(data);
-            ws.Stop(WebSocketCloseStatus.NormalClosure, null);
-
-            data.Logger.Log("Closed the WebSocket", LogColors.MossGreen);
+            proxy.Credentials = new NetworkCredential(proxyModel.Username, proxyModel.Password);
         }
 
-        private static WebsocketClient GetSocket(BotData data)
-            => data.TryGetObject<WebsocketClient>("webSocket") ?? throw new NullReferenceException("You must open a websocket connection first");
-
-        private static List<string> GetMessages(BotData data)
-            => data.TryGetObject<List<string>>("wsMessages") ?? throw new NullReferenceException("You must open a websocket connection first");
+        return proxy;
     }
+
+    private static string GetProxyScheme(Models.Proxies.ProxyType proxyType)
+        => proxyType switch
+        {
+            Models.Proxies.ProxyType.Http => "http",
+            Models.Proxies.ProxyType.Socks4 => "socks4",
+            Models.Proxies.ProxyType.Socks5 => "socks5",
+            Models.Proxies.ProxyType.Socks4a => "socks4a",
+            _ => throw new ArgumentOutOfRangeException(nameof(proxyType), proxyType, "Unsupported proxy type")
+        };
 }

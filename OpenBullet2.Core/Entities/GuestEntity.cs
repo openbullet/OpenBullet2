@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace OpenBullet2.Core.Entities;
@@ -11,12 +11,12 @@ public class GuestEntity : Entity
     /// <summary>
     /// The username that the guest uses to log in.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// The bcrypt hash of the password of the guest.
     /// </summary>
-    public string PasswordHash { get; set; }
+    public string? PasswordHash { get; set; }
 
     /// <summary>
     /// The time when access will expire for this guest.
@@ -28,10 +28,10 @@ public class GuestEntity : Entity
     /// is allowed to use when connecting to the remote instance of OpenBullet 2.
     /// These can include masked IP ranges and static DNS.
     /// </summary>
-    public string AllowedAddresses { get; set; }
+    public string? AllowedAddresses { get; set; }
 
     /// <summary>
     /// The proxy groups that the guest owns.
     /// </summary>
-    public ICollection<ProxyGroupEntity> ProxyGroups { get; set; }
+    public ICollection<ProxyGroupEntity> ProxyGroups { get; set; } = [];
 }

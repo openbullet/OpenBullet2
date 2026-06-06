@@ -50,7 +50,12 @@
                     <Label FontWeight="Bold">Skip:</Label>
                     <Label Content="{Binding Job.Skip}" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                <StackPanel Orientation="Horizontal"
+                            Margin="0 -5"
+                            Background="Transparent"
+                            Cursor="Hand"
+                            ToolTip="Change bots"
+                            MouseDown="ChangeBots">
                     <Label FontWeight="Bold">Bots:</Label>
                     <Label Content="{Binding Job.Bots}" />
                     <iconPacks:PackIconRemixIcon
@@ -58,7 +63,6 @@
                         Margin="0 10 0 0"
                         Height="10"
                         Width="10"
-                        MouseDown="ChangeBots"
                         Kind="Edit2Fill" />
                 </StackPanel>
             </StackPanel>
@@ -277,7 +281,14 @@
 
                 <!-- Show Headers by overriding the default style -->
                 <ListView.Style>
-                    <Style TargetType="{x:Type ListView}" />
+                    <Style TargetType="{x:Type ListView}">
+                        <Setter Property="Grid.ColumnSpan" Value="1" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowHits}" Value="False">
+                                <Setter Property="Grid.ColumnSpan" Value="3" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
                 </ListView.Style>
 
                 <ListView.View>
@@ -295,9 +306,10 @@
                 ResizeBehavior="PreviousAndNext"
                 Grid.Column="1"
                 Width="1"
-                VerticalAlignment="Stretch" />
+                VerticalAlignment="Stretch"
+                Visibility="{Binding ShowHits, Converter={StaticResource BoolToVis}}" />
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Visibility="{Binding ShowHits, Converter={StaticResource BoolToVis}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />

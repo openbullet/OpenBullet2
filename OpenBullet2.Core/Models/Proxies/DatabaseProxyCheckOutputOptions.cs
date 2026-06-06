@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Core.Models.Proxies;
+namespace OpenBullet2.Core.Models.Proxies;
 
 /// <summary>
 /// Options for a <see cref="DatabaseProxyCheckOutput"/>.

@@ -54,6 +54,14 @@
                 <div class="d-flex flex-row">
                     <div class="d-flex align-items-center mr-2">
                         <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Immediate"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="immediate"></p-radioButton>
+                        <label for="immediate" class="ml-2 text-small">Start immediately</label>
+                    </div>
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
                             [value]="StartConditionMode.Relative"
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
@@ -70,6 +78,10 @@
                     </div>
                 </div>
             </div>
+            <span class="text-small color-inactive"
+                *ngIf="startConditionMode === StartConditionMode.Immediate">
+                The job will start as soon as you run it.
+            </span>
             <span class="input-small"
                 *ngIf="startConditionMode === StartConditionMode.Relative">
                 <app-input-time-span [small]="true"
@@ -173,6 +185,16 @@
                             [(ngModel)]="options.neverBanProxies"
                             [binary]="true" inputId="neverBanProxies"
                             label="Never ban proxies" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl
+                            pTooltip="When enabled, bad proxy connection failures follow the previous ERROR-ban behavior instead of marking the proxy as bad"
+                            [(ngModel)]="options.neverMarkProxiesAsBad"
+                            [binary]="true" inputId="neverMarkProxiesAsBad"
+                            label="Never mark proxies as bad" />
                     </div>
                 </div>
                 <div class="row my-3">
@@ -566,6 +588,16 @@
                     label="Mark data as 'TO CHECK' on job abort" />
             </div>
             <div class="mt-3 mb-1">
+                <p-checkbox class="text-small"
+                    (onChange)="touched = true" ngDefaultControl
+                    [(ngModel)]="options.cacheHits"
+                    [binary]="true" inputId="cacheHits"
+                    label="Cache hits in memory for this job" />
+                <span class="text-small color-inactive d-block mt-1">
+                    Disable for high-throughput jobs. Hit counters and configured outputs remain active.
+                </span>
+            </div>
+            <div class="mt-3 mb-1">
                 <span class="title-small">HIT OUTPUTS</span>
             </div>
             <div class="mt-2 mb-1">
@@ -612,7 +644,7 @@
                     <span class="text-small font-weight-bold">File system</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <span class="text-small mr-1 align-self-center">
-                            Folder
+                            Folder template
                         </span>
                         <app-input-text key="hitOutputBaseDir"
                             class="input-small w-100"
@@ -620,12 +652,15 @@
                             (touched)="touched = true" ngDefaultControl
                             (validityChange)="onValidityChange($event)"
                             [(ngModel)]="hitOutput.baseDir" regex="^.+$"
-                            placeholder="proxies.txt" />
+                            placeholder="UserData/Hits/&lt;CONFIG&gt;/&lt;DATE&gt;" />
                         <button class="button button-small button-transparent ml-2"
                             (click)="removeHitOutput(hitOutput)">
                             <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                         </button>
                     </div>
+                    <span class="text-small color-inactive d-block mb-2">
+                        Available placeholders: &lt;CONFIG&gt;, &lt;WORDLIST&gt;, &lt;DATE&gt;
+                    </span>
                 </div>
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.DiscordWebhook">
                     <span class="text-small font-weight-bold">Discord</span>

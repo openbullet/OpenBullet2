@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
+namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 
 /// <summary>
 /// DTO that represents a multipart setting.

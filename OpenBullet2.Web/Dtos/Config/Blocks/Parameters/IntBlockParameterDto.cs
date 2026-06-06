@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Blocks.Parameters;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
@@ -13,5 +13,5 @@ public class IntBlockParameterDto : BlockParameterDto
     /// <summary>
     /// The default value.
     /// </summary>
-    public int DefaultValue { get; set; } = 0;
+    public long DefaultValue { get; set; } = 0;
 }

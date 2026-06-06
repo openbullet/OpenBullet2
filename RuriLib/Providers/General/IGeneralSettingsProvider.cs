@@ -1,8 +1,17 @@
-﻿namespace RuriLib.Providers.Proxies
+namespace RuriLib.Providers.Proxies;
+
+/// <summary>
+/// Provides general runtime settings.
+/// </summary>
+public interface IGeneralSettingsProvider
 {
-    public interface IGeneralSettingsProvider
-    {
-        bool VerboseMode { get; }
-        bool LogAllResults { get; }
-    }
+    /// <summary>
+    /// Gets a value indicating whether verbose logging is enabled.
+    /// </summary>
+    bool VerboseMode { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether all results should be logged.
+    /// </summary>
+    bool LogAllResults { get; }
 }

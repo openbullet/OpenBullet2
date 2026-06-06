@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Services;
+namespace OpenBullet2.Web.Services;
 
 /// <summary>
 /// Service to manage themes.
@@ -21,6 +21,12 @@ public class ThemeService
     /// <param name="fileName">Must end in .css</param>
     /// <param name="stream">The file stream</param>
     public async Task SaveCssFileAsync(string fileName, Stream stream)
+        => await SaveCssFileAsync(fileName, stream, CancellationToken.None);
+
+    /// <summary>
+    /// Saves a CSS file.
+    /// </summary>
+    public async Task SaveCssFileAsync(string fileName, Stream stream, CancellationToken cancellationToken)
     {
         if (!fileName.EndsWith(".css"))
         {
@@ -30,7 +36,7 @@ public class ThemeService
         var path = Path.Combine(_basePath, fileName);
 
         await using var fs = new FileStream(path, FileMode.Create);
-        await stream.CopyToAsync(fs);
+        await stream.CopyToAsync(fs, cancellationToken);
     }
 
     /// <summary>
@@ -47,6 +53,12 @@ public class ThemeService
     /// </summary>
     /// <param name="name">The name of the file</param>
     public async Task<byte[]> GetCssFileAsync(string name)
+        => await GetCssFileAsync(name, CancellationToken.None);
+
+    /// <summary>
+    /// Gets a CSS file by name.
+    /// </summary>
+    public async Task<byte[]> GetCssFileAsync(string name, CancellationToken cancellationToken)
     {
         var fileName = name + ".css";
 
@@ -57,6 +69,6 @@ public class ThemeService
             throw new FileNotFoundException($"Theme file {fileName} not found.");
         }
 
-        return await File.ReadAllBytesAsync(path);
+        return await File.ReadAllBytesAsync(path, cancellationToken);
     }
 }

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 

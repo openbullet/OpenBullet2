@@ -31,6 +31,7 @@ export class InputDropdownComponent<T> {
   valueChanged() {
     this.notifyTouched();
     this.ngModelChange.emit(this.ngModel!);
+    this.validityChange.emit({ key: this.key, valid: true });
   }
 
   computeItemClass(): string {

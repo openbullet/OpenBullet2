@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Core.Helpers;
+namespace OpenBullet2.Core.Helpers;
 
 public static class RootUtils
 {

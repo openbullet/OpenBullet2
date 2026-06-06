@@ -5,8 +5,8 @@ import {
   faCaretRight,
   faPlay,
   faSliders,
+  faSpinner,
   faStop,
-  faWindowMaximize,
 } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -46,11 +46,12 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   faCaretRight = faCaretRight;
   faAlignLeft = faAlignLeft;
   faSliders = faSliders;
-  faWindowMaximize = faWindowMaximize;
+  faSpinner = faSpinner;
 
   logs: BotLoggerEntry[] = [];
   variables: VariableDto[] = [];
   status = 'unknown';
+  isStarting = false;
 
   displayVariables = false;
   viewAsHtmlModalVisible = false;
@@ -84,12 +85,6 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
     this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
 
-    this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
-      // Request the current state
-      this.debuggerHubService.getState();
-    });
-
-    // When the state arrives, set current variables
     this.stateSubscription = this.debuggerHubService.state$.subscribe((msg) => {
       if (msg === null || msg === undefined) {
         return;
@@ -102,26 +97,13 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
           ...msg.variables.filter((v) => v.markedForCapture)
         ] : msg.variables;
       this.status = msg.status;
+      if (msg.status !== 'idle') {
+        this.isStarting = false;
+      }
 
-      this.onNewState();
+      this.scrollToBottom();
     });
-  }
 
-  ngOnDestroy(): void {
-    this.debuggerHubService.stopHubConnection();
-
-    this.stateSubscription?.unsubscribe();
-    this.logsSubscription?.unsubscribe();
-    this.variablesSubscription?.unsubscribe();
-    this.statusSubscription?.unsubscribe();
-    this.errorSubscription?.unsubscribe();
-  }
-
-  onNewState() {
-    // When we get the debugger state, we can start listening to
-    // new messages
-    // TODO: Handle the case where other messages arrive before
-    // the state message
     this.logsSubscription = this.debuggerHubService.logs$.subscribe((msg) => {
       if (msg === null || msg === undefined) {
         return;
@@ -149,6 +131,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }
 
       this.status = msg.newStatus;
+      this.isStarting = false;
 
       // Needed because otherwise the scroll is so fast that
       // it happens before the new element is actually rendered
@@ -169,20 +152,46 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         detail: this.truncatePipe.transform(msg.message, 100),
       });
 
+      this.isStarting = false;
       this.scrollToBottom();
+    });
+
+    this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
+      // Request the current state
+      this.debuggerHubService.getState();
     });
   }
 
+  ngOnDestroy(): void {
+    this.debuggerHubService.stopHubConnection();
+
+    this.stateSubscription?.unsubscribe();
+    this.logsSubscription?.unsubscribe();
+    this.variablesSubscription?.unsubscribe();
+    this.statusSubscription?.unsubscribe();
+    this.errorSubscription?.unsubscribe();
+  }
+
   start() {
+    if (this.isStarting || this.status !== 'idle' || this.settings === null) {
+      return;
+    }
+
+    this.isStarting = true;
+
     if (!this.settings?.persistLog) {
       this.logs = [];
     }
 
     // Save the config on the backend but without persisting the changes.
     // We need this in order to properly debug any new changes
-    this.configService.saveConfig(this.config, false).subscribe((_) => {
-      // Then, send the start message to the debugger
-      this.debuggerHubService.start(this.settings!);
+    this.configService.saveConfig(this.config, false).subscribe({
+      next: (_) => {
+        // Then, send the start message to the debugger
+        this.debuggerHubService.start(this.settings!)
+          .catch((error) => this.onStartError(error));
+      },
+      error: (error) => this.onStartError(error),
     });
   }
 
@@ -238,5 +247,15 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   invariantDisplayFunction(x: string) {
     return x;
+  }
+
+  private onStartError(error: unknown) {
+    console.log(error);
+    this.isStarting = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Debugger Error',
+      detail: 'Could not start the debugger',
+    });
   }
 }

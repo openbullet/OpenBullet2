@@ -1,170 +1,207 @@
-﻿using System.IO;
 using System;
-using RuriLib.Models.Blocks.Settings;
-using RuriLib.Models.Blocks.Parameters;
-using Microsoft.CodeAnalysis.CSharp;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 
-namespace RuriLib.Helpers.LoliCode
+namespace RuriLib.Helpers.LoliCode;
+
+/// <summary>
+/// Has methods to write LoliCode syntax.
+/// </summary>
+public class LoliCodeWriter : StringWriter
 {
     /// <summary>
-    /// Has methods to write LoliCode syntax.
+    /// Initializes a new <see cref="LoliCodeWriter"/> without any initial value.
     /// </summary>
-    public class LoliCodeWriter : StringWriter
+    public LoliCodeWriter()
     {
-        /// <summary>
-        /// Initializes a new <see cref="LoliCodeWriter"/> without any initial value.
-        /// </summary>
-        public LoliCodeWriter() 
-        {
+    }
 
+    /// <summary>
+    /// Initializes a new <see cref="LoliCodeWriter"/> with an <paramref name="initialValue"/>.
+    /// </summary>
+    public LoliCodeWriter(string initialValue)
+    {
+        Write(initialValue);
+    }
+
+    /// <summary>
+    /// Appends a generic LoliCode token.
+    /// </summary>
+    public LoliCodeWriter AppendToken(string token, int spaces = 0)
+    {
+        ArgumentNullException.ThrowIfNull(token);
+
+        if (!token.EndsWith(' '))
+        {
+            token += ' ';
         }
 
-        /// <summary>
-        /// Initializes a new <see cref="LoliCodeWriter"/> with an <paramref name="initialValue"/>.
-        /// </summary>
-        public LoliCodeWriter(string initialValue)
+        Write(token.PadLeft(token.Length + spaces));
+        return this;
+    }
+
+    /// <summary>
+    /// Appends a <paramref name="line"/> prefixed by a given number of <paramref name="spaces"/>
+    /// and a return character.
+    /// </summary>
+    public LoliCodeWriter AppendLine(string line = "", int spaces = 0)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+
+        WriteLine(line.PadLeft(line.Length + spaces));
+        return this;
+    }
+
+    /// <summary>
+    /// Appends a <paramref name="setting"/> in the form <code>SettingName = SettingValue</code>.
+    /// The setting will be written only if the value is different from the default value in the
+    /// corresponding <paramref name="parameter"/>.
+    /// </summary>
+    /// <param name="setting">The setting to append.</param>
+    /// <param name="parameter">The optional parameter metadata used to detect default values.</param>
+    /// <param name="spaces">The indentation width.</param>
+    /// <param name="printDefaults">Whether default values should still be written.</param>
+    /// <returns>The current writer.</returns>
+    public LoliCodeWriter AppendSetting(BlockSetting setting, BlockParameter? parameter = null,
+        int spaces = 2, bool printDefaults = false)
+    {
+        ArgumentNullException.ThrowIfNull(setting);
+
+        if (parameter is null)
         {
-            Write(initialValue);
-        }
-
-        /// <summary>
-        /// Appends a generic LoliCode token.
-        /// </summary>
-        public LoliCodeWriter AppendToken(string token, int spaces = 0)
-        {
-            if (token == null)
-                throw new ArgumentNullException(nameof(token));
-
-            if (!token.EndsWith(' '))
-                token += ' ';
-
-            Write(token.PadLeft(token.Length + spaces));
+            AppendLine($"{setting.Name} = {GetSettingValue(setting)}", spaces);
             return this;
         }
 
-        /// <summary>
-        /// Appends a <paramref name="line"/> prefixed by a given number of <paramref name="spaces"/>
-        /// and a return character.
-        /// </summary>
-        public LoliCodeWriter AppendLine(string line = "", int spaces = 0)
-        {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+        var isDefaultValue = IsDefaultValue(setting, parameter);
 
-            WriteLine(line.PadLeft(line.Length + spaces));
-            return this;
+        if (setting.InputMode == SettingInputMode.Variable || !isDefaultValue || printDefaults)
+        {
+            AppendLine($"{parameter.Name} = {GetSettingValue(setting)}", spaces);
         }
 
-        /// <summary>
-        /// Appends a <paramref name="setting"/> in the form <code>SettingName = SettingValue</code>.
-        /// The setting will be written only if the value is different from the default value in the
-        /// corresponding <paramref name="parameter"/>.
-        /// </summary>
-        /// <param name="setting"></param>
-        /// <param name="parameter"></param>
-        public LoliCodeWriter AppendSetting(BlockSetting setting, BlockParameter parameter = null,
-            int spaces = 2, bool printDefaults = false)
-        {
-            if (parameter == null)
-            {
-                AppendLine($"{setting.Name} = {GetSettingValue(setting)}", spaces);
-                return this;
-            }
+        return this;
+    }
 
-            var isDefaultValue = setting.FixedSetting switch
+    private static bool IsDefaultValue(BlockSetting setting, BlockParameter parameter)
+        => setting.InputMode switch
+        {
+            SettingInputMode.Fixed => setting.FixedSetting switch
             {
-                StringSetting x => x.Value == (parameter as StringParameter).DefaultValue,
-                IntSetting x => x.Value == (parameter as IntParameter).DefaultValue,
-                FloatSetting x => x.Value == (parameter as FloatParameter).DefaultValue,
-                BoolSetting x => x.Value == (parameter as BoolParameter).DefaultValue,
-                ByteArraySetting x => Compare(x.Value, (parameter as ByteArrayParameter).DefaultValue),
-                ListOfStringsSetting x => Compare(x.Value, (parameter as ListOfStringsParameter).DefaultValue),
-                DictionaryOfStringsSetting x => 
-                    Compare(x.Value?.Keys, (parameter as DictionaryOfStringsParameter).DefaultValue?.Keys) &&
-                    Compare(x.Value?.Values, (parameter as DictionaryOfStringsParameter).DefaultValue?.Values),
-                EnumSetting x => x.Value == (parameter as EnumParameter).DefaultValue,
+                StringSetting x => parameter is StringParameter stringParameter
+                    && x.Value == stringParameter.DefaultValue,
+                IntSetting x => parameter is IntParameter intParameter
+                    && x.Value == intParameter.DefaultValue,
+                FloatSetting x => parameter is FloatParameter floatParameter
+                    && Math.Abs(x.Value - floatParameter.DefaultValue) < double.Epsilon,
+                BoolSetting x => parameter is BoolParameter boolParameter
+                    && x.Value == boolParameter.DefaultValue,
+                ByteArraySetting x => parameter is ByteArrayParameter byteArrayParameter
+                    && Compare(x.Value, byteArrayParameter.DefaultValue),
+                ListOfStringsSetting x => parameter is ListOfStringsParameter listParameter
+                    && Compare(x.Value, listParameter.DefaultValue),
+                DictionaryOfStringsSetting x => parameter is DictionaryOfStringsParameter dictionaryParameter
+                    && Compare(x.Value?.Keys, dictionaryParameter.DefaultValue?.Keys)
+                    && Compare(x.Value?.Values, dictionaryParameter.DefaultValue?.Values),
+                EnumSetting x => parameter is EnumParameter enumParameter
+                    && x.Value == enumParameter.DefaultValue,
                 _ => throw new NotImplementedException(),
+            },
+            SettingInputMode.Interpolated => setting.InterpolatedSetting switch
+            {
+                InterpolatedStringSetting x => parameter is StringParameter stringParameter
+                    && x.Value == stringParameter.DefaultValue,
+                InterpolatedListOfStringsSetting x => parameter is ListOfStringsParameter listParameter
+                    && Compare(x.Value, listParameter.DefaultValue),
+                InterpolatedDictionaryOfStringsSetting x => parameter is DictionaryOfStringsParameter dictionaryParameter
+                    && Compare(x.Value?.Keys, dictionaryParameter.DefaultValue?.Keys)
+                    && Compare(x.Value?.Values, dictionaryParameter.DefaultValue?.Values),
+                _ => false
+            },
+            SettingInputMode.Variable => false,
+            _ => false
+        };
+
+    private static bool Compare<T>(IEnumerable<T>? first, IEnumerable<T>? second)
+    {
+        if (first is null || second is null)
+        {
+            return first == second;
+        }
+
+        return first.SequenceEqual(second);
+    }
+
+    /// <summary>
+    /// Gets the snippet of the value of a <paramref name="setting"/> in LoliCode syntax.
+    /// </summary>
+    public static string GetSettingValue(BlockSetting setting)
+    {
+        ArgumentNullException.ThrowIfNull(setting);
+
+        // Preserve the original reference when serializing. Invalid names should be
+        // validated where they are entered instead of being rewritten on save.
+        if (setting.InputMode == SettingInputMode.Variable)
+        {
+            return $"@{setting.InputVariableName}";
+        }
+
+        if (setting.InputMode == SettingInputMode.Interpolated)
+        {
+            return '$' + setting.InterpolatedSetting switch
+            {
+                InterpolatedStringSetting x => ToLiteral(x.Value),
+                InterpolatedListOfStringsSetting x => SerializeList(x.Value),
+                InterpolatedDictionaryOfStringsSetting x => SerializeDictionary(x.Value),
+                _ => throw new NotImplementedException()
             };
-
-            if (setting.InputMode != SettingInputMode.Fixed || !isDefaultValue || printDefaults)
-                AppendLine($"{parameter.Name} = {GetSettingValue(setting)}", spaces);
-
-            return this;
         }
 
-        private static bool Compare<T>(IEnumerable<T> first, IEnumerable<T> second)
+        return setting.FixedSetting switch
         {
-            if (first is null || second is null)
-            {
-                return first == second;
-            }
+            StringSetting x => x.Value is null ? "\"\"" : ToLiteral(x.Value),
+            IntSetting x => x.Value.ToString(CultureInfo.InvariantCulture),
+            FloatSetting x => FormatFloat(x.Value),
+            BoolSetting x => x.Value.ToString(),
+            ByteArraySetting x => x.Value is null ? string.Empty : Convert.ToBase64String(x.Value),
+            ListOfStringsSetting x => x.Value is null ? "[]" : SerializeList(x.Value),
+            DictionaryOfStringsSetting x => x.Value is null ? "{}" : SerializeDictionary(x.Value),
+            EnumSetting x => x.Value,
+            _ => throw new NotImplementedException(),
+        };
+    }
 
-            return first.SequenceEqual(second);
-        }
+    private static string ToLiteral(string? input)
+        => SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression,
+            SyntaxFactory.Literal(input ?? string.Empty)).ToFullString();
 
-        /// <summary>
-        /// Gets the snippet of the value of a <paramref name="setting"/> in LoliCode syntax.
-        /// </summary>
-        public static string GetSettingValue(BlockSetting setting)
+    private static string FormatFloat(double input)
+        => input.ToString(CultureInfo.InvariantCulture);
+
+    private static string SerializeList(List<string>? input)
+    {
+        if (input is null)
         {
-            // TODO: Make a valid variable name if it's invalid
-            if (setting.InputMode == SettingInputMode.Variable)
-                return $"@{setting.InputVariableName}";
-
-            if (setting.InputMode == SettingInputMode.Interpolated)
-            {
-                return '$' + setting.InterpolatedSetting switch
-                {
-                    InterpolatedStringSetting x => ToLiteral(x.Value),
-                    InterpolatedListOfStringsSetting x => SerializeList(x.Value),
-                    InterpolatedDictionaryOfStringsSetting x => SerializeDictionary(x.Value),
-                    _ => throw new NotImplementedException()
-                };
-            }
-
-            return setting.FixedSetting switch
-            {
-                StringSetting x => x.Value == null ? "\"\"" : ToLiteral(x.Value),
-                IntSetting x => x.Value.ToString(),
-                FloatSetting x => FormatFloat(x.Value),
-                BoolSetting x => x.Value.ToString(),
-                ByteArraySetting x => x.Value == null ? "" : Convert.ToBase64String(x.Value),
-                ListOfStringsSetting x => x.Value == null ? "[]" : SerializeList(x.Value),
-                DictionaryOfStringsSetting x => x.Value == null ? "{}" : SerializeDictionary(x.Value),
-                EnumSetting x => x.Value,
-                _ => throw new NotImplementedException(),
-            };
+            return "[]";
         }
 
-        private static string ToLiteral(string input)
+        return "[" + string.Join(", ", input.Select(ToLiteral)) + "]";
+    }
+
+    private static string SerializeDictionary(Dictionary<string, string>? input)
+    {
+        if (input is null || input.Count == 0)
         {
-            input ??= string.Empty;
-
-            return SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(input)).ToFullString();
+            return "{}";
         }
 
-        private static string FormatFloat(float input)
-            => input.ToString(CultureInfo.InvariantCulture);
-
-        private static string SerializeList(List<string> input)
-        {
-            if (input == null)
-                return "[]";
-
-            return "[" + string.Join(", ", input.Select(ToLiteral)) + "]";
-        }
-
-        private static string SerializeDictionary(Dictionary<string, string> input) 
-        {
-            if (input == null || input.Keys.Count == 0)
-                return "{}";
-
-            var list = input.Select(kvp => $"{ToLiteral(kvp.Key)}, {ToLiteral(kvp.Value)}");
-            return "{" + string.Join(", ", list.Select(s => $"({s})")) + "}";
-        }
+        var list = input.Select(kvp => $"{ToLiteral(kvp.Key)}, {ToLiteral(kvp.Value)}");
+        return "{" + string.Join(", ", list.Select(s => $"({s})")) + "}";
     }
 }

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
@@ -7,7 +7,7 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Exceptions;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -28,16 +28,16 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.Guests.Add(guest);
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group1", Owner = guest });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group2" });
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var result = await GetJsonAsync<IEnumerable<ProxyGroupDto>>(client, "/api/v1/proxy-group/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count());
     }
-    
+
     /// <summary>
     /// A guest can only list their own proxy groups.
     /// </summary>
@@ -53,20 +53,20 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group1", Owner = guest });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group2" });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group3", Owner = guest2 });
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<ProxyGroupDto>>(client, "/api/v1/proxy-group/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
         Assert.Equal("group1", result.Value.First().Name);
     }
-    
+
     /// <summary>
     /// An admin can create a new proxy group.
     /// </summary>
@@ -76,18 +76,18 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dto = new CreateProxyGroupDto { Name = "group1" };
-        
+
         // Act
         var result = await PostJsonAsync<ProxyGroupDto>(client, "/api/v1/proxy-group", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var group = await dbContext.ProxyGroups.FindAsync(result.Value.Id);
+        var group = await dbContext.ProxyGroups.FindAsync([result.Value.Id], TestCancellationToken);
         Assert.NotNull(group);
         Assert.Equal("group1", group.Name);
     }
-    
+
     /// <summary>
     /// A guest can create a new proxy group, and they will be the owner.
     /// </summary>
@@ -100,25 +100,25 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxyGroupRepo = GetRequiredService<IProxyGroupRepository>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         var dto = new CreateProxyGroupDto { Name = "group1" };
-        
+
         // Act
         var result = await PostJsonAsync<ProxyGroupDto>(client, "/api/v1/proxy-group", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        var group = await proxyGroupRepo.GetAsync(result.Value.Id);
+        var group = await proxyGroupRepo.GetAsync(result.Value.Id, TestCancellationToken);
         Assert.NotNull(group);
         Assert.Equal("group1", group.Name);
         Assert.NotNull(group.Owner);
         Assert.Equal(guest.Id, group.Owner.Id);
     }
-    
+
     [Fact]
     public async Task UpdateProxyGroup_Admin_Success()
     {
@@ -127,19 +127,19 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group1" };
         dbContext.ProxyGroups.Add(group);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var dto = new UpdateProxyGroupDto { Id = group.Id, Name = "group2" };
-        
+
         // Act
         var result = await PutJsonAsync<ProxyGroupDto>(client, "/api/v1/proxy-group", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        await dbContext.Entry(group).ReloadAsync();
+        await dbContext.Entry(group).ReloadAsync(TestCancellationToken);
         Assert.Equal("group2", group.Name);
     }
-    
+
     [Fact]
     public async Task UpdateProxyGroup_Guest_OwnGroup_Success()
     {
@@ -150,22 +150,22 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var group = new ProxyGroupEntity { Name = "group1", Owner = guest };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         var dto = new UpdateProxyGroupDto { Id = group.Id, Name = "group2" };
-        
+
         // Act
         var result = await PutJsonAsync<ProxyGroupDto>(client, "/api/v1/proxy-group", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        await dbContext.Entry(group).ReloadAsync();
+        await dbContext.Entry(group).ReloadAsync(TestCancellationToken);
         Assert.Equal("group2", group.Name);
     }
-    
+
     [Fact]
     public async Task UpdateProxyGroup_Guest_NotOwned_NotFound()
     {
@@ -176,22 +176,22 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var group = new ProxyGroupEntity { Name = "group1" };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         var dto = new UpdateProxyGroupDto { Id = group.Id, Name = "group2" };
-        
+
         // Act
         var result = await PutJsonAsync<ProxyGroupDto>(client, "/api/v1/proxy-group", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DeleteProxyGroup_Admin_Success()
     {
@@ -206,23 +206,23 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.ProxyGroups.Add(group);
         dbContext.Proxies.Add(proxy1);
         dbContext.Proxies.Add(proxy2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var result = await DeleteAsync(client, $"/api/v1/proxy-group?id={group.Id}");
-        
+
         // Assert
         Assert.Null(result);
-        group = await proxyGroupRepo.GetAsync(group.Id);
+        group = await proxyGroupRepo.GetAsync(group.Id, TestCancellationToken);
         Assert.Null(group);
-        
+
         // Proxies should be deleted as well
-        proxy1 = await proxyRepo.GetAsync(proxy1.Id);
+        proxy1 = await proxyRepo.GetAsync(proxy1.Id, TestCancellationToken);
         Assert.Null(proxy1);
-        proxy2 = await proxyRepo.GetAsync(proxy2.Id);
+        proxy2 = await proxyRepo.GetAsync(proxy2.Id, TestCancellationToken);
         Assert.Null(proxy2);
     }
-    
+
     [Fact]
     public async Task DeleteProxyGroup_Guest_OwnGroup_Success()
     {
@@ -238,26 +238,26 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.ProxyGroups.Add(group);
         dbContext.Proxies.Add(proxy1);
         dbContext.Proxies.Add(proxy2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await DeleteAsync(client, $"/api/v1/proxy-group?id={group.Id}");
-        
+
         // Assert
         Assert.Null(result);
-        group = await proxyGroupRepo.GetAsync(group.Id);
+        group = await proxyGroupRepo.GetAsync(group.Id, TestCancellationToken);
         Assert.Null(group);
-        
+
         // Proxies should be deleted as well
-        proxy1 = await proxyRepo.GetAsync(proxy1.Id);
+        proxy1 = await proxyRepo.GetAsync(proxy1.Id, TestCancellationToken);
         Assert.Null(proxy1);
-        proxy2 = await proxyRepo.GetAsync(proxy2.Id);
+        proxy2 = await proxyRepo.GetAsync(proxy2.Id, TestCancellationToken);
         Assert.Null(proxy2);
     }
-    
+
     [Fact]
     public async Task DeleteProxyGroup_Guest_NotOwned_NotFound()
     {
@@ -268,20 +268,20 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var group = new ProxyGroupEntity { Name = "group1" };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await DeleteAsync(client, $"/api/v1/proxy-group?id={group.Id}");
-        
+
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Content);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Content.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DeleteProxyGroup_InUse_ByProxyCheckJob_Failure()
     {
@@ -292,25 +292,26 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxy = new ProxyEntity { Host = "host", Port = 80, Group = group };
         dbContext.ProxyGroups.Add(group);
         dbContext.Proxies.Add(proxy);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var jobManager = GetRequiredService<JobManagerService>();
         var jobFactory = GetRequiredService<JobFactoryService>();
-        var job = jobFactory.FromOptions(1, 0, new ProxyCheckJobOptions {
+        var job = jobFactory.FromOptions(1, 0, new ProxyCheckJobOptions
+        {
             GroupId = group.Id,
             Target = new ProxyCheckTarget()
         });
         jobManager.AddJob(job);
-        
+
         // Act
         var result = await DeleteAsync(client, $"/api/v1/proxy-group?id={group.Id}");
-        
+
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Content);
         Assert.Equal(ErrorCode.ProxyGroupInUse, result.Content.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DeleteProxyGroup_InUse_ByMultiRunJob_Failure()
     {
@@ -321,18 +322,19 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxy = new ProxyEntity { Host = "host", Port = 80, Group = group };
         dbContext.ProxyGroups.Add(group);
         dbContext.Proxies.Add(proxy);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var jobManager = GetRequiredService<JobManagerService>();
         var jobFactory = GetRequiredService<JobFactoryService>();
-        var job = jobFactory.FromOptions(1, 0, new MultiRunJobOptions {
+        var job = jobFactory.FromOptions(1, 0, new MultiRunJobOptions
+        {
             ProxySources = [new GroupProxySourceOptions { GroupId = group.Id }]
         });
         jobManager.AddJob(job);
-        
+
         // Act
         var result = await DeleteAsync(client, $"/api/v1/proxy-group?id={group.Id}");
-        
+
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Content);

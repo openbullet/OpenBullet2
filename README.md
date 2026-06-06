@@ -1,5 +1,10 @@
 ![Logo](https://i.imgur.com/sToEkJC.png)
 
+[![Latest release](https://img.shields.io/github/v/release/openbullet/OpenBullet2?label=latest)](https://github.com/openbullet/OpenBullet2/releases/latest)
+[![Tests](https://github.com/openbullet/OpenBullet2/actions/workflows/run-tests.yml/badge.svg)](https://github.com/openbullet/OpenBullet2/actions/workflows/run-tests.yml)
+[![Docker](https://img.shields.io/docker/v/openbullet/openbullet2?label=docker&sort=semver)](https://hub.docker.com/r/openbullet/openbullet2)
+[![License](https://img.shields.io/github/license/openbullet/OpenBullet2)](LICENSE)
+
 OpenBullet 2 is a cross-platform automation suite powered by .NET. It allows to perform requests towards a target webapp and offers a lot of tools to work with the results. This software can be used for **scraping** and **parsing data**, automated **penetration testing** and much more.
 
 ## ⚠️ Disclaimer

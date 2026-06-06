@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
+namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
 /// <summary>
 /// Information about a config in a job.

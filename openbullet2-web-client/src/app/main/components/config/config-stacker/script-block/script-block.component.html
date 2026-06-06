@@ -77,3 +77,11 @@
         </div>
     </div>
 </div>
+<div class="row mt-2" *ngIf="getDeprecationWarning(block.interpreter) as warning">
+    <div class="col-12 px-0">
+        <div class="interpreter-warning">
+            <fa-icon class="mr-2" [icon]="faExclamationTriangle" [fixedWidth]="true"></fa-icon>
+            <span>{{ warning }}</span>
+        </div>
+    </div>
+</div>

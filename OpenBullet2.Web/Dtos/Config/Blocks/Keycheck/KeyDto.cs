@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
+namespace OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
 
 /// <summary>
 /// A key of the keychain.

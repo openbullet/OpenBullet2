@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using System.Threading;
 using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web.Models.Pagination;
@@ -61,11 +62,21 @@ public class PagedList<T>
     public static async Task<PagedList<TEntity>> CreateAsync<TEntity>(
         IQueryable<TEntity> source,
         int pageNumber, int pageSize) where TEntity : Entity
+        => await CreateAsync(source, pageNumber, pageSize, CancellationToken.None);
+
+    /// <summary>
+    /// Creates a paged list from an <see cref="IQueryable{T}" />, useful
+    /// for DB calls to optimize the query.
+    /// </summary>
+    public static async Task<PagedList<TEntity>> CreateAsync<TEntity>(
+        IQueryable<TEntity> source,
+        int pageNumber, int pageSize,
+        CancellationToken cancellationToken) where TEntity : Entity
     {
-        var count = await source.CountAsync();
+        var count = await source.CountAsync(cancellationToken);
         var items = await source
             .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize).ToListAsync();
+            .Take(pageSize).ToListAsync(cancellationToken);
 
         return new PagedList<TEntity>(items, count, pageNumber, pageSize);
     }

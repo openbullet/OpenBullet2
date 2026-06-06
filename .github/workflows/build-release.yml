@@ -7,26 +7,111 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    # Only run if the commit message contains the string [build]
-    if: contains(github.event.head_commit.message, '[build]')
+    runs-on: ${{ matrix.os }}
+    # Only run if the commit message contains [build] and does not contain [skip-tests]
+    if: contains(github.event.head_commit.message, '[build]') && !contains(github.event.head_commit.message, '[skip-tests]')
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
+    - uses: actions/checkout@v5
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
+    - name: Fetch curl-impersonate native assets
+      run: dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid current
     - name: Unit and integration tests
-      run: dotnet test
+      shell: pwsh
+      run: |
+        Get-ChildItem -Path . -Recurse -Filter *.Tests.csproj |
+          Where-Object { $_.FullName -notlike '*OpenBullet2.Native.Tests*' } |
+          ForEach-Object {
+            dotnet test $_.FullName
+          }
+
+  build-updaters:
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      always() &&
+      contains(github.event.head_commit.message, '[build]') &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: win-x64
+            executable: OpenBullet2.Web.Updater.exe
+            release_name: ob2-web-updater-win-x64.exe
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: win-arm64
+            executable: OpenBullet2.Web.Updater.exe
+            release_name: ob2-web-updater-win-arm64.exe
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: osx-x64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-osx-x64
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: osx-arm64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-osx-arm64
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: linux-x64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-linux-x64
+          - project: OpenBullet2.Web.Updater/OpenBullet2.Web.Updater.csproj
+            runtime: linux-arm64
+            executable: OpenBullet2.Web.Updater
+            release_name: ob2-web-updater-linux-arm64
+          - project: OpenBullet2.Native.Updater/OpenBullet2.Native.Updater.csproj
+            runtime: win-x64
+            executable: OpenBullet2.Native.Updater.exe
+            release_name: ob2-native-updater-win-x64.exe
+          - project: OpenBullet2.Native.Updater/OpenBullet2.Native.Updater.csproj
+            runtime: win-arm64
+            executable: OpenBullet2.Native.Updater.exe
+            release_name: ob2-native-updater-win-arm64.exe
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+    - name: Publish updater
+      run: dotnet publish "${{ matrix.project }}" -c Release -r ${{ matrix.runtime }} -o "./publish/${{ matrix.release_name }}"
+    - name: Prepare release artifact
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path .release | Out-Null
+        Move-Item "./publish/${{ matrix.release_name }}/${{ matrix.executable }}" "./.release/${{ matrix.release_name }}"
+    - name: Upload updater artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: updater-${{ matrix.release_name }}
+        path: ./.release/${{ matrix.release_name }}
+        if-no-files-found: error
+        retention-days: 1
 
   build:
     runs-on: ubuntu-latest
-    needs: test
+    needs:
+    - test
+    - build-updaters
+    if: |
+      always() &&
+      contains(github.event.head_commit.message, '[build]') &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.build-updaters.result == 'success' || needs.build-updaters.result == 'skipped')
     steps:
 
     # Checkout the repository
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
         
@@ -34,32 +119,60 @@ jobs:
     - name: Read version
       run: echo "VERSION=$(head -n 1 OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     # Build using docker
     - name: Build using docker
-      run: docker build -t openbullet2-build -f Dockerfile.build .
+      uses: docker/build-push-action@v7
+      with:
+        context: .
+        file: ./Dockerfile.build
+        load: true
+        tags: openbullet2-build
+        # This image contains every release artifact, so max-mode cache exports too many
+        # large intermediate self-contained publish layers for GitHub-hosted runner disks.
+        cache-from: type=gha,scope=openbullet2-artifacts-v2
+        cache-to: type=gha,mode=min,scope=openbullet2-artifacts-v2
 
     # Extract files from the /app folder of the image into a zip
     - name: Extract files from the image
       run: |
         docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
-        docker cp openbullet2-extract:/app/web .web
-        docker cp openbullet2-extract:/app/native .native
-        docker cp openbullet2-extract:/app/updater .updater
+        docker cp openbullet2-extract:/app/web-win-x64 .web-win-x64
+        docker cp openbullet2-extract:/app/web-win-arm64 .web-win-arm64
+        docker cp openbullet2-extract:/app/web-osx-x64 .web-osx-x64
+        docker cp openbullet2-extract:/app/web-osx-arm64 .web-osx-arm64
+        docker cp openbullet2-extract:/app/web-linux-x64 .web-linux-x64
+        docker cp openbullet2-extract:/app/web-linux-arm64 .web-linux-arm64
+        docker cp openbullet2-extract:/app/native-win-x64 .native-win-x64
+        docker cp openbullet2-extract:/app/native-win-arm64 .native-win-arm64
         docker rm openbullet2-extract
         mkdir .release
-        cd .web
-        zip -r ../.release/OpenBullet2.Web.zip ./*
-        cd ../.native
-        zip -r ../.release/OpenBullet2.Native.zip ./*
+        cd .web-win-x64
+        zip -r ../.release/OpenBullet2.Web-win-x64.zip .
+        cd ../.web-win-arm64
+        zip -r ../.release/OpenBullet2.Web-win-arm64.zip .
+        cd ../.web-osx-x64
+        zip -r ../.release/OpenBullet2.Web-osx-x64.zip .
+        cd ../.web-osx-arm64
+        zip -r ../.release/OpenBullet2.Web-osx-arm64.zip .
+        cd ../.web-linux-x64
+        zip -r ../.release/OpenBullet2.Web-linux-x64.zip .
+        cd ../.web-linux-arm64
+        zip -r ../.release/OpenBullet2.Web-linux-arm64.zip .
+        cd ../.native-win-x64
+        zip -r ../.release/OpenBullet2.Native-win-x64.zip .
+        cd ../.native-win-arm64
+        zip -r ../.release/OpenBullet2.Native-win-arm64.zip .
         cd ..
-        mv .updater/web/win-x64/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-x64.exe
-        mv .updater/web/win-x86/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-x86.exe
-        mv .updater/web/win-arm64/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-arm64.exe
-        mv .updater/web/linux-x64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-x64
-        mv .updater/web/linux-arm64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-arm64
-        mv .updater/native/win-x64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x64.exe
-        mv .updater/native/win-x86/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x86.exe
-        mv .updater/native/win-arm64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-arm64.exe
+
+    - name: Download updater artifacts
+      uses: actions/download-artifact@v5
+      with:
+        pattern: updater-*
+        path: .release
+        merge-multiple: true
 
     # Upload the files to the release
     - name: Upload OpenBullet2 release
@@ -103,31 +216,37 @@ jobs:
   docker:
     name: Build and Push Docker image to Docker Hub
     needs: build
+    if: |
+      always() &&
+      needs.build.result == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
     
     # Read the version
     - name: Read version
       run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
     
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
     
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     
     - name: Login to DockerHub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v4
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
     - name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v7
       with:
         push: true
         file: ./Dockerfile.remote
-        platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
+        build-args: RELEASE_TAG=${{ env.VERSION }}
+        platforms: linux/arm64/v8,linux/amd64
         tags: openbullet/openbullet2:latest,openbullet/openbullet2:${{ env.VERSION }}
+        cache-from: type=gha,scope=openbullet2-remote-image
+        cache-to: type=gha,mode=max,scope=openbullet2-remote-image

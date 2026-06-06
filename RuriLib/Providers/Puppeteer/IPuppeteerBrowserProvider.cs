@@ -1,7 +1,12 @@
-﻿namespace RuriLib.Providers.Puppeteer
+namespace RuriLib.Providers.Puppeteer;
+
+/// <summary>
+/// Provides Puppeteer browser configuration.
+/// </summary>
+public interface IPuppeteerBrowserProvider
 {
-    public interface IPuppeteerBrowserProvider
-    {
-        string ChromeBinaryLocation { get; }
-    }
+    /// <summary>
+    /// Gets the Chrome binary location.
+    /// </summary>
+    string ChromeBinaryLocation { get; }
 }

@@ -1,4 +1,4 @@
-﻿using RuriLib.Helpers.CSharp;
+using RuriLib.Helpers.CSharp;
 
 namespace OpenBullet2.Web.Dtos.Config.Settings;
 

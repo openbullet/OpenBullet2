@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.User;
+using OpenBullet2.Web.Dtos.User;
 
 namespace OpenBullet2.Web.Dtos.Hit;
 

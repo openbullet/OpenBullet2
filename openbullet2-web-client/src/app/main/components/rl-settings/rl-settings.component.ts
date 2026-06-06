@@ -4,7 +4,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
 import { FieldValidity } from 'src/app/shared/utils/forms';
-import { BrowserType, CaptchaServiceType, ParallelizerType, RLSettingsDto } from '../../dtos/settings/rl-settings.dto';
+import {
+  BrowserType,
+  CaptchaServiceType,
+  ParallelizerType,
+  PlaywrightBrowserSource,
+  PlaywrightBrowserType,
+  RLSettingsDto,
+} from '../../dtos/settings/rl-settings.dto';
 import { SettingsService } from '../../services/settings.service';
 
 @Component({
@@ -47,6 +54,15 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     ParallelizerType.ParallelBased,
   ];
   browserTypes: BrowserType[] = [BrowserType.Chrome, BrowserType.Firefox];
+  playwrightBrowserTypes: PlaywrightBrowserType[] = [
+    PlaywrightBrowserType.Chromium,
+    PlaywrightBrowserType.Firefox,
+    PlaywrightBrowserType.Webkit,
+  ];
+  playwrightBrowserSources: PlaywrightBrowserSource[] = [
+    PlaywrightBrowserSource.Managed,
+    PlaywrightBrowserSource.ExecutablePath,
+  ];
   captchaServiceTypes: CaptchaServiceType[] = [
     CaptchaServiceType.TwoCaptcha,
     CaptchaServiceType.AntiCaptcha,
@@ -77,6 +93,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     CaptchaServiceType.Aycd,
   ];
   CaptchaServiceType = CaptchaServiceType;
+  PlaywrightBrowserSource = PlaywrightBrowserSource;
 
   constructor(
     private settingsService: SettingsService,

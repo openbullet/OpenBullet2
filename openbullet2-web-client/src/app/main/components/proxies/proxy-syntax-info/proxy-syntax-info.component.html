@@ -26,10 +26,18 @@
                     <td class="monospace">(type)host:port:username:password</td>
                     <td class="monospace">(socks5)myproxy.com:5134:myusername:mypassword</td>
                 </tr>
+                <tr>
+                    <td class="monospace">scheme://host:port</td>
+                    <td class="monospace">http://127.0.0.1:8080, socks5://myproxy.com:5134</td>
+                </tr>
+                <tr>
+                    <td class="monospace">scheme://username:password&#64;host:port</td>
+                    <td class="monospace">https://myusername:mypassword&#64;127.0.0.1:8080</td>
+                </tr>
             </tbody>
         </table>
         <span class="text-small color-inactive">
-            The proxy type can be either http, socks4, socks4a or socks5.
+            The proxy type can be either http, https, socks4, socks4a or socks5.
         </span>
     </p-accordionTab>
 </p-accordion>

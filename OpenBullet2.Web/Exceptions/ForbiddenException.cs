@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Exceptions;
+namespace OpenBullet2.Web.Exceptions;
 
 /// <summary>
 /// An exception that is thrown when a user tries to

@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Settings;
+namespace OpenBullet2.Web.Dtos.Settings;
 
 /// <summary>
 /// A CSS theme.

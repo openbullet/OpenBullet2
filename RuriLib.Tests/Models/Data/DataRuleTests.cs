@@ -1,74 +1,97 @@
-﻿using RuriLib.Models.Data.Rules;
+using RuriLib.Models.Data.Rules;
 using Xunit;
 
-namespace RuriLib.Tests.Models.Data
+namespace RuriLib.Tests.Models.Data;
+
+public class DataRuleTests
 {
-    public class DataRuleTests
+    [Fact]
+    public void IsSatisfied_Contains_True()
     {
-        [Fact]
-        public void IsSatisfied_Contains_True()
+        var rule = new SimpleDataRule
         {
-            var rule = new SimpleDataRule
-            {
-                Comparison = StringRule.Contains,
-                StringToCompare = "abc",
-                Invert = false
-            };
+            Comparison = StringRule.Contains,
+            StringToCompare = "abc",
+            Invert = false
+        };
 
-            Assert.True(rule.IsSatisfied("abcdef"));
-        }
+        Assert.True(rule.IsSatisfied("abcdef"));
+    }
 
-        [Fact]
-        public void IsSatisfied_ContainsInvert_False()
+    [Fact]
+    public void IsSatisfied_ContainsInvert_False()
+    {
+        var rule = new SimpleDataRule
         {
-            var rule = new SimpleDataRule
-            {
-                Comparison = StringRule.Contains,
-                StringToCompare = "abc",
-                Invert = true
-            };
+            Comparison = StringRule.Contains,
+            StringToCompare = "abc",
+            Invert = true
+        };
 
-            Assert.False(rule.IsSatisfied("abcdef"));
-        }
+        Assert.False(rule.IsSatisfied("abcdef"));
+    }
 
-        [Fact]
-        public void IsSatisfied_ContainsCaseInsensitive_False()
+    [Fact]
+    public void IsSatisfied_ContainsCaseInsensitive_False()
+    {
+        var rule = new SimpleDataRule
         {
-            var rule = new SimpleDataRule
-            {
-                Comparison = StringRule.Contains,
-                StringToCompare = "ABC",
-                CaseSensitive = false,
-                Invert = false
-            };
+            Comparison = StringRule.Contains,
+            StringToCompare = "ABC",
+            CaseSensitive = false,
+            Invert = false
+        };
 
-            Assert.True(rule.IsSatisfied("abcdef"));
-        }
+        Assert.True(rule.IsSatisfied("abcdef"));
+    }
 
-        [Fact]
-        public void IsSatisfied_ContainsAll_True()
+    [Fact]
+    public void IsSatisfied_ContainsAll_True()
+    {
+        var rule = new SimpleDataRule
         {
-            var rule = new SimpleDataRule
-            {
-                Comparison = StringRule.ContainsAll,
-                StringToCompare = "acf",
-                Invert = false
-            };
+            Comparison = StringRule.ContainsAll,
+            StringToCompare = "acf",
+            Invert = false
+        };
 
-            Assert.True(rule.IsSatisfied("abcdef"));
-        }
+        Assert.True(rule.IsSatisfied("abcdef"));
+    }
 
-        [Fact]
-        public void IsSatisfied_ContainsAny_True()
+    [Fact]
+    public void IsSatisfied_ContainsAny_True()
+    {
+        var rule = new SimpleDataRule
         {
-            var rule = new SimpleDataRule
-            {
-                Comparison = StringRule.ContainsAny,
-                StringToCompare = "a78",
-                Invert = false
-            };
+            Comparison = StringRule.ContainsAny,
+            StringToCompare = "a78",
+            Invert = false
+        };
 
-            Assert.True(rule.IsSatisfied("abcdef"));
-        }
+        Assert.True(rule.IsSatisfied("abcdef"));
+    }
+
+    [Fact]
+    public void IsSatisfied_LongerThan_True()
+    {
+        var rule = new SimpleDataRule
+        {
+            Comparison = StringRule.LongerThan,
+            StringToCompare = "3"
+        };
+
+        Assert.True(rule.IsSatisfied("abcdef"));
+    }
+
+    [Fact]
+    public void RegexDataRule_IsSatisfied_RespectsInvert()
+    {
+        var rule = new RegexDataRule
+        {
+            RegexToMatch = "^abc",
+            Invert = true
+        };
+
+        Assert.False(rule.IsSatisfied("abcdef"));
     }
 }

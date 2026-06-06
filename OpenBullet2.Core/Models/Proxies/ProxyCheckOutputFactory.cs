@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +10,7 @@ namespace OpenBullet2.Core.Models.Proxies;
 public class ProxyCheckOutputFactory
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    
+
     /// <summary></summary>
     public ProxyCheckOutputFactory(IServiceScopeFactory scopeFactory)
     {

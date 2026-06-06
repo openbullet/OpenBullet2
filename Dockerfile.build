@@ -3,34 +3,39 @@
 # -------
 # BACKEND
 # -------
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS backend
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS backend
 
 WORKDIR /code
 
 COPY . .
-RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 -o /build/native
-RUN dotnet publish OpenBullet2.Web -c Release -o /build/web
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build/web-win-x64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x64 -o /updater/web/win-x64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x86 -o /updater/web/win-x86
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-arm64 -o /updater/web/win-arm64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r linux-x64 -o /updater/web/linux-x64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r linux-arm64 -o /updater/web/linux-arm64
-RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-x64 -o /updater/native/win-x64
-RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-x86 -o /updater/native/win-x86
-RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-arm64 -o /updater/native/win-arm64
 
-# No osx because it needs codesign and it costs money...
-
-# Copy the win-x64 executable to the root of the web folder
-RUN cp /build/web-win-x64/OpenBullet2.Web.exe /build/web/OpenBullet2.Web.exe
-
-WORKDIR /build/web
-
-# Remove all .xml files
-# (we cannot use <GenerateDocumentationFile>false</GenerateDocumentationFile>
-# because we need it for swagger)
-RUN find . -name "*.xml" -type f -delete
+# Build all release artifacts in a single layer. Splitting every publish into its own RUN
+# makes BuildKit keep large cumulative self-contained publish snapshots, which can exhaust
+# the GitHub-hosted runner disk when exporting the artifact build cache.
+RUN dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid all \
+    && dotnet publish OpenBullet2.Native -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-x64 \
+    && dotnet publish OpenBullet2.Native -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/native-win-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r win-x64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r win-arm64 --self-contained true -p:PlaywrightPlatform=win -o /build/web-win-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r osx-x64 --self-contained true -p:PlaywrightPlatform=osx -o /build/web-osx-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r osx-arm64 --self-contained true -p:PlaywrightPlatform=all -o /build/web-osx-arm64 \
+    && dotnet publish OpenBullet2.Web -c Release -r linux-x64 --self-contained true -p:PlaywrightPlatform=linux-x64 -o /build/web-linux-x64 \
+    && dotnet publish OpenBullet2.Web -c Release -r linux-arm64 --self-contained true -p:PlaywrightPlatform=linux-arm64 -o /build/web-linux-arm64 \
+    && find /build/web-win-x64 -name "*.xml" -type f -delete \
+    && find /build/web-win-arm64 -name "*.xml" -type f -delete \
+    && find /build/web-osx-x64 -name "*.xml" -type f -delete \
+    && find /build/web-osx-arm64 -name "*.xml" -type f -delete \
+    && find /build/web-linux-x64 -name "*.xml" -type f -delete \
+    && find /build/web-linux-arm64 -name "*.xml" -type f -delete \
+    && find /build/native-win-x64 -name "*.xml" -type f -delete \
+    && find /build/native-win-arm64 -name "*.xml" -type f -delete \
+    && rm -rf /build/web-osx-arm64/.playwright/node/darwin-x64 \
+    /build/web-osx-arm64/.playwright/node/linux-arm64 \
+    /build/web-osx-arm64/.playwright/node/linux-x64 \
+    /build/web-osx-arm64/.playwright/node/win32_x64 \
+    /tmp/openbullet2-curl-impersonate \
+    /root/.nuget/packages \
+    && find /code -type d \( -name bin -o -name obj \) -prune -exec rm -rf {} +
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
@@ -45,7 +50,7 @@ WORKDIR /code
 
 COPY openbullet2-web-client/package.json .
 COPY openbullet2-web-client/package-lock.json .
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 COPY openbullet2-web-client .
 RUN npm run build
@@ -54,24 +59,68 @@ RUN mkdir /build && mv dist/* /build
 # ---------
 # AGGREGATE
 # ---------
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
+FROM alpine:3.20
 
-RUN apt-get update -yq && apt-get install -y --no-install-recommends curl
+WORKDIR /app/web-win-x64
 
-WORKDIR /app/web
-
-COPY --from=backend /build/web .
+COPY --from=backend /build/web-win-x64 .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
-# Create a text file with all the files and folders in the current directory, not recursive, to be used by the updater
-RUN ls -1 > build-files.txt
+RUN ls -1A > build-files.txt
 
-WORKDIR /app/native
+WORKDIR /app/web-linux-x64
 
-COPY --from=backend /build/native /app/native
+COPY --from=backend /build/web-linux-x64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
-# Create a text file with all the files and folders in the current directory, not recursive, to be used by the updater
-RUN ls -1 > build-files.txt
+RUN ls -1A > build-files.txt
 
-COPY --from=backend /updater /app/updater
+WORKDIR /app/web-win-arm64
+
+COPY --from=backend /build/web-win-arm64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-osx-x64
+
+COPY --from=backend /build/web-osx-x64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-osx-arm64
+
+COPY --from=backend /build/web-osx-arm64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/web-linux-arm64
+
+COPY --from=backend /build/web-linux-arm64 .
+COPY --from=frontend /build ./wwwroot
+COPY OpenBullet2.Web/dbip-country-lite.mmdb .
+
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/native-win-x64
+
+COPY --from=backend /build/native-win-x64 /app/native-win-x64
+
+# Create a text file with all top-level files and folders, including hidden ones like .playwright,
+# to be used by the updater
+RUN ls -1A > build-files.txt
+
+WORKDIR /app/native-win-arm64
+
+COPY --from=backend /build/native-win-arm64 /app/native-win-arm64
+
+# Create a text file with all top-level files and folders, including hidden ones like .playwright,
+# to be used by the updater
+RUN ls -1A > build-files.txt

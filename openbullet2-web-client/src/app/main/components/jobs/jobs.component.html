@@ -145,8 +145,8 @@
                         </td>
                         <td>{{ mrj.name }}</td>
                         <td>
-                            <div [class]="'job-chip bg-' + statusColor[mrj.status]">
-                                {{ mrj.status | uppercase }}
+                            <div [class]="'job-chip bg-' + getDisplayStatusColor(mrj)">
+                                {{ getDisplayStatusLabel(mrj) | uppercase }}
                             </div>
                         </td>
                         <td>{{ mrj.configName }}</td>
@@ -172,8 +172,8 @@
                             </button>
                             <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
                                 <button class="button button-transparent" *ngIf="showJobActions"
-                                    pTooltip="Start" tooltipPosition="bottom"
-                                    (click)="startJob(mrj, $event)">
+                                    [pTooltip]="getStartActionLabel(mrj)" tooltipPosition="bottom"
+                                    (click)="startOrResumeJob(mrj, $event)">
                                     <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                                 </button>
                                 <button class="button button-transparent" *ngIf="showJobActions"
@@ -295,9 +295,9 @@
                         </td>
                         <td>{{ pcj.name }}</td>
                         <td>
-                            <div [class]="'job-chip bg-' + statusColor[pcj.status]">
+                            <div [class]="'job-chip bg-' + getDisplayStatusColor(pcj)">
                                 <span class="px-auto">
-                                    {{ pcj.status | uppercase }}
+                                    {{ getDisplayStatusLabel(pcj) | uppercase }}
                                 </span>
                             </div>
                         </td>
@@ -314,8 +314,8 @@
                             </button>
                             <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
                                 <button class="button button-transparent" *ngIf="showJobActions"
-                                    pTooltip="Start" tooltipPosition="bottom"
-                                    (click)="startJob(pcj, $event)">
+                                    [pTooltip]="getStartActionLabel(pcj)" tooltipPosition="bottom"
+                                    (click)="startOrResumeJob(pcj, $event)">
                                     <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                                 </button>
                                 <button class="button button-transparent" *ngIf="showJobActions"

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
@@ -9,7 +9,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Pagination;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Proxies;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -33,22 +33,23 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
         dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
         var adminProxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "127.0.0.1",
                 Port = p,
                 Group = adminGroup
             });
         var guestProxies = Enumerable.Range(9080, 500)
-            .Select(p => new ProxyEntity 
+            .Select(p => new ProxyEntity
             {
-                Host = "127.0.0.1", 
-                Port = p, 
+                Host = "127.0.0.1",
+                Port = p,
                 Group = guestGroup
             });
         dbContext.Proxies.AddRange(adminProxies);
         dbContext.Proxies.AddRange(guestProxies);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var filters = new ProxyFiltersDto
         {
@@ -69,7 +70,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-    
+
     /// <summary>
     /// A guest can list all proxies in their own proxy groups.
     /// </summary>
@@ -87,33 +88,34 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var guest2Group = new ProxyGroupEntity { Name = "guest2Group", Owner = guest2 };
         dbContext.ProxyGroups.AddRange(adminGroup, guestGroup, guest2Group);
         var adminProxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "127.0.0.1",
                 Port = p,
                 Group = adminGroup
             });
         var guestProxies = Enumerable.Range(9080, 2000)
-            .Select(p => new ProxyEntity 
+            .Select(p => new ProxyEntity
             {
                 Host = "127.0.0.1",
-                Port = p, 
+                Port = p,
                 Group = guestGroup
             });
         var guest2Proxies = Enumerable.Range(11080, 500)
-            .Select(p => new ProxyEntity 
+            .Select(p => new ProxyEntity
             {
-                Host = "127.0.0.1", 
-                Port = p, 
+                Host = "127.0.0.1",
+                Port = p,
                 Group = guest2Group
             });
         dbContext.Proxies.AddRange(adminProxies);
         dbContext.Proxies.AddRange(guestProxies);
         dbContext.Proxies.AddRange(guest2Proxies);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var filters = new ProxyFiltersDto
         {
@@ -126,7 +128,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<PagedList<ProxyDto>>(
             client, "/api/v1/proxy/all".ToUri(filters));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(25, result.Value.Items.Count);
@@ -134,7 +136,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-    
+
     [Fact]
     public async Task GetAll_Filtered_Success()
     {
@@ -146,7 +148,8 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var group2 = new ProxyGroupEntity { Name = "group2", Owner = guest };
         dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
                 Port = p,
                 Type = p / 4 % 2 == 0 ? ProxyType.Http : ProxyType.Socks5,
@@ -154,15 +157,16 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
                 Group = group
             });
         var proxies2 = Enumerable.Range(9080, 500)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "1.1.1.1",
                 Port = p,
                 Group = group2
             });
         dbContext.Proxies.AddRange(proxies);
         dbContext.Proxies.AddRange(proxies2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var filters = new ProxyFiltersDto
         {
@@ -175,7 +179,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<PagedList<ProxyDto>>(
             client, "/api/v1/proxy/all".ToUri(filters));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(25, result.Value.Items.Count);
@@ -183,7 +187,41 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-    
+
+    [Fact]
+    public async Task GetAll_FilteredByQuality_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        dbContext.Proxies.AddRange(
+            new ProxyEntity { Host = "1.1.1.1", Port = 8080, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.2", Port = 8081, Quality = ProxyQuality.Anonymous, Group = group },
+            new ProxyEntity { Host = "1.1.1.3", Port = 8082, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.4", Port = 8083, Quality = ProxyQuality.Transparent, Group = group }
+        );
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var filters = new ProxyFiltersDto
+        {
+            PageNumber = 0,
+            PageSize = 25,
+            ProxyGroupId = group.Id,
+            Quality = ProxyQuality.Elite
+        };
+        var result = await GetJsonAsync<PagedList<ProxyDto>>(
+            client, "/api/v1/proxy/all".ToUri(filters));
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Items.Count);
+        Assert.Equal(2, result.Value.TotalCount);
+        Assert.All(result.Value.Items, p => Assert.Equal(ProxyQuality.Elite, p.Quality));
+    }
+
     [Fact]
     public async Task Add_FromList_Success()
     {
@@ -193,10 +231,10 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group" };
         dbContext.ProxyGroups.Add(group);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
-        var dto = new AddProxiesFromListDto 
+        var dto = new AddProxiesFromListDto
         {
             Proxies = Enumerable.Range(8080, 1000)
                 .Select(p => $"127.0.0.1:{p}")
@@ -208,20 +246,20 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/add", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(1001, result.Value.Count);
-        
-        var proxies = await proxyRepo.GetAll().ToListAsync();
-        
+
+        var proxies = await proxyRepo.GetAll().ToListAsync(TestCancellationToken);
+
         Assert.Equal(1001, proxies.Count);
-        
+
         var first = proxies[0];
         Assert.Equal(ProxyType.Socks5, first.Type);
         Assert.Equal("username", first.Username);
         Assert.Equal("password", first.Password);
-        
+
         // Check that the last proxy was added with the correct type and credentials
         // and was not overwritten by the default values
         var localhost = proxies.First(p => p.Host == "localhost");
@@ -229,7 +267,53 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("user", localhost.Username);
         Assert.Equal("pass", localhost.Password);
     }
-    
+
+    [Fact]
+    public async Task Add_FromList_UriSyntax_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var proxyRepo = GetRequiredService<IProxyRepository>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var dto = new AddProxiesFromListDto
+        {
+            Proxies =
+            [
+                "socks5://uri-user:uri-pass@localhost:6001",
+                "https://127.0.0.1:6002"
+            ],
+            DefaultType = ProxyType.Socks4,
+            DefaultUsername = "default-user",
+            DefaultPassword = "default-pass",
+            ProxyGroupId = group.Id
+        };
+        var result = await PostJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/add", dto);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+
+        var proxies = await proxyRepo.GetAll().ToListAsync(TestCancellationToken);
+
+        Assert.Equal(2, proxies.Count);
+
+        var localhost = proxies.First(p => p.Host == "localhost");
+        Assert.Equal(ProxyType.Socks5, localhost.Type);
+        Assert.Equal("uri-user", localhost.Username);
+        Assert.Equal("uri-pass", localhost.Password);
+
+        var localIp = proxies.First(p => p.Host == "127.0.0.1");
+        Assert.Equal(ProxyType.Http, localIp.Type);
+        Assert.Equal("default-user", localIp.Username);
+        Assert.Equal("default-pass", localIp.Password);
+    }
+
     [Fact]
     public async Task Add_FromRemote_Success()
     {
@@ -239,26 +323,26 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group" };
         dbContext.ProxyGroups.Add(group);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
-        var dto = new AddProxiesFromRemoteDto 
+        var dto = new AddProxiesFromRemoteDto
         {
             Url = "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
             ProxyGroupId = group.Id
         };
         var result = await PostJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/add-from-remote", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.Count > 0);
-        
-        var proxies = await proxyRepo.GetAll().ToListAsync();
-        
+
+        var proxies = await proxyRepo.GetAll().ToListAsync(TestCancellationToken);
+
         Assert.Equal(result.Value.Count, proxies.Count);
     }
-    
+
     [Fact]
     public async Task MoveMany_Filtered_Success()
     {
@@ -269,7 +353,8 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var group2 = new ProxyGroupEntity { Name = "group2" };
         dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
                 Port = p,
                 Type = p / 4 % 2 == 0 ? ProxyType.Http : ProxyType.Socks5,
@@ -277,15 +362,16 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
                 Group = group
             });
         var proxies2 = Enumerable.Range(9080, 500)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "1.1.1.1",
                 Port = p,
                 Group = group2
             });
         dbContext.Proxies.AddRange(proxies);
         dbContext.Proxies.AddRange(proxies2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var dto = new MoveProxiesDto
         {
@@ -299,23 +385,23 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/move/many", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(1000 / 8, result.Value.Count);
-        
+
         var group1ProxyCount = await dbContext.Proxies
-            .Where(p => p.Group.Id == group.Id)
-            .CountAsync();
-        
+            .Where(p => p.Group != null && p.Group.Id == group.Id)
+            .CountAsync(TestCancellationToken);
+
         var group2ProxyCount = await dbContext.Proxies
-            .Where(p => p.Group.Id == group2.Id)
-            .CountAsync();
-        
+            .Where(p => p.Group != null && p.Group.Id == group2.Id)
+            .CountAsync(TestCancellationToken);
+
         Assert.Equal(1000 - 1000 / 8, group1ProxyCount);
         Assert.Equal(500 + 1000 / 8, group2ProxyCount);
     }
-    
+
     /// <summary>
     /// A guest should now be allowed to move proxies from
     /// an admin-owned group to a self-owned group.
@@ -331,17 +417,18 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
         dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
         var proxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "127.0.0.1",
                 Port = p,
                 Group = adminGroup
             });
         dbContext.Proxies.AddRange(proxies);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new MoveProxiesDto
         {
@@ -352,12 +439,12 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/move/many", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Count);
     }
-    
+
     [Fact]
     public async Task UpdateMany_Guest_FromOwned_ToNotOwned_Fail()
     {
@@ -371,18 +458,18 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity
             {
-                Host = "127.0.0.1", 
-                Port = p, 
+                Host = "127.0.0.1",
+                Port = p,
                 Group = guestGroup
             });
         dbContext.Proxies.AddRange(proxies);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
 
         // Act
-        var dto = new MoveProxiesDto 
+        var dto = new MoveProxiesDto
         {
             PageNumber = 0,
             PageSize = 25,
@@ -397,7 +484,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DownloadMany_Filtered_Success()
     {
@@ -408,7 +495,8 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var group2 = new ProxyGroupEntity { Name = "group2" };
         dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
                 Port = p,
                 Type = p / 4 % 2 == 0 ? ProxyType.Http : ProxyType.Socks5,
@@ -416,15 +504,16 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
                 Group = group
             });
         var proxies2 = Enumerable.Range(9080, 500)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = "1.1.1.1",
                 Port = p,
                 Group = group2
             });
         dbContext.Proxies.AddRange(proxies);
         dbContext.Proxies.AddRange(proxies2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var filters = new ProxyFiltersDto
         {
@@ -436,11 +525,11 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
             Status = ProxyWorkingStatus.NotWorking
         };
         var response = await client.GetAsync(
-            "/api/v1/proxy/download/many".ToUri(filters));
-        
+            "/api/v1/proxy/download/many".ToUri(filters), TestCancellationToken);
+
         // Assert
         Assert.True(response.IsSuccessStatusCode);
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(TestCancellationToken);
         var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(1000 / 8, lines.Length);
         Assert.All(lines, l => Assert.Contains("loc", l));
@@ -449,7 +538,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("attachment", response.Content.Headers.ContentDisposition!.DispositionType);
         Assert.Equal("proxies.txt", response.Content.Headers.ContentDisposition!.FileName);
     }
-    
+
     [Fact]
     public async Task DeleteMany_Filtered_Success()
     {
@@ -459,7 +548,8 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var group = new ProxyGroupEntity { Name = "group" };
         dbContext.ProxyGroups.Add(group);
         var proxies = Enumerable.Range(8080, 1000)
-            .Select(p => new ProxyEntity {
+            .Select(p => new ProxyEntity
+            {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
                 Port = p,
                 Type = p / 4 % 2 == 0 ? ProxyType.Http : ProxyType.Socks5,
@@ -467,8 +557,8 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
                 Group = group
             });
         dbContext.Proxies.AddRange(proxies);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var filters = new ProxyFiltersDto
         {
@@ -481,18 +571,18 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/many".ToUri(filters));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(1000 / 8, result.Value.Count);
-        
+
         var remaining = await dbContext.Proxies
-            .Where(p => p.Group.Id == group.Id)
-            .CountAsync();
-        
+            .Where(p => p.Group != null && p.Group.Id == group.Id)
+            .CountAsync(TestCancellationToken);
+
         Assert.Equal(1000 - 1000 / 8, remaining);
     }
-    
+
     [Fact]
     public async Task DeleteSlow_Admin_Success()
     {
@@ -507,27 +597,67 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
             new ProxyEntity { Ping = 3000, Group = group },
             new ProxyEntity { Ping = 4000, Group = group }
         );
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
-        var queryParams = new {
+        var queryParams = new
+        {
             proxyGroupId = group.Id,
             maxPing = 2000
         };
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/slow".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
-        
+
         var remaining = await dbContext.Proxies
-            .Where(p => p.Group.Id == group.Id)
-            .CountAsync();
-        
+            .Where(p => p.Group != null && p.Group.Id == group.Id)
+            .CountAsync(TestCancellationToken);
+
         Assert.Equal(2, remaining);
     }
-    
+
+    [Fact]
+    public async Task DeleteLowQuality_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var group = new ProxyGroupEntity { Name = "group" };
+        dbContext.ProxyGroups.Add(group);
+        dbContext.Proxies.AddRange(
+            new ProxyEntity { Host = "1.1.1.1", Port = 8080, Quality = ProxyQuality.Elite, Group = group },
+            new ProxyEntity { Host = "1.1.1.2", Port = 8081, Quality = ProxyQuality.Unknown, Group = group },
+            new ProxyEntity { Host = "1.1.1.3", Port = 8082, Quality = ProxyQuality.Anonymous, Group = group },
+            new ProxyEntity { Host = "1.1.1.4", Port = 8083, Quality = ProxyQuality.Transparent, Group = group }
+        );
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var queryParams = new
+        {
+            proxyGroupId = group.Id,
+            deleteUnknown = true,
+            deleteTransparent = true,
+            deleteAnonymous = true
+        };
+        var result = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/low-quality".ToUri(queryParams));
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.Count);
+
+        var remaining = await dbContext.Proxies
+            .Where(p => p.Group != null && p.Group.Id == group.Id)
+            .ToListAsync(TestCancellationToken);
+
+        Assert.Single(remaining);
+        Assert.Equal(ProxyQuality.Elite, remaining[0].Quality);
+    }
+
     [Fact]
     public async Task DeleteSlow_Guest_NotOwned_Fail()
     {
@@ -544,22 +674,24 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
             new ProxyEntity { Ping = 3000, Group = adminGroup },
             new ProxyEntity { Ping = 4000, Group = adminGroup }
         );
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
-        var queryParams = new {
+        var queryParams = new
+        {
             proxyGroupId = adminGroup.Id,
             maxPing = 2000
         };
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/proxy/slow".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content!.ErrorCode);
     }
 }
+

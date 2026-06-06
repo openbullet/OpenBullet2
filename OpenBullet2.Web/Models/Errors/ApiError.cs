@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Models.Errors;
+namespace OpenBullet2.Web.Models.Errors;
 
 /// <summary>
 /// A generic error from the API.

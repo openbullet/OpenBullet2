@@ -23,11 +23,13 @@ import { PickListModule } from 'primeng/picklist';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
+import { SplitterModule } from 'primeng/splitter';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { SharedModule } from '../shared/shared.module';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
+import { BotLogEntryComponent } from './components/config/config-debugger/bot-log-entry.component';
 import { ConfigDebuggerComponent } from './components/config/config-debugger/config-debugger.component';
 import { ViewAsHtmlComponent } from './components/config/config-debugger/view-as-html/view-as-html.component';
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
@@ -100,6 +102,7 @@ import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/u
 import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.component';
 import { PluginsComponent } from './components/plugins/plugins.component';
 import { CreateProxyGroupComponent } from './components/proxies/create-proxy-group/create-proxy-group.component';
+import { DeleteLowQualityProxiesComponent } from './components/proxies/delete-low-quality-proxies/delete-low-quality-proxies.component';
 import { DeleteSlowProxiesComponent } from './components/proxies/delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromFileComponent } from './components/proxies/import-proxies-from-file/import-proxies-from-file.component';
 import { ImportProxiesFromRemoteComponent } from './components/proxies/import-proxies-from-remote/import-proxies-from-remote.component';
@@ -150,6 +153,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ProxiesComponent,
     CreateProxyGroupComponent,
     UpdateProxyGroupComponent,
+    DeleteLowQualityProxiesComponent,
     DeleteSlowProxiesComponent,
     ImportProxiesFromTextComponent,
     ProxySyntaxInfoComponent,
@@ -171,6 +175,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ConfigLolicodeComponent,
     ConfigCsharpComponent,
     ConfigDebuggerComponent,
+    BotLogEntryComponent,
     ViewAsHtmlComponent,
     JobsComponent,
     CreateJobComponent,
@@ -240,6 +245,7 @@ import { BaseChartDirective } from 'ng2-charts';
     FileUploadModule,
     DialogModule,
     TableModule,
+    SplitterModule,
     ChipModule,
     BaseChartDirective,
     MarkdownModule.forRoot(),

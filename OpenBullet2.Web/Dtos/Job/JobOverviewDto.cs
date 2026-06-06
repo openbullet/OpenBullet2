@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Jobs;
 using RuriLib.Models.Jobs;
 using System.Text.Json.Serialization;
 
@@ -34,8 +34,14 @@ public class JobOverviewDto
     public JobStatus Status { get; set; }
 
     /// <summary>
-    /// The name of the job.
+    /// The outcome of the most recent run.
     /// </summary>
     [JsonPropertyOrder(-1)]
+    public JobLastRunOutcome LastRunOutcome { get; set; }
+
+    /// <summary>
+    /// The name of the job.
+    /// </summary>
+    [JsonPropertyOrder(0)]
     public string Name { get; set; } = string.Empty;
 }

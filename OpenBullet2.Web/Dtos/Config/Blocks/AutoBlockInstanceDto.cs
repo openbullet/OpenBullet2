@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Blocks;
+namespace OpenBullet2.Web.Dtos.Config.Blocks;
 
 /// <summary>
 /// DTO that represents an auto block instance.

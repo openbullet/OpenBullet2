@@ -1,3 +1,4 @@
+import { JobLastRunOutcome } from './job-last-run-outcome';
 import { JobStatus } from './job-status';
 
 export enum JobType {
@@ -10,6 +11,7 @@ export interface JobDto {
   ownerId: number;
   type: JobType;
   status: JobStatus;
+  lastRunOutcome: JobLastRunOutcome;
   name: string;
   startTime: string | null;
 }
@@ -19,5 +21,6 @@ export interface JobOverviewDto {
   ownerId: number;
   type: JobType;
   status: JobStatus;
+  lastRunOutcome: JobLastRunOutcome;
   name: string;
 }

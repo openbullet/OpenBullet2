@@ -1,58 +1,98 @@
-﻿using RuriLib.Models.Conditions.Comparisons;
+using RuriLib.Models.Conditions.Comparisons;
 using System;
 
-namespace RuriLib.Models.Jobs.Monitor.Triggers
+namespace RuriLib.Models.Jobs.Monitor.Triggers;
+
+/// <summary>
+/// Represents a condition evaluated by the job monitor.
+/// </summary>
+public abstract class Trigger
 {
-    public abstract class Trigger
-    {
-        public virtual bool CheckStatus(Job job)
-            => throw new NotImplementedException();
-    }
+    /// <summary>
+    /// Checks whether the trigger matches the given job.
+    /// </summary>
+    /// <param name="job">The job to inspect.</param>
+    /// <returns><see langword="true"/> if the trigger matches.</returns>
+    public virtual bool CheckStatus(Job job)
+        => throw new NotImplementedException();
+}
 
-    public class JobStatusTrigger : Trigger
-    {
-        public JobStatus Status { get; set; } = JobStatus.Idle;
+/// <summary>
+/// Matches a specific job status.
+/// </summary>
+public class JobStatusTrigger : Trigger
+{
+    /// <summary>Gets or sets the expected job status.</summary>
+    public JobStatus Status { get; set; } = JobStatus.Idle;
 
-        public override bool CheckStatus(Job job)
-            => job.Status == Status;
-    }
-    
-    public class JobFinishedTrigger : Trigger
-    {
-        public override bool CheckStatus(Job job)
-            => job.Status == JobStatus.Idle && job.Progress == 1f;
-    }
-    
-    public class ProgressTrigger : Trigger
-    {
-        public NumComparison Comparison { get; set; }
-        public float Amount { get; set; }
+    /// <inheritdoc />
+    public override bool CheckStatus(Job job)
+        => job.Status == Status;
+}
 
-        public override bool CheckStatus(Job job)
-            => Functions.Conditions.Conditions.Check(job.Progress * 100, Comparison, Amount);
-    }
+/// <summary>
+/// Matches jobs that finished successfully.
+/// </summary>
+public class JobFinishedTrigger : Trigger
+{
+    /// <inheritdoc />
+    public override bool CheckStatus(Job job)
+        => job.Status == JobStatus.Idle && job.LastRunOutcome == JobLastRunOutcome.Completed;
+}
 
-    public class TimeElapsedTrigger : Trigger
-    {
-        public NumComparison Comparison { get; set; }
-        public int Seconds { get; set; } = 0;
-        public int Minutes { get; set; } = 0;
-        public int Hours { get; set; } = 0;
-        public int Days { get; set; } = 0;
+/// <summary>
+/// Matches jobs based on progress percentage.
+/// </summary>
+public class ProgressTrigger : Trigger
+{
+    /// <summary>Gets or sets the comparison operator.</summary>
+    public NumComparison Comparison { get; set; }
+    /// <summary>Gets or sets the comparison amount.</summary>
+    public float Amount { get; set; }
 
-        public override bool CheckStatus(Job job)
-            => Functions.Conditions.Conditions.Check(job.Elapsed, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
-    }
+    /// <inheritdoc />
+    public override bool CheckStatus(Job job)
+        => Functions.Conditions.Conditions.Check(job.Progress * 100, Comparison, Amount);
+}
 
-    public class TimeRemainingTrigger : Trigger
-    {
-        public NumComparison Comparison { get; set; }
-        public int Seconds { get; set; } = 0;
-        public int Minutes { get; set; } = 0;
-        public int Hours { get; set; } = 0;
-        public int Days { get; set; } = 0;
+/// <summary>
+/// Matches jobs based on elapsed time.
+/// </summary>
+public class TimeElapsedTrigger : Trigger
+{
+    /// <summary>Gets or sets the comparison operator.</summary>
+    public NumComparison Comparison { get; set; }
+    /// <summary>Gets or sets the seconds component.</summary>
+    public int Seconds { get; set; }
+    /// <summary>Gets or sets the minutes component.</summary>
+    public int Minutes { get; set; }
+    /// <summary>Gets or sets the hours component.</summary>
+    public int Hours { get; set; }
+    /// <summary>Gets or sets the days component.</summary>
+    public int Days { get; set; }
 
-        public override bool CheckStatus(Job job)
-            => Functions.Conditions.Conditions.Check(job.Remaining, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
-    }
+    /// <inheritdoc />
+    public override bool CheckStatus(Job job)
+        => Functions.Conditions.Conditions.Check(job.Elapsed, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
+}
+
+/// <summary>
+/// Matches jobs based on remaining time.
+/// </summary>
+public class TimeRemainingTrigger : Trigger
+{
+    /// <summary>Gets or sets the comparison operator.</summary>
+    public NumComparison Comparison { get; set; }
+    /// <summary>Gets or sets the seconds component.</summary>
+    public int Seconds { get; set; }
+    /// <summary>Gets or sets the minutes component.</summary>
+    public int Minutes { get; set; }
+    /// <summary>Gets or sets the hours component.</summary>
+    public int Hours { get; set; }
+    /// <summary>Gets or sets the days component.</summary>
+    public int Days { get; set; }
+
+    /// <inheritdoc />
+    public override bool CheckStatus(Job job)
+        => Functions.Conditions.Conditions.Check(job.Remaining, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
 }

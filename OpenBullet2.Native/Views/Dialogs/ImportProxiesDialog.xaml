@@ -90,9 +90,13 @@
             <TextBlock x:Name="advancedWarning" Grid.Row="0" Grid.ColumnSpan="2" FontFamily="Consolas" Margin="5">
                 <Span Foreground="{DynamicResource ForegroundMain}" FontWeight="Bold">Advanced Syntax:</Span>
                 <LineBreak/>
-                <Span Foreground="{DynamicResource ForegroundMain}">Type: (Http)1.1.1.1:80</Span>
+                <Span Foreground="{DynamicResource ForegroundMain}">Legacy type: (Http)1.1.1.1:80</Span>
                 <LineBreak/>
-                <Span Foreground="{DynamicResource ForegroundMain}">Auth: 1.1.1.1:80:username:password</Span>
+                <Span Foreground="{DynamicResource ForegroundMain}">Legacy auth: 1.1.1.1:80:username:password</Span>
+                <LineBreak/>
+                <Span Foreground="{DynamicResource ForegroundMain}">URI: http://1.1.1.1:80</Span>
+                <LineBreak/>
+                <Span Foreground="{DynamicResource ForegroundMain}">URI auth: socks5://username:password@1.1.1.1:1080</Span>
             </TextBlock>
 
             <Label Grid.Row="1" Grid.ColumnSpan="2" Content="Defaults (when not specified):" />

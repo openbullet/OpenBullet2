@@ -1,37 +1,36 @@
-﻿using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Helpers;
 using RuriLib.Models.Blocks;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Services
+namespace OpenBullet2.Native.Services;
+
+public class VolatileSettingsService
 {
-    public class VolatileSettingsService
+    public List<BlockDescriptor> RecentDescriptors { get; set; } = [];
+
+    public void AddRecentDescriptor(BlockDescriptor descriptor)
     {
-        public List<BlockDescriptor> RecentDescriptors { get; set; } = new();
-
-        public void AddRecentDescriptor(BlockDescriptor descriptor)
+        if (RecentDescriptors.Contains(descriptor))
         {
-            if (RecentDescriptors.Contains(descriptor))
-            {
-                RecentDescriptors.Remove(descriptor);
-            }
-
-            RecentDescriptors.Insert(0, descriptor);
+            RecentDescriptors.Remove(descriptor);
         }
 
-        public Dictionary<string, ListViewSortInfo> ListViewSorting { get; set; } = new();
-
-        public VolatileSettingsService()
-        {
-            ListViewSorting["configs"] = new();
-            ListViewSorting["wordlists"] = new();
-        }
+        RecentDescriptors.Insert(0, descriptor);
     }
 
-    public class ListViewSortInfo
+    public Dictionary<string, ListViewSortInfo> ListViewSorting { get; set; } = [];
+
+    public VolatileSettingsService()
     {
-        public string By { get; set; }
-        public ListSortDirection Direction { get; set; }
+        ListViewSorting["configs"] = new();
+        ListViewSorting["wordlists"] = new();
     }
+}
+
+public class ListViewSortInfo
+{
+    public string By { get; set; } = string.Empty;
+    public ListSortDirection Direction { get; set; }
 }

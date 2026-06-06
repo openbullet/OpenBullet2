@@ -1,10 +1,22 @@
-﻿namespace OpenBullet2.Web.Dtos.Config.Settings;
+using RuriLib.Models.Configs.Settings;
+
+namespace OpenBullet2.Web.Dtos.Config.Settings;
 
 /// <summary>
 /// DTO that contains a config's browser settings.
 /// </summary>
 public class ConfigBrowserSettingsDto
 {
+    /// <summary>
+    /// The browser automation engine that should execute generic browser blocks.
+    /// </summary>
+    public BrowserAutomationEngine Engine { get; set; } = BrowserAutomationEngine.Puppeteer;
+
+    /// <summary>
+    /// Controls how generic browser blocks move and click the mouse.
+    /// </summary>
+    public BrowserMouseAutomationMode MouseAutomationMode { get; set; } = BrowserMouseAutomationMode.Native;
+
     /// <summary>
     /// The values of the status for which the browser should be closed
     /// when the bot ends its execution.
@@ -44,4 +56,9 @@ public class ConfigBrowserSettingsDto
     /// perform requests towards them.
     /// </summary>
     public List<string> BlockedUrls { get; set; } = new();
+
+    /// <summary>
+    /// The GhostCursor-specific settings used when mouse automation is enabled.
+    /// </summary>
+    public ConfigGhostCursorSettingsDto GhostCursor { get; set; } = new();
 }

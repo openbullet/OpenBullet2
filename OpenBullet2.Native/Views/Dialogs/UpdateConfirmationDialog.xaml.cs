@@ -1,72 +1,86 @@
-﻿using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Native.ViewModels;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Dialogs
+namespace OpenBullet2.Native.Views.Dialogs;
+
+/// <summary>
+/// Interaction logic for UpdateConfirmationDialog.xaml
+/// </summary>
+public partial class UpdateConfirmationDialog : Page
 {
-    /// <summary>
-    /// Interaction logic for UpdateConfirmationDialog.xaml
-    /// </summary>
-    public partial class UpdateConfirmationDialog : Page
+    private readonly UpdateConfirmationDialogViewModel vm;
+    private readonly UpdateChannel updateChannel;
+
+    public UpdateConfirmationDialog(Version current, Version remote, UpdateChannel updateChannel)
     {
-        private readonly UpdateConfirmationDialogViewModel vm;
+        InitializeComponent();
 
-        public UpdateConfirmationDialog(Version current, Version remote)
-        {
-            InitializeComponent();
-
-            vm = new UpdateConfirmationDialogViewModel(current, remote);
-            DataContext = vm;
-        }
-
-        private void Confirm(object sender, RoutedEventArgs e)
-        {
-            var updaterFileName = RuntimeInformation.OSArchitecture switch
-            {
-                Architecture.Arm64 => "ob2-native-updater-win-arm64.exe",
-                Architecture.X64 => "ob2-native-updater-win-x64.exe",
-                Architecture.X86 => "ob2-native-updater-win-x86.exe",
-                _ => throw new NotImplementedException()
-            };
-
-            Process.Start(updaterFileName);
-            Environment.Exit(0);
-        }
-
-        private void GoBack(object sender, RoutedEventArgs e) => ((MainDialog)Parent).Close();
+        this.updateChannel = updateChannel;
+        vm = new UpdateConfirmationDialogViewModel(current, remote);
+        DataContext = vm;
     }
 
-    public class UpdateConfirmationDialogViewModel : ViewModelBase
+    private void Confirm(object sender, RoutedEventArgs e)
     {
-        private string currentVersion = string.Empty;
-        public string CurrentVersion
+        var updaterFileName = RuntimeInformation.OSArchitecture switch
         {
-            get => currentVersion;
-            set
-            {
-                currentVersion = value;
-                OnPropertyChanged();
-            }
+            Architecture.Arm64 => "ob2-native-updater-win-arm64.exe",
+            Architecture.X64 => "ob2-native-updater-win-x64.exe",
+            _ => throw new PlatformNotSupportedException("Native updates are only published for x64 and arm64")
+        };
+
+        var installDirectory = AppContext.BaseDirectory;
+        var startInfo = new ProcessStartInfo(Path.Combine(installDirectory, updaterFileName))
+        {
+            WorkingDirectory = installDirectory
+        };
+
+        if (updateChannel != UpdateChannel.Disabled)
+        {
+            startInfo.ArgumentList.Add("--channel");
+            startInfo.ArgumentList.Add(updateChannel.ToString().ToLowerInvariant());
         }
 
-        private string remoteVersion = string.Empty;
-        public string RemoteVersion
-        {
-            get => remoteVersion;
-            set
-            {
-                remoteVersion = value;
-                OnPropertyChanged();
-            }
-        }
+        Process.Start(startInfo);
+        Environment.Exit(0);
+    }
 
-        public UpdateConfirmationDialogViewModel(Version current, Version remote)
+    private void GoBack(object sender, RoutedEventArgs e) => ((MainDialog)Parent).Close();
+}
+
+public class UpdateConfirmationDialogViewModel : ViewModelBase
+{
+    private string currentVersion = string.Empty;
+    public string CurrentVersion
+    {
+        get => currentVersion;
+        set
         {
-            CurrentVersion = current.ToString();
-            RemoteVersion = remote.ToString();
+            currentVersion = value;
+            OnPropertyChanged();
         }
+    }
+
+    private string remoteVersion = string.Empty;
+    public string RemoteVersion
+    {
+        get => remoteVersion;
+        set
+        {
+            remoteVersion = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public UpdateConfirmationDialogViewModel(Version current, Version remote)
+    {
+        CurrentVersion = current.ToString();
+        RemoteVersion = remote.ToString();
     }
 }

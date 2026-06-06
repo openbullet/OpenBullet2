@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
+namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
 /// <summary>
 /// Sent at regular intervals while the job runs, contains

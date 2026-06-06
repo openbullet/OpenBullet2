@@ -12,6 +12,16 @@ export enum StringRule {
   EndsWith = 'endsWith',
 }
 
+export enum BrowserAutomationEngine {
+  Puppeteer = 'puppeteer',
+  Playwright = 'playwright',
+}
+
+export enum BrowserMouseAutomationMode {
+  Native = 'native',
+  GhostCursor = 'ghostCursor',
+}
+
 export interface ConfigDto {
   id: string;
   isRemote: boolean;
@@ -117,6 +127,8 @@ export interface RandomLinesFromFileResourceDto {
 }
 
 export interface ConfigBrowserSettingsDto {
+  engine: BrowserAutomationEngine;
+  mouseAutomationMode: BrowserMouseAutomationMode;
   quitBrowserStatuses: string[];
   headless: boolean;
   commandLineArgs: string;
@@ -124,6 +136,20 @@ export interface ConfigBrowserSettingsDto {
   loadOnlyDocumentAndScript: boolean;
   dismissDialogs: boolean;
   blockedUrls: string[];
+  ghostCursor: ConfigGhostCursorSettingsDto;
+}
+
+export interface ConfigGhostCursorSettingsDto {
+  moveSpeed: number | null;
+  moveDelay: number | null;
+  randomizeMoveDelay: boolean;
+  delayPerStep: number | null;
+  scrollSpeed: number | null;
+  scrollDelay: number | null;
+  hesitate: number | null;
+  waitForClick: number | null;
+  maxTries: number | null;
+  overshootThreshold: number | null;
 }
 
 export interface ConfigScriptSettingsDto {

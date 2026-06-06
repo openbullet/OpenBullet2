@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Interfaces;
+namespace OpenBullet2.Web.Interfaces;
 
 /// <summary>
 /// A service that can track versions and monitor new updates.

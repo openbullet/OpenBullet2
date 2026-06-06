@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Entities;
 
 namespace OpenBullet2.Core.Repositories;
 

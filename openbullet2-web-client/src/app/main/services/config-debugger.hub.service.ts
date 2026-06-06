@@ -11,6 +11,8 @@ import {
 import { ConfigDebuggerSettings } from '../models/config-debugger-settings';
 import { UserService } from './user.service';
 
+const DEBUGGER_HUB_SERVER_TIMEOUT_MS = 5 * 60 * 1000;
+
 @Injectable({ providedIn: 'root' })
 export class ConfigDebuggerHubService {
   private hubConnection: HubConnection | null = null;
@@ -41,6 +43,9 @@ export class ConfigDebuggerHubService {
       .withAutomaticReconnect()
       .build();
 
+    // Large step-by-step sessions can take a long time to resume their state.
+    this.hubConnection.serverTimeoutInMilliseconds = DEBUGGER_HUB_SERVER_TIMEOUT_MS;
+
     this.hubConnection.on('newLogEntry', (msg) => {
       this.logsEmitter.emit(msg);
     });
@@ -61,6 +66,8 @@ export class ConfigDebuggerHubService {
       this.errorEmitter.emit(msg);
     });
 
+    this.hubConnection.onreconnected(() => this.getState());
+
     return this.hubConnection.start().catch((err) => console.error(err));
   }
 
@@ -69,17 +76,19 @@ export class ConfigDebuggerHubService {
   }
 
   async start(settings: ConfigDebuggerSettings) {
-    return this.hubConnection
-      ?.invoke('start', {
-        testData: settings.testData,
-        wordlistType: settings.wordlistType,
-        useProxy: settings.useProxy,
-        testProxy: settings.testProxy,
-        proxyType: settings.proxyType,
-        persistLog: settings.persistLog,
-        stepByStep: settings.stepByStep,
-      })
-      .catch((error) => console.log(error));
+    if (this.hubConnection === null) {
+      throw new Error('The debugger hub connection has not been started');
+    }
+
+    return this.hubConnection.invoke('start', {
+      testData: settings.testData,
+      wordlistType: settings.wordlistType,
+      useProxy: settings.useProxy,
+      testProxy: settings.testProxy,
+      proxyType: settings.proxyType,
+      persistLog: settings.persistLog,
+      stepByStep: settings.stepByStep,
+    });
   }
 
   async stop() {

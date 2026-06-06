@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Exceptions;
@@ -40,7 +40,8 @@ public abstract class AuthorizedHub : Hub
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
         {
-            User = new ApiUser {
+            User = new ApiUser
+            {
                 Id = -1, Role = UserRole.Admin, Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
             };
 
@@ -79,7 +80,8 @@ public abstract class AuthorizedHub : Hub
         {
             await Clients.Caller.SendAsync(
                 CommonMethods.Error,
-                new ErrorMessage {
+                new ErrorMessage
+                {
                     Message = "You must be an admin to use this hub", Type = nameof(UnauthorizedException)
                 });
 

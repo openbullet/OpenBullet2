@@ -1,41 +1,53 @@
-﻿using RuriLib.Extensions;
 using RuriLib.Models.Blocks.Settings;
-using System;
 
-namespace RuriLib.Models.Blocks.Parameters
+namespace RuriLib.Models.Blocks.Parameters;
+
+/// <summary>
+/// A parameter of type byte array.
+/// </summary>
+public class ByteArrayParameter : BlockParameter
 {
-    public class ByteArrayParameter : BlockParameter
+    /// <summary>
+    /// The default value of the parameter.
+    /// </summary>
+    public byte[] DefaultValue { get; set; } = [];
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ByteArrayParameter"/> class.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    public ByteArrayParameter(string name) : base(name)
     {
-        public byte[] DefaultValue { get; set; }
 
-        public ByteArrayParameter()
-        {
-
-        }
-
-        public ByteArrayParameter(string name, byte[] defaultValue = null, SettingInputMode inputMode = SettingInputMode.Fixed)
-        {
-            Name = name;
-            InputMode = inputMode;
-            DefaultValue = defaultValue ?? Array.Empty<byte>();
-        }
-
-        public ByteArrayParameter(string name, string defaultVariableName = "")
-        {
-            Name = name;
-            DefaultVariableName = defaultVariableName;
-            DefaultValue = Array.Empty<byte>();
-            InputMode = SettingInputMode.Variable;
-        }
-
-        public override BlockSetting ToBlockSetting()
-            => new()
-            {
-                Name = Name,
-                Description = Description,
-                ReadableName = PrettyName ?? Name.ToReadableName(),
-                FixedSetting = new ByteArraySetting { Value = DefaultValue },
-                InputMode = InputMode
-            };
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ByteArrayParameter"/> class.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <param name="defaultValue">The default fixed value.</param>
+    /// <param name="inputMode">The supported input mode.</param>
+    public ByteArrayParameter(string name, byte[]? defaultValue = null,
+        SettingInputMode inputMode = SettingInputMode.Fixed) : base(name)
+    {
+        InputMode = inputMode;
+        DefaultValue = defaultValue ?? [];
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ByteArrayParameter"/> class.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <param name="defaultVariableName">The default variable name when used in variable mode.</param>
+    public ByteArrayParameter(string name, string defaultVariableName = "")
+        : base(name)
+    {
+        DefaultVariableName = defaultVariableName;
+        InputMode = SettingInputMode.Variable;
+    }
+
+    /// <inheritdoc />
+    public override BlockSetting ToBlockSetting()
+        => BlockSettingFactory.CreateByteArraySetting(Name, DefaultValue, InputMode,
+            DefaultVariableName, PrettyName, Description);
 }

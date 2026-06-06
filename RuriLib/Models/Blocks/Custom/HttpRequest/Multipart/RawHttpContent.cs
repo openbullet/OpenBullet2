@@ -1,14 +1,12 @@
-﻿namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
-{
-    public class RawHttpContent : MyHttpContent
-    {
-        public byte[] Data { get; set; }
+namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 
-        public RawHttpContent(string name, byte[] data, string contentType)
-        {
-            Name = name;
-            Data = data;
-            ContentType = contentType;
-        }
-    }
+/// <summary>
+/// Runtime multipart content containing raw binary data.
+/// </summary>
+public class RawHttpContent(string name, byte[] data, string contentType) : MyHttpContent(name, contentType)
+{
+    /// <summary>
+    /// Gets or sets the binary payload.
+    /// </summary>
+    public byte[] Data { get; set; } = data;
 }

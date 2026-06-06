@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
@@ -15,24 +15,16 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage user sessions.
 /// </summary>
+/// <remarks></remarks>
 [ApiVersion("1.0")]
-public class UserController : ApiController
+public class UserController(OpenBulletSettingsService obSettingsService,
+    IAuthTokenService authService, IGuestRepository guestRepo,
+    ILogger<UserController> logger) : ApiController
 {
-    private readonly IAuthTokenService _authService;
-    private readonly IGuestRepository _guestRepo;
-    private readonly ILogger<UserController> _logger;
-    private readonly OpenBulletSettingsService _obSettingsService;
-
-    /// <summary></summary>
-    public UserController(OpenBulletSettingsService obSettingsService,
-        IAuthTokenService authService, IGuestRepository guestRepo,
-        ILogger<UserController> logger)
-    {
-        _obSettingsService = obSettingsService;
-        _authService = authService;
-        _guestRepo = guestRepo;
-        _logger = logger;
-    }
+    private readonly IAuthTokenService _authService = authService;
+    private readonly IGuestRepository _guestRepo = guestRepo;
+    private readonly ILogger<UserController> _logger = logger;
+    private readonly OpenBulletSettingsService _obSettingsService = obSettingsService;
 
     /// <summary>
     /// Log in as an admin or guest user and get an
@@ -41,10 +33,11 @@ public class UserController : ApiController
     [HttpPost("login")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto,
-        [FromServices] IValidator<UserLoginDto> validator)
+        [FromServices] IValidator<UserLoginDto> validator,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(dto);
-        
+        await validator.ValidateAndThrowAsync(dto, cancellationToken);
+
         // Admin user
         if (string.Equals(_obSettingsService.Settings.SecuritySettings.AdminUsername, dto.Username,
                 StringComparison.CurrentCultureIgnoreCase))
@@ -53,7 +46,7 @@ public class UserController : ApiController
         }
 
         // Guest
-        return await LoginGuestUser(dto);
+        return await LoginGuestUser(dto, cancellationToken);
     }
 
     private Task<LoggedInUserDto> LoginAdminUser(UserLoginDto dto)
@@ -70,28 +63,24 @@ public class UserController : ApiController
 
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
-            new Claim(ClaimTypes.Name, dto.Username), new Claim(ClaimTypes.Role, "Admin")
+            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, dto.Username),
+            new Claim(ClaimTypes.Role, "Admin")
         };
 
         var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
         var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
-        
+
         _logger.LogInformation("Admin user logged in");
-        
+
         return Task.FromResult(new LoggedInUserDto { Token = token });
     }
 
-    private async Task<LoggedInUserDto> LoginGuestUser(UserLoginDto dto)
+    private async Task<LoggedInUserDto> LoginGuestUser(UserLoginDto dto, CancellationToken cancellationToken)
     {
-        var entity = await _guestRepo.GetAll().FirstOrDefaultAsync(g => g.Username.ToLower() == dto.Username.ToLower());
-
-        if (entity == null)
-        {
-            // Invalid username
-            throw new UnauthorizedException(ErrorCode.InvalidCredentials,
+        var normalizedUsername = dto.Username.ToLower();
+        var entity = await _guestRepo.GetAll()
+            .FirstOrDefaultAsync(g => g.Username != null && g.Username.ToLower() == normalizedUsername, cancellationToken) ?? throw new UnauthorizedException(ErrorCode.InvalidCredentials,
                 "Invalid username or password");
-        }
-
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, entity.PasswordHash))
         {
             throw new UnauthorizedException(ErrorCode.InvalidCredentials,
@@ -111,7 +100,7 @@ public class UserController : ApiController
             ip = ip.MapToIPv4();
         }
 
-        if (entity.AllowedAddresses.Length > 0)
+        if (!string.IsNullOrEmpty(entity.AllowedAddresses))
         {
             var isValid = await Firewall.CheckIpValidityAsync(ip,
                 entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
@@ -125,7 +114,8 @@ public class UserController : ApiController
 
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, entity.Id.ToString(), ClaimValueTypes.Integer),
-            new Claim(ClaimTypes.Name, dto.Username), new Claim(ClaimTypes.Role, "Guest"),
+            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, dto.Username),
+            new Claim(ClaimTypes.Role, "Guest"),
             new Claim("IPAtLogin", ip.ToString())
         };
 
@@ -138,7 +128,7 @@ public class UserController : ApiController
             accessExpiration < lifetimeSpan ? accessExpiration : lifetimeSpan);
 
         _logger.LogInformation("Guest user {Username} logged in", dto.Username);
-        
+
         return new LoggedInUserDto { Token = token };
     }
 }

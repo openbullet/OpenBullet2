@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
@@ -6,119 +6,122 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace RuriLib.Legacy.Blocks
+namespace RuriLib.Legacy.Blocks;
+
+/// <summary>
+/// A block that executes javascript code in the selenium-driven browser.
+/// </summary>
+public class SBlockExecuteJS : BlockBase
 {
+    /// <summary>The javascript code.</summary>
+    public string JavascriptCode { get; set; } = "alert('henlo');";
+
+    /// <summary>The name of the output variable.</summary>
+    public string OutputVariable { get; set; } = "";
+
+    /// <summary>Whether the output variable should be marked for Capture.</summary>
+    public bool IsCapture { get; set; } = false;
+
     /// <summary>
-    /// A block that executes javascript code in the selenium-driven browser.
+    /// Creates an ExecuteJS block.
     /// </summary>
-    public class SBlockExecuteJS : BlockBase
+    public SBlockExecuteJS()
     {
-        /// <summary>The javascript code.</summary>
-        public string JavascriptCode { get; set; } = "alert('henlo');";
+        Label = "EXECUTE JS";
+    }
 
-        /// <summary>The name of the output variable.</summary>
-        public string OutputVariable { get; set; } = "";
+    /// <summary>
+    /// Parses the block from a legacy LoliScript line.
+    /// </summary>
+    /// <param name="line">The line to parse.</param>
+    /// <returns>The current block instance.</returns>
+    public override BlockBase FromLS(string line)
+    {
+        // Trim the line
+        var input = line.Trim();
 
-        /// <summary>Whether the output variable should be marked for Capture.</summary>
-        public bool IsCapture { get; set; } = false;
+        // Parse the label
+        if (input.StartsWith("#"))
+            Label = LineParser.ParseLabel(ref input);
 
-        /// <summary>
-        /// Creates an ExecuteJS block.
-        /// </summary>
-        public SBlockExecuteJS()
+        /*
+         * Syntax:
+         * EXECUTEJS "SCRIPT"
+         * */
+
+        JavascriptCode = LineParser.ParseLiteral(ref input, "SCRIPT");
+
+        // Try to parse the arrow, otherwise just return the block as is with default var name and var / cap choice
+        if (LineParser.ParseToken(ref input, TokenType.Arrow, false) == string.Empty)
+            return this;
+
+        // Parse the VAR / CAP
+        try
         {
-            Label = "EXECUTE JS";
+            var varType = LineParser.ParseToken(ref input, TokenType.Parameter, true);
+            if (varType.ToUpper() == "VAR" || varType.ToUpper() == "CAP")
+                IsCapture = varType.ToUpper() == "CAP";
+        }
+        catch { throw new ArgumentException("Invalid or missing variable type"); }
+
+        // Parse the variable/capture name
+        try { OutputVariable = LineParser.ParseToken(ref input, TokenType.Literal, true); }
+        catch { throw new ArgumentException("Variable name not specified"); }
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public override string ToLS(bool indent = true)
+    {
+        var writer = new BlockWriter(GetType(), indent, Disabled);
+        writer
+            .Label(Label)
+            .Token("EXECUTEJS")
+            .Literal(JavascriptCode.Replace("\r\n", " ").Replace("\n", " "));
+
+        if (!writer.CheckDefault(OutputVariable, "OutputVariable"))
+        {
+            writer
+                .Arrow()
+                .Token(IsCapture ? "CAP" : "VAR")
+                .Literal(OutputVariable);
         }
 
-        /// <inheritdoc />
-        public override BlockBase FromLS(string line)
+        return writer.ToString();
+    }
+
+    /// <inheritdoc />
+    public override async Task Process(LSGlobals ls)
+    {
+        var data = ls.BotData;
+        await base.Process(ls);
+
+        var browser = data.TryGetObject<WebDriver>("selenium");
+
+        if (browser == null)
         {
-            // Trim the line
-            var input = line.Trim();
+            throw new Exception("Open a browser first!");
+        }
 
-            // Parse the label
-            if (input.StartsWith("#"))
-                Label = LineParser.ParseLabel(ref input);
+        data.Logger.Log("Executing JS code!", LogColors.White);
 
-            /*
-             * Syntax:
-             * EXECUTEJS "SCRIPT"
-             * */
+        var returned = browser.ExecuteScript(ReplaceValues(JavascriptCode, ls));
 
-            JavascriptCode = LineParser.ParseLiteral(ref input, "SCRIPT");
-
-            // Try to parse the arrow, otherwise just return the block as is with default var name and var / cap choice
-            if (LineParser.ParseToken(ref input, TokenType.Arrow, false) == string.Empty)
-                return this;
-
-            // Parse the VAR / CAP
+        if (returned != null)
+        {
             try
             {
-                var varType = LineParser.ParseToken(ref input, TokenType.Parameter, true);
-                if (varType.ToUpper() == "VAR" || varType.ToUpper() == "CAP")
-                    IsCapture = varType.ToUpper() == "CAP";
+                InsertVariable(ls, IsCapture, false, new List<string>() { returned.ToString() ?? string.Empty }, OutputVariable, "", "", false, true);
             }
-            catch { throw new ArgumentException("Invalid or missing variable type"); }
-
-            // Parse the variable/capture name
-            try { OutputVariable = LineParser.ParseToken(ref input, TokenType.Literal, true); }
-            catch { throw new ArgumentException("Variable name not specified"); }
-
-            return this;
+            catch
+            {
+                throw new Exception($"Failed to convert the returned value to a string");
+            }
         }
 
-        /// <inheritdoc />
-        public override string ToLS(bool indent = true)
-        {
-            var writer = new BlockWriter(GetType(), indent, Disabled);
-            writer
-                .Label(Label)
-                .Token("EXECUTEJS")
-                .Literal(JavascriptCode.Replace("\r\n", " ").Replace("\n", " "));
+        data.Logger.Log("... executed!", LogColors.White);
 
-            if (!writer.CheckDefault(OutputVariable, "OutputVariable"))
-            {
-                writer
-                    .Arrow()
-                    .Token(IsCapture ? "CAP" : "VAR")
-                    .Literal(OutputVariable);
-            }
-
-            return writer.ToString();
-        }
-
-        /// <inheritdoc />
-        public override async Task Process(LSGlobals ls)
-        {
-            var data = ls.BotData;
-            await base.Process(ls);
-
-            var browser = data.TryGetObject<WebDriver>("selenium");
-
-            if (browser == null)
-            {
-                throw new Exception("Open a browser first!");
-            }
-
-            data.Logger.Log("Executing JS code!", LogColors.White);
-
-            var returned = browser.ExecuteScript(ReplaceValues(JavascriptCode, ls));
-
-            if (returned != null)
-            {
-                try
-                {
-                    InsertVariable(ls, IsCapture, false, new List<string>() { returned.ToString() }, OutputVariable, "", "", false, true);
-                }
-                catch
-                {
-                    throw new Exception($"Failed to convert the returned value to a string");
-                }
-            }
-
-            data.Logger.Log("... executed!", LogColors.White);
-
-            UpdateSeleniumData(data);
-        }
+        UpdateSeleniumData(data);
     }
 }

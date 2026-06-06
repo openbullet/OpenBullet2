@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Jobs;
+using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 
 namespace OpenBullet2.Core.Models.Jobs;

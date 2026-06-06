@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>logo.ico</ApplicationIcon>
@@ -82,11 +82,7 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\logohq_square_padded.png">
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+        <Resource Include="Images\logohq_square_padded.png" />
         <Content Include="Images\logohq_square_padded_bg.png">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -100,27 +96,52 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+        <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
         <PackageReference Include="HtmlSanitizer" Version="8.1.866-beta" />
-        <PackageReference Include="MahApps.Metro" Version="2.4.10" />
-        <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
+        <PackageReference Include="MahApps.Metro" Version="2.4.11" />
+        <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
         <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
-        <PackageReference Include="Markdig" Version="0.37.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+        <PackageReference Include="Markdig" Version="1.1.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
-        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.5"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7"/>
+        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.5"/>
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
         <PackageReference Include="WpfAnimatedGif" Version="2.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-j92c-7v7g-gj3f" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj"/>
     </ItemGroup>
+
+    <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
+        <CurlImpersonateNativeAsset Include="..\RuriLib.Http\runtimes\$(RuntimeIdentifier)\native\**\*" />
+        <Content Include="@(CurlImpersonateNativeAsset)"
+                 CopyToOutputDirectory="PreserveNewest"
+                 CopyToPublishDirectory="PreserveNewest"
+                 ExcludeFromSingleFile="true"
+                 TargetPath="runtimes\$(RuntimeIdentifier)\native\%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <Target Name="EnsureCurlImpersonateNativeAssets" BeforeTargets="Publish"
+            Condition="'$(RuntimeIdentifier)' != '' and '@(CurlImpersonateNativeAsset)' == ''">
+        <Error Text="curl-impersonate native assets for $(RuntimeIdentifier) were not found. Run 'dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid $(RuntimeIdentifier)' before publishing." />
+    </Target>
 
     <ItemGroup>
         <None Update="dbip-country-lite.mmdb">

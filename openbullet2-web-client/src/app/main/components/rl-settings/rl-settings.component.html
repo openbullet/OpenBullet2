@@ -100,6 +100,17 @@
                 placeholder="Mozilla/5.0 ..." />
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Proxy judge URLs</span>
+            <app-input-list key="proxyJudgeUrls"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(list)]="settings.generalSettings.proxyJudgeUrls"
+                placeholder="http://azenv.net/" />
+        </div>
+    </div>
     <div class="row mt-5">
         <div class="col-12">
             <h3>Proxies</h3>
@@ -596,6 +607,42 @@
                 (validityChange)="onValidityChange($event)"
                 [(ngModel)]="settings.puppeteerSettings.chromeBinaryLocation"
                 placeholder="/path/to/chrome" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Playwright</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Browser type</span>
+            <app-input-dropdown key="playwrightBrowserType"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="playwrightBrowserTypes"
+                [(ngModel)]="settings.playwrightSettings.browserType" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Browser source</span>
+            <app-input-dropdown key="playwrightBrowserSource"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="playwrightBrowserSources"
+                [(ngModel)]="settings.playwrightSettings.source" />
+        </div>
+    </div>
+    <div class="row my-3" *ngIf="settings.playwrightSettings.source === PlaywrightBrowserSource.ExecutablePath">
+        <div class="col-12">
+            <span class="mr-2">Executable path</span>
+            <app-input-text key="playwrightExecutablePath"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.playwrightSettings.executablePath"
+                placeholder="/path/to/browser" regex="^.+$" />
         </div>
     </div>
     <div class="row mt-5">

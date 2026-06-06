@@ -8,6 +8,7 @@ using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
+using RuriLib.Logging;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Parallelization.Models;
@@ -20,7 +21,7 @@ namespace OpenBullet2.Web.Services;
 public sealed class MultiRunJobService : IJobService, IDisposable
 {
     // Maps jobs to connections
-    private readonly Dictionary<MultiRunJob, List<string>> _connections = new();
+    private readonly Dictionary<MultiRunJob, List<string>> _connections = [];
     private readonly IHubContext<MultiRunJobHub> _hub;
     private readonly JobManagerService _jobManager;
     private readonly ILogger<MultiRunJobService> _logger;
@@ -28,6 +29,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     private readonly EventHandler _onCompleted;
     private readonly EventHandler<Exception> _onError;
     private readonly EventHandler<Hit> _onHit;
+    private readonly EventHandler<BotLoggerEntry> _onLogEntry;
     private readonly EventHandler<ResultDetails<MultiRunInput, CheckResult>> _onResult;
 
     // Event handlers
@@ -68,6 +70,11 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             SendErrorAsync
         );
 
+        _onLogEntry = EventHandlers.TryAsync<BotLoggerEntry>(
+            OnLogEntryAsync,
+            SendErrorAsync
+        );
+
         _onTimerTick = EventHandlers.TryAsync(
             OnTimerTickAsync,
             SendErrorAsync
@@ -94,14 +101,8 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     /// <inheritdoc />
     public void RegisterConnection(string connectionId, int jobId)
     {
-        var job = _jobManager.Jobs.FirstOrDefault(j => j.Id == jobId);
-
-        if (job is null)
-        {
-            throw new EntryNotFoundException(ErrorCode.JobNotFound,
+        var job = _jobManager.Jobs.FirstOrDefault(j => j.Id == jobId) ?? throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 $"Job with id {jobId} not found");
-        }
-
         if (job is not MultiRunJob mrJob)
         {
             throw new BadRequestException(ErrorCode.InvalidJobType,
@@ -110,7 +111,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
         if (!_connections.ContainsKey(mrJob))
         {
-            _connections[mrJob] = new List<string>();
+            _connections[mrJob] = [];
 
             // Hook the event handlers to the job
             mrJob.OnStatusChanged += _onStatusChanged;
@@ -118,6 +119,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             mrJob.OnError += _onError;
             mrJob.OnTaskError += _onTaskError;
             mrJob.OnResult += _onResult;
+            mrJob.OnLogEntry += _onLogEntry;
             mrJob.OnTimerTick += _onTimerTick;
             mrJob.OnHit += _onHit;
             mrJob.OnBotsChanged += _onBotsChanged;
@@ -133,9 +135,21 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     /// <inheritdoc />
     public void UnregisterConnection(string connectionId, int jobId)
     {
-        var job = (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
+        var job = FindTrackedJob(jobId);
 
-        _connections[job].Remove(connectionId);
+        if (job is null || !_connections.TryGetValue(job, out var connections))
+        {
+            _logger.LogDebug("Skipped unregistering connection {ConnectionId} for multi run job {JobId} because it is no longer tracked",
+                connectionId, jobId);
+            return;
+        }
+
+        connections.Remove(connectionId);
+
+        if (connections.Count == 0)
+        {
+            StopTracking(job);
+        }
 
         _logger.LogDebug("Unregistered connection {ConnectionId} for multi run job {JobId}",
             connectionId, jobId);
@@ -240,6 +254,25 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     private MultiRunJob GetJob(int jobId)
         => (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
 
+    private MultiRunJob? FindTrackedJob(int jobId)
+        => _jobManager.Jobs.OfType<MultiRunJob>().FirstOrDefault(j => j.Id == jobId)
+        ?? _connections.Keys.FirstOrDefault(j => j.Id == jobId);
+
+    private void StopTracking(MultiRunJob job)
+    {
+        job.OnStatusChanged -= _onStatusChanged;
+        job.OnCompleted -= _onCompleted;
+        job.OnError -= _onError;
+        job.OnTaskError -= _onTaskError;
+        job.OnResult -= _onResult;
+        job.OnLogEntry -= _onLogEntry;
+        job.OnTimerTick -= _onTimerTick;
+        job.OnHit -= _onHit;
+        job.OnBotsChanged -= _onBotsChanged;
+
+        _connections.Remove(job);
+    }
+
     private async Task OnStatusChangedAsync(object? sender, JobStatus e)
     {
         var message = new JobStatusChangedMessage { NewStatus = e };
@@ -263,7 +296,8 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnTaskErrorAsync(object? sender, ErrorDetails<MultiRunInput> e)
     {
-        var message = new MrjTaskErrorMessage {
+        var message = new MrjTaskErrorMessage
+        {
             DataLine = e.Item.BotData.Line.Data,
             Proxy = e.Item.BotData.Proxy is null
                 ? null
@@ -283,7 +317,8 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnResultAsync(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
     {
-        var message = new MrjNewResultMessage {
+        var message = new MrjNewResultMessage
+        {
             DataLine = e.Item.BotData.Line.Data,
             Proxy = e.Item.BotData.Proxy is null
                 ? null
@@ -301,12 +336,21 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         await NotifyClientsAsync(sender, message, MultiRunJobMethods.NewResult);
     }
 
+    private async Task OnLogEntryAsync(object? sender, BotLoggerEntry e)
+    {
+        var message = new MrjNewLogMessage { NewMessage = e };
+
+        await NotifyClientsAsync(sender, message, MultiRunJobMethods.NewLogEntry);
+    }
+
     private async Task OnTimerTickAsync(object? sender, EventArgs e)
     {
         var job = (sender as MultiRunJob)!;
 
-        var message = new MrjStatsMessage {
-            DataStats = new MrjDataStatsDto {
+        var message = new MrjStatsMessage
+        {
+            DataStats = new MrjDataStatsDto
+            {
                 Hits = job.DataHits,
                 Custom = job.DataCustom,
                 Fails = job.DataFails,
@@ -315,11 +359,12 @@ public sealed class MultiRunJobService : IJobService, IDisposable
                 Banned = job.DataBanned,
                 Errors = job.DataErrors,
                 ToCheck = job.DataToCheck,
-                Total = job.DataPool.Size,
+                Total = job.DataPool?.Size ?? 0,
                 Tested = job.DataTested
             },
             ProxyStats =
-                new MrjProxyStatsDto {
+                new MrjProxyStatsDto
+                {
                     Total = job.ProxiesTotal, Alive = job.ProxiesAlive, Bad = job.ProxiesBad, Banned = job.ProxiesBanned
                 },
             CPM = job.CPM,
@@ -334,13 +379,15 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnHitAsync(object? sender, Hit e)
     {
-        var message = new MrjNewHitMessage {
-            Hit = new MrjHitDto {
+        var message = new MrjNewHitMessage
+        {
+            Hit = new MrjHitDto
+            {
                 Id = e.Id,
                 Date = e.Date,
                 Type = e.Type,
                 Data = e.DataString,
-                Proxy = e.Proxy is not null 
+                Proxy = e.Proxy is not null
                     ? new MrjProxy
                     {
                         Type = e.Proxy.Type,
@@ -371,7 +418,12 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     {
         var job = sender as MultiRunJob;
 
-        await _hub.Clients.Clients(_connections[job!]).SendAsync(
+        if (job is null || !_connections.TryGetValue(job, out var connections) || connections.Count == 0)
+        {
+            return;
+        }
+
+        await _hub.Clients.Clients(connections).SendAsync(
             method, message);
     }
 
@@ -385,15 +437,9 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     {
         if (disposing)
         {
-            foreach (var job in _connections.Keys)
+            foreach (var job in _connections.Keys.ToList())
             {
-                job.OnStatusChanged -= _onStatusChanged;
-                job.OnCompleted -= _onCompleted;
-                job.OnError -= _onError;
-                job.OnTaskError -= _onTaskError;
-                job.OnResult -= _onResult;
-                job.OnHit -= _onHit;
-                job.OnBotsChanged -= _onBotsChanged;
+                StopTracking(job);
             }
         }
     }

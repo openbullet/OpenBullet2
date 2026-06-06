@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
@@ -15,11 +15,11 @@ internal class GuestFilter : IAsyncAuthorizationFilter
     {
         _guestRepo = guestRepo;
     }
-    
+
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         var apiUser = context.HttpContext.GetApiUser();
-        
+
         if (apiUser.Role is not UserRole.Admin and not UserRole.Guest)
         {
             throw new UnauthorizedException(ErrorCode.InvalidRole,
@@ -28,14 +28,14 @@ internal class GuestFilter : IAsyncAuthorizationFilter
 
         if (apiUser.Role is UserRole.Guest)
         {
-            var guest = await _guestRepo.GetAsync(apiUser.Id);
-            
+            var guest = await _guestRepo.GetAsync(apiUser.Id, context.HttpContext.RequestAborted);
+
             if (guest is null)
             {
                 throw new UnauthorizedException(ErrorCode.InvalidGuestAccount,
                     "The guest user does not exist in the database");
             }
-            
+
             if (guest.AccessExpiration < DateTime.Now)
             {
                 throw new UnauthorizedException(ErrorCode.GuestAccountExpired,

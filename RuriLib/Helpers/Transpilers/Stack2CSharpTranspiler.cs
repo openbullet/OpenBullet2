@@ -1,5 +1,3 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Bots;
@@ -8,44 +6,51 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace RuriLib.Helpers.Transpilers
+namespace RuriLib.Helpers.Transpilers;
+
+/// <summary>
+/// Takes care of transpiling a list of blocks to a C# script.
+/// </summary>
+public class Stack2CSharpTranspiler
 {
     /// <summary>
-    /// Takes care of transpiling a list of blocks to a C# script.
+    /// Transpiles a list of <paramref name="blocks"/> to a C# script.
     /// </summary>
-    public class Stack2CSharpTranspiler
+    /// <param name="blocks">The blocks to transpile.</param>
+    /// <param name="settings">The config settings that influence generated code.</param>
+    /// <param name="stepByStep">Whether step-by-step mode should be enabled.</param>
+    /// <returns>The generated C# script.</returns>
+    public static string Transpile(List<BlockInstance> blocks, ConfigSettings settings, bool stepByStep = false)
     {
-        /// <summary>
-        /// Transpiles a list of <paramref name="blocks"/> to a C# script. If <paramref name="pauseToken"/> is
-        /// not null, step-by-step mode will be enabled.
-        /// </summary>
-        public static string Transpile(List<BlockInstance> blocks, ConfigSettings settings, bool stepByStep = false)
+        var declaredVariables = typeof(BotData).GetProperties()
+            .Select(p => $"data.{p.Name}").ToList();
+        var validBlocks = blocks.Where(b => !b.Disabled).ToList();
+        using var writer = new StringWriter();
+        var syntaxContext = new BlockSyntaxGenerationContext(declaredVariables, settings, stepByStep);
+
+        foreach (var block in validBlocks)
         {
-            var declaredVariables = typeof(BotData).GetProperties()
-                .Select(p => $"data.{p.Name}").ToList();
+            writer.WriteLine($"// BLOCK: {block.Label}");
+            writer.WriteLine($"data.ExecutingBlock({CSharpWriter.SerializeString(block.Label)});");
 
-            using var writer = new StringWriter();
-
-            var validBlocks = blocks.Where(b => !b.Disabled);
-
-            foreach (var block in validBlocks)
+            if (block is LoliCodeBlockInstance loliCodeBlock)
             {
-                writer.WriteLine($"// BLOCK: {block.Label}");
-                writer.WriteLine($"data.ExecutingBlock({CSharpWriter.SerializeString(block.Label)});");
-
-                var snippet = block.ToCSharp(declaredVariables, settings);
-                var tree = CSharpSyntaxTree.ParseText(snippet);
-                writer.WriteLine(tree.GetRoot().NormalizeWhitespace().ToFullString());
-                writer.WriteLine();
-
-                // If in step by step mode, and if not the last block, check if pause was requested
-                if (stepByStep && block != validBlocks.Last())
-                {
-                    writer.WriteLine("await data.Stepper.WaitForStepAsync(data.CancellationToken);");
-                }
+                writer.Write(loliCodeBlock.BuildScriptSnippet(syntaxContext.DefinedVariables, stepByStep));
+            }
+            else
+            {
+                writer.Write(block.ToSyntax(syntaxContext).ToSnippet());
             }
 
-            return writer.ToString();
+            writer.WriteLine();
+
+            // If in step by step mode, and if not the last block, check if pause was requested
+            if (stepByStep && block != validBlocks.Last())
+            {
+                writer.WriteLine("await data.Stepper.WaitForStepAsync(data.CancellationToken);");
+            }
         }
+
+        return writer.ToString();
     }
 }

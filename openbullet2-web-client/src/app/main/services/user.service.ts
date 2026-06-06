@@ -49,7 +49,10 @@ export class UserService {
     }
 
     const decodedToken = helper.decodeToken(jwt);
-    const name = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    const name = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+      ?? decodedToken.name
+      ?? decodedToken.unique_name
+      ?? 'admin';
     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
     return {

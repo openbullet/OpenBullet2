@@ -1,16 +1,36 @@
-﻿namespace RuriLib.Models.Configs.Settings
+namespace RuriLib.Models.Configs.Settings;
+
+/// <summary>
+/// Defines general execution behavior for a config.
+/// </summary>
+public class GeneralSettings
 {
-    public class GeneralSettings
-    {
-        public int SuggestedBots { get; set; } = 1;
-        public int MaximumCPM { get; set; } = 0;
-        public bool SaveEmptyCaptures { get; set; } = false;
-        public bool ReportLastCaptchaOnRetry { get; set; } = false;
-        
-        public string[] ContinueStatuses { get; set; } = new string[]
-        {
-            "SUCCESS",
-            "NONE"
-        };
-    }
+    /// <summary>
+    /// The suggested bot count.
+    /// </summary>
+    public int SuggestedBots { get; set; } = 1;
+
+    /// <summary>
+    /// The maximum suggested CPM.
+    /// </summary>
+    public int MaximumCPM { get; set; }
+
+    /// <summary>
+    /// Whether empty captures should be saved.
+    /// </summary>
+    public bool SaveEmptyCaptures { get; set; }
+
+    /// <summary>
+    /// Whether the last captcha should be reported on retry.
+    /// </summary>
+    public bool ReportLastCaptchaOnRetry { get; set; }
+
+    /// <summary>
+    /// Statuses that should continue execution instead of stopping.
+    /// </summary>
+    public string[] ContinueStatuses { get; set; } =
+    [
+        "SUCCESS",
+        "NONE"
+    ];
 }

@@ -1,4 +1,4 @@
-﻿using RuriLib.Logging;
+using RuriLib.Logging;
 using RuriLib.Models.Debugger;
 
 namespace OpenBullet2.Web.Dtos.ConfigDebugger;

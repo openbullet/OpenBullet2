@@ -1,23 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Authors>Ruri</Authors>
     <Version>1.0.1</Version>
     <Description>This is a library that provides a custom HTTP client, in addition to an HttpMessageHandler to be used with the default HttpClient of System.Net</Description>
-    <Copyright>Ruri 2022</Copyright>
+    <Copyright>Ruri 2024</Copyright>
     <RepositoryUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Http</RepositoryUrl>
     <PackageTags>http; proxy; socks; client; custom;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.8.4" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RuriLib.Proxies\RuriLib.Proxies.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\**\*"
+          Pack="true"
+          PackagePath="runtimes\%(RecursiveDir)%(Filename)%(Extension)"
+          Visible="false">
+      <TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <None Update="runtimes\$(RuntimeIdentifier)\native\**\*"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

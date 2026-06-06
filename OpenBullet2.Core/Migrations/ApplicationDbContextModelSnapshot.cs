@@ -15,7 +15,7 @@ namespace OpenBullet2.Core.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
 
             modelBuilder.Entity("OpenBullet2.Core.Entities.GuestEntity", b =>
                 {
@@ -47,18 +47,22 @@ namespace OpenBullet2.Core.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CapturedData")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConfigCategory")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConfigId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConfigName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Data")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -68,6 +72,7 @@ namespace OpenBullet2.Core.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Proxy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
@@ -77,6 +82,7 @@ namespace OpenBullet2.Core.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("WordlistName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -97,6 +103,9 @@ namespace OpenBullet2.Core.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("JobType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LastRunOutcome")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("OwnerId")
@@ -134,6 +143,9 @@ namespace OpenBullet2.Core.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Port")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quality")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
@@ -209,7 +221,7 @@ namespace OpenBullet2.Core.Migrations
                     b.Property<string>("Purpose")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Total")
+                    b.Property<long>("Total")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Plugin;
 using OpenBullet2.Web.Exceptions;
@@ -15,7 +15,7 @@ public class PluginController : ApiController
 {
     private readonly PluginRepository _pluginRepository;
     private readonly ILogger<PluginController> _logger;
-    
+
     /// <summary></summary>
     public PluginController(PluginRepository pluginRepository,
         ILogger<PluginController> logger)
@@ -52,11 +52,11 @@ public class PluginController : ApiController
         }
 
         _pluginRepository.DeletePlugin(name);
-        
+
         _logger.LogInformation(
             "Plugin {PluginName} marked for deletion, will be deleted upon server restart",
             name);
-        
+
         return Ok();
     }
 
@@ -68,9 +68,9 @@ public class PluginController : ApiController
     public ActionResult Add(IFormFile file)
     {
         _pluginRepository.AddPlugin(file.OpenReadStream());
-        
+
         _logger.LogInformation("Plugin added from file {FileName}", file.FileName);
-        
+
         return Ok();
     }
 }

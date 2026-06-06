@@ -33,6 +33,7 @@ export enum Interpreter {
   Jint = 'jint',
   NodeJS = 'nodeJS',
   IronPython = 'ironPython',
+  Python = 'python',
 }
 
 export enum KeychainMode {

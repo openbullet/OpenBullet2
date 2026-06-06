@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
@@ -11,7 +11,7 @@ public class MrjProxy
     /// The type of the proxy.
     /// </summary>
     public ProxyType Type { get; set; } = ProxyType.Http;
-    
+
     /// <summary>
     /// The host of the proxy.
     /// </summary>
@@ -21,12 +21,12 @@ public class MrjProxy
     /// The port of the proxy.
     /// </summary>
     public int? Port { get; set; }
-    
+
     /// <summary>
     /// The username to use for authentication.
     /// </summary>
     public string? Username { get; set; }
-    
+
     /// <summary>
     /// The password to use for authentication.
     /// </summary>

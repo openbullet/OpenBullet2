@@ -1,4 +1,4 @@
-﻿using MahApps.Metro.IconPacks;
+using MahApps.Metro.IconPacks;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Data;
 using RuriLib.Models.Data.Rules;
@@ -10,139 +10,123 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace OpenBullet2.Native.Views.Dialogs
+namespace OpenBullet2.Native.Views.Dialogs;
+
+/// <summary>
+/// Interaction logic for TestDataRulesDialog.xaml
+/// </summary>
+public partial class TestDataRulesDialog : Page
 {
-    /// <summary>
-    /// Interaction logic for TestDataRulesDialog.xaml
-    /// </summary>
-    public partial class TestDataRulesDialog : Page
+    private readonly TestDataRulesDialogViewModel vm;
+
+    public TestDataRulesDialog(string testData, string wordlistType, IEnumerable<DataRule> rules,
+        RuriLibSettingsService rlSettingsService)
     {
-        private readonly TestDataRulesDialogViewModel vm;
+        vm = new TestDataRulesDialogViewModel(testData, wordlistType, rules, rlSettingsService);
+        DataContext = vm;
 
-        public TestDataRulesDialog(string testData, string wordlistType, IEnumerable<DataRule> rules)
+        InitializeComponent();
+    }
+}
+
+public class TestDataRulesDialogViewModel : ViewModelBase
+{
+    public string WordlistType { get; init; }
+
+    private RegexValidationViewModel regexValidation = new(false);
+    public RegexValidationViewModel RegexValidation
+    {
+        get => regexValidation;
+        set
         {
-            vm = new TestDataRulesDialogViewModel(testData, wordlistType, rules);
-            DataContext = vm;
-
-            InitializeComponent();
+            regexValidation = value;
+            OnPropertyChanged();
         }
     }
 
-    public class TestDataRulesDialogViewModel : ViewModelBase
+    private ObservableCollection<SliceViewModel> slicesCollection = [];
+    public ObservableCollection<SliceViewModel> SlicesCollection
     {
-        public string WordlistType { get; init; }
-        
-        private RegexValidationViewModel regexValidation;
-        public RegexValidationViewModel RegexValidation
+        get => slicesCollection;
+        set
         {
-            get => regexValidation;
-            set
-            {
-                regexValidation = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        private ObservableCollection<SliceViewModel> slicesCollection;
-        public ObservableCollection<SliceViewModel> SlicesCollection
-        {
-            get => slicesCollection;
-            set
-            {
-                slicesCollection = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<ResultViewModel> resultsCollection;
-        public ObservableCollection<ResultViewModel> ResultsCollection
-        {
-            get => resultsCollection;
-            set
-            {
-                resultsCollection = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public TestDataRulesDialogViewModel(string testData, string wordlistType, IEnumerable<DataRule> rules)
-        {
-            WordlistType = wordlistType;
-
-            var env = SP.GetService<RuriLibSettingsService>().Environment;
-            var wt = env.WordlistTypes.First(w => w.Name == wordlistType);
-            var dataLine = new DataLine(testData, wt);
-            var slices =dataLine.GetVariables().Select(v => new SliceViewModel(v.Name, v.AsString()));
-
-            RegexValidation = new(dataLine.IsValid);
-            SlicesCollection = new ObservableCollection<SliceViewModel>(slices);
-
-            var results = new List<ResultViewModel>();
-
-            foreach (var rule in rules)
-            {
-                var slice = slices.FirstOrDefault(v => v.Name == rule.SliceName);
-
-                results.Add(slice == null
-                    ? new ResultViewModel($"Invalid slice name: {rule.SliceName}", false)
-                    : new ResultViewModel(GetRuleText(rule), rule.IsSatisfied(slice.Value)));
-            }
-
-            ResultsCollection = new ObservableCollection<ResultViewModel>(results);
-        }
-
-        private static string GetRuleText(DataRule rule)
-        {
-            if (rule is RegexDataRule rdr)
-            {
-                return $"{rdr.SliceName} must{(rdr.Invert ? " not" : "")} match regex {rdr.RegexToMatch}";
-            }
-            else if (rule is SimpleDataRule sdr)
-            {
-                return $"{sdr.SliceName} must{(sdr.Invert ? " not" : "")} respect: {sdr.Comparison} {sdr.StringToCompare}";
-            }
-
-            throw new NotImplementedException();
+            slicesCollection = value;
+            OnPropertyChanged();
         }
     }
 
-    public class RegexValidationViewModel : ViewModelBase
+    private ObservableCollection<ResultViewModel> resultsCollection = [];
+    public ObservableCollection<ResultViewModel> ResultsCollection
     {
-        public bool Passed { get; set; }
-        public string Result => Passed ? "Passed" : "Invalid";
-        public SolidColorBrush Color => Passed ? Brushes.YellowGreen : Brushes.Tomato;
-        public PackIconForkAwesomeKind Icon => Passed ? PackIconForkAwesomeKind.Check : PackIconForkAwesomeKind.Times;
-
-        public RegexValidationViewModel(bool passed)
+        get => resultsCollection;
+        set
         {
-            Passed = passed;
+            resultsCollection = value;
+            OnPropertyChanged();
         }
     }
 
-    public class SliceViewModel : ViewModelBase
+    public TestDataRulesDialogViewModel(string testData, string wordlistType, IEnumerable<DataRule> rules,
+        RuriLibSettingsService rlSettingsService)
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        WordlistType = wordlistType;
 
-        public SliceViewModel(string name, string value)
+        var env = rlSettingsService.Environment;
+        var wt = env.WordlistTypes.First(w => w.Name == wordlistType);
+        var dataLine = new DataLine(testData, wt);
+        var slices = dataLine.GetVariables().Select(v => new SliceViewModel(v.Name, v.AsString()));
+
+        RegexValidation = new(dataLine.IsValid);
+        SlicesCollection = new ObservableCollection<SliceViewModel>(slices);
+
+        var results = new List<ResultViewModel>();
+
+        foreach (var rule in rules)
         {
-            Name = name;
-            Value = value;
+            var slice = slices.FirstOrDefault(v => v.Name == rule.SliceName);
+
+            results.Add(slice == null
+                ? new ResultViewModel($"Invalid slice name: {rule.SliceName}", false)
+                : new ResultViewModel(GetRuleText(rule), rule.IsSatisfied(slice.Value)));
         }
+
+        ResultsCollection = new ObservableCollection<ResultViewModel>(results);
     }
 
-    public class ResultViewModel : ViewModelBase
+    private static string GetRuleText(DataRule rule)
     {
-        public bool Passed { get; set; }
-        public string Text { get; set; }
-
-        public SolidColorBrush Color => Passed ? Brushes.YellowGreen : Brushes.Tomato;
-        public PackIconForkAwesomeKind Icon => Passed ? PackIconForkAwesomeKind.Check : PackIconForkAwesomeKind.Times;
-
-        public ResultViewModel(string text, bool passed)
+        if (rule is RegexDataRule rdr)
         {
-            Text = text;
-            Passed = passed;
+            return $"{rdr.SliceName} must{(rdr.Invert ? " not" : "")} match regex {rdr.RegexToMatch}";
         }
+        else if (rule is SimpleDataRule sdr)
+        {
+            return $"{sdr.SliceName} must{(sdr.Invert ? " not" : "")} respect: {sdr.Comparison} {sdr.StringToCompare}";
+        }
+
+        throw new NotImplementedException();
     }
+}
+
+public class RegexValidationViewModel(bool passed) : ViewModelBase
+{
+    public bool Passed { get; set; } = passed;
+    public string Result => Passed ? "Passed" : "Invalid";
+    public SolidColorBrush Color => Passed ? Brushes.YellowGreen : Brushes.Tomato;
+    public PackIconForkAwesomeKind Icon => Passed ? PackIconForkAwesomeKind.Check : PackIconForkAwesomeKind.Times;
+}
+
+public class SliceViewModel(string name, string value) : ViewModelBase
+{
+    public string Name { get; set; } = name;
+    public string Value { get; set; } = value;
+}
+
+public class ResultViewModel(string text, bool passed) : ViewModelBase
+{
+    public bool Passed { get; set; } = passed;
+    public string Text { get; set; } = text;
+
+    public SolidColorBrush Color => Passed ? Brushes.YellowGreen : Brushes.Tomato;
+    public PackIconForkAwesomeKind Icon => Passed ? PackIconForkAwesomeKind.Check : PackIconForkAwesomeKind.Times;
 }

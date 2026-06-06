@@ -1,71 +1,89 @@
-﻿#nullable enable
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RuriLib.Helpers
+namespace RuriLib.Helpers;
+
+/// <summary>
+/// Runs local scripts and captures their standard output.
+/// </summary>
+public static class RunScript
 {
-    public static class RunScript
+    /// <summary>
+    /// Runs a supported script file and returns its standard output.
+    /// </summary>
+    /// <param name="scriptPath">The script path.</param>
+    /// <returns>The standard output, or <c>null</c> if unsupported or failed.</returns>
+    public static async Task<string?> RunScriptAndGetStdOut(string scriptPath)
     {
-        public static Task<string?> RunScriptAndGetStdOut(string scriptPath)
+        ArgumentNullException.ThrowIfNull(scriptPath);
+
+        var startInfo = CreateStartInfo(scriptPath);
+        if (startInfo is null)
         {
-            TaskCompletionSource<string?> tcs = new();
-            var fileExtension = Path.GetExtension(scriptPath).ToLower();
-            ProcessStartInfo? startInfo;
-            switch (fileExtension)
-            {
-                case ".bat":
-                    startInfo = new("cmd.exe", $@"/C ""{scriptPath}""")
-                    {
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                    };
-                    break;
-                case ".ps1":
-                    startInfo = new("powershell.exe", $@"""&'{scriptPath}'""")
-                    {
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                    };
-                    break;
-                case ".sh":
-                    startInfo = new("/bin/bash", scriptPath)
-                    {
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                    };
-                    break;
-                default:
-                    // un-supported script.
-                    tcs.SetResult(null);
-                    return tcs.Task;
-            }
+            // un-supported script.
+            return null;
+        }
 
-            StringBuilder stdOut = new();
-            Process process = new() { EnableRaisingEvents = true };
+        try
+        {
+            using var process = new Process { StartInfo = startInfo };
 
-            process.StartInfo = startInfo;
-            process.OutputDataReceived += (_, args) => stdOut.AppendLine(args.Data);
-            process.Exited += (_, args) =>
-            {
-                tcs.SetResult(stdOut.Length > 0 ? stdOut.ToString() : null);
-                process.Dispose();
-            };
-            try
-            {
-                process.Start();
-                process.BeginOutputReadLine();
-            }
-            catch
-            {
-                // ignored
-            }
+            process.Start();
+            var stdOutTask = process.StandardOutput.ReadToEndAsync();
+            var stdErrTask = process.StandardError.ReadToEndAsync();
 
-            return tcs.Task;
+            await process.WaitForExitAsync().ConfigureAwait(false);
+            var stdOut = await stdOutTask.ConfigureAwait(false);
+            await stdErrTask.ConfigureAwait(false);
+
+            return stdOut.Length > 0 ? stdOut : null;
+        }
+        catch
+        {
+            // ignored
+            return null;
         }
     }
+
+    private static ProcessStartInfo? CreateStartInfo(string scriptPath)
+    {
+        var fileExtension = Path.GetExtension(scriptPath).ToLowerInvariant();
+
+        return fileExtension switch
+        {
+            ".bat" => CreateCmdStartInfo(scriptPath),
+            ".ps1" => CreatePowerShellStartInfo(scriptPath),
+            ".sh" => CreateBashStartInfo(scriptPath),
+            _ => null
+        };
+    }
+
+    private static ProcessStartInfo CreateCmdStartInfo(string scriptPath)
+        => new("cmd.exe", $@"/C ""{scriptPath}""")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+    private static ProcessStartInfo CreatePowerShellStartInfo(string scriptPath)
+        => new("powershell.exe", $@"-NoProfile -ExecutionPolicy Bypass -File ""{scriptPath}""")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+    private static ProcessStartInfo CreateBashStartInfo(string scriptPath)
+        => new("/bin/bash", scriptPath)
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
 }

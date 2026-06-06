@@ -94,7 +94,8 @@
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Hidden"
                       Grid.Row="1">
-            <ItemsControl 
+            <ItemsControl
+                x:Name="blocksItemsControl"
                 Margin="0 4 0 0"
                 ItemsSource="{Binding Stack}">
                 <ItemsControl.ItemsPanel>

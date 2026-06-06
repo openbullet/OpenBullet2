@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Proxies;
 using RuriLib.Helpers;
 using RuriLib.Models.Jobs.StartConditions;

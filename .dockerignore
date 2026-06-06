@@ -1,1 +1,12 @@
+.git
+.github
+.idea
+artifacts
+UserData
 openbullet2-web-client/node_modules
+openbullet2-web-client/dist
+**/bin
+**/obj
+*.binlog
+*.log
+*.user

@@ -1,56 +1,53 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 using RuriLib.Models.Variables;
-using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace RuriLib.Models.Debugger
+namespace RuriLib.Models.Debugger;
+
+/// <summary>
+/// Options for the OpenBullet 2 config debugger.
+/// </summary>
+public class DebuggerOptions
 {
     /// <summary>
-    /// Options for the OpenBullet 2 config debugger.
+    /// The data under test.
     /// </summary>
-    public class DebuggerOptions
-    {
-        /// <summary>
-        /// The data under test.
-        /// </summary>
-        public string TestData { get; set; } = "";
+    public string TestData { get; set; } = string.Empty;
 
-        /// <summary>
-        /// The Wordlist Type to use when slicing the <see cref="TestData"/>.
-        /// </summary>
-        public string WordlistType { get; set; }
+    /// <summary>
+    /// The Wordlist Type to use when slicing the <see cref="TestData"/>.
+    /// </summary>
+    public string WordlistType { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Whether the provided <see cref="TestProxy"/> should be used.
-        /// </summary>
-        public bool UseProxy { get; set; } = false;
+    /// <summary>
+    /// Whether the provided <see cref="TestProxy"/> should be used.
+    /// </summary>
+    public bool UseProxy { get; set; }
 
-        /// <summary>
-        /// The proxy to use for remote connections.
-        /// </summary>
-        public string TestProxy { get; set; } = "";
+    /// <summary>
+    /// The proxy to use for remote connections.
+    /// </summary>
+    public string TestProxy { get; set; } = string.Empty;
 
-        /// <summary>
-        /// The type of <see cref="TestProxy"/>.
-        /// </summary>
-        public ProxyType ProxyType { get; set; } = ProxyType.Http;
+    /// <summary>
+    /// The type of <see cref="TestProxy"/>.
+    /// </summary>
+    public ProxyType ProxyType { get; set; } = ProxyType.Http;
 
-        /// <summary>
-        /// Whether to persist the logs from the previous debug.
-        /// </summary>
-        public bool PersistLog { get; set; } = false;
+    /// <summary>
+    /// Whether to persist the logs from the previous debug.
+    /// </summary>
+    public bool PersistLog { get; set; }
 
-        /// <summary>
-        /// The list of variables that were found during the last debug.
-        /// </summary>
-        // TODO: Move this outside of the options
-        public List<Variable> Variables { get; set; } = new List<Variable>();
+    /// <summary>
+    /// The list of variables that were found during the last debug.
+    /// </summary>
+    // TODO: Move this outside of the options
+    public List<Variable> Variables { get; set; } = [];
 
-        /// <summary>
-        /// Whether to debug the config in step by step mode, waiting for
-        /// user input before proceeding with the next block.
-        /// </summary>
-        public bool StepByStep { get; set; } = false;
-    }
+    /// <summary>
+    /// Whether to debug the config in step by step mode, waiting for
+    /// user input before proceeding with the next block.
+    /// </summary>
+    public bool StepByStep { get; set; }
 }

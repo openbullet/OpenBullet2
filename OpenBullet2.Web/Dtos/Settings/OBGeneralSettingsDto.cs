@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 
 namespace OpenBullet2.Web.Dtos.Settings;
 
@@ -29,9 +29,20 @@ public class OBGeneralSettingsDto
     public bool WarnConfigNotSaved { get; set; } = true;
 
     /// <summary>
+    /// Whether to output a warning when selecting a config that might contain
+    /// custom C# code or external program calls.
+    /// </summary>
+    public bool WarnDangerousConfig { get; set; } = true;
+
+    /// <summary>
     /// The default author to use when creating new configs.
     /// </summary>
     public string DefaultAuthor { get; set; } = "Anonymous";
+
+    /// <summary>
+    /// The channel to use when checking for update alerts.
+    /// </summary>
+    public UpdateChannel UpdateChannel { get; set; } = UpdateChannel.Release;
 
     /// <summary>
     /// Whether to display the job log in the interface.

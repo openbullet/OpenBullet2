@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Proxies;
@@ -15,16 +15,10 @@ namespace OpenBullet2.Core.Services;
 /// <summary>
 /// A reload service that will reload proxies from an <see cref="IProxyGroupRepository"/>.
 /// </summary>
-public class ProxyReloadService : IDisposable
+public class ProxyReloadService(IServiceScopeFactory scopeFactory) : IDisposable
 {
-    private readonly SemaphoreSlim _semaphore;
-    private readonly IServiceScopeFactory _scopeFactory;
-
-    public ProxyReloadService(IServiceScopeFactory scopeFactory)
-    {
-        _semaphore = new SemaphoreSlim(1, 1);
-        _scopeFactory = scopeFactory;
-    }
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
 
     /// <summary>
     /// Reloads proxies from a group with a given <paramref name="groupId"/> of a user with a given
@@ -33,7 +27,6 @@ public class ProxyReloadService : IDisposable
     public async Task<IEnumerable<Proxy>> ReloadAsync(int groupId, int userId, CancellationToken cancellationToken = default)
     {
         using var scope = _scopeFactory.CreateScope();
-        var proxyGroupsRepo = scope.ServiceProvider.GetRequiredService<IProxyGroupRepository>();
         var proxyRepo = scope.ServiceProvider.GetRequiredService<IProxyRepository>();
 
         List<ProxyEntity> entities;
@@ -49,14 +42,14 @@ public class ProxyReloadService : IDisposable
             {
                 entities = userId == 0
                     ? await proxyRepo.GetAll().ToListAsync(cancellationToken).ConfigureAwait(false)
-                    : await proxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
-                        .Where(p => p.Group.Owner.Id == userId).ToListAsync(cancellationToken).ConfigureAwait(false);
+                    : await proxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g!.Owner)
+                        .Where(p => p.Group != null && p.Group.Owner != null && p.Group.Owner.Id == userId)
+                        .ToListAsync(cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                var group = await proxyGroupsRepo.GetAsync(groupId, cancellationToken).ConfigureAwait(false);
                 entities = await proxyRepo.GetAll()
-                    .Where(p => p.Group.Id == groupId)
+                    .Where(p => p.Group != null && p.Group.Id == groupId)
                     .ToListAsync(cancellationToken).ConfigureAwait(false);
             }
         }

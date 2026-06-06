@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleLeft, faAngleRight, faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { getJobDisplayColor, getJobDisplayLabel } from '../../dtos/job/job-display';
+import { JobOverviewDto } from '../../dtos/job/job.dto';
 import { JobStatus } from '../../dtos/job/job-status';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
@@ -35,17 +37,6 @@ export class JobsComponent implements OnInit, OnDestroy {
   showMoreMultiRunJobs = false;
   showMoreProxyCheckJobs = false;
   createJobModalVisible = false;
-
-  statusColor: Record<string, string> = {
-    idle: 'secondary',
-    waiting: 'accent',
-    starting: 'good',
-    running: 'good',
-    pausing: 'custom',
-    paused: 'custom',
-    stopping: 'bad',
-    resuming: 'good',
-  };
 
   usernames: Map<number, string> = new Map();
 
@@ -183,20 +174,37 @@ export class JobsComponent implements OnInit, OnDestroy {
     this.showJobActions = !this.showJobActions;
   }
 
-  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
+  getStartActionLabel(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+    return job.status === JobStatus.PAUSED ? 'Resume' : 'Start';
+  }
+
+  startOrResumeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
+
+    if (job.status === JobStatus.PAUSED) {
+      this.jobService.resume(job.id).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Resumed',
+          detail: `Job #${job.id} was resumed`,
+        });
+        this.refreshJobs();
+      });
+
+      return;
+    }
 
     // If the status is not idle, we can't start it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Not idle',
-        detail: 'The job you are trying to start is not idle, please ' + 'stop it or abort it first',
+        summary: 'Cannot start',
+        detail: 'The job you are trying to start is neither idle nor paused',
       });
       return;
     }
 
-    this.jobService.start(job.id).subscribe((resp) => {
+    this.jobService.start(job.id).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: 'Started',
@@ -306,5 +314,13 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
 
     return mrj.useProxies ? 'bg-good' : 'bg-bad';
+  }
+
+  getDisplayStatusLabel(job: { status: JobStatus; lastRunOutcome: JobOverviewDto['lastRunOutcome'] }) {
+    return getJobDisplayLabel(job);
+  }
+
+  getDisplayStatusColor(job: { status: JobStatus; lastRunOutcome: JobOverviewDto['lastRunOutcome'] }) {
+    return getJobDisplayColor(job);
   }
 }

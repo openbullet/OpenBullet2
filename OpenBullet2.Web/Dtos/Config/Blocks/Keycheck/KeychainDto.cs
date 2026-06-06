@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Blocks.Custom.Keycheck;
+using RuriLib.Models.Blocks.Custom.Keycheck;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
 

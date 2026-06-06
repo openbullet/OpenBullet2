@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Common;
+using OpenBullet2.Web.Dtos.Common;
 using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Web.Dtos.Proxy;
@@ -28,12 +28,17 @@ public class ProxyFiltersDto : PaginationDto
     /// The proxy status filter, if any.
     /// </summary>
     public ProxyWorkingStatus? Status { get; set; } = null;
-    
+
+    /// <summary>
+    /// The proxy quality filter, if any.
+    /// </summary>
+    public ProxyQuality? Quality { get; set; } = null;
+
     /// <summary>
     /// The field to sort proxies by, if any.
     /// </summary>
     public ProxySortField? SortBy { get; set; } = null;
-    
+
     /// <summary>
     /// Whether to sort the proxies in descending order.
     /// </summary>

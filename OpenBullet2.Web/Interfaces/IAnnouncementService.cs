@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Interfaces;
+namespace OpenBullet2.Web.Interfaces;
 
 /// <summary>
 /// Service that reads the announcement.

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { faExclamationTriangle, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCaretLeft, faCaretRight, faExclamationTriangle, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { UpdateInfoDto, VersionType } from './dtos/info/update-info.dto';
 import { InfoService } from './services/info.service';
 import { UserService } from './services/user.service';
@@ -12,6 +12,9 @@ import { UserService } from './services/user.service';
 })
 export class MainComponent implements OnInit {
   updateInfo: UpdateInfoDto | null = null;
+  sidebarVisible = true;
+  faCaretLeft = faCaretLeft;
+  faCaretRight = faCaretRight;
   faExclamationTriangle = faExclamationTriangle;
   faRightFromBracket = faRightFromBracket;
   changelogModalVisible = false;
@@ -63,5 +66,9 @@ export class MainComponent implements OnInit {
   logout() {
     this.userService.resetJwt();
     window.location.reload();
+  }
+
+  toggleSidebar() {
+    this.sidebarVisible = !this.sidebarVisible;
   }
 }

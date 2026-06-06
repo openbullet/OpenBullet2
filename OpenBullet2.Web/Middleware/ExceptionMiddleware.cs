@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Errors;
 using System.Net;
 using System.Text.Json;
@@ -56,6 +56,10 @@ internal class ExceptionMiddleware
                 new ApiError(ex.ErrorCode, ex.Message, ex.StackTrace?.Trim()),
                 HttpStatusCode.BadRequest);
         }
+        catch (OperationCanceledException ex) when (context.RequestAborted.IsCancellationRequested)
+        {
+            _logger.LogDebug(ex, "Request was canceled by the client");
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Generic exception");
@@ -68,6 +72,12 @@ internal class ExceptionMiddleware
     private async Task RespondAsync(HttpContext context, ApiError error,
         HttpStatusCode statusCode)
     {
+        if (context.Response.HasStarted)
+        {
+            _logger.LogWarning("Unable to write error response because the HTTP response has already started");
+            return;
+        }
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 

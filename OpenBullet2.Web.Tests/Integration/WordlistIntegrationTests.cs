@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
@@ -6,9 +7,10 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Models.Errors;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Extensions;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -25,14 +27,14 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -40,7 +42,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(wordlist.Id, result.Value.Id);
@@ -51,7 +53,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(wordlist.Type, result.Value.WordlistType);
         Assert.Null(result.Value.Owner);
     }
-    
+
     [Fact]
     public async Task GetWordlist_GuestOwned_Success()
     {
@@ -63,18 +65,18 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
             Owner = guest
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -82,7 +84,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(wordlist.Id, result.Value.Id);
@@ -94,7 +96,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Value.Owner);
         Assert.Equal(guest.Id, result.Value.Owner.Id);
     }
-    
+
     [Fact]
     public async Task GetWordlist_GuestNotOwned_Failure()
     {
@@ -106,18 +108,18 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
             Owner = new GuestEntity { Username = "other" }
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -125,12 +127,12 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorCode.WordlistNotFound, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task GetAll_Admin_ListAll()
     {
@@ -140,7 +142,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default"
@@ -148,22 +150,22 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist2 = new WordlistEntity
         {
             Name = "test2",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default"
         };
         dbContext.Wordlists.AddRange(wordlist1, wordlist2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var result = await GetJsonAsync<IEnumerable<WordlistDto>>(
             client, "/api/v1/wordlist/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count());
-        
+
         var result1 = result.Value.First();
         Assert.Equal(wordlist1.Id, result1.Id);
         Assert.Equal(wordlist1.Name, result1.Name);
@@ -173,7 +175,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(wordlist1.Type, result1.WordlistType);
         Assert.Null(result1.Owner);
     }
-    
+
     [Fact]
     public async Task GetAll_Guest_OnlyOwn()
     {
@@ -186,7 +188,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
@@ -195,7 +197,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist2 = new WordlistEntity
         {
             Name = "test2",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
@@ -204,38 +206,38 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist3 = new WordlistEntity
         {
             Name = "test3",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default"
         };
         dbContext.Wordlists.AddRange(wordlist1, wordlist2, wordlist3);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<WordlistDto>>(
             client, "/api/v1/wordlist/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
-        
+
         var result1 = result.Value.First();
         Assert.Equal(wordlist1.Id, result1.Id);
     }
-    
+
     [Fact]
     public async Task GetPreview_Admin_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var fileName = Path.GetTempFileName();
+        var fileName = GetRandomTempPath();
         await File.WriteAllLinesAsync(
-            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()));
+            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()), TestCancellationToken);
         var wordlist = new WordlistEntity
         {
             Name = "test",
@@ -245,8 +247,8 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -255,16 +257,16 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistPreviewDto>(
             client, "/api/v1/wordlist/preview".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(5, result.Value.FirstLines.Length);
         Assert.Equal("0", result.Value.FirstLines[0]);
-        
+
         var fileInfo = new FileInfo(fileName);
         Assert.Equal(fileInfo.Length, result.Value.SizeInBytes);
     }
-    
+
     [Fact]
     public async Task GetPreview_FileNotFound_Failure()
     {
@@ -280,8 +282,8 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -290,12 +292,12 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistPreviewDto>(
             client, "/api/v1/wordlist/preview".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorCode.FileNotFound, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task GetPreview_Guest_Owned_Success()
     {
@@ -304,9 +306,9 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        var fileName = Path.GetTempFileName();
+        var fileName = GetRandomTempPath();
         await File.WriteAllLinesAsync(
-            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()));
+            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()), TestCancellationToken);
         var wordlist = new WordlistEntity
         {
             Name = "test",
@@ -317,11 +319,11 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Owner = guest
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -330,16 +332,16 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistPreviewDto>(
             client, "/api/v1/wordlist/preview".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(5, result.Value.FirstLines.Length);
         Assert.Equal("0", result.Value.FirstLines[0]);
-        
+
         var fileInfo = new FileInfo(fileName);
         Assert.Equal(fileInfo.Length, result.Value.SizeInBytes);
     }
-    
+
     [Fact]
     public async Task GetPreview_Guest_NotOwned_Failure()
     {
@@ -351,18 +353,18 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
             Owner = new GuestEntity { Username = "other" }
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -371,12 +373,12 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<WordlistPreviewDto>(
             client, "/api/v1/wordlist/preview".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorCode.WordlistNotFound, result.Error.Content!.ErrorCode);
     }
-    
+
     /// <summary>
     /// An admin should be able to create a wordlist.
     /// </summary>
@@ -386,9 +388,9 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var fileName = Path.GetTempFileName();
+        var fileName = GetRandomTempPath();
         await File.WriteAllLinesAsync(
-            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()));
+            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()), TestCancellationToken);
         var dto = new CreateWordlistDto
         {
             Name = "test",
@@ -396,17 +398,17 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             WordlistType = "Default",
             FilePath = fileName
         };
-        
+
         // Act
         var result = await PostJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var wordlist = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == result.Value.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == result.Value.Id, TestCancellationToken);
+
         Assert.NotNull(wordlist);
         Assert.Equal(wordlist.Id, result.Value.Id);
         Assert.Equal(dto.Name, result.Value.Name);
@@ -416,7 +418,35 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.WordlistType, result.Value.WordlistType);
         Assert.Null(result.Value.Owner);
     }
-    
+
+    [Fact]
+    public async Task CreateWordlist_Admin_MixedLineTerminators_Success()
+    {
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var fileName = GetRandomTempPath();
+        await File.WriteAllTextAsync(fileName, "one\r\ntwo\nthree\rfour", TestCancellationToken);
+        var dto = new CreateWordlistDto
+        {
+            Name = "test",
+            Purpose = "test",
+            WordlistType = "Default",
+            FilePath = fileName
+        };
+
+        var result = await PostJsonAsync<WordlistDto>(
+            client, "/api/v1/wordlist", dto);
+
+        Assert.True(result.IsSuccess);
+
+        var wordlist = await dbContext.Wordlists
+            .FirstOrDefaultAsync(w => w.Id == result.Value.Id, TestCancellationToken);
+
+        Assert.NotNull(wordlist);
+        Assert.Equal(4L, wordlist.Total);
+        Assert.Equal(4L, result.Value.LineCount);
+    }
+
     /// <summary>
     /// A guest should be able to create a wordlist that
     /// references a file in the allowed subdirectory.
@@ -432,7 +462,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Directory.CreateDirectory(Path.Combine(UserDataFolder, "Wordlists"));
         var fileName = Path.Combine(UserDataFolder, "Wordlists", Guid.NewGuid() + ".txt");
         await File.WriteAllLinesAsync(
-            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()));
+            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()), TestCancellationToken);
         var dto = new CreateWordlistDto
         {
             Name = "test",
@@ -440,22 +470,22 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             WordlistType = "Default",
             FilePath = fileName
         };
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await PostJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var wordlist = await dbContext.Wordlists
             .Include(w => w.Owner)
-            .FirstOrDefaultAsync(w => w.Id == result.Value.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == result.Value.Id, TestCancellationToken);
+
         Assert.NotNull(wordlist);
         Assert.Equal(wordlist.Id, result.Value.Id);
         Assert.Equal(dto.Name, result.Value.Name);
@@ -466,7 +496,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Value.Owner);
         Assert.Equal(guest.Id, result.Value.Owner.Id);
     }
-    
+
     [Fact]
     public async Task CreateWordlist_Guest_OutsideAllowedPath_Failure()
     {
@@ -475,9 +505,9 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        var fileName = Path.GetTempFileName();
+        var fileName = GetRandomTempPath();
         await File.WriteAllLinesAsync(
-            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()));
+            fileName, Enumerable.Range(0, 100).Select(i => i.ToString()), TestCancellationToken);
         var dto = new CreateWordlistDto
         {
             Name = "test",
@@ -485,21 +515,21 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             WordlistType = "Default",
             FilePath = fileName
         };
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await PostJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.FileOutsideAllowedPath, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task CreateWordlist_FileNotFound_Failure()
     {
@@ -512,17 +542,17 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             WordlistType = "Default",
             FilePath = Guid.NewGuid() + ".txt"
         };
-        
+
         // Act
         var result = await PostJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.NotFound, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.FileNotFound, result.Error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task UploadWordlistFile_Admin_Success()
     {
@@ -533,36 +563,60 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         await using var writer = new StreamWriter(stream);
         foreach (var line in lines) await writer.WriteLineAsync(line);
         stream.Position = 0;
-        
+
         var content = new MultipartFormDataContent
         {
             { new StreamContent(stream), "file", "test.txt" }
         };
-        
+
         // Act
         var result = await client.PostAsync(
-            "/api/v1/wordlist/upload", content);
-        
+            "/api/v1/wordlist/upload", content, TestCancellationToken);
+
         // Assert
         result.EnsureSuccessStatusCode();
-        
-        var response = await result.Content.ReadAsStringAsync();
+
+        var response = await result.Content.ReadAsStringAsync(TestCancellationToken);
         var dto = JsonSerializer.Deserialize<WordlistFileDto>(
             response, JsonSerializerOptions);
-        
+
         Assert.NotNull(dto);
         Assert.True(dto.FilePath.IsSubPathOf(
             Path.Combine(UserDataFolder, "Wordlists")));
     }
-    
-    // TODO: Delete wordlist (admin)
+
+    [Fact]
+    public async Task UploadWordlistFile_ScriptExtension_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        await using var stream = new MemoryStream("echo test"u8.ToArray());
+        var content = new MultipartFormDataContent
+        {
+            { new StreamContent(stream), "file", "test.sh" }
+        };
+
+        // Act
+        var response = await client.PostAsync(
+            "/api/v1/wordlist/upload", content, TestCancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+        var dto = await response.Content.ReadFromJsonAsync<ApiError>(
+            JsonSerializerOptions, TestCancellationToken);
+
+        Assert.NotNull(dto);
+        Assert.Equal(ErrorCode.ScriptFileNotAllowed, dto.ErrorCode);
+    }
+
     [Fact]
     public async Task DeleteWordlist_Admin_WithoutFile_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var fileName = Path.GetTempFileName();
+        var fileName = await CreateTempFileAsync();
         var wordlist = new WordlistEntity
         {
             Name = "test",
@@ -572,8 +626,8 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -582,24 +636,24 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await DeleteAsync(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(result);
-        
+
         var deleted = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == wordlist.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == wordlist.Id, TestCancellationToken);
+
         Assert.Null(deleted);
         Assert.True(File.Exists(fileName));
     }
-    
+
     [Fact]
     public async Task DeleteWordlist_Admin_WithFile_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var fileName = Path.GetTempFileName();
+        var fileName = await CreateTempFileAsync();
         var wordlist = new WordlistEntity
         {
             Name = "test",
@@ -609,8 +663,8 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -619,17 +673,17 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await DeleteAsync(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(result);
-        
+
         var deleted = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == wordlist.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == wordlist.Id, TestCancellationToken);
+
         Assert.Null(deleted);
         Assert.False(File.Exists(fileName));
     }
-    
+
     [Fact]
     public async Task DeleteWordlist_Guest_NotOwned_Failure()
     {
@@ -641,18 +695,18 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
             Owner = new GuestEntity { Username = "other" }
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -661,13 +715,13 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await DeleteAsync(
             client, "/api/v1/wordlist".ToUri(queryParams));
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
         Assert.Equal(ErrorCode.WordlistNotFound, error.Content!.ErrorCode);
     }
-    
+
     [Fact]
     public async Task DeleteNotFound_Admin_Success()
     {
@@ -677,7 +731,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(), // Exists
+            FileName = await CreateTempFileAsync(), // Exists
             Purpose = "test",
             Total = 10,
             Type = "Default"
@@ -691,27 +745,27 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.AddRange(wordlist1, wordlist2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/wordlist/not-found");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Count);
-        
+
         var deleted = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == wordlist2.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == wordlist2.Id, TestCancellationToken);
+
         Assert.Null(deleted);
-        
+
         var notDeleted = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == wordlist1.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == wordlist1.Id, TestCancellationToken);
+
         Assert.NotNull(notDeleted);
     }
-    
+
     [Fact]
     public async Task DeleteNotFound_Guest_OnlyOwn()
     {
@@ -723,7 +777,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(), // Exists
+            FileName = await CreateTempFileAsync(), // Exists
             Purpose = "test",
             Total = 10,
             Type = "Default",
@@ -756,30 +810,30 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Type = "Default"
         };
         dbContext.Wordlists.AddRange(wordlist1, wordlist2, wordlist3, wordlist4);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/wordlist/not-found");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Count);
-        
+
         var deleted = await dbContext.Wordlists
-            .FirstOrDefaultAsync(w => w.Id == wordlist2.Id);
-        
+            .FirstOrDefaultAsync(w => w.Id == wordlist2.Id, TestCancellationToken);
+
         Assert.Null(deleted);
-        
+
         var notDeleted = await dbContext.Wordlists
-            .ToListAsync();
-        
+            .ToListAsync(TestCancellationToken);
+
         Assert.Equal(3, notDeleted.Count);
     }
-    
+
     [Fact]
     public async Task UpdateWordlistInfo_Admin_Success()
     {
@@ -789,14 +843,14 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default"
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var dto = new UpdateWordlistInfoDto
         {
             Id = wordlist.Id,
@@ -804,22 +858,22 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Purpose = "test2",
             WordlistType = "Default2"
         };
-        
+
         // Act
         var result = await PatchJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist/info", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(wordlist.Id, result.Value.Id);
-        
-        await dbContext.Entry(wordlist).ReloadAsync();
-        
+
+        await dbContext.Entry(wordlist).ReloadAsync(TestCancellationToken);
+
         Assert.Equal(dto.Name, wordlist.Name);
         Assert.Equal(dto.Purpose, wordlist.Purpose);
         Assert.Equal(dto.WordlistType, wordlist.Type);
     }
-    
+
     [Fact]
     public async Task UpdateWordlistInfo_Guest_NotOwned_Failure()
     {
@@ -831,18 +885,18 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist = new WordlistEntity
         {
             Name = "test",
-            FileName = Path.GetTempFileName(),
+            FileName = GetRandomTempPath(),
             Purpose = "test",
             Total = 10,
             Type = "Default",
             Owner = new GuestEntity { Username = "other" }
         };
         dbContext.Wordlists.Add(wordlist);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         var dto = new UpdateWordlistInfoDto
         {
             Id = wordlist.Id,
@@ -850,14 +904,25 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
             Purpose = "test2",
             WordlistType = "Default2"
         };
-        
+
         // Act
         var result = await PatchJsonAsync<WordlistDto>(
             client, "/api/v1/wordlist/info", dto);
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.WordlistNotFound, result.Error.Content!.ErrorCode);
     }
+
+    private static string GetRandomTempPath(string extension = ".tmp")
+        => Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}{extension}");
+
+    private static async Task<string> CreateTempFileAsync(string extension = ".tmp")
+    {
+        var path = GetRandomTempPath(extension);
+        await File.WriteAllTextAsync(path, string.Empty);
+        return path;
+    }
 }
+

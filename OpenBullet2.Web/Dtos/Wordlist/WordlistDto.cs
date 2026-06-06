@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.User;
+using OpenBullet2.Web.Dtos.User;
 
 namespace OpenBullet2.Web.Dtos.Wordlist;
 
@@ -30,7 +30,7 @@ public class WordlistDto
     /// <summary>
     /// The total number of lines in the wordlist.
     /// </summary>
-    public int LineCount { get; set; }
+    public long LineCount { get; set; }
 
     /// <summary>
     /// The wordlist type.

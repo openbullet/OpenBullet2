@@ -1,14 +1,12 @@
-﻿namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
-{
-    public class StringHttpContent : MyHttpContent
-    {
-        public string Data { get; set; }
+namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 
-        public StringHttpContent(string name, string data, string contentType)
-        {
-            Name = name;
-            Data = data;
-            ContentType = contentType;
-        }
-    }
+/// <summary>
+/// Runtime multipart content containing text data.
+/// </summary>
+public class StringHttpContent(string name, string data, string contentType) : MyHttpContent(name, contentType)
+{
+    /// <summary>
+    /// Gets or sets the string payload.
+    /// </summary>
+    public string Data { get; set; } = data;
 }

@@ -1,5 +1,5 @@
-<div class="wrapper">
-    <div class="sidebar">
+<div class="wrapper" [class.sidebar-collapsed]="!sidebarVisible">
+    <div class="sidebar" [class.sidebar-hidden]="!sidebarVisible">
         <div class="sidebar-logo">
             <img class="logo" src="../../assets/images/logohq.png"
                 alt="OpenBullet 2" />
@@ -26,6 +26,14 @@
             </button>
         </div>
     </div>
+    <button
+        type="button"
+        class="sidebar-handle button button-transparent"
+        [attr.aria-label]="sidebarVisible ? 'Collapse sidebar' : 'Expand sidebar'"
+        [attr.aria-expanded]="sidebarVisible"
+        (click)="toggleSidebar()">
+        <fa-icon [icon]="sidebarVisible ? faCaretLeft : faCaretRight" [fixedWidth]="true"></fa-icon>
+    </button>
     <div class="content">
         <router-outlet></router-outlet>
     </div>

@@ -1,30 +1,36 @@
-﻿using RuriLib.Attributes;
+using RuriLib.Attributes;
 using RuriLib.Models.Bots;
 using RuriLib.Providers.UserAgents;
 
-namespace RuriLib.Blocks.Functions
+namespace RuriLib.Blocks.Functions;
+
+/// <summary>
+/// General purpose function blocks.
+/// </summary>
+[BlockCategory("Functions", "General purpose functions", "#9acd32")]
+public static class Methods
 {
-    [BlockCategory("Functions", "General purpose functions", "#9acd32")]
-    public static class Methods
+    /// <summary>
+    /// Generates a random User Agent using the builtin provider or a custom list.
+    /// </summary>
+    [Block("Generates a random User Agent using the builtin provider or a custom list")]
+    public static string RandomUserAgent(BotData data, UAPlatform platform = UAPlatform.All)
     {
-        [Block("Generates a random User Agent using the builtin provider or a custom list")]
-        public static string RandomUserAgent(BotData data, UAPlatform platform = UAPlatform.All)
+        data.Logger.LogHeader();
+
+        data.Logger.Log("Getting random UA from the builtin provider");
+        string ua;
+
+        try
         {
-            data.Logger.LogHeader();
-            data.Logger.Log("Getting random UA from the builtin provider");
-            string ua;
-
-            try
-            {
-                ua = data.Providers.RandomUA.Generate(platform);
-            }
-            catch
-            {
-                ua = "NO_RANDOM_UA_FOUND";
-            }
-
-            data.Logger.Log(ua);
-            return ua;
+            ua = data.Providers.RandomUA.Generate(platform);
         }
+        catch
+        {
+            ua = "NO_RANDOM_UA_FOUND";
+        }
+
+        data.Logger.Log(ua);
+        return ua;
     }
 }

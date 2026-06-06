@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 using System;
 using System.Text;
 
@@ -12,7 +12,7 @@ public class ProxyEntity : Entity
     /// <summary>
     /// The host on which the proxy server is running.
     /// </summary>
-    public string Host { get; set; }
+    public string? Host { get; set; }
 
     /// <summary>
     /// The port on which the proxy server is listening.
@@ -27,17 +27,17 @@ public class ProxyEntity : Entity
     /// <summary>
     /// The username, if required by the proxy server.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// The password, if required by the proxy server.
     /// </summary>
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// The country of the proxy, detected after checking it with a geolocalization service.
     /// </summary>
-    public string Country { get; set; }
+    public string? Country { get; set; }
 
     /// <summary>
     /// The working status of the proxy.
@@ -50,6 +50,11 @@ public class ProxyEntity : Entity
     public int Ping { get; set; }
 
     /// <summary>
+    /// The anonymity quality reported by a proxy judge.
+    /// </summary>
+    public ProxyQuality Quality { get; set; } = ProxyQuality.Unknown;
+
+    /// <summary>
     /// The last time the proxy was checked.
     /// </summary>
     public DateTime LastChecked { get; set; }
@@ -57,7 +62,7 @@ public class ProxyEntity : Entity
     /// <summary>
     /// The proxy group to which the proxy belongs to.
     /// </summary>
-    public ProxyGroupEntity Group { get; set; }
+    public ProxyGroupEntity? Group { get; set; }
 
     /// <summary>
     /// Returns a string representation of the proxy.

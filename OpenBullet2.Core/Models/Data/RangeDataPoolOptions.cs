@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Data.DataPools;
+using RuriLib.Models.Data.DataPools;
 
 namespace OpenBullet2.Core.Models.Data;
 

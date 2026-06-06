@@ -1,5 +1,4 @@
-﻿using OpenBullet2.Native.Helpers;
-using OpenBullet2.Native.Services;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Functions.Captchas;
 using System;
@@ -16,9 +15,9 @@ public partial class RLSettings : Page
 {
     private readonly RLSettingsViewModel vm;
 
-    public RLSettings()
+    public RLSettings(RLSettingsViewModel vm)
     {
-        vm = SP.GetService<ViewModelsService>().RLSettings;
+        this.vm = vm;
         vm.CaptchaServiceChanged += UpdateCaptchaTabControl;
         DataContext = vm;
 
@@ -31,13 +30,27 @@ public partial class RLSettings : Page
     private void CustomUserAgentsChanged(object sender, TextChangedEventArgs e)
         => vm.UserAgents = customUserAgentsListTextBox.Text.Split(Environment.NewLine).ToList();
 
+    private void ProxyJudgeUrlsChanged(object sender, TextChangedEventArgs e)
+        => vm.ProxyJudgeUrls = proxyJudgeUrlsTextBox.Text.Split(Environment.NewLine).ToList();
+
     private void GlobalBanKeysChanged(object sender, TextChangedEventArgs e)
         => vm.GlobalBanKeys = globalBanKeysTextBox.Text.Split(Environment.NewLine).ToList();
 
     private void GlobalRetryKeysChanged(object sender, TextChangedEventArgs e)
         => vm.GlobalRetryKeys = globalRetryKeysTextBox.Text.Split(Environment.NewLine).ToList();
 
-    private async void Save(object sender, RoutedEventArgs e) => await vm.Save();
+    private async void Save(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await vm.Save();
+            Alert.ToastSuccess("Saved", "RL settings were saved successfully!");
+        }
+        catch (Exception ex)
+        {
+            Alert.Exception(ex);
+        }
+    }
 
     private void Reset(object sender, RoutedEventArgs e)
     {
@@ -68,6 +81,7 @@ public partial class RLSettings : Page
     private void SetMultiLineTextBoxContents()
     {
         customUserAgentsListTextBox.Text = string.Join(Environment.NewLine, vm.UserAgents);
+        proxyJudgeUrlsTextBox.Text = string.Join(Environment.NewLine, vm.ProxyJudgeUrls);
         globalBanKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalBanKeys);
         globalRetryKeysTextBox.Text = string.Join(Environment.NewLine, vm.GlobalRetryKeys);
     }

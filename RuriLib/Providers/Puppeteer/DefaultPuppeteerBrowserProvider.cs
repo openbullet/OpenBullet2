@@ -1,14 +1,23 @@
-﻿using RuriLib.Services;
+using RuriLib.Services;
 
-namespace RuriLib.Providers.Puppeteer
+namespace RuriLib.Providers.Puppeteer;
+
+/// <summary>
+/// Default implementation of <see cref="IPuppeteerBrowserProvider"/>.
+/// </summary>
+public class DefaultPuppeteerBrowserProvider : IPuppeteerBrowserProvider
 {
-    public class DefaultPuppeteerBrowserProvider : IPuppeteerBrowserProvider
-    {
-        public string ChromeBinaryLocation { get; }
+    /// <summary>
+    /// Gets the Chrome binary location.
+    /// </summary>
+    public string ChromeBinaryLocation { get; }
 
-        public DefaultPuppeteerBrowserProvider(RuriLibSettingsService settings)
-        {
-            ChromeBinaryLocation = settings.RuriLibSettings.PuppeteerSettings.ChromeBinaryLocation;
-        }
+    /// <summary>
+    /// Creates a provider from the persisted RuriLib settings.
+    /// </summary>
+    /// <param name="settings">The settings service to read from.</param>
+    public DefaultPuppeteerBrowserProvider(RuriLibSettingsService settings)
+    {
+        ChromeBinaryLocation = settings.RuriLibSettings.PuppeteerSettings.ChromeBinaryLocation;
     }
 }

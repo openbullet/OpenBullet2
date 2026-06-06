@@ -1,22 +1,30 @@
-﻿using System;
+using System;
 using System.Text;
 
-namespace RuriLib.Extensions
-{
-    public static class ExceptionExtensions
-    {
-        public static string PrettyPrint(this Exception ex)
-        {
-            var sb = new StringBuilder();
-            sb.Append($"{ex.GetType()}: {ex.Message}");
+namespace RuriLib.Extensions;
 
-            while (ex is AggregateException && ex.InnerException is not null)
+/// <summary>
+/// Provides extension methods for <see cref="Exception"/>.
+/// </summary>
+public static class ExceptionExtensions
+{
+    /// <summary>
+    /// Pretty prints an exception and all its inner exceptions.
+    /// </summary>
+    public static string PrettyPrint(this Exception ex)
+    {
+        var sb = new StringBuilder();
+
+        for (var current = ex; current is not null; current = current.InnerException)
+        {
+            if (sb.Length > 0)
             {
-                ex = ex.InnerException;
-                sb.Append($" | {ex.GetType()}: {ex.Message}");
+                sb.Append(" | ");
             }
 
-            return sb.ToString();
+            sb.Append($"{current.GetType()}: {current.Message}");
         }
+
+        return sb.ToString();
     }
 }

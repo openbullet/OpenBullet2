@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Job.ProxyCheck;
+using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using FluentValidation;
@@ -49,6 +49,11 @@ public class UpdateProxyCheckJobDto
     /// The maximum timeout that a valid proxy should have, in milliseconds.
     /// </summary>
     public int TimeoutMilliseconds { get; set; } = 10000;
+
+    /// <summary>
+    /// Whether to use a proxy judge in addition to the target site check.
+    /// </summary>
+    public bool UseProxyJudge { get; set; } = true;
 
     /// <summary>
     /// The options for the output of a proxy check.

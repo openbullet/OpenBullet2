@@ -1,5 +1,7 @@
-﻿using System.Net;
+using System.Net;
+using System.Reflection;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
@@ -25,8 +27,9 @@ using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
+using RuriLib.Models.Proxies;
 using RuriLib.Services;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -46,17 +49,19 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 2;
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         var pcJob = CreateProxyCheckJob();
         pcJob.Name = "Test PCJ";
         pcJob.Id = 1;
         pcJob.OwnerId = 1;
+        SetLastRunOutcome(pcJob, JobLastRunOutcome.Stopped);
         jobManager.AddJob(mrJob);
         jobManager.AddJob(pcJob);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<JobOverviewDto>>(
             client, "/api/v1/job/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
@@ -66,6 +71,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(pcJob.Name, j.Name);
                 Assert.Equal(1, j.OwnerId);
                 Assert.Equal(JobType.ProxyCheck, j.Type);
+                Assert.Equal(JobLastRunOutcome.Stopped, j.LastRunOutcome);
             },
             j =>
             {
@@ -73,9 +79,10 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob.Name, j.Name);
                 Assert.Equal(0, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
+                Assert.Equal(JobLastRunOutcome.Completed, j.LastRunOutcome);
             });
     }
-    
+
     /// <summary>
     /// Guest can get all their jobs, ordered by id.
     /// </summary>
@@ -88,7 +95,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 2;
@@ -98,14 +105,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.Id = 1;
         jobManager.AddJob(mrJob);
         jobManager.AddJob(pcJob);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<JobOverviewDto>>(
             client, "/api/v1/job/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
@@ -117,7 +124,39 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(JobType.MultiRun, j.Type);
             });
     }
-    
+
+    [Fact]
+    public async Task JobManagerService_WhenJobEntityHasLastRunOutcome_RestoresIt()
+    {
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.RemoveRange(dbContext.Jobs);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        var options = (ProxyCheckJobOptions)JobOptionsFactory.CreateNew(JobType.ProxyCheck);
+        var wrapper = new JobOptionsWrapper { Options = options };
+        var settings = new Newtonsoft.Json.JsonSerializerSettings
+        {
+            TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+        };
+
+        dbContext.Jobs.Add(new JobEntity
+        {
+            JobType = JobType.ProxyCheck,
+            JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, settings),
+            LastRunOutcome = JobLastRunOutcome.Completed
+        });
+
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        using var manager = new JobManagerService(
+            GetRequiredService<IServiceScopeFactory>(),
+            GetRequiredService<JobFactoryService>());
+
+        var job = Assert.Single(manager.Jobs);
+        Assert.Equal(JobStatus.Idle, job.Status);
+        Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
+    }
+
     /// <summary>
     /// Admin can get all multi run jobs, even ones of guests, ordered by id.
     /// </summary>
@@ -135,24 +174,31 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Id = Guid.NewGuid().ToString(),
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
-        mrJob.DataPool = new CombinationsDataPool("abc", 3);
+        mrJob.DataPool = new RangeDataPool(1, 10);
         mrJob.Bots = 10;
         mrJob.ProxyMode = JobProxyMode.On;
+        mrJob.Skip = 0;
+        SetDataTested(mrJob, 10);
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         var mrJob2 = CreateMultiRunJob();
         mrJob2.Name = "Test MRJ2";
         mrJob2.Id = 2;
         mrJob2.OwnerId = 1;
+        mrJob2.DataPool = new RangeDataPool(1, 10);
+        mrJob2.Skip = 6;
+        SetDataTested(mrJob2, 6);
+        SetLastRunOutcome(mrJob2, JobLastRunOutcome.Stopped);
         var pcJob = CreateProxyCheckJob();
         pcJob.Name = "Test PCJ";
         pcJob.Id = 1;
         jobManager.AddJob(mrJob);
         jobManager.AddJob(mrJob2);
         jobManager.AddJob(pcJob);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<MultiRunJobOverviewDto>>(
             client, "/api/v1/job/multi-run/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
@@ -162,6 +208,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob2.Name, j.Name);
                 Assert.Equal(1, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
+                Assert.Equal(6, j.DataTested);
             },
             j =>
             {
@@ -170,12 +217,13 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(0, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
                 Assert.Equal(mrJob.Config.Metadata.Name, j.ConfigName);
-                Assert.Contains("Combinations", j.DataPoolInfo);
+                Assert.Contains("Range", j.DataPoolInfo);
                 Assert.Equal(mrJob.Bots, j.Bots);
                 Assert.Equal(mrJob.ShouldUseProxies(), j.UseProxies);
+                Assert.Equal(10, j.DataTested);
             });
     }
-    
+
     /// <summary>
     /// Guest can get all their multi run jobs, ordered by id.
     /// </summary>
@@ -188,7 +236,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 3;
@@ -203,20 +251,20 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobManager.AddJob(mrJob);
         jobManager.AddJob(mrJob2);
         jobManager.AddJob(pcJob);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<MultiRunJobOverviewDto>>(
             client, "/api/v1/job/multi-run/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
             j => Assert.Equal(mrJob.Name, j.Name));
     }
-    
+
     /// <summary>
     /// Admin can get all proxy check jobs, even ones of guests, ordered by id.
     /// </summary>
@@ -240,11 +288,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobManager.AddJob(mrJob);
         jobManager.AddJob(pcJob);
         jobManager.AddJob(pcJob2);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<ProxyCheckJobOverviewDto>>(
             client, "/api/v1/job/proxy-check/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
@@ -264,7 +312,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(pcJob.Bots, j.Bots);
             });
     }
-    
+
     /// <summary>
     /// Guest can get all their proxy check jobs, ordered by id.
     /// </summary>
@@ -277,7 +325,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 3;
@@ -291,20 +339,20 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobManager.AddJob(mrJob);
         jobManager.AddJob(pcJob);
         jobManager.AddJob(pcJob2);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var result = await GetJsonAsync<IEnumerable<ProxyCheckJobOverviewDto>>(
             client, "/api/v1/job/proxy-check/all");
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Collection(result.Value,
             j => Assert.Equal(pcJob2.Name, j.Name));
     }
-    
+
     /// <summary>
     /// Admin can get the details of a multi run job.
     /// </summary>
@@ -334,8 +382,9 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.DataPool = new CombinationsDataPool("abc", 3);
         mrJob.Bots = 10;
         mrJob.ProxyMode = JobProxyMode.On;
+        SetLastRunOutcome(mrJob, JobLastRunOutcome.Completed);
         jobManager.AddJob(mrJob);
-        
+
         // Act
         var queryParams = new
         {
@@ -343,7 +392,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(mrJob.Id, result.Value.Id);
@@ -351,15 +400,62 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(mrJob.Skip, result.Value.Skip);
         Assert.Single(result.Value.ProxySources);
         Assert.Single(result.Value.HitOutputs);
-        // TODO: Check the start condition
+        var startCondition = Assert.IsType<JsonElement>(result.Value.StartCondition);
+        Assert.Equal("relativeTimeStartCondition",
+            startCondition.GetProperty("_polyTypeName").GetString());
+        Assert.Equal(TimeSpan.FromSeconds(1),
+            JsonSerializer.Deserialize<RelativeTimeStartConditionDto>(
+                startCondition.GetRawText(), JsonSerializerOptions)?.StartAfter);
         Assert.Equal(mrJob.Config.Metadata.Name, result.Value.Config!.Name);
         Assert.Contains("Combinations", result.Value.DataPoolInfo);
         Assert.Equal(mrJob.Bots, result.Value.Bots);
         Assert.Equal(mrJob.ProxyMode, result.Value.ProxyMode);
+        Assert.Equal(JobLastRunOutcome.Completed, result.Value.LastRunOutcome);
         Assert.NotNull(result.Value.DataStats);
         Assert.NotNull(result.Value.ProxyStats);
     }
-    
+
+    /// <summary>
+    /// Admin can get the details of a multi run job with multiple group proxy sources.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJob_Admin_MultipleGroupProxySources_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var proxyReloadService = GetRequiredService<ProxyReloadService>();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+
+        var groupOne = new ProxyGroupEntity { Name = "Group 1" };
+        var groupTwo = new ProxyGroupEntity { Name = "Group 2" };
+        dbContext.ProxyGroups.AddRange(groupOne, groupTwo);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 2;
+        mrJob.ProxySources =
+        [
+            new GroupProxySource(groupOne.Id, proxyReloadService),
+            new GroupProxySource(groupTwo.Id, proxyReloadService)
+        ];
+        mrJob.DataPool = new CombinationsDataPool("abc", 3);
+        jobManager.AddJob(mrJob);
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run".ToUri(queryParams));
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(["Group 1 (Group)", "Group 2 (Group)"], result.Value.ProxySources);
+    }
+
     /// <summary>
     /// Guest cannot get the details of a multi run job not owned by them.
     /// </summary>
@@ -372,15 +468,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 2;
         jobManager.AddJob(mrJob);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -388,14 +484,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
     }
-    
+
     /// <summary>
     /// Guest can get the details of their multi run job.
     /// </summary>
@@ -408,16 +504,16 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 2;
         mrJob.OwnerId = guest.Id;
         jobManager.AddJob(mrJob);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -425,13 +521,13 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(mrJob.Id, result.Value.Id);
         Assert.Equal(mrJob.Name, result.Value.Name);
     }
-    
+
     /// <summary>
     /// Admin can get the details of a proxy check job.
     /// </summary>
@@ -455,12 +551,13 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.SuccessKey = "<title>Example</title>";
         pcJob.Timeout = TimeSpan.FromSeconds(10);
         pcJob.ProxyOutput = proxyCheckOutputFactory.FromOptions(new DatabaseProxyCheckOutputOptions());
+        SetLastRunOutcome(pcJob, JobLastRunOutcome.Failed);
         var jobEntity = CreateProxyCheckJobEntity(pcJob);
         jobEntity.Id = pcJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -468,7 +565,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(pcJob.Id, result.Value.Id);
@@ -478,8 +575,9 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(pcJob.SuccessKey, result.Value.Target!.SuccessKey);
         Assert.Equal(pcJob.Timeout.TotalMilliseconds, result.Value.TimeoutMilliseconds);
         Assert.Contains("database", result.Value.CheckOutput.ToLower());
+        Assert.Equal(JobLastRunOutcome.Failed, result.Value.LastRunOutcome);
     }
-    
+
     /// <summary>
     /// Guest cannot get the details of a proxy check job not owned by them.
     /// </summary>
@@ -492,7 +590,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;
         pcJob.Name = "Test PCJ";
@@ -500,11 +598,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = pcJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -512,14 +610,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
     }
-    
+
     /// <summary>
     /// Guest can get the details of their proxy check job.
     /// </summary>
@@ -551,11 +649,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -563,7 +661,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(pcJob.Id, result.Value.Id);
@@ -574,7 +672,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(pcJob.Timeout.TotalMilliseconds, result.Value.TimeoutMilliseconds);
         Assert.Contains("database", result.Value.CheckOutput.ToLower());
     }
-    
+
     /// <summary>
     /// Admin can get the options of a multi run job.
     /// </summary>
@@ -596,7 +694,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
         jobManager.AddJob(mrJob);
-        var jobOptions = new MultiRunJobOptions {
+        var jobOptions = new MultiRunJobOptions
+        {
             Name = "Test MRJ",
             ConfigId = config.Id,
             Bots = 10,
@@ -610,8 +709,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var jobEntity = CreateMultiRunJobEntity(mrJob, jobOptions);
         jobEntity.Id = mrJob.Id;
         db.Jobs.Add(jobEntity);
-        await db.SaveChangesAsync();
-        
+        await db.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -619,7 +718,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobOptionsDto>(
             client, "/api/v1/job/multi-run/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(jobOptions.ConfigId, result.Value.ConfigId);
@@ -629,7 +728,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(result.Value.HitOutputs);
         Assert.Single(result.Value.ProxySources);
     }
-    
+
     /// <summary>
     /// Admin can get the default options of a multi run job.
     /// </summary>
@@ -638,7 +737,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         using var client = Factory.CreateClient();
-        
+
         // Act
         var queryParams = new
         {
@@ -646,11 +745,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobOptionsDto>(
             client, "/api/v1/job/multi-run/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
     }
-    
+
     /// <summary>
     /// Guest cannot get the options of a multi run job not owned by them.
     /// </summary>
@@ -663,11 +762,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
-        var jobOptions = new MultiRunJobOptions {
+        var jobOptions = new MultiRunJobOptions
+        {
             Name = "Test MRJ",
             ConfigId = Guid.NewGuid().ToString(),
             Bots = 10,
@@ -682,11 +782,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -694,14 +794,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobOptionsDto>(
             client, "/api/v1/job/multi-run/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
     }
-    
+
     /// <summary>
     /// Guest can get the options of their multi run job.
     /// </summary>
@@ -718,7 +818,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
         mrJob.OwnerId = guest.Id;
-        var jobOptions = new MultiRunJobOptions {
+        var jobOptions = new MultiRunJobOptions
+        {
             Name = "Test MRJ",
             ConfigId = Guid.NewGuid().ToString(),
             Bots = 10,
@@ -734,11 +835,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -746,7 +847,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<MultiRunJobOptionsDto>(
             client, "/api/v1/job/multi-run/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(jobOptions.ConfigId, result.Value.ConfigId);
@@ -756,7 +857,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(result.Value.HitOutputs);
         Assert.Single(result.Value.ProxySources);
     }
-    
+
     /// <summary>
     /// Admin can get the options of a proxy check job.
     /// </summary>
@@ -769,11 +870,13 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;
         pcJob.Name = "Test PCJ";
-        var jobOptions = new ProxyCheckJobOptions {
+        var jobOptions = new ProxyCheckJobOptions
+        {
             Bots = 10,
             GroupId = -1,
             CheckOnlyUntested = true,
-            Target = new ProxyCheckTarget {
+            Target = new ProxyCheckTarget
+            {
                 Url = "https://example.com",
                 SuccessKey = "<title>Example</title>"
             },
@@ -785,8 +888,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var db = GetRequiredService<ApplicationDbContext>();
         db.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await db.SaveChangesAsync();
-        
+        await db.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -794,7 +897,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
             client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(jobOptions.Bots, result.Value.Bots);
@@ -804,7 +907,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(jobOptions.Target.SuccessKey, result.Value.Target!.SuccessKey);
         Assert.Equal(jobOptions.TimeoutMilliseconds, result.Value.TimeoutMilliseconds);
     }
-    
+
     /// <summary>
     /// Admin can get the default options of a proxy check job.
     /// </summary>
@@ -813,7 +916,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         using var client = Factory.CreateClient();
-        
+
         // Act
         var queryParams = new
         {
@@ -821,11 +924,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
             client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
     }
-    
+
     /// <summary>
     /// Guest cannot get the options of a proxy check job not owned by them.
     /// </summary>
@@ -838,15 +941,17 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;
         pcJob.Name = "Test PCJ";
-        var jobOptions = new ProxyCheckJobOptions {
+        var jobOptions = new ProxyCheckJobOptions
+        {
             Bots = 10,
             GroupId = -1,
             CheckOnlyUntested = true,
-            Target = new ProxyCheckTarget {
+            Target = new ProxyCheckTarget
+            {
                 Url = "https://example.com",
                 SuccessKey = "<title>Example</title>"
             },
@@ -856,11 +961,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = pcJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -868,14 +973,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
             client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
     }
-    
+
     /// <summary>
     /// Guest can get the options of their proxy check job.
     /// </summary>
@@ -892,11 +997,13 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.Id = 1;
         pcJob.Name = "Test PCJ";
         pcJob.OwnerId = guest.Id;
-        var jobOptions = new ProxyCheckJobOptions {
+        var jobOptions = new ProxyCheckJobOptions
+        {
             Bots = 10,
             GroupId = -1,
             CheckOnlyUntested = true,
-            Target = new ProxyCheckTarget {
+            Target = new ProxyCheckTarget
+            {
                 Url = "https://example.com",
                 SuccessKey = "<title>Example</title>"
             },
@@ -907,11 +1014,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -919,7 +1026,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
             client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(jobOptions.Bots, result.Value.Bots);
@@ -929,7 +1036,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(jobOptions.Target.SuccessKey, result.Value.Target!.SuccessKey);
         Assert.Equal(jobOptions.TimeoutMilliseconds, result.Value.TimeoutMilliseconds);
     }
-    
+
     // Admin can create a multi run job
     [Fact]
     public async Task CreateMultiRunJob_Admin_Success()
@@ -943,7 +1050,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
         await configRepository.SaveAsync(config);
-        
+
         // Act
         var dto = new CreateMultiRunJobDto
         {
@@ -973,14 +1080,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var resultJob = result.Value;
         Assert.Equal(dto.Name, resultJob.Name);
     }
-    
+
     // Guest can create a multi run job
     [Fact]
     public async Task CreateMultiRunJob_Guest_Success()
@@ -994,15 +1101,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
         await configRepository.SaveAsync(config);
-        
+
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new CreateMultiRunJobDto
         {
@@ -1032,22 +1139,81 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var resultJob = result.Value;
         Assert.Equal(dto.Name, resultJob.Name);
         Assert.Equal(guest.Id, resultJob.OwnerId);
     }
-    
+
+    [Fact]
+    public async Task CreateMultiRunJob_Guest_ScriptFileProxySource_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        var dto = new CreateMultiRunJobDto
+        {
+            Name = "Test MRJ",
+            ConfigId = config.Id,
+            Bots = 10,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new FileProxySourceOptionsDto
+            {
+                FileName = Path.Combine(UserDataFolder, "Wordlists", "guest-proxies.ps1"),
+                DefaultType = ProxyType.Http,
+                PolyTypeName = "fileProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+
+        // Act
+        var result = await PostJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ScriptFileNotAllowed, result.Error.Content!.ErrorCode);
+        Assert.Empty(await dbContext.Jobs.ToListAsync(TestCancellationToken));
+    }
+
     // Admin can create a proxy check job
     [Fact]
     public async Task CreateProxyCheckJob_Admin_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
-        
+
         // Act
         var dto = new CreateProxyCheckJobDto
         {
@@ -1073,29 +1239,29 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var resultJob = result.Value;
         Assert.Equal(dto.Name, resultJob.Name);
     }
-    
+
     // Guest can create a proxy check job
     [Fact]
     public async Task CreateProxyCheckJob_Guest_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
-        
+
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new CreateProxyCheckJobDto
         {
@@ -1121,15 +1287,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var result = await PostJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
-        
+
         var resultJob = result.Value;
         Assert.Equal(dto.Name, resultJob.Name);
         Assert.Equal(guest.Id, resultJob.OwnerId);
     }
-    
+
     // Admin can update a multi run job
     [Fact]
     public async Task UpdateMultiRunJob_Admin_Success()
@@ -1145,8 +1311,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.Add(jobEntity);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var configRepository = GetRequiredService<IConfigRepository>();
         var config = new Config
         {
@@ -1154,7 +1320,9 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
         await configRepository.SaveAsync(config);
-        
+        var configService = GetRequiredService<ConfigService>();
+        configService.Configs.Add(config);
+
         // Act
         var dto = new UpdateMultiRunJobDto
         {
@@ -1185,15 +1353,102 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run", dto);
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(dto.Name, response.Value.Name);
-        
+
         mrJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
         Assert.Equal(dto.Name, mrJob.Name);
     }
-    
+
+    // Admin update preserves matching custom input answers
+    [Fact]
+    public async Task UpdateMultiRunJob_Admin_PreservesCustomInputsAnswers()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.CustomInputsAnswers = new Dictionary<string, string>
+        {
+            ["TEST"] = "saved value",
+            ["STALE"] = "old value"
+        };
+        jobManager.AddJob(mrJob);
+
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" },
+            Settings = new ConfigSettings
+            {
+                InputSettings = new InputSettings
+                {
+                    CustomInputs =
+                    [
+                        new CustomInput
+                        {
+                            VariableName = "TEST",
+                            Description = "Test custom input",
+                            DefaultAnswer = "default"
+                        }
+                    ]
+                }
+            }
+        };
+        await configRepository.SaveAsync(config);
+        var configService = GetRequiredService<ConfigService>();
+        configService.Configs.Add(config);
+
+        // Act
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+            {
+                GroupId = -1,
+                PolyTypeName = "groupProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+
+        // Assert
+        Assert.True(response.IsSuccess);
+
+        var updatedJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
+        Assert.Equal("saved value", updatedJob.CustomInputsAnswers["TEST"]);
+        Assert.False(updatedJob.CustomInputsAnswers.ContainsKey("STALE"));
+    }
+
     // Admin cannot update a multi run job that is not idle
     [Fact]
     public async Task UpdateMultiRunJob_Admin_NotIdle_BadRequest()
@@ -1210,8 +1465,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.Add(jobEntity);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         var configRepository = GetRequiredService<IConfigRepository>();
         var config = new Config
         {
@@ -1219,7 +1474,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             Metadata = new ConfigMetadata { Name = "Test Config" }
         };
         await configRepository.SaveAsync(config);
-        
+
         // Act
         var dto = new UpdateMultiRunJobDto
         {
@@ -1250,14 +1505,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<MultiRunJobDto>(
             client, "/api/v1/job/multi-run", dto);
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
     }
-    
+
     // Guest cannot update a multi run job not owned by them
     [Fact]
     public async Task UpdateMultiRunJob_Guest_NotOwned_NotFound()
@@ -1268,7 +1523,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
@@ -1276,7 +1531,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1352,7 +1607,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1405,9 +1660,88 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(dto.Name, response.Value.Name);
-        
+
         mrJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
         Assert.Equal(dto.Name, mrJob.Name);
+    }
+
+    [Fact]
+    public async Task UpdateMultiRunJob_Guest_ScriptFileProxySource_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+
+        var dto = new UpdateMultiRunJobDto
+        {
+            Id = mrJob.Id,
+            Name = "Test MRJ2",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs =
+            [
+                JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+                {
+                    PolyTypeName = "databaseHitOutput"
+                }, JsonSerializerOptions)
+            ],
+            ProxySources =
+            [
+                JsonSerializer.SerializeToElement(new FileProxySourceOptionsDto
+                {
+                    FileName = Path.Combine(UserDataFolder, "Wordlists", "guest-proxies.sh"),
+                    DefaultType = ProxyType.Http,
+                    PolyTypeName = "fileProxySource"
+                }, JsonSerializerOptions)
+            ],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+
+        // Act
+        var response = await PutJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+
+        // Assert
+        Assert.False(response.IsSuccess);
+        Assert.Equal(HttpStatusCode.Forbidden, response.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ScriptFileNotAllowed, response.Error.Content!.ErrorCode);
+
+        mrJob = jobManager.Jobs.OfType<MultiRunJob>().Single();
+        Assert.Equal("Test MRJ", mrJob.Name);
     }
 
     // Admin can update a proxy check job
@@ -1425,8 +1759,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.Jobs.Add(jobEntity);
         var jobManager = GetRequiredService<JobManagerService>();
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var dto = new UpdateProxyCheckJobDto
         {
@@ -1453,15 +1787,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(dto.Name, response.Value.Name);
-        
+
         pcJob = jobManager.Jobs.OfType<ProxyCheckJob>().Single();
         Assert.Equal(dto.Name, pcJob.Name);
     }
-    
+
     // Admin cannot update a proxy check job that is not idle
     [Fact]
     public async Task UpdateProxyCheckJob_Admin_NotIdle_BadRequest()
@@ -1478,8 +1812,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.Jobs.Add(jobEntity);
         var jobManager = GetRequiredService<JobManagerService>();
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var dto = new UpdateProxyCheckJobDto
         {
@@ -1506,14 +1840,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
     }
-    
+
     // Guest cannot update a proxy check job not owned by them
     [Fact]
     public async Task UpdateProxyCheckJob_Guest_NotOwned_NotFound()
@@ -1523,7 +1857,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;
         pcJob.Name = "Test PCJ";
@@ -1532,11 +1866,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.Jobs.Add(jobEntity);
         var jobManager = GetRequiredService<JobManagerService>();
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new UpdateProxyCheckJobDto
         {
@@ -1563,14 +1897,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, response.Error.Content.ErrorCode);
     }
-    
+
     // Guest can update their proxy check job
     [Fact]
     public async Task UpdateProxyCheckJob_Guest_Owned_Success()
@@ -1590,11 +1924,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         dbContext.Jobs.Add(jobEntity);
         var jobManager = GetRequiredService<JobManagerService>();
         jobManager.AddJob(pcJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new UpdateProxyCheckJobDto
         {
@@ -1621,15 +1955,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await PutJsonAsync<ProxyCheckJobDto>(
             client, "/api/v1/job/proxy-check", dto);
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(dto.Name, response.Value.Name);
-        
+
         pcJob = jobManager.Jobs.OfType<ProxyCheckJob>().Single();
         Assert.Equal(dto.Name, pcJob.Name);
     }
-    
+
     // Admin can get the custom inputs for a multi run job
     [Fact]
     public async Task GetMultiRunJobCustomInputs_Admin_Success()
@@ -1645,7 +1979,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         var customInputs = new List<CustomInput>()
         {
@@ -1663,7 +1997,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 DefaultAnswer = "test2"
             }
         };
-        
+
         var config = new Config
         {
             Id = Guid.NewGuid().ToString(),
@@ -1683,7 +2017,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             { "TEST", "modified" }
         };
-        
+
         // Act
         var queryParams = new
         {
@@ -1691,7 +2025,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await GetJsonAsync<IEnumerable<CustomInputQuestionDto>>(
             client, "/api/v1/job/multi-run/custom-inputs".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         var result = response.Value.ToList();
@@ -1705,7 +2039,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(customInputs[1].DefaultAnswer, result[1].DefaultAnswer);
         Assert.Null(result[1].CurrentAnswer);
     }
-    
+
     // Guest cannot get the custom inputs for a multi run job not owned by them
     [Fact]
     public async Task GetMultiRunJobCustomInputs_Guest_NotOwned_NotFound()
@@ -1716,7 +2050,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
@@ -1724,7 +2058,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1736,14 +2070,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await GetJsonAsync<IEnumerable<CustomInputQuestionDto>>(
             client, "/api/v1/job/multi-run/custom-inputs".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.JobNotFound, response.Error.Content.ErrorCode);
     }
-    
+
     // Guest can get the custom inputs for their multi run job
     [Fact]
     public async Task GetMultiRunJobCustomInputs_Guest_Owned_Success()
@@ -1763,7 +2097,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1842,7 +2176,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         // Act
         var dto = new CustomInputsDto
@@ -1863,7 +2197,85 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Null(error);
         Assert.Equal(dto.Answers.First().Answer, mrJob.CustomInputsAnswers["TEST"]);
     }
-    
+
+    [Fact]
+    public async Task SetMultiRunJobCustomInputs_Admin_PersistsAnswersImmediately()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.CustomInputsAnswers = new Dictionary<string, string>
+        {
+            ["TEST"] = "old value",
+            ["STALE"] = "stale value"
+        };
+        mrJob.Config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Settings = new ConfigSettings
+            {
+                InputSettings = new InputSettings
+                {
+                    CustomInputs =
+                    [
+                        new CustomInput
+                        {
+                            VariableName = "TEST",
+                            Description = "Test input",
+                            DefaultAnswer = "default"
+                        }
+                    ]
+                }
+            }
+        };
+        jobManager.AddJob(mrJob);
+
+        var jobEntity = CreateMultiRunJobEntity(mrJob, new MultiRunJobOptions
+        {
+            ConfigId = mrJob.Config.Id,
+            DataPool = new InfiniteDataPoolOptions()
+        });
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var dto = new CustomInputsDto
+        {
+            JobId = mrJob.Id,
+            Answers =
+            [
+                new CustomInputAnswerDto
+                {
+                    VariableName = "TEST",
+                    Answer = "saved value"
+                }
+            ]
+        };
+        var error = await PatchAsync(
+            client, "/api/v1/job/multi-run/custom-inputs", dto);
+
+        // Assert
+        Assert.Null(error);
+
+        await dbContext.Entry(jobEntity).ReloadAsync(TestCancellationToken);
+        var savedEntity = jobEntity;
+        var wrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<JobOptionsWrapper>(
+            savedEntity.JobOptions!,
+            new Newtonsoft.Json.JsonSerializerSettings
+            {
+                TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+            });
+        var options = Assert.IsType<MultiRunJobOptions>(wrapper!.Options);
+
+        Assert.Equal("saved value", options.CustomInputsAnswers["TEST"]);
+        Assert.False(options.CustomInputsAnswers.ContainsKey("STALE"));
+    }
+
     // Guest cannot set the custom inputs for a multi run job not owned by them
     [Fact]
     public async Task SetMultiRunJobCustomInputs_Guest_NotOwned_NotFound()
@@ -1874,7 +2286,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
@@ -1882,7 +2294,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1907,7 +2319,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
         Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
     }
-    
+
     // Guest can set the custom inputs for their multi run job
     [Fact]
     public async Task SetMultiRunJobCustomInputs_Guest_Owned_Success()
@@ -1927,7 +2339,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -1951,7 +2363,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Null(error);
         Assert.Equal(dto.Answers.First().Answer, mrJob.CustomInputsAnswers["TEST"]);
     }
-    
+
     // Admin can delete a job
     [Fact]
     public async Task DeleteJob_Admin_Success()
@@ -1967,8 +2379,8 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.Add(jobEntity);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var queryParams = new
         {
@@ -1976,15 +2388,50 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await DeleteAsync(
             client, "/api/v1/job".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(error);
         Assert.Empty(jobManager.Jobs);
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Empty(jobEntities);
     }
-    
+
+    [Fact]
+    public async Task DeleteJob_Admin_NotIdle_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.GetType().GetProperty("Status")!.SetValue(mrJob, JobStatus.Running);
+        jobManager.AddJob(mrJob);
+        var jobEntity = CreateMultiRunJobEntity(mrJob);
+        jobEntity.Id = mrJob.Id;
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Jobs.Add(jobEntity);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var error = await DeleteAsync(
+            client, "/api/v1/job".ToUri(queryParams));
+
+        // Assert
+        Assert.NotNull(error);
+        Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.JobNotIdle, error.Content!.ErrorCode);
+        Assert.Single(jobManager.Jobs);
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
+        Assert.Single(jobEntities);
+    }
+
     // Guest cannot delete a job not owned by them
     [Fact]
     public async Task DeleteJob_Guest_NotOwned_NotFound()
@@ -1995,7 +2442,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
@@ -2003,7 +2450,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Id = mrJob.Id;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -2015,18 +2462,18 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await DeleteAsync(
             client, "/api/v1/job".ToUri(queryParams));
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
         Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
-        
+
         Assert.Single(jobManager.Jobs);
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Single(jobEntities);
     }
-    
+
     // Guest can delete their job
     [Fact]
     public async Task DeleteJob_Guest_Owned_Success()
@@ -2046,7 +2493,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobEntity.Owner = guest;
         dbContext.Jobs.Add(jobEntity);
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -2058,15 +2505,15 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await DeleteAsync(
             client, "/api/v1/job".ToUri(queryParams));
-        
+
         // Assert
         Assert.Null(error);
         Assert.Empty(jobManager.Jobs);
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Empty(jobEntities);
     }
-    
+
     // Admin can delete all jobs
     [Fact]
     public async Task DeleteAllJobs_Admin_Success()
@@ -2074,38 +2521,38 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
-        
+
         var mrJob1 = CreateMultiRunJob();
         mrJob1.Name = "Test MRJ";
         mrJob1.Id = 1;
         jobManager.AddJob(mrJob1);
         var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
         jobEntity1.Id = mrJob1.Id;
-        
+
         var mrJob2 = CreateMultiRunJob();
         mrJob2.Name = "Test MRJ2";
         mrJob2.Id = 2;
         jobManager.AddJob(mrJob2);
         var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
         jobEntity2.Id = mrJob2.Id;
-        
+
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var response = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/job/all");
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(2, response.Value.Count);
         Assert.Empty(jobManager.Jobs);
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Empty(jobEntities);
     }
-    
+
     // Admin cannot delete all jobs if there are running jobs
     [Fact]
     public async Task DeleteAllJobs_Admin_NotIdle_BadRequest()
@@ -2113,7 +2560,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
-        
+
         var mrJob1 = CreateMultiRunJob();
         mrJob1.Name = "Test MRJ";
         mrJob1.Id = 1;
@@ -2121,34 +2568,34 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         jobManager.AddJob(mrJob1);
         var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
         jobEntity1.Id = mrJob1.Id;
-        
+
         var mrJob2 = CreateMultiRunJob();
         mrJob2.Name = "Test MRJ2";
         mrJob2.Id = 2;
         jobManager.AddJob(mrJob2);
         var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
         jobEntity2.Id = mrJob2.Id;
-        
+
         var dbContext = GetRequiredService<ApplicationDbContext>();
         dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         // Act
         var response = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/job/all");
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.JobNotIdle, response.Error.Content.ErrorCode);
-        
+
         Assert.Equal(2, jobManager.Jobs.Count());
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Equal(2, jobEntities.Count);
     }
-    
+
     // Guest can delete all their jobs (but not others)
     [Fact]
     public async Task DeleteAllJobs_Guest_Success()
@@ -2159,7 +2606,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        
+
         var mrJob1 = CreateMultiRunJob();
         mrJob1.Name = "Test MRJ";
         mrJob1.Id = 1;
@@ -2168,33 +2615,33 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var jobEntity1 = CreateMultiRunJobEntity(mrJob1);
         jobEntity1.Id = mrJob1.Id;
         jobEntity1.Owner = guest;
-        
+
         var mrJob2 = CreateMultiRunJob();
         mrJob2.Name = "Test MRJ2";
         mrJob2.Id = 2;
         jobManager.AddJob(mrJob2);
         var jobEntity2 = CreateMultiRunJobEntity(mrJob2);
         jobEntity2.Id = mrJob2.Id;
-        
+
         dbContext.Jobs.AddRange(jobEntity1, jobEntity2);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var response = await DeleteJsonAsync<AffectedEntriesDto>(
             client, "/api/v1/job/all");
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(1, response.Value.Count);
         Assert.Single(jobManager.Jobs);
-        
-        var jobEntities = await dbContext.Jobs.ToListAsync();
+
+        var jobEntities = await dbContext.Jobs.ToListAsync(TestCancellationToken);
         Assert.Single(jobEntities);
     }
-    
+
     // Admin can get the hit log for a hit in a multi run job
     [Fact]
     public async Task GetHitLog_Admin_Success()
@@ -2214,7 +2661,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             BotLogger = botLogger,
         };
         mrJob.Hits.Add(hit);
-        
+
         // Act
         var queryParams = new
         {
@@ -2223,14 +2670,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await GetJsonAsync<MrjHitLogDto>(
             client, "/api/v1/job/multi-run/hit-log".ToUri(queryParams));
-        
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(2, response.Value.Log!.Count);
         Assert.Equal("Test message", response.Value.Log[0].Message);
         Assert.Equal("Test message 2", response.Value.Log[1].Message);
     }
-    
+
     // Guest cannot get the hit log for a hit (admin only)
     [Fact]
     public async Task GetHitLog_Guest_NotAllowed_Forbidden()
@@ -2241,7 +2688,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
@@ -2254,10 +2701,10 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             BotLogger = botLogger,
         };
         mrJob.Hits.Add(hit);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var queryParams = new
         {
@@ -2266,16 +2713,79 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var response = await GetJsonAsync<MrjHitLogDto>(
             client, "/api/v1/job/multi-run/hit-log".ToUri(queryParams));
-        
+
         // Assert
         Assert.False(response.IsSuccess);
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, response.Error.Content.ErrorCode);
     }
-    
-    // TODO: Test all actions for various job states
-    
+
+    [Theory]
+    [InlineData("start")]
+    [InlineData("stop")]
+    [InlineData("pause")]
+    [InlineData("resume")]
+    [InlineData("abort")]
+    public async Task JobCommand_Admin_Wait_Success(string command)
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var job = CreateCommandTestJob();
+        job.Id = 1;
+        jobManager.AddJob(job);
+
+        // Act
+        var error = await PostAsync(client, $"/api/v1/job/{command}",
+            new JobCommandDto
+            {
+                JobId = job.Id,
+                Wait = true
+            });
+
+        // Assert
+        Assert.Null(error);
+        Assert.Equal(1, GetCommandCallCount(job, command));
+    }
+
+    [Theory]
+    [InlineData("start")]
+    [InlineData("stop")]
+    [InlineData("pause")]
+    [InlineData("resume")]
+    [InlineData("abort")]
+    public async Task JobCommand_Guest_NotOwned_NotFound(string command)
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var job = CreateCommandTestJob();
+        job.Id = 1;
+        jobManager.AddJob(job);
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var error = await PostAsync(client, $"/api/v1/job/{command}",
+            new JobCommandDto
+            {
+                JobId = job.Id,
+                Wait = true
+            });
+
+        // Assert
+        Assert.NotNull(error);
+        Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
+        Assert.Equal(0, GetCommandCallCount(job, command));
+    }
+
     // Admin can change the number of bots in a job
     [Fact]
     public async Task ChangeBots_Admin_Success()
@@ -2288,7 +2798,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.Id = 1;
         mrJob.Bots = 10;
         jobManager.AddJob(mrJob);
-        
+
         // Act
         var dto = new ChangeBotsDto
         {
@@ -2297,12 +2807,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await PostAsync(
             client, "/api/v1/job/change-bots", dto);
-        
+
         // Assert
         Assert.Null(error);
         Assert.Equal(5, mrJob.Bots);
     }
-    
+
     // Guest cannot change the number of bots in a job not owned by them
     [Fact]
     public async Task ChangeBots_Guest_NotOwned_NotFound()
@@ -2313,16 +2823,16 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(TestCancellationToken);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
         mrJob.Id = 1;
         mrJob.Bots = 10;
         jobManager.AddJob(mrJob);
-        
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new ChangeBotsDto
         {
@@ -2331,14 +2841,14 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await PostAsync(
             client, "/api/v1/job/change-bots", dto);
-        
+
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
         Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
         Assert.Equal(10, mrJob.Bots);
     }
-    
+
     // Guest can change the number of bots in their job
     [Fact]
     public async Task ChangeBots_Guest_Owned_Success()
@@ -2355,11 +2865,11 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob.OwnerId = guest.Id;
         mrJob.Bots = 10;
         jobManager.AddJob(mrJob);
-        await dbContext.SaveChangesAsync();
-        
+        await dbContext.SaveChangesAsync(TestCancellationToken);
+
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
+
         // Act
         var dto = new ChangeBotsDto
         {
@@ -2368,12 +2878,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var error = await PostAsync(
             client, "/api/v1/job/change-bots", dto);
-        
+
         // Assert
         Assert.Null(error);
         Assert.Equal(5, mrJob.Bots);
     }
-    
+
     private MultiRunJob CreateMultiRunJob()
     {
         var logger = GetRequiredService<IJobLogger>();
@@ -2385,7 +2895,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         return job;
     }
-    
+
     private ProxyCheckJob CreateProxyCheckJob()
     {
         var logger = GetRequiredService<IJobLogger>();
@@ -2393,7 +2903,33 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var pluginRepository = GetRequiredService<PluginRepository>();
         return new ProxyCheckJob(ruriLibSettingsService, pluginRepository, logger);
     }
-    
+
+    private static void SetLastRunOutcome(Job job, JobLastRunOutcome outcome)
+        => typeof(Job).GetProperty(nameof(Job.LastRunOutcome))!
+            .GetSetMethod(nonPublic: true)!
+            .Invoke(job, [outcome]);
+
+    private static void SetDataTested(MultiRunJob job, int dataTested)
+        => typeof(MultiRunJob).GetField("dataTested", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(job, dataTested);
+
+    private TestCommandJob CreateCommandTestJob()
+    {
+        var ruriLibSettingsService = GetRequiredService<RuriLibSettingsService>();
+        var pluginRepository = GetRequiredService<PluginRepository>();
+        return new TestCommandJob(ruriLibSettingsService, pluginRepository);
+    }
+
+    private static int GetCommandCallCount(TestCommandJob job, string command) => command switch
+    {
+        "start" => job.StartCalls,
+        "stop" => job.StopCalls,
+        "pause" => job.PauseCalls,
+        "resume" => job.ResumeCalls,
+        "abort" => job.AbortCalls,
+        _ => throw new ArgumentOutOfRangeException(nameof(command), command, "Unknown command")
+    };
+
     private JobEntity CreateMultiRunJobEntity(Job job, MultiRunJobOptions? options = null)
     {
         // We need to use Newtonsoft.Json here for the TypeNameHandling
@@ -2401,12 +2937,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
         };
-        
+
         var wrapper = new JobOptionsWrapper
         {
             Options = options ?? new MultiRunJobOptions()
         };
-        
+
         return new JobEntity
         {
             CreationDate = DateTime.Now,
@@ -2414,12 +2950,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             {
                 MultiRunJob _ => JobType.MultiRun,
                 ProxyCheckJob _ => JobType.ProxyCheck,
-                _ => throw new NotImplementedException()    
+                _ => throw new NotImplementedException()
             },
             JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, jsonSettings)
         };
     }
-    
+
     private JobEntity CreateProxyCheckJobEntity(Job job,
         ProxyCheckJobOptions? options = null, GuestEntity? owner = null)
     {
@@ -2428,12 +2964,12 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
         };
-        
+
         var wrapper = new JobOptionsWrapper
         {
             Options = options ?? new ProxyCheckJobOptions()
         };
-        
+
         return new JobEntity
         {
             CreationDate = DateTime.Now,
@@ -2441,10 +2977,54 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
             {
                 MultiRunJob _ => JobType.MultiRun,
                 ProxyCheckJob _ => JobType.ProxyCheck,
-                _ => throw new NotImplementedException()    
+                _ => throw new NotImplementedException()
             },
             JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, jsonSettings),
             Owner = owner
         };
     }
+
+    private sealed class TestCommandJob(RuriLibSettingsService settings, PluginRepository pluginRepo)
+        : Job(settings, pluginRepo)
+    {
+        public int StartCalls { get; private set; }
+        public int StopCalls { get; private set; }
+        public int PauseCalls { get; private set; }
+        public int ResumeCalls { get; private set; }
+        public int AbortCalls { get; private set; }
+
+        public override TimeSpan Remaining => TimeSpan.Zero;
+        public override float Progress => 0f;
+
+        public override Task Start(CancellationToken cancellationToken = default)
+        {
+            StartCalls++;
+            return Task.CompletedTask;
+        }
+
+        public override Task Stop()
+        {
+            StopCalls++;
+            return Task.CompletedTask;
+        }
+
+        public override Task Pause()
+        {
+            PauseCalls++;
+            return Task.CompletedTask;
+        }
+
+        public override Task Resume()
+        {
+            ResumeCalls++;
+            return Task.CompletedTask;
+        }
+
+        public override Task Abort()
+        {
+            AbortCalls++;
+            return Task.CompletedTask;
+        }
+    }
 }
+

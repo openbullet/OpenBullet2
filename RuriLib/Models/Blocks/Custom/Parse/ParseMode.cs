@@ -1,11 +1,28 @@
-﻿namespace RuriLib.Models.Blocks.Custom.Parse
+namespace RuriLib.Models.Blocks.Custom.Parse;
+
+/// <summary>
+/// Parsing modes supported by the custom parse block.
+/// </summary>
+public enum ParseMode
 {
-    public enum ParseMode
-    {
-        LR,
-        CSS,
-        XPath,
-        Json,
-        Regex
-    }
+    /// <summary>
+    /// Left-right delimiter parsing.
+    /// </summary>
+    LR,
+    /// <summary>
+    /// CSS selector parsing.
+    /// </summary>
+    CSS,
+    /// <summary>
+    /// XPath parsing.
+    /// </summary>
+    XPath,
+    /// <summary>
+    /// JSON token parsing.
+    /// </summary>
+    Json,
+    /// <summary>
+    /// Regular expression parsing.
+    /// </summary>
+    Regex
 }

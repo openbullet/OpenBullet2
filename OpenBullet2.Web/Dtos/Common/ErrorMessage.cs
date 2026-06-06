@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Common;
+namespace OpenBullet2.Web.Dtos.Common;
 
 /// <summary>
 /// A new error was raised.

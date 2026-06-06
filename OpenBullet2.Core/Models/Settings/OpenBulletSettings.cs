@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Core.Models.Settings;
+namespace OpenBullet2.Core.Models.Settings;
 
 /// <summary>
 /// Settings for the OpenBullet 2 application.

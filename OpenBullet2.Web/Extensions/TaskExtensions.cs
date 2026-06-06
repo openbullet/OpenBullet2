@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Extensions;
+namespace OpenBullet2.Web.Extensions;
 
 static internal class TaskExtensions
 {

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Services;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
@@ -25,7 +25,8 @@ internal class AuthTokenVerificationMiddleware
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
         {
-            var apiUser = new ApiUser {
+            var apiUser = new ApiUser
+            {
                 Id = -1, Role = UserRole.Admin, Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
             };
 
@@ -35,7 +36,7 @@ internal class AuthTokenVerificationMiddleware
 
             return;
         }
-        
+
         // If the user provided the X-Api-Key header, validate it.
         // For now, only the admin can use the API
         var apiKey = context.Request.Headers["X-Api-Key"].FirstOrDefault();
@@ -44,7 +45,8 @@ internal class AuthTokenVerificationMiddleware
             var validApiKey = _obSettingsService.Settings.SecuritySettings.AdminApiKey;
             if (apiKey == validApiKey)
             {
-                var apiUser = new ApiUser {
+                var apiUser = new ApiUser
+                {
                     Id = -1, Role = UserRole.Admin, Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
                 };
 

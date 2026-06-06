@@ -1,14 +1,19 @@
-﻿using CaptchaSharp.Services;
+using CaptchaSharp.Services;
 using RuriLib.Models.Settings;
 using System;
 
 namespace RuriLib.Functions.Captchas;
 
+/// <summary>
+/// Provides a factory to create <see cref="CaptchaService"/> instances.
+/// </summary>
 public class CaptchaServiceFactory
 {
     /// <summary>
     /// Gets a <see cref="CaptchaService"/> to be used for solving captcha challenges.
     /// </summary>
+    /// <param name="settings">The configured captcha settings.</param>
+    /// <returns>The initialized captcha service instance.</returns>
     public static CaptchaService GetService(CaptchaSettings settings)
     {
         CaptchaService service = settings.CurrentService switch

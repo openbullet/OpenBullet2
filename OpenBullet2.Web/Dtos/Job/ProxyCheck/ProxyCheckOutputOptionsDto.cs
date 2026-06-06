@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Proxies;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Web.Attributes;
 
 namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;

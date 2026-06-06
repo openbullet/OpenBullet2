@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
+namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
 /// <summary>
 /// A hit obtained by a multi run job.

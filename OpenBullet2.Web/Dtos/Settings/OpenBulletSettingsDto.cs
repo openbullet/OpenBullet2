@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 
 namespace OpenBullet2.Web.Dtos.Settings;
 

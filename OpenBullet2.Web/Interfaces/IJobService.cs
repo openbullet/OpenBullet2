@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Dtos.Job;
 
 namespace OpenBullet2.Web.Interfaces;
 

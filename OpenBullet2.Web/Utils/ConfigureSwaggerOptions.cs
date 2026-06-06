@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Xml.XPath;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -32,9 +31,6 @@ internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOption
         var xmlDocFile = Path.Combine(AppContext.BaseDirectory, $"{_hostEnvironment.ApplicationName}.xml");
         if (File.Exists(xmlDocFile))
         {
-            var comments = new XPathDocument(xmlDocFile);
-            options.OperationFilter<XmlCommentsOperationFilter>(comments);
-            options.SchemaFilter<XmlCommentsSchemaFilter>(comments);
             options.IncludeXmlComments(xmlDocFile);
         }
     }

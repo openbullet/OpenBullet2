@@ -1,13 +1,12 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
-namespace OpenBullet2.Native.Utils
+namespace OpenBullet2.Native.Utils;
+
+public static class ConsoleHelper
 {
-    public static class ConsoleHelper
-    {
-        [DllImport("Kernel32")]
-        static internal extern void AllocConsole();
+    [DllImport("Kernel32")]
+    static internal extern void AllocConsole();
 
-        [DllImport("Kernel32")]
-        static internal extern void FreeConsole();
-    }
+    [DllImport("Kernel32")]
+    static internal extern void FreeConsole();
 }

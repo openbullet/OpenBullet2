@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 using RuriLib.Functions.Crypto;
 using RuriLib.Models.Jobs.Monitor;
 using System;
@@ -18,23 +19,29 @@ public class JobMonitorService : IDisposable
     /// <summary>
     /// The list of triggered actions that can be executed by the job monitor.
     /// </summary>
-    public List<TriggeredAction> TriggeredActions { get; set; } = new List<TriggeredAction>();
+    public List<TriggeredAction> TriggeredActions { get; set; } = [];
 
     private readonly Timer timer;
-    private readonly Timer saveTimer;
+    private readonly Timer? saveTimer;
     private readonly JobManagerService jobManager;
+    private readonly TriggeredActionExecutor triggeredActionExecutor;
+    private readonly ILogger<JobMonitorService> logger;
     private readonly string fileName;
-    private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+    private readonly JsonSerializerSettings jsonSettings = new()
     {
         TypeNameHandling = TypeNameHandling.Auto,
         Formatting = Formatting.Indented
     };
-    private byte[] lastSavedHash = Array.Empty<byte>();
+    private byte[] lastSavedHash = [];
 
     public JobMonitorService(JobManagerService jobManager,
+        TriggeredActionExecutor triggeredActionExecutor,
+        ILogger<JobMonitorService> logger,
         string fileName = "UserData/triggeredActions.json", bool autoSave = true)
     {
         this.jobManager = jobManager;
+        this.triggeredActionExecutor = triggeredActionExecutor;
+        this.logger = logger;
         this.fileName = fileName;
         RestoreTriggeredActions();
 
@@ -51,10 +58,10 @@ public class JobMonitorService : IDisposable
         for (var i = 0; i < TriggeredActions.Count; i++)
         {
             var action = TriggeredActions[i];
-            
+
             if (action.IsActive && !action.IsExecuting && (action.IsRepeatable || action.Executions == 0))
             {
-                action.CheckAndExecute(jobManager.Jobs).ConfigureAwait(false);
+                _ = triggeredActionExecutor.CheckAndExecuteAsync(action, jobManager.Jobs);
             }
         }
     }
@@ -69,11 +76,11 @@ public class JobMonitorService : IDisposable
         try
         {
             var json = File.ReadAllText(fileName);
-            TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings).ToList();
+            TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings)?.ToList() ?? [];
         }
         catch
         {
-            Console.WriteLine("Failed to deserialize triggered actions from json, recreating them");
+            logger.LogWarning("Failed to deserialize triggered actions from {FileName}, recreating them", fileName);
         }
     }
 
@@ -91,7 +98,7 @@ public class JobMonitorService : IDisposable
             }
             catch
             {
-                // File probably in use
+                logger.LogDebug("Could not save triggered actions to {FileName}, the file might be in use", fileName);
             }
         }
     }

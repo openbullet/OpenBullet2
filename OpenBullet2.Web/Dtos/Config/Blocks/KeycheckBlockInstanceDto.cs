@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
+using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks;
 

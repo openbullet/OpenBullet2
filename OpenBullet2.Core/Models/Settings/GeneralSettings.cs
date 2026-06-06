@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace OpenBullet2.Core.Models.Settings;
 
@@ -26,26 +26,30 @@ public enum JobDisplayMode
 }
 
 /// <summary>
+/// The channel used for update alerts.
+/// </summary>
+public enum UpdateChannel
+{
+    Release,
+    Staging,
+    Disabled
+}
+
+/// <summary>
 /// A target to be used as proxy check.
 /// </summary>
-public class ProxyCheckTarget
+public class ProxyCheckTarget(string url = "https://google.com", string successKey = "title>Google")
 {
     /// <summary>
     /// The URL of the website that the proxy will send a GET query to.
     /// </summary>
-    public string Url { get; set; }
+    public string Url { get; set; } = url;
 
     /// <summary>
     /// A keyword that must be present in the HTTP response body in order
     /// to mark the proxy as working. Case sensitive.
     /// </summary>
-    public string SuccessKey { get; set; }
-
-    public ProxyCheckTarget(string url = "https://google.com", string successKey = "title>Google")
-    {
-        Url = url;
-        SuccessKey = successKey;
-    }
+    public string SuccessKey { get; set; } = successKey;
 
     public override string ToString() => $"{Url} | {SuccessKey}";
 }
@@ -58,7 +62,7 @@ public class CustomSnippet
     /// <summary>
     /// The name of the snippet which will need to be typed (at least partially) to get the suggestion.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The body of the snippet which will be inserted by the editor.
@@ -68,7 +72,7 @@ public class CustomSnippet
     /// <summary>
     /// The description of what the snippet does.
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -94,9 +98,20 @@ public class GeneralSettings
     public bool WarnConfigNotSaved { get; set; } = true;
 
     /// <summary>
+    /// Whether to output a warning when selecting a config that might contain
+    /// custom C# code or external program calls.
+    /// </summary>
+    public bool WarnDangerousConfig { get; set; } = true;
+
+    /// <summary>
     /// The default author to use when creating new configs.
     /// </summary>
     public string DefaultAuthor { get; set; } = "Anonymous";
+
+    /// <summary>
+    /// The channel to use when checking for update alerts.
+    /// </summary>
+    public UpdateChannel UpdateChannel { get; set; } = UpdateChannel.Release;
 
     /// <summary>
     /// Whether to display the job log in the interface.
@@ -117,7 +132,7 @@ public class GeneralSettings
     /// <summary>
     /// The available targets that can be used to check proxies.
     /// </summary>
-    public List<ProxyCheckTarget> ProxyCheckTargets { get; set; }
+    public List<ProxyCheckTarget> ProxyCheckTargets { get; set; } = [];
 
     /// <summary>
     /// The default display mode for job information.
@@ -149,5 +164,5 @@ public class GeneralSettings
     /// <summary>
     /// Custom user-defined snippets for editor autocompletion.
     /// </summary>
-    public List<CustomSnippet> CustomSnippets { get; set; } = new();
+    public List<CustomSnippet> CustomSnippets { get; set; } = [];
 }

@@ -1,17 +1,16 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
-namespace OpenBullet2.Native.Helpers
+namespace OpenBullet2.Native.Helpers;
+
+public static class Url
 {
-    public static class Url
+    public static void Open(string url)
     {
-        public static void Open(string url)
+        var sInfo = new ProcessStartInfo(url)
         {
-            var sInfo = new ProcessStartInfo(url)
-            {
-                UseShellExecute = true,
-            };
+            UseShellExecute = true,
+        };
 
-            Process.Start(sInfo);
-        }
+        Process.Start(sInfo);
     }
 }

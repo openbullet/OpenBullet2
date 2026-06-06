@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Environment;
+using RuriLib.Models.Environment;
 
 namespace OpenBullet2.Web.Dtos.Settings;
 

@@ -25,7 +25,7 @@ export class AddActionComponent {
     ];
 
     if (this.jobType === JobType.MultiRun) {
-      types = types.concat([ActionType.SetBots, ActionType.ReloadProxies]);
+      types = types.concat([ActionType.SetBots, ActionType.SetSkip, ActionType.ReloadProxies]);
     }
 
     return types;

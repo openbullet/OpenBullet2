@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies;
 using System.ComponentModel.DataAnnotations;
 
 namespace OpenBullet2.Web.Dtos.Proxy;

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 
 namespace OpenBullet2.Core;
@@ -11,7 +11,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions options)
         : base(options)
     {
-        
+
     }
 
     public DbSet<ProxyEntity> Proxies { get; set; }
@@ -28,12 +28,12 @@ public class ApplicationDbContext : DbContext
             .HasMany(g => g.Proxies)
             .WithOne(u => u.Group)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<ProxyGroupEntity>()
             .HasOne(g => g.Owner)
             .WithMany(u => u.ProxyGroups)
             .OnDelete(DeleteBehavior.SetNull);
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Common;
+namespace OpenBullet2.Web.Dtos.Common;
 
 static internal class CommonMethods
 {

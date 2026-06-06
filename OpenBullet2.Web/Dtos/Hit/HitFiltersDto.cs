@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Hit;
+namespace OpenBullet2.Web.Dtos.Hit;
 
 /// <summary>
 /// Filters to describe a subset of hits.
@@ -10,7 +10,7 @@ public class HitFiltersDto
     /// captured data, wordlist name or proxy. Optional.
     /// </summary>
     public string? SearchTerm { get; set; }
-    
+
     /// <summary>
     /// The config name to filter results by. Optional.
     /// </summary>

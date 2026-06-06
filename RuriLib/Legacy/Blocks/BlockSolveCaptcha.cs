@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using CaptchaSharp.Models.CaptchaOptions;
 using CaptchaSharp.Models.CaptchaResponses;
@@ -215,7 +216,7 @@ public class BlockSolveCaptcha : BlockBase
                 SiteKey = LineParser.ParseLiteral(ref input, "SITE KEY");
                 SiteUrl = LineParser.ParseLiteral(ref input, "SITE URL");
                 break;
-            
+
             default:
                 throw new NotSupportedException(
                     $"The currently selected service does not support tasks of type {Type}");
@@ -329,17 +330,24 @@ public class BlockSolveCaptcha : BlockBase
 
         string errorMessage;
 
-        var proxy = data.UseProxy && UseProxy
-            ? new Proxy
+        Proxy? proxy = null;
+        if (data.UseProxy && UseProxy)
+        {
+            if (data.Proxy == null)
+            {
+                throw new InvalidOperationException("A proxy is required when captcha solving uses proxies");
+            }
+
+            proxy = new Proxy
             {
                 Host = data.Proxy.Host,
                 Port = data.Proxy.Port,
                 Type = (ProxyType)Enum.Parse(typeof(ProxyType), data.Proxy.Type.ToString()),
                 Username = data.Proxy.Username,
                 Password = data.Proxy.Password,
-            }
-            : null;
-        
+            };
+        }
+
         var cookies = data.COOKIES.ToDictionary(cookie => cookie.Key, cookie => cookie.Value);
 
         foreach (var cookie in ls.GlobalCookies)
@@ -374,7 +382,8 @@ public class BlockSolveCaptcha : BlockBase
                 {
                     if (ex is AggregateException { InnerException: not null } aggEx)
                     {
-                        throw aggEx.InnerException;
+                        var innerException = aggEx.InnerException ?? ex;
+                        ExceptionDispatchInfo.Capture(innerException).Throw();
                     }
 
                     throw;
@@ -423,7 +432,8 @@ public class BlockSolveCaptcha : BlockBase
             {
                 if (ex is AggregateException { InnerException: not null } aggEx)
                 {
-                    throw aggEx.InnerException;
+                    var innerException = aggEx.InnerException ?? ex;
+                    ExceptionDispatchInfo.Capture(innerException).Throw();
                 }
 
                 throw;
@@ -459,7 +469,7 @@ public class BlockSolveCaptcha : BlockBase
         return Type switch
         {
             CaptchaType.TextCaptcha => await provider.SolveTextCaptchaAsync(ReplaceValues(Question, ls), new TextCaptchaOptions
-                { CaptchaLanguage = Language, CaptchaLanguageGroup = LanguageGroup }),
+            { CaptchaLanguage = Language, CaptchaLanguageGroup = LanguageGroup }),
 
             CaptchaType.ImageCaptcha => await provider.SolveImageCaptchaAsync(ReplaceValues(Base64, ls), new ImageCaptchaOptions
             {
@@ -494,7 +504,7 @@ public class BlockSolveCaptcha : BlockBase
 
             CaptchaType.KeyCaptcha => await provider.SolveKeyCaptchaAsync(
                 ReplaceValues(UserId, ls), ReplaceValues(SessionId, ls),
-                ReplaceValues(WebServerSign1, ls), ReplaceValues(WebServerSign2, ls), 
+                ReplaceValues(WebServerSign1, ls), ReplaceValues(WebServerSign2, ls),
                 ReplaceValues(SiteUrl, ls), sessionParams),
 
             CaptchaType.GeeTest => await provider.SolveGeeTestAsync(

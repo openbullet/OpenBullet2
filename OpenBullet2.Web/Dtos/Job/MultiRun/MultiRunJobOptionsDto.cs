@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Jobs;
+using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Web.Dtos.Job.MultiRun;
@@ -66,6 +66,11 @@ public class MultiRunJobOptionsDto
     public bool NeverBanProxies { get; set; } = false;
 
     /// <summary>
+    /// Whether bad proxy connection failures should keep the legacy ban behavior instead of marking proxies as bad.
+    /// </summary>
+    public bool NeverMarkProxiesAsBad { get; set; } = false;
+
+    /// <summary>
     /// Whether to allow multiple bots to use the same proxy. Use this for rotating proxy services.
     /// </summary>
     public bool ConcurrentProxyMode { get; set; } = false;
@@ -76,6 +81,11 @@ public class MultiRunJobOptionsDto
     /// to the value of <see cref="NoValidProxyBehaviour" />.
     /// </summary>
     public int PeriodicReloadIntervalSeconds { get; set; } = 0;
+
+    /// <summary>
+    /// Whether to retain hits in memory and publish them to connected job viewers.
+    /// </summary>
+    public bool CacheHits { get; set; } = true;
 
     /// <summary>
     /// The options for the data pool that provides data lines to the job.

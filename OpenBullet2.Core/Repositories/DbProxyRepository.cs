@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +10,15 @@ namespace OpenBullet2.Core.Repositories;
 /// <summary>
 /// Stores proxies to a database.
 /// </summary>
-public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
+public class DbProxyRepository(ApplicationDbContext context) : DbRepository<ProxyEntity>(context), IProxyRepository
 {
-    public DbProxyRepository(ApplicationDbContext context)
-        : base(context)
-    {
-        
-    }
-
-    public async override Task UpdateAsync(ProxyEntity entity, CancellationToken cancellationToken = default)
+    public override async Task UpdateAsync(ProxyEntity entity, CancellationToken cancellationToken = default)
     {
         context.Entry(entity).State = EntityState.Modified;
         await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
-    public async override Task UpdateAsync(IEnumerable<ProxyEntity> entities, CancellationToken cancellationToken = default)
+    public override async Task UpdateAsync(IEnumerable<ProxyEntity> entities, CancellationToken cancellationToken = default)
     {
         foreach (var entity in entities)
         {
@@ -38,14 +32,14 @@ public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
     public async Task<int> RemoveDuplicatesAsync(int groupId)
     {
         var proxies = await GetAll()
-            .Where(p => p.Group.Id == groupId)
+            .Where(p => p.Group != null && p.Group.Id == groupId)
             .ToListAsync();
 
         var duplicates = proxies
             .GroupBy(p => new { p.Type, p.Host, p.Port, p.Username, p.Password })
             .SelectMany(g => g.Skip(1))
             .ToList();
-        
+
         await DeleteAsync(duplicates);
 
         return duplicates.Count;

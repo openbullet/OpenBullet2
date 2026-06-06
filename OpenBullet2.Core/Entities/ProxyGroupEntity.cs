@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace OpenBullet2.Core.Entities;
 
@@ -10,15 +10,15 @@ public class ProxyGroupEntity : Entity
     /// <summary>
     /// The name of the group.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// The owner of this group (null if admin).
     /// </summary>
-    public GuestEntity Owner { get; set; }
-    
+    public GuestEntity? Owner { get; set; }
+
     /// <summary>
     /// The proxies in this group.
     /// </summary>
-    public ICollection<ProxyEntity> Proxies { get; set; }
+    public ICollection<ProxyEntity> Proxies { get; set; } = [];
 }

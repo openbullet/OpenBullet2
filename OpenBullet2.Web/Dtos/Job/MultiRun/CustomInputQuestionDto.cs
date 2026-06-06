@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
+namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
 /// <summary>
 /// A question for a custom user input.
@@ -20,7 +20,7 @@ public class CustomInputQuestionDto
     /// The default answer to suggest to the user.
     /// </summary>
     public string DefaultAnswer { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// The current answer to the question, null if not answered yet.
     /// </summary>

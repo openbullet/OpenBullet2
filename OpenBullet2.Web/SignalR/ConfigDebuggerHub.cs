@@ -1,4 +1,3 @@
-﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
@@ -18,11 +17,11 @@ namespace OpenBullet2.Web.SignalR;
 public class ConfigDebuggerHub : AuthorizedHub
 {
     private readonly ConfigDebuggerService _debuggerService;
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
 
     /// <summary></summary>
     public ConfigDebuggerHub(ConfigDebuggerService debuggerService,
-        IAuthTokenService tokenService, IMapper mapper,
+        IAuthTokenService tokenService, IObjectMapper mapper,
         OpenBulletSettingsService obSettingsService)
         : base(tokenService, obSettingsService, true)
     {
@@ -131,7 +130,8 @@ public class ConfigDebuggerHub : AuthorizedHub
         // If there is a debugger
         if (debugger is not null)
         {
-            state = new DbgStateDto {
+            state = new DbgStateDto
+            {
                 Log = debugger.Logger.Entries,
                 Status = debugger.Status,
                 Variables = debugger.Options.Variables.Select(

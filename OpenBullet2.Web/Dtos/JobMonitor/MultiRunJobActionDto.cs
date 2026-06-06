@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Jobs.Monitor.Actions;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
@@ -22,6 +22,20 @@ public class SetBotsActionDto : MultiRunJobActionDto
     /// The new amount of bots.
     /// </summary>
     public int Amount { get; set; }
+}
+
+/// <summary>
+/// Sets the number of data lines to skip before starting.
+/// </summary>
+[PolyType("setSkipAction")]
+[MapsFrom(typeof(SetSkipAction))]
+[MapsTo(typeof(SetSkipAction))]
+public class SetSkipActionDto : MultiRunJobActionDto
+{
+    /// <summary>
+    /// The new skip value.
+    /// </summary>
+    public int Skip { get; set; }
 }
 
 /// <summary>

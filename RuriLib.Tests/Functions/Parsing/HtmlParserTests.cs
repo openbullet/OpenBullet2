@@ -1,12 +1,12 @@
-﻿using RuriLib.Functions.Parsing;
 using System.Linq;
+using RuriLib.Functions.Parsing;
 using Xunit;
 
-namespace RuriLib.Tests.Functions.Parsing
+namespace RuriLib.Tests.Functions.Parsing;
+
+public class HtmlParserTests
 {
-    public class HtmlParserTests
-    {
-        private readonly string htmlPage = @"
+    private readonly string htmlPage = @"
 <html>
 <body>
 <p>text <strong>123</strong></p>
@@ -18,91 +18,90 @@ namespace RuriLib.Tests.Functions.Parsing
 </html>
 ";
 
-        // CSS Selector
+    // CSS Selector
 
-        [Fact]
-        public void QueryAttributeAll_SingleElementQueryInnerHTML_GetText()
-        {
-            var match = HtmlParser.QueryAttributeAll(htmlPage, "#testid", "innerHTML").FirstOrDefault();
-            Assert.Equal("innertext1", match);
-        }
+    [Fact]
+    public void QueryAttributeAll_SingleElementQueryInnerHTML_GetText()
+    {
+        var match = HtmlParser.QueryAttributeAll(htmlPage, "#testid", "innerHTML").FirstOrDefault();
+        Assert.Equal("innertext1", match);
+    }
 
-        [Fact]
-        public void QueryAttributeAll_SingleElementQueryOuterHTML_GetText()
-        {
-            var match = HtmlParser.QueryAttributeAll(htmlPage, "strong", "outerHTML").FirstOrDefault();
-            Assert.Equal("<strong>123</strong>", match);
-        }
+    [Fact]
+    public void QueryAttributeAll_SingleElementQueryOuterHTML_GetText()
+    {
+        var match = HtmlParser.QueryAttributeAll(htmlPage, "strong", "outerHTML").FirstOrDefault();
+        Assert.Equal("<strong>123</strong>", match);
+    }
 
-        [Fact]
-        public void QueryAttributeAll_SingleElementQueryInnerText_GetText()
-        {
-            var match = HtmlParser.QueryAttributeAll(htmlPage, "body p", "innerText").FirstOrDefault();
-            Assert.Equal("text 123", match);
-        }
+    [Fact]
+    public void QueryAttributeAll_SingleElementQueryInnerText_GetText()
+    {
+        var match = HtmlParser.QueryAttributeAll(htmlPage, "body p", "innerText").FirstOrDefault();
+        Assert.Equal("text 123", match);
+    }
 
-        [Fact]
-        public void QueryAttributeAll_SingleElementNonExistant_MatchNothing()
-        {
-            var match = HtmlParser.QueryAttributeAll(htmlPage, "#nonexistant", "innerHTML").FirstOrDefault();
-            Assert.Null(match);
-        }
+    [Fact]
+    public void QueryAttributeAll_SingleElementNonExistant_MatchNothing()
+    {
+        var match = HtmlParser.QueryAttributeAll(htmlPage, "#nonexistant", "innerHTML").FirstOrDefault();
+        Assert.Null(match);
+    }
 
-        [Fact]
-        public void QueryAttributeAll_SingleElementQueryAttribute_GetText()
-        {
-            var match = HtmlParser.QueryAttributeAll(htmlPage, "#testid", "testattr").FirstOrDefault();
-            Assert.Equal("testvalue", match);
-        }
+    [Fact]
+    public void QueryAttributeAll_SingleElementQueryAttribute_GetText()
+    {
+        var match = HtmlParser.QueryAttributeAll(htmlPage, "#testid", "testattr").FirstOrDefault();
+        Assert.Equal("testvalue", match);
+    }
 
-        [Fact]
-        public void QueryAttributeAll_ManyElementsQueryAttribute_GetText()
-        {
-            var matches = HtmlParser.QueryAttributeAll(htmlPage, "ul li p", "innerHTML").ToArray();
-            Assert.Equal(new string[] { "innertext1", "innertext2" }, matches);
-        }
+    [Fact]
+    public void QueryAttributeAll_ManyElementsQueryAttribute_GetText()
+    {
+        var matches = HtmlParser.QueryAttributeAll(htmlPage, "ul li p", "innerHTML").ToArray();
+        Assert.Equal(new[] { "innertext1", "innertext2" }, matches);
+    }
 
-        // XPATH
-        [Fact]
-        public void QueryXPathAll_SingleElementQueryInnerHTML_GetText()
-        {
-            var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='testid']", "innerHTML").FirstOrDefault();
-            Assert.Equal("innertext1", match);
-        }
+    // XPATH
+    [Fact]
+    public void QueryXPathAll_SingleElementQueryInnerHTML_GetText()
+    {
+        var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='testid']", "innerHTML").FirstOrDefault();
+        Assert.Equal("innertext1", match);
+    }
 
-        [Fact]
-        public void QueryXPathAll_SingleElementQueryOuterHTML_GetText()
-        {
-            var match = HtmlParser.QueryXPathAll(htmlPage, "//strong", "outerHTML").FirstOrDefault();
-            Assert.Equal("<strong>123</strong>", match);
-        }
+    [Fact]
+    public void QueryXPathAll_SingleElementQueryOuterHTML_GetText()
+    {
+        var match = HtmlParser.QueryXPathAll(htmlPage, "//strong", "outerHTML").FirstOrDefault();
+        Assert.Equal("<strong>123</strong>", match);
+    }
 
-        [Fact]
-        public void QueryXPathAll_SingleElementQueryInnerText_GetText()
-        {
-            var match = HtmlParser.QueryXPathAll(htmlPage, "//body/p", "innerText").FirstOrDefault();
-            Assert.Equal("text 123", match);
-        }
+    [Fact]
+    public void QueryXPathAll_SingleElementQueryInnerText_GetText()
+    {
+        var match = HtmlParser.QueryXPathAll(htmlPage, "//body/p", "innerText").FirstOrDefault();
+        Assert.Equal("text 123", match);
+    }
 
-        [Fact]
-        public void QueryXPathAll_SingleElementNonExistant_MatchNothing()
-        {
-            var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='nonexistant']", "innerHTML").FirstOrDefault();
-            Assert.Null(match);
-        }
+    [Fact]
+    public void QueryXPathAll_SingleElementNonExistant_MatchNothing()
+    {
+        var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='nonexistant']", "innerHTML").FirstOrDefault();
+        Assert.Null(match);
+    }
 
-        [Fact]
-        public void QueryXPathAll_SingleElementQueryAttribute_GetText()
-        {
-            var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='testid']", "testattr").FirstOrDefault();
-            Assert.Equal("testvalue", match);
-        }
+    [Fact]
+    public void QueryXPathAll_SingleElementQueryAttribute_GetText()
+    {
+        var match = HtmlParser.QueryXPathAll(htmlPage, "//p[@id='testid']", "testattr").FirstOrDefault();
+        Assert.Equal("testvalue", match);
+    }
 
-        [Fact]
-        public void QueryXPathAll_ManyElementsQueryAttribute_GetText()
-        {
-            var matches = HtmlParser.QueryXPathAll(htmlPage, "//ul/li/p", "innerHTML").ToArray();
-            Assert.Equal(new string[] { "innertext1", "innertext2" }, matches);
-        }
+    [Fact]
+    public void QueryXPathAll_ManyElementsQueryAttribute_GetText()
+    {
+        var matches = HtmlParser.QueryXPathAll(htmlPage, "//ul/li/p", "innerHTML").ToArray();
+        Assert.Equal(new[] { "innertext1", "innertext2" }, matches);
     }
 }

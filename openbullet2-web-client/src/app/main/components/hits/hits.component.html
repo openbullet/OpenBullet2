@@ -39,6 +39,7 @@
                 class="ml-2"
                 [(ngModel)]="configName"
                 (ngModelChange)="refreshHits()"
+                [filter]="true"
                 [options]="configNames">
                 <ng-template let-item pTemplate="selectedItem">
                     <span>{{item | pascalcase : true}}</span>
@@ -54,9 +55,16 @@
                 class="ml-2"
                 [style]="{ width: '400px' }"
                 appendTo="body"
-                (onSelect)="refreshHits()"
+                (onSelect)="dateRangeSelected()"
+                placeholder="Any date"
                 [showSeconds]="true">
             </p-calendar>
+            <button class="button button-secondary ml-2" [style]="{ height: '41px'}"
+                pTooltip="Clear the date filter"
+                [disabled]="!useDateFilter"
+                (click)="clearDateFilter()">
+                Clear dates
+            </button>
         </div>
         <div class="col-4 pr-0 text-right">
             <button class="button button-secondary mr-2" [style]="{ height: '41px'}"

@@ -1,121 +1,151 @@
-﻿using RuriLib.Attributes;
+using RuriLib.Attributes;
 using RuriLib.Extensions;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Conditions.Comparisons;
 using System.Collections.Generic;
 
-namespace RuriLib.Blocks.Conditions
+namespace RuriLib.Blocks.Conditions;
+
+/// <summary>
+/// Blocks to check conditions.
+/// </summary>
+[BlockCategory("Conditions", "Blocks that have to do with checking conditions", "#1e90ff")]
+public static class Methods
 {
-    [BlockCategory("Conditions", "Blocks that have to do with checking conditions", "#1e90ff")]
-    public static class Methods
+    /*
+     * These are not blocks, but they take BotData as an input. The KeycheckBlockInstance will take care
+     * of writing C# code that calls these methods where necessary once it's transpiled.
+     */
+
+    /// <summary>
+    /// Checks a condition with two boolean terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, bool leftTerm, BoolComparison comparison, bool rightTerm)
     {
-        /*
-         * These are not blocks, but they take BotData as an input. The KeycheckBlockInstance will take care
-         * of writing C# code that calls these methods where necessary once it's transpiled.
-         */
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
 
-        public static bool CheckCondition(BotData data, bool leftTerm, BoolComparison comparison, bool rightTerm)
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-            
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
         }
 
-        public static bool CheckCondition(BotData data, string leftTerm, StrComparison comparison, string rightTerm)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks a condition with two string terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, string leftTerm, StrComparison comparison, string rightTerm)
+    {
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
+
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm.TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm.TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
         }
 
-        public static bool CheckCondition(BotData data, List<string> leftTerm, ListComparison comparison, string rightTerm)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks a condition between a list of strings and a string.
+    /// </summary>
+    public static bool CheckCondition(BotData data, List<string> leftTerm, ListComparison comparison, string rightTerm)
+    {
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
+
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm.AsString().TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm.AsString().TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
         }
 
-        public static bool CheckCondition(BotData data, int leftTerm, NumComparison comparison, int rightTerm)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks a condition with two integer terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, int leftTerm, NumComparison comparison, int rightTerm)
+        => CheckCondition(data, (long)leftTerm, comparison, rightTerm);
+
+    /// <summary>
+    /// Checks a condition with two integer terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, long leftTerm, NumComparison comparison, long rightTerm)
+    {
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
+
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
         }
 
-        public static bool CheckCondition(BotData data, float leftTerm, NumComparison comparison, float rightTerm)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks a condition with two float terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, float leftTerm, NumComparison comparison, float rightTerm)
+        => CheckCondition(data, (double)leftTerm, comparison, rightTerm);
+
+    /// <summary>
+    /// Checks a condition with two double terms.
+    /// </summary>
+    public static bool CheckCondition(BotData data, double leftTerm, NumComparison comparison, double rightTerm)
+    {
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
+
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm} {comparison} {rightTerm}");
         }
 
-        public static bool CheckCondition(BotData data, Dictionary<string, string> leftTerm, DictComparison comparison, string rightTerm)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks a condition between a dictionary of strings and a string.
+    /// </summary>
+    public static bool CheckCondition(BotData data, Dictionary<string, string> leftTerm, DictComparison comparison, string rightTerm)
+    {
+        var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
+
+        if (result)
         {
-            var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Matched key {leftTerm.AsString().TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
-            }
-
-            return result;
+            data.Logger.Log($"Matched key {leftTerm.AsString().TruncatePretty(50)} {comparison} {rightTerm.TruncatePretty(50)}");
         }
 
-        public static bool CheckGlobalBanKeys(BotData data)
-        {
-            var result = data.Providers.ProxySettings.ContainsBanKey(data.SOURCE, out var matchedKey);
-            
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Found global ban key: {matchedKey}");
-            }
+        return result;
+    }
 
-            return result;
+    /// <summary>
+    /// Checks if the source contains a global ban key.
+    /// </summary>
+    public static bool CheckGlobalBanKeys(BotData data)
+    {
+        var result = data.Providers.ProxySettings.ContainsBanKey(data.SOURCE, out var matchedKey);
+
+        if (result)
+        {
+            data.Logger.Log($"Found global ban key: {matchedKey}");
         }
 
-        public static bool CheckGlobalRetryKeys(BotData data)
+        return result;
+    }
+
+    /// <summary>
+    /// Checks if the source contains a global retry key.
+    /// </summary>
+    public static bool CheckGlobalRetryKeys(BotData data)
+    {
+        var result = data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE, out var matchedKey);
+
+        if (result)
         {
-            var result = data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE, out var matchedKey);
-
-            if (result)
-            {
-                data.Logger.LogHeader();
-                data.Logger.Log($"Found global retry key: {matchedKey}");
-            }
-
-            return result;
+            data.Logger.Log($"Found global retry key: {matchedKey}");
         }
+
+        return result;
     }
 }

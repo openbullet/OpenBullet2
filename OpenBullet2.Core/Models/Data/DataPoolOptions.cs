@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Data;
+using RuriLib.Models.Data;
 
 namespace OpenBullet2.Core.Models.Data;
 

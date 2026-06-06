@@ -19,7 +19,7 @@
                 <ng-template pTemplate="end">
                     <button class="button button-secondary"
                         pTooltip="Clear filters" tooltipPosition="bottom"
-                        (click)="wordlistsDt.clear()">
+                        (click)="clearTable()">
                         Clear
                         <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
                     </button>
@@ -28,7 +28,9 @@
                             spellcheck="false"
                             class="ml-2"
                             [style]="{ height: '33px' }"
-                            (input)="wordlistsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                            [(ngModel)]="searchTerm"
+                            (input)="applyGlobalFilter()"
+                            placeholder="Search keyword" />
                     </span>
                 </ng-template>
             </p-menubar>
@@ -41,15 +43,20 @@
                 [value]="wordlists"
                 [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
                 [paginator]="true"
-                [rows]="10"
+                [rows]="tableRows"
+                [first]="tableFirst"
                 [resizableColumns]="true"
                 [scrollable]="true"
                 scrollDirection="horizontal"
                 columnResizeMode="expand"
                 [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]"
+                stateStorage="session"
+                stateKey="wordlists-table"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [globalFilterFields]="['name', 'filePath', 'purpose', 'lineCount', 'wordlistType']"
+                (onPage)="onTablePageChange($event)"
+                (onStateRestore)="onTableStateRestore($event)"
                 >
                 <ng-template pTemplate="emptymessage">
                     <div class="m-3">

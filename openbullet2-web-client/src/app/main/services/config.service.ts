@@ -10,6 +10,7 @@ import { ConfigInfoDto } from '../dtos/config/config-info.dto';
 import { ConfigReadmeDto } from '../dtos/config/config-readme.dto';
 import { ConfigDto, ConfigSettingsDto } from '../dtos/config/config.dto';
 import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from '../dtos/config/conversion.dto';
+import { TestDataRulesDto, TestDataRulesResultDto } from '../dtos/config/test-data-rules.dto';
 import { UpdateConfigDto } from '../dtos/config/update-config.dto';
 import * as CryptoJS from 'crypto-js';
 
@@ -266,6 +267,10 @@ export class ConfigService {
 
   getBlockSnippets() {
     return this.http.get<{ [key: string]: string }>(`${getBaseUrl()}/config/block-snippets`);
+  }
+
+  testDataRules(dto: TestDataRulesDto) {
+    return this.http.post<TestDataRulesResultDto>(`${getBaseUrl()}/config/test-data-rules`, dto);
   }
 
   getRemoteImage(url: string) {

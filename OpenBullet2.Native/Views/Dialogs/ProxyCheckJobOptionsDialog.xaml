@@ -21,6 +21,12 @@
             <Label Content="Start condition" Foreground="{DynamicResource ForegroundCustom}" />
             <StackPanel Orientation="Horizontal" Background="Transparent">
                 <RadioButton 
+                Content="Start immediately"
+                x:Name="startImmediatelyButton"
+                IsChecked="{Binding StartImmediatelyMode}"
+                Background="Transparent"
+                Margin="5 0"/>
+                <RadioButton 
                 Content="Start in"
                 x:Name="startInButton"
                 IsChecked="{Binding StartInMode}"
@@ -40,6 +46,9 @@
                         <Setter Property="Visibility" Value="Collapsed"/>
                     </Style>
                 </TabControl.ItemContainerStyle>
+                <TabItem>
+                    <TextBlock Text="The job will start as soon as you run it." />
+                </TabItem>
                 <TabItem>
                     <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
                 </TabItem>
@@ -82,6 +91,10 @@
                 Margin="5 5 0 0"
                 Content="Check only untested"
                 IsChecked="{Binding CheckOnlyUntested}" />
+            <CheckBox
+                Margin="5 5 0 0"
+                Content="Use proxy judge for anonymity detection"
+                IsChecked="{Binding UseProxyJudge}" />
             <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
                 <Label>Check on website</Label>
                 <ComboBox

@@ -43,6 +43,17 @@
                           IsChecked="{Binding WarnConfigNotSaved}" 
                           VerticalContentAlignment="Center"
                           Margin="5 10 0 0"/>
+                <CheckBox Content="View warning when selecting a potentially dangerous config" 
+                          IsChecked="{Binding WarnDangerousConfig}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Update alerts channel</Label>
+                    <ComboBox x:Name="updateChannelCombobox"
+                              SelectedValue="{Binding Path=UpdateChannel}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
                     <Label>Default author for new configs</Label>
                     <TextBox Text="{Binding DefaultAuthor}" 

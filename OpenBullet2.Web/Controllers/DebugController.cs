@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Debugging;
 using OpenBullet2.Web.Exceptions;
@@ -10,8 +11,10 @@ namespace OpenBullet2.Web.Controllers;
 /// </summary>
 [TypeFilter<AdminFilter>]
 [ApiVersion("1.0")]
-public class DebugController : ApiController
-{   
+public class DebugController(UserDataDirectoryProvider userDataDirectory) : ApiController
+{
+    private readonly UserDataDirectoryProvider _userDataDirectory = userDataDirectory;
+
     /// <summary>
     /// Trigger the garbage collector.
     /// </summary>
@@ -25,7 +28,7 @@ public class DebugController : ApiController
 #pragma warning restore S1215
         return Ok();
     }
-    
+
     /// <summary>
     /// Get the current server log as a text file.
     /// </summary>
@@ -34,7 +37,7 @@ public class DebugController : ApiController
     public ActionResult GetServerLogs()
     {
         // This is only supported for the default Serilog configuration
-        var logsFolder = Path.Combine(Globals.UserDataFolder, "Logs");
+        var logsFolder = _userDataDirectory.GetPath("Logs");
         var latestLog = Directory.GetFiles(logsFolder, "log-*.txt").MaxBy(f => f);
 
         if (latestLog is null)
@@ -42,7 +45,7 @@ public class DebugController : ApiController
             throw new ResourceNotFoundException(ErrorCode.FileNotFound,
                 "No logs found on the server or the Serilog configuration is not the default one");
         }
-        
+
         var stream = new FileStream(latestLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         return File(stream, "text/plain", Path.GetFileName(latestLog));
     }

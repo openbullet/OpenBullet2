@@ -1,4 +1,7 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
+
+ARG RELEASE_TAG=latest
+ARG TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -41,11 +44,20 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Download and unpack the latest OpenBullet2.Web release
-RUN wget https://github.com/openbullet/openbullet2/releases/latest/download/OpenBullet2.Web.zip \
-    && unzip OpenBullet2.Web.zip \
-    && rm OpenBullet2.Web.zip
+# Download and unpack the requested OpenBullet2.Web release
+RUN case "$TARGETARCH" in \
+        amd64) WEB_ASSET="OpenBullet2.Web-linux-x64.zip" ;; \
+        arm64) WEB_ASSET="OpenBullet2.Web-linux-arm64.zip" ;; \
+        *) echo "Unsupported Linux architecture: $TARGETARCH" && exit 1 ;; \
+    esac \
+    && if [ "$RELEASE_TAG" = "latest" ]; then \
+        wget "https://github.com/openbullet/openbullet2/releases/latest/download/${WEB_ASSET}"; \
+    else \
+        wget "https://github.com/openbullet/openbullet2/releases/download/${RELEASE_TAG}/${WEB_ASSET}"; \
+    fi \
+    && unzip "$WEB_ASSET" \
+    && rm "$WEB_ASSET"
 
 EXPOSE 5000
 
-CMD ["dotnet", "./OpenBullet2.Web.dll", "--urls=http://*:5000"]
+CMD ["./OpenBullet2.Web", "--urls=http://*:5000"]

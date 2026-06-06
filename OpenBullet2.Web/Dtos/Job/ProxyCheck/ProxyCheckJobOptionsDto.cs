@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
+namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
 
 /// <summary>
 /// The options of a proxy check job.
@@ -39,6 +39,11 @@ public class ProxyCheckJobOptionsDto
     /// The maximum timeout that a valid proxy should have, in milliseconds.
     /// </summary>
     public int TimeoutMilliseconds { get; set; } = 10000;
+
+    /// <summary>
+    /// Whether to use a proxy judge in addition to the target site check.
+    /// </summary>
+    public bool UseProxyJudge { get; set; } = true;
 
     /// <summary>
     /// The options for the output of a proxy check.

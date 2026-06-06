@@ -5,6 +5,7 @@ import { ErrorMessage } from '../dtos/common/messages.dto';
 import { BotsChangedMessage } from '../dtos/job/messages/bots-changed.dto';
 import { ChangeBotsMessage } from '../dtos/job/messages/change-bots.dto';
 import { MRJNewHitMessage } from '../dtos/job/messages/multi-run/hit.dto';
+import { MRJNewLogMessage } from '../dtos/job/messages/multi-run/new-log.dto';
 import { MRJNewResultMessage } from '../dtos/job/messages/multi-run/new-result.dto';
 import { MRJStatsMessage } from '../dtos/job/messages/multi-run/stats.dto';
 import { MRJTaskErrorMessage } from '../dtos/job/messages/multi-run/task-error.dto';
@@ -20,6 +21,9 @@ export class MultiRunJobHubService {
 
   private hitEmitter = new EventEmitter<MRJNewHitMessage | null>();
   public hit$ = this.hitEmitter.asObservable();
+
+  private logEmitter = new EventEmitter<MRJNewLogMessage | null>();
+  public log$ = this.logEmitter.asObservable();
 
   private tickEmitter = new EventEmitter<MRJStatsMessage | null>();
   public tick$ = this.tickEmitter.asObservable();
@@ -57,6 +61,10 @@ export class MultiRunJobHubService {
 
     this.hubConnection.on('newHit', (hit) => {
       this.hitEmitter.emit(hit);
+    });
+
+    this.hubConnection.on('newLogEntry', (log) => {
+      this.logEmitter.emit(log);
     });
 
     this.hubConnection.on('timerTick', (tick) => {

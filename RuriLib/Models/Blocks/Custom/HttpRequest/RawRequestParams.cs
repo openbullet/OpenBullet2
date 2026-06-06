@@ -1,15 +1,18 @@
-﻿using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Blocks.Settings;
 
-namespace RuriLib.Models.Blocks.Custom.HttpRequest
+namespace RuriLib.Models.Blocks.Custom.HttpRequest;
+
+/// <summary>
+/// Parameters for a raw binary HTTP request.
+/// </summary>
+public class RawRequestParams : RequestParams
 {
-    public class RawRequestParams : RequestParams
-    {
-        public BlockSetting Content { get; set; } = new BlockSetting
-        {
-            Name = "content",
-            FixedSetting = new ByteArraySetting()
-        };
-
-        public BlockSetting ContentType { get; set; } = BlockSettingFactory.CreateStringSetting("contentType", "application/octet-stream");
-    }
+    /// <summary>
+    /// Gets or sets the raw request content.
+    /// </summary>
+    public BlockSetting Content { get; set; } = BlockSettingFactory.CreateByteArraySetting("content");
+    /// <summary>
+    /// Gets or sets the request content type.
+    /// </summary>
+    public BlockSetting ContentType { get; set; } = BlockSettingFactory.CreateStringSetting("contentType", "application/octet-stream");
 }

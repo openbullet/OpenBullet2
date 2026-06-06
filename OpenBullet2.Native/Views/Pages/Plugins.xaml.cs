@@ -1,42 +1,46 @@
-﻿using Microsoft.Win32;
-using OpenBullet2.Native.Services;
+using Microsoft.Win32;
 using OpenBullet2.Native.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Views.Pages
+namespace OpenBullet2.Native.Views.Pages;
+
+/// <summary>
+/// Interaction logic for Plugins.xaml
+/// </summary>
+public partial class Plugins : Page
 {
-    /// <summary>
-    /// Interaction logic for Plugins.xaml
-    /// </summary>
-    public partial class Plugins : Page
+    private readonly PluginsViewModel vm;
+
+    public Plugins(PluginsViewModel vm)
     {
-        private readonly PluginsViewModel vm;
+        this.vm = vm;
+        DataContext = vm;
 
-        public Plugins()
+        InitializeComponent();
+    }
+
+    private void AddPlugin(object sender, RoutedEventArgs e)
+    {
+        var ofd = new OpenFileDialog
         {
-            vm = SP.GetService<ViewModelsService>().Plugins;
-            DataContext = vm;
+            Filter = "Plugin Files(*.zip)|*.zip",
+            FilterIndex = 1
+        };
 
-            InitializeComponent();
-        }
+        ofd.ShowDialog();
 
-        private void AddPlugin(object sender, RoutedEventArgs e)
+        if (!string.IsNullOrWhiteSpace(ofd.FileName))
         {
-            var ofd = new OpenFileDialog
-            {
-                Filter = "Plugin Files(*.zip)|*.zip",
-                FilterIndex = 1
-            };
-
-            ofd.ShowDialog();
-
-            if (!string.IsNullOrWhiteSpace(ofd.FileName))
-            {
-                vm.Add(ofd.FileName);
-            }
+            vm.Add(ofd.FileName);
         }
+    }
 
-        private void RemovePlugin(object sender, RoutedEventArgs e) => vm.Delete((PluginInfo)(sender as Button).Tag);
+    private void RemovePlugin(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: PluginInfo plugin })
+        {
+            vm.Delete(plugin);
+        }
     }
 }

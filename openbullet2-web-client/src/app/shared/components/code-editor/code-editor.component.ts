@@ -21,6 +21,8 @@ export class CodeEditorComponent implements OnInit {
   @Input() theme = 'vs-dark-lolicode';
   // biome-ignore lint/suspicious/noExplicitAny: any
   editorOptions: any = null;
+  // biome-ignore lint/suspicious/noExplicitAny: Monaco editor instance
+  editorInstance: any = null;
   isTouched = false;
   model = '';
 
@@ -34,7 +36,7 @@ export class CodeEditorComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.settingsService.getSafeSettings().subscribe((settings) => {
@@ -43,12 +45,29 @@ export class CodeEditorComponent implements OnInit {
         language: this.language,
         readOnly: this.readOnly,
         wordWrap: settings.customizationSettings.wordWrap ? 'on' : 'off',
-        fontLigatures: false
+        fontFamily: 'Chivo Mono',
+        fontLigatures: false,
+        suggest: {
+          showInlineDetails: false,
+          showStatusBar: true,
+        },
       };
     });
   }
 
-  editorLoaded() {
+  // biome-ignore lint/suspicious/noExplicitAny: Monaco editor instance
+  editorLoaded(editorInstance: any) {
+    this.editorInstance = editorInstance;
+    monaco.editor.remeasureFonts();
+    this.editorInstance.layout();
+
+    if ('fonts' in document) {
+      void document.fonts.ready.then(() => {
+        monaco.editor.remeasureFonts();
+        this.editorInstance?.layout();
+      });
+    }
+
     this.loaded.emit();
 
     if (this.language === 'lolicode') {
@@ -74,19 +93,8 @@ export class CodeEditorComponent implements OnInit {
                 endLineNumber: position.lineNumber,
                 endColumn: position.column,
               });
-
-              if ('BLOCK:'.startsWith(textUntilPosition.trim())) {
-                return {
-                  suggestions: [
-                    {
-                      label: 'BLOCK:',
-                      kind: monaco.languages.CompletionItemKind.Snippet,
-                      insertText: 'BLOCK:',
-                      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                    },
-                  ],
-                };
-              }
+              const trimmedText = textUntilPosition.trim();
+              const indentationLength = textUntilPosition.match(/^\s*/)?.[0].length ?? 0;
 
               const word = model.getWordUntilPosition(position);
               const range = {
@@ -95,10 +103,32 @@ export class CodeEditorComponent implements OnInit {
                 startColumn: word.startColumn,
                 endColumn: word.endColumn,
               };
+              const blockRange = {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: indentationLength + 1,
+                endColumn: position.column,
+              };
+              const isBlockPrefix =
+                trimmedText.length >= 'BLOCK'.length && 'BLOCK:'.startsWith(trimmedText.toUpperCase());
+              const isBlockContext = trimmedText.toUpperCase().startsWith('BLOCK:');
 
-              if (textUntilPosition.trim().startsWith('BLOCK:')) {
+              if (isBlockPrefix || isBlockContext) {
+                const suggestions = [];
+                if (!isBlockContext) {
+                  suggestions.push({
+                    label: 'BLOCK:',
+                    kind: monaco.languages.CompletionItemKind.Keyword,
+                    insertText: 'BLOCK:',
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    range: blockRange,
+                    detail: 'Block prefix',
+                    documentation: 'BLOCK:',
+                  });
+                }
+                suggestions.push(...autoCompleteBlock(monaco, blockRange));
                 return {
-                  suggestions: autoCompleteBlock(monaco, range),
+                  suggestions,
                 };
               }
 

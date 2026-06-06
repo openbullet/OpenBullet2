@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job;
+namespace OpenBullet2.Web.Dtos.Job;
 
 /// <summary>
 /// Request to change the number of bots.

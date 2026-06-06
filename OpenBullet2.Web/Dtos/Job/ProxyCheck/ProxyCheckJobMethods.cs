@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
+namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
 
 static internal class ProxyCheckJobMethods
 {

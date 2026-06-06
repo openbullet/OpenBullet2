@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faFileLines, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService, TableState } from 'primeng/api';
+import { Table, TablePageEvent } from 'primeng/table';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
 import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
@@ -19,6 +20,9 @@ export class WordlistsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
   wordlists: WordlistDto[] | null = null;
 
+  @ViewChild('wordlistsDt')
+  wordlistsDt: Table | undefined = undefined;
+
   @ViewChild('addWordlistComponent')
   addWordlistComponent: AddWordlistComponent | undefined = undefined;
 
@@ -34,6 +38,9 @@ export class WordlistsComponent implements OnInit {
   addWordlistModalVisible = false;
   uploadWordlistModalVisible = false;
   updateWordlistInfoModalVisible = false;
+  tableFirst = 0;
+  tableRows = 10;
+  searchTerm = '';
 
   wordlistTypes: string[] = [];
 
@@ -92,7 +99,34 @@ export class WordlistsComponent implements OnInit {
 
     this.wordlistService.getAllWordlists().subscribe((wordlists) => {
       this.wordlists = wordlists;
+      this.reapplyTableState();
     });
+  }
+
+  onTablePageChange(event: TablePageEvent) {
+    this.tableFirst = event.first;
+    this.tableRows = event.rows;
+  }
+
+  onTableStateRestore(state: TableState) {
+    this.tableFirst = state.first ?? 0;
+    this.tableRows = state.rows ?? 10;
+
+    const globalFilter = state.filters?.['global'];
+    if (globalFilter && !Array.isArray(globalFilter) && globalFilter.value) {
+      this.searchTerm = String(globalFilter.value);
+    }
+  }
+
+  applyGlobalFilter() {
+    this.tableFirst = 0;
+    this.wordlistsDt?.filterGlobal(this.searchTerm, 'contains');
+  }
+
+  clearTable() {
+    this.searchTerm = '';
+    this.tableFirst = 0;
+    this.wordlistsDt?.clear();
   }
 
   openAddWordlistModal() {
@@ -156,7 +190,12 @@ export class WordlistsComponent implements OnInit {
         summary: 'Deleted',
         detail: `Wordlist ${wordlist.name} was deleted${alsoDeleteFile ? ', along with its file' : ''}`,
       });
-      this.refreshWordlists();
+
+      if (this.wordlists !== null) {
+        this.wordlists = this.wordlists.filter((w) => w.id !== wordlist.id);
+      }
+
+      this.reapplyTableState();
     });
   }
 
@@ -179,6 +218,28 @@ export class WordlistsComponent implements OnInit {
         detail: `${resp.count} wordlists were deleted from the database`,
       });
       this.refreshWordlists();
+    });
+  }
+
+  private reapplyTableState() {
+    setTimeout(() => {
+      if (!this.wordlistsDt) {
+        return;
+      }
+
+      if (this.searchTerm) {
+        this.wordlistsDt.filterGlobal(this.searchTerm, 'contains');
+      }
+
+      const filteredCount = this.wordlistsDt.filteredValue?.length ?? this.wordlists?.length ?? 0;
+
+      if (filteredCount === 0) {
+        this.tableFirst = 0;
+        return;
+      }
+
+      const maxFirst = Math.floor((filteredCount - 1) / this.tableRows) * this.tableRows;
+      this.tableFirst = Math.min(this.tableFirst, maxFirst);
     });
   }
 }

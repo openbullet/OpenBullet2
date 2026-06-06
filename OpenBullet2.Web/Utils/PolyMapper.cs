@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using Mapster;
 using OpenBullet2.Web.Dtos;
 using OpenBullet2.Web.Exceptions;
 using System.Text.Json;
@@ -8,7 +8,7 @@ namespace OpenBullet2.Web.Utils;
 static internal class PolyMapper
 {
     static internal object? MapFrom<T>(
-        T item, IRuntimeMapper mapper)
+        T item, TypeAdapterConfig config)
     {
         if (item is null)
         {
@@ -16,8 +16,14 @@ static internal class PolyMapper
         }
 
         var type = item.GetType();
-        var mappedType = PolyDtoCache.GetMapping(type);
-        var mapped = (PolyDto)mapper.Map(item, type, mappedType);
+        var mappedType = PolyDtoCache.GetMapping(type)
+            ?? throw new MappingException($"No mapped type found for {type.FullName}");
+        var adapted = TypeAdapter.Adapt(item, type, mappedType, config);
+
+        if (adapted is not PolyDto mapped)
+        {
+            throw new MappingException($"Mapped type {mappedType.FullName} is not a PolyDto");
+        }
 
         mapped.PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType(
             mapped.GetType()) ?? string.Empty;
@@ -26,13 +32,13 @@ static internal class PolyMapper
     }
 
     static internal List<object> MapAllFrom<T>(
-        IEnumerable<T> list, IRuntimeMapper mapper) where T : notnull
+        IEnumerable<T> list, TypeAdapterConfig config) where T : notnull
     {
         var mappedList = new List<object>();
 
         foreach (var item in list)
         {
-            var mapped = MapFrom(item, mapper);
+            var mapped = MapFrom(item, config);
 
             if (mapped is not null)
             {
@@ -45,7 +51,7 @@ static internal class PolyMapper
 
     static internal TDest? MapBetween<TSource, TDest>(
         JsonElement jsonElement,
-        IRuntimeMapper mapper) where TSource : PolyDto
+        TypeAdapterConfig config) where TSource : PolyDto
     {
         var item = ConvertPolyDto<TSource>(jsonElement);
 
@@ -55,19 +61,21 @@ static internal class PolyMapper
         }
 
         var type = item.GetType();
-        var targetType = PolyDtoCache.GetMapping(type);
-        return (TDest)mapper.Map(item, type, targetType);
+        var targetType = PolyDtoCache.GetMapping(type)
+            ?? throw new MappingException($"No target mapping found for {type.FullName}");
+        var adapted = TypeAdapter.Adapt(item, type, targetType, config);
+        return adapted is null ? default : (TDest)adapted;
     }
 
     static internal List<TDest> MapBetween<TSource, TDest>(
         IEnumerable<JsonElement> jsonElements,
-        IRuntimeMapper mapper) where TSource : PolyDto
+        TypeAdapterConfig config) where TSource : PolyDto
     {
         var mappedList = new List<TDest>();
 
         foreach (var jsonElement in jsonElements)
         {
-            var mapped = MapBetween<TSource, TDest>(jsonElement, mapper);
+            TDest? mapped = MapBetween<TSource, TDest>(jsonElement, config);
 
             if (mapped is not null)
             {

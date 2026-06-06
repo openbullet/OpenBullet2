@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using FluentValidation;
 
@@ -53,5 +53,11 @@ internal class UpdateTriggeredActionDtoValidator : AbstractValidator<UpdateTrigg
     public UpdateTriggeredActionDtoValidator()
     {
         RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Triggers)
+            .Must(t => t.Count > 0)
+            .WithMessage("At least one trigger is required");
+        RuleFor(x => x.Actions)
+            .Must(a => a.Count > 0)
+            .WithMessage("At least one action is required");
     }
 }

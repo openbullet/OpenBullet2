@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Web.Attributes;
+namespace OpenBullet2.Web.Attributes;
 
 /// <summary>
 /// Used to decorate a class that can be mapped from another class.
@@ -9,7 +9,7 @@ public class MapsFromAttribute : Attribute
     /// <summary>
     /// Assigns the given source type. If <paramref name="autoMap" />
     /// is <see langword="true" />, it will also register a default mapping
-    /// in <see cref="AutoMapper.Mapper" />.
+    /// in the web mapper configuration.
     /// </summary>
     public MapsFromAttribute(Type sourceType, bool autoMap = true)
     {
@@ -23,7 +23,7 @@ public class MapsFromAttribute : Attribute
     public Type SourceType { get; init; }
 
     /// <summary>
-    /// Whether to register a default mapping in <see cref="AutoMapper.Mapper" />.
+    /// Whether to register a default mapping in the web mapper configuration.
     /// </summary>
     public bool AutoMap { get; set; }
 }

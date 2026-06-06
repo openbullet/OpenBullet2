@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Utils;
@@ -19,68 +19,67 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenBullet2.Native.Controls
+namespace OpenBullet2.Native.Controls;
+
+/// <summary>
+/// Interaction logic for ImagePicker.xaml
+/// </summary>
+public partial class ImagePicker : UserControl
 {
-    /// <summary>
-    /// Interaction logic for ImagePicker.xaml
-    /// </summary>
-    public partial class ImagePicker : UserControl
+    private readonly ImagePickerViewModel vm;
+    public event EventHandler<byte[]>? ImageChanged;
+
+    public ImagePicker(byte[] imageBytes)
     {
-        private ImagePickerViewModel vm;
-        public event EventHandler<byte[]> ImageChanged;
-
-        public ImagePicker(byte[] imageBytes)
+        InitializeComponent();
+        vm = new ImagePickerViewModel
         {
-            InitializeComponent();
-            vm = new ImagePickerViewModel
-            {
-                ImageBytes = imageBytes
-            };
-            DataContext = vm;
-        }
+            ImageBytes = imageBytes
+        };
+        DataContext = vm;
+    }
 
-        private void OpenImage(object sender, RoutedEventArgs e)
+    private void OpenImage(object sender, RoutedEventArgs e)
+    {
+        var ofd = new OpenFileDialog
         {
-            var ofd = new OpenFileDialog
-            {
-                Filter = "Images | *.ico;*.jpg;*.jpeg;*.png;*.bmp",
-                FilterIndex = 1
-            };
+            Filter = "Images | *.ico;*.jpg;*.jpeg;*.png;*.bmp",
+            FilterIndex = 1
+        };
 
-            ofd.ShowDialog();
+        ofd.ShowDialog();
 
-            if (!string.IsNullOrEmpty(ofd.FileName))
+        if (!string.IsNullOrEmpty(ofd.FileName))
+        {
+            try
             {
-                try
-                {
-                    vm.SetImageFromFile(ofd.FileName);
-                    ImageChanged?.Invoke(this, vm.ImageBytes);
-                }
-                catch (Exception ex)
-                {
-                    Alert.Exception(ex);
-                }
+                vm.SetImageFromFile(ofd.FileName);
+                ImageChanged?.Invoke(this, vm.ImageBytes);
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
             }
         }
     }
+}
 
-    public class ImagePickerViewModel : ViewModelBase
+public class ImagePickerViewModel : ViewModelBase
+{
+    private byte[] imageBytes = [];
+    public byte[] ImageBytes
     {
-        private byte[] imageBytes;
-        public byte[] ImageBytes
+        get => imageBytes;
+        set
         {
-            get => imageBytes;
-            set
-            {
-                imageBytes = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Image));
-            }
+            imageBytes = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(Image));
         }
-
-        public BitmapImage Image => ImageBytes is null ? null : Images.BytesToBitmapImage(ImageBytes);
-
-        public void SetImageFromFile(string fileName)
-            => ImageBytes = ImageEditor.ToCompatibleFormat(File.ReadAllBytes(fileName));
     }
+
+    public BitmapImage? Image => ImageBytes.Length == 0 ? null : Images.BytesToBitmapImage(ImageBytes);
+
+    public void SetImageFromFile(string fileName)
+        => ImageBytes = ImageEditor.ToCompatibleFormat(File.ReadAllBytes(fileName));
 }

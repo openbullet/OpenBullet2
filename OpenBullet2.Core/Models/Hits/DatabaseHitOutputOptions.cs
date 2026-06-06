@@ -1,4 +1,4 @@
-﻿namespace OpenBullet2.Core.Models.Hits;
+namespace OpenBullet2.Core.Models.Hits;
 
 /// <summary>
 /// Options for a <see cref="DatabaseHitOutput"/>.
