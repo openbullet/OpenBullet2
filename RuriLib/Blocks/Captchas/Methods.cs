@@ -1,6 +1,7 @@
 using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using RuriLib.Attributes;
+using RuriLib.Exceptions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Captchas;
@@ -600,7 +601,7 @@ public static class Methods
             {
                 Host = data.Proxy.Host,
                 Port = data.Proxy.Port,
-                Type = Enum.Parse<ProxyType>(data.Proxy.Type.ToString(), true),
+                Type = ToCaptchaProxyType(data.Proxy.Type),
                 Username = data.Proxy.Username,
                 Password = data.Proxy.Password
             }
@@ -613,4 +614,9 @@ public static class Methods
             Cookies = data.COOKIES
         };
     }
+
+    private static ProxyType ToCaptchaProxyType(Models.Proxies.ProxyType proxyType)
+        => proxyType == Models.Proxies.ProxyType.Https
+            ? throw new BlockExecutionException("HTTPS proxies are not supported for captcha solver requests")
+            : Enum.Parse<ProxyType>(proxyType.ToString(), true);
 }

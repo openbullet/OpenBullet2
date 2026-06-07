@@ -35,6 +35,6 @@ public class ConfigProxySettingsDto
     /// The proxy types that are allowed to be used for this config.
     /// </summary>
     public ProxyType[] AllowedProxyTypes { get; set; } = {
-        ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5
+        ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5
     };
 }

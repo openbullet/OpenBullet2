@@ -18,7 +18,7 @@ public class Proxy
     private static readonly Dictionary<string, ProxyType> ProxyUriSchemeMap = new(StringComparer.OrdinalIgnoreCase)
     {
         ["http"] = ProxyType.Http,
-        ["https"] = ProxyType.Http,
+        ["https"] = ProxyType.Https,
         ["socks4"] = ProxyType.Socks4,
         ["socks4a"] = ProxyType.Socks4a,
         ["socks5"] = ProxyType.Socks5

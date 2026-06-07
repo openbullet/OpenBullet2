@@ -19,7 +19,7 @@ export class ImportProxiesFromTextComponent {
   defaultUsername = '';
   defaultPassword = '';
   defaultProxyType: ProxyType = ProxyType.Http;
-  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
   public reset() {
     this.proxies = '';

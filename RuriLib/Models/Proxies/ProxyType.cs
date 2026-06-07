@@ -23,5 +23,10 @@ public enum ProxyType
     /// <summary>
     /// A SOCKS4a proxy.
     /// </summary>
-    Socks4a = 3
+    Socks4a = 3,
+
+    /// <summary>
+    /// An HTTPS proxy.
+    /// </summary>
+    Https = 4
 }

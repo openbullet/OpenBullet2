@@ -29,7 +29,7 @@ internal class ConsoleOptions
     [Option("proxy", Required = false, HelpText = "Single proxy to use in single-run mode.")]
     public string? SingleRunProxy { get; set; }
 
-    [Option("ptype", Default = ProxyType.Http, HelpText = "Type of proxies loaded (Http, Socks4, Socks5).")]
+    [Option("ptype", Default = ProxyType.Http, HelpText = "Type of proxies loaded (Http, Https, Socks4, Socks5).")]
     public ProxyType ProxyType { get; set; }
 
     [Option("pmode", Default = JobProxyMode.Default, HelpText = "The proxy mode (On, Off, Default).")]

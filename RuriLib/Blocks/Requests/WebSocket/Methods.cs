@@ -178,6 +178,7 @@ public static class Methods
         => proxyType switch
         {
             Models.Proxies.ProxyType.Http => "http",
+            Models.Proxies.ProxyType.Https => "https",
             Models.Proxies.ProxyType.Socks4 => "socks4",
             Models.Proxies.ProxyType.Socks5 => "socks5",
             Models.Proxies.ProxyType.Socks4a => "socks4a",

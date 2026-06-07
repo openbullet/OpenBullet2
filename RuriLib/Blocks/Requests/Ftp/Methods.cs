@@ -50,6 +50,7 @@ public static class Methods
             client = data.Proxy.Type switch
             {
                 ProxyType.Http => new AsyncFtpClientHttp11Proxy(proxyInfo),
+                ProxyType.Https => throw new BlockExecutionException("HTTPS proxies are not supported for FTP requests"),
                 ProxyType.Socks4 => new AsyncFtpClientSocks4Proxy(proxyInfo),
                 ProxyType.Socks4a => new AsyncFtpClientSocks4aProxy(proxyInfo),
                 ProxyType.Socks5 => new AsyncFtpClientSocks5Proxy(proxyInfo),

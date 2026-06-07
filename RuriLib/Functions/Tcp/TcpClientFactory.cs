@@ -55,6 +55,7 @@ public static class TcpClientFactory
             client = proxy.Type switch
             {
                 ProxyType.Http => new HttpProxyClient(settings),
+                ProxyType.Https => throw new NotSupportedException("HTTPS proxies are not supported for raw TCP connections"),
                 ProxyType.Socks4 => new Socks4ProxyClient(settings),
                 ProxyType.Socks4a => new Socks4aProxyClient(settings),
                 ProxyType.Socks5 => new Socks5ProxyClient(settings),

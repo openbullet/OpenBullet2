@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Threading;
@@ -24,9 +23,8 @@ namespace RuriLib.Http;
 /// </summary>
 public class RLHttpClient : IDisposable
 {
-    private TcpClient? _tcpClient;
+    private ProxyConnection? _proxyConnection;
     private Stream? _connectionCommonStream;
-    private NetworkStream? _connectionNetworkStream;
 
     #region Properties
     /// <summary>
@@ -232,18 +230,7 @@ public class RLHttpClient : IDisposable
 
     private async Task CreateConnection(HttpRequest request, CancellationToken cancellationToken)
     {
-        // Dispose of any previous connection (if we're coming from a redirect)
-        _tcpClient?.Close();
-
-        if (_connectionCommonStream is not null)
-        {
-            await _connectionCommonStream.DisposeAsync().ConfigureAwait(false);
-        }
-
-        if (_connectionNetworkStream is not null)
-        {
-            await _connectionNetworkStream.DisposeAsync().ConfigureAwait(false);
-        }
+        await DisposeActiveConnectionAsync().ConfigureAwait(false);
 
         var uri = request.Uri;
 
@@ -256,28 +243,29 @@ public class RLHttpClient : IDisposable
         // absolute-form request line instead of using CONNECT tunneling.
         if (ShouldUseAbsoluteUriInFirstLine(uri) && ProxyClient is HttpProxyClient httpProxyClient)
         {
-            _tcpClient = await httpProxyClient.ConnectToProxyAsync(null, cancellationToken).ConfigureAwait(false);
+            _proxyConnection = await httpProxyClient.ConnectToProxyStreamAsync(null, cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            _tcpClient = await ProxyClient.ConnectAsync(uri.Host, uri.Port, null, cancellationToken).ConfigureAwait(false);
+            _proxyConnection = await ProxyClient.ConnectStreamAsync(uri.Host, uri.Port, null, cancellationToken).ConfigureAwait(false);
         }
 
-        _connectionNetworkStream = _tcpClient.GetStream();
+        _connectionCommonStream = _proxyConnection.Stream;
 
         // If https, set up a TLS stream
         if (uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
-                var sslStream = new SslStream(_connectionNetworkStream, false);
+                var sslStream = new SslStream(_connectionCommonStream, false);
 
                 var sslOptions = new SslClientAuthenticationOptions
                 {
                     TargetHost = uri.Host,
                     EnabledSslProtocols = SslProtocols,
                     CertificateRevocationCheckMode = CertRevocationMode,
-                    RemoteCertificateValidationCallback = ServerCertificateCustomValidationCallback
+                    RemoteCertificateValidationCallback = ServerCertificateCustomValidationCallback,
+                    ApplicationProtocols = [SslApplicationProtocol.Http11]
                 };
 
                 if (sslOptions.RemoteCertificateValidationCallback is null
@@ -299,7 +287,7 @@ public class RLHttpClient : IDisposable
             {
                 if (ex is IOException or AuthenticationException)
                 {
-                    throw new ProxyException("Failed SSL connect");
+                    throw new ProxyException("Failed SSL connect", ex);
                 }
 
                 throw;
@@ -307,7 +295,7 @@ public class RLHttpClient : IDisposable
         }
         else
         {
-            _connectionCommonStream = _connectionNetworkStream;
+            _connectionCommonStream = _proxyConnection.Stream;
         }
     }
 
@@ -336,8 +324,36 @@ public class RLHttpClient : IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        _tcpClient?.Dispose();
-        _connectionCommonStream?.Dispose();
-        _connectionNetworkStream?.Dispose();
+        DisposeActiveConnection();
+    }
+
+    private async Task DisposeActiveConnectionAsync()
+    {
+        if (_connectionCommonStream is not null
+            && !ReferenceEquals(_connectionCommonStream, _proxyConnection?.Stream))
+        {
+            await _connectionCommonStream.DisposeAsync().ConfigureAwait(false);
+        }
+
+        if (_proxyConnection is not null)
+        {
+            await _proxyConnection.DisposeAsync().ConfigureAwait(false);
+        }
+
+        _connectionCommonStream = null;
+        _proxyConnection = null;
+    }
+
+    private void DisposeActiveConnection()
+    {
+        if (_connectionCommonStream is not null
+            && !ReferenceEquals(_connectionCommonStream, _proxyConnection?.Stream))
+        {
+            _connectionCommonStream.Dispose();
+        }
+
+        _proxyConnection?.Dispose();
+        _connectionCommonStream = null;
+        _proxyConnection = null;
     }
 }

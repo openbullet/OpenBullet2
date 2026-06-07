@@ -98,7 +98,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   DataPoolType = DataPoolType;
   ProxySourceType = ProxySourceType;
   HitOutputType = HitOutputType;
-  proxyTypes = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5, ProxyType.Socks4a];
+  proxyTypes = [ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks5, ProxyType.Socks4a];
 
   mode: EditMode = EditMode.Edit;
   jobId: number | null = null;

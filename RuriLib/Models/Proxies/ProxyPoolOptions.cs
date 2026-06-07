@@ -8,5 +8,5 @@ public class ProxyPoolOptions
     /// <summary>
     /// Gets or sets the proxy types allowed in the pool.
     /// </summary>
-    public ProxyType[] AllowedTypes { get; set; } = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5];
+    public ProxyType[] AllowedTypes { get; set; } = [ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks5];
 }

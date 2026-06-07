@@ -144,6 +144,9 @@ public class HttpFactory
                 ReadWriteTimeOut = options.ReadWriteTimeout
             };
 
+            settings.ProxyCertificateValidationCallback = GetCertificateValidationCallback(options);
+            settings.ProxyCertRevocationMode = options.CertRevocationMode;
+
             if (proxy.NeedsAuthentication)
             {
                 settings.Credentials = new NetworkCredential(proxy.Username, proxy.Password);
@@ -152,6 +155,7 @@ public class HttpFactory
             client = proxy.Type switch
             {
                 ProxyType.Http => new HttpProxyClient(settings),
+                ProxyType.Https => new HttpsProxyClient(settings),
                 ProxyType.Socks4 => new Socks4ProxyClient(settings),
                 ProxyType.Socks4a => new Socks4aProxyClient(settings),
                 ProxyType.Socks5 => new Socks5ProxyClient(settings),
@@ -178,6 +182,10 @@ public class HttpFactory
                 {
                     Proxy = GetWebProxy(proxy)
                 },
+                ProxyType.Https => new SocketsHttpHandler
+                {
+                    Proxy = GetWebProxy(proxy)
+                },
                 ProxyType.Socks4 or ProxyType.Socks4a or ProxyType.Socks5 => new SocketsHttpHandler
                 {
                     Proxy = GetWebProxy(proxy)
@@ -198,6 +206,7 @@ public class HttpFactory
         var address = proxy.Type switch
         {
             ProxyType.Http => $"http://{proxy.Host}:{proxy.Port}",
+            ProxyType.Https => $"https://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks4 => $"socks4://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks4a => $"socks4a://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks5 => $"socks5://{proxy.Host}:{proxy.Port}",
@@ -212,6 +221,7 @@ public class HttpFactory
         var scheme = proxy.Type switch
         {
             ProxyType.Http => "http",
+            ProxyType.Https => "https",
             ProxyType.Socks4 => "socks4",
             ProxyType.Socks4a => "socks4a",
             ProxyType.Socks5 => "socks5",
