@@ -5,6 +5,7 @@ using RuriLib.Models.Bots;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using RuriLib.Extensions;
 
 namespace RuriLib.Blocks.Functions.Constants;
 
@@ -22,7 +23,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {value}", LogColors.YellowGreen);
+        data.Logger.Log(value, LogColors.YellowGreen);
         return value;
     }
 
@@ -34,7 +35,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {value}", LogColors.YellowGreen);
+        data.Logger.Log(value.AsString(), LogColors.YellowGreen);
         return value;
     }
 
@@ -52,7 +53,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {value.ToString(CultureInfo.InvariantCulture)}", LogColors.YellowGreen);
+        data.Logger.Log(value.AsString(), LogColors.YellowGreen);
         return value;
     }
 
@@ -70,7 +71,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {value}", LogColors.YellowGreen);
+        data.Logger.Log(value.AsString(), LogColors.YellowGreen);
         return value;
     }
 
@@ -82,7 +83,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {HexConverter.ToHexString(value)}", LogColors.YellowGreen);
+        data.Logger.Log(HexConverter.ToHexString(value), LogColors.YellowGreen);
         return value;
     }
 
@@ -94,7 +95,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {string.Join(", ", value)}", LogColors.YellowGreen);
+        data.Logger.Log(value.AsString(), LogColors.YellowGreen);
         return value.Select(i => i).ToList(); // Clone the list
     }
 
@@ -106,7 +107,7 @@ public static class Methods
     {
         data.Logger.LogHeader();
 
-        data.Logger.Log($"Set constant value {string.Join(", ", value.Select(kvp => $"({kvp.Key}, {kvp.Value})"))}", LogColors.YellowGreen);
+        data.Logger.Log(value.AsString(), LogColors.YellowGreen);
         return value.Select(i => i).ToDictionary(i => i.Key, i => i.Value);
     }
 }
