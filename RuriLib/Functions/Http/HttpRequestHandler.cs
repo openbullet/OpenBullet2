@@ -14,7 +14,7 @@ namespace RuriLib.Functions.Http;
 
 internal abstract class HttpRequestHandler
 {
-    protected static readonly string[] commaHeaders = ["Accept", "Accept-Encoding"];
+    protected static readonly string[] commaHeaders = ["Accept", "Accept-Encoding", "Content-Encoding"];
 
     public virtual Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
         => throw new NotImplementedException();

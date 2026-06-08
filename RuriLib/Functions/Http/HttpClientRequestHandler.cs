@@ -3,6 +3,7 @@ using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http.Options;
 using RuriLib.Helpers;
+using RuriLib.Http.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -570,24 +570,26 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
         data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
-        // Decode brotli if still compressed
-        if (data.HEADERS.TryGetValue("Content-Encoding", out var value) && value.Contains("br"))
+        // Decode the response if still compressed
+        if (data.RAWSOURCE.Length > 0 && data.HEADERS.TryGetValue("Content-Encoding", out var value)
+            && !string.IsNullOrWhiteSpace(value))
         {
             try
             {
                 using var inputStream = new MemoryStream(data.RAWSOURCE);
                 using var outputStream = new MemoryStream();
-                await using var brotli = new BrotliStream(inputStream, CompressionMode.Decompress, false);
-                await brotli.CopyToAsync(outputStream);
+                using var decodedStream = ContentEncodingHelper.GetDecodedStream(inputStream, [value]);
+                decodedStream.CopyTo(outputStream);
                 data.RAWSOURCE = outputStream.ToArray();
             }
-            catch
+            catch (Exception ex)
             {
-                data.Logger.Log("[WARNING] Tried to decompress brotli but failed", LogColors.DarkOrange);
+                data.Logger.Log($"[WARNING] Tried to decompress {value} but failed: {ex.Message}",
+                    LogColors.DarkOrange);
             }
         }
 
-        // Unzip the GZipped content if still gzipped (after Content-Length calculation)
+        // Fallback for gzip bodies that still reach us compressed without a Content-Encoding header
         if (data.RAWSOURCE.Length > 1 && data.RAWSOURCE[0] == 0x1F && data.RAWSOURCE[1] == 0x8B)
         {
             try
