@@ -25,8 +25,8 @@ export class InfoService {
     return this.http.get<CollectionInfoDto>(`${getBaseUrl()}/info/collection`);
   }
 
-  getChangelog(version: string | null) {
-    return this.http.get<ChangelogDto>(`${getBaseUrl()}/info/changelog${version ? `?v=${version}` : ''}`);
+  getChangelog() {
+    return this.http.get<ChangelogDto>(`${getBaseUrl()}/info/changelog`);
   }
 
   getUpdateInfo() {

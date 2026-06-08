@@ -87,35 +87,24 @@ public class InfoController(IAnnouncementService announcementService,
     }
 
     /// <summary>
-    /// Get the changelog for a given version of the software.
-    /// If no version is specified, the current version will be used.
+    /// Get the complete changelog bundled with the software.
     /// </summary>
     [HttpGet("changelog")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ChangelogDto>> GetChangelog(string? v, CancellationToken cancellationToken)
+    public async Task<ActionResult<ChangelogDto>> GetChangelog(CancellationToken cancellationToken)
     {
-        // NOTE: We cannot call the query param "version" otherwise ASP.NET core
-        // will set its value to the API version instead of what was passed :|
         string markdown;
-
-        // If a version was not provided, use the current version
-        v ??= _updateService.CurrentVersion.ToString();
 
         try
         {
-            markdown = await _changelogService.FetchChangelogAsync(v, cancellationToken);
-        }
-        catch (ResourceNotFoundException)
-        {
-            // Rethrow this since it is handled by the middleware
-            throw;
+            markdown = await _changelogService.FetchChangelogAsync(cancellationToken);
         }
         catch
         {
             markdown = "Could not retrieve the changelog";
         }
 
-        return new ChangelogDto { MarkdownText = markdown, Version = v };
+        return new ChangelogDto { MarkdownText = markdown };
     }
 
     /// <summary>
@@ -127,9 +116,7 @@ public class InfoController(IAnnouncementService announcementService,
     {
         CurrentVersion = _updateService.CurrentVersion.ToString(),
         RemoteVersion = _updateService.RemoteVersion.ToString(),
-        IsUpdateAvailable = _updateService.IsUpdateAvailable,
-        CurrentVersionType = _updateService.CurrentVersionType,
-        RemoteVersionType = _updateService.RemoteVersionType
+        IsUpdateAvailable = _updateService.IsUpdateAvailable
     };
 
     /// <summary>

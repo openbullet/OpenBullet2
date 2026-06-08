@@ -55,7 +55,6 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
     public async Task GetChangelog_Success()
     {
         // Arrange
-        var updateService = GetRequiredService<IUpdateService>();
         const string expectedMarkdown = "# Changelog\r\n- Test entry";
         using var factory = Factory.WithWebHostBuilder(builder => builder.ConfigureServices(services =>
         {
@@ -70,13 +69,6 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedMarkdown, result.Value.MarkdownText);
-
-        var version = new Version(result.Value.Version);
-
-        // The version should be identical except for the revision
-        Assert.Equal(updateService.CurrentVersion.Major, version.Major);
-        Assert.Equal(updateService.CurrentVersion.Minor, version.Minor);
-        Assert.Equal(updateService.CurrentVersion.Build, version.Build);
     }
 
     [Fact]
@@ -253,7 +245,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
 
     private sealed class TestChangelogService(string markdown) : IChangelogService
     {
-        public Task<string> FetchChangelogAsync(string version, CancellationToken cancellationToken)
+        public Task<string> FetchChangelogAsync(CancellationToken cancellationToken)
             => Task.FromResult(markdown);
     }
 }

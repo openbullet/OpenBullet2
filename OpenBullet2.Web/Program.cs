@@ -206,10 +206,7 @@ builder.Services.AddSingleton<MultiRunJobService>();
 builder.Services.AddSingleton<LoliCodeAutocompletionService>();
 
 // HttpClient
-builder.Services.AddHttpClient<IChangelogService, ChangelogService>(client =>
-{
-    client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
-});
+builder.Services.AddSingleton<IChangelogService, ChangelogService>();
 builder.Services.AddHttpClient<ProxyController>(client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
@@ -309,7 +306,7 @@ Console.WriteLine($"""
                   \____/ .___/\___/_/ /_/_____/\__,_/_/_/\___/\__/   /____/ 
                       /_/                                                                               
                       
-                  v{updateService.CurrentVersion} [{updateService.CurrentVersionType}]    
+                  v{updateService.CurrentVersion}
                   """);
 Console.ForegroundColor = ConsoleColor.Red;
 Console.WriteLine("""

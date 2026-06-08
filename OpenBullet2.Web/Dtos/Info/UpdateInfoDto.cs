@@ -1,5 +1,3 @@
-using OpenBullet2.Web.Interfaces;
-
 namespace OpenBullet2.Web.Dtos.Info;
 
 /// <summary>
@@ -21,14 +19,4 @@ public class UpdateInfoDto
     /// Whether an update is available.
     /// </summary>
     public bool IsUpdateAvailable { get; set; }
-
-    /// <summary>
-    /// The type of the current version.
-    /// </summary>
-    public VersionType CurrentVersionType { get; set; }
-
-    /// <summary>
-    /// The type of the remote version.
-    /// </summary>
-    public VersionType RemoteVersionType { get; set; }
 }

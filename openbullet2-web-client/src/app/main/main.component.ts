@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCaretLeft, faCaretRight, faExclamationTriangle, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { UpdateInfoDto, VersionType } from './dtos/info/update-info.dto';
+import { UpdateInfoDto } from './dtos/info/update-info.dto';
 import { InfoService } from './services/info.service';
 import { UserService } from './services/user.service';
 
@@ -34,15 +34,6 @@ export class MainComponent implements OnInit {
     this.infoService.getUpdateInfo().subscribe((updateInfo) => {
       this.updateInfo = updateInfo;
     });
-
-    // Mock update info
-    // this.updateInfo = {
-    //   currentVersion: '0.2.4',
-    //   currentVersionType: VersionType.Beta,
-    //   remoteVersion: '0.2.5',
-    //   remoteVersionType: VersionType.Beta,
-    //   isUpdateAvailable: true
-    // };
 
     // Every 12 hours, check for updates
     setInterval(

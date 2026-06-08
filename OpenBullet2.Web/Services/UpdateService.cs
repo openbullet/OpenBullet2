@@ -59,12 +59,6 @@ public class UpdateService : BackgroundService, IUpdateService
         && RemoteVersion > CurrentVersion;
 
     /// <inheritdoc />
-    public VersionType CurrentVersionType => GetVersionType(CurrentVersion);
-
-    /// <inheritdoc />
-    public VersionType RemoteVersionType => GetVersionType(RemoteVersion);
-
-    /// <inheritdoc />
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // Check for updates every 3 hours
@@ -75,13 +69,6 @@ public class UpdateService : BackgroundService, IUpdateService
             await FetchRemoteVersionAsync(stoppingToken);
         } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
-
-    private static VersionType GetVersionType(Version version) => version switch
-    {
-        { Major: 0, Minor: 0 } => VersionType.Alpha,
-        { Major: 0 } => VersionType.Beta,
-        _ => VersionType.Release
-    };
 
     private UpdateChannel SelectedChannel => _settingsService.Settings.GeneralSettings.UpdateChannel;
 

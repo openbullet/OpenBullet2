@@ -29,9 +29,6 @@ public class UpdateService : IDisposable
     };
     public bool IsUpdateAvailable => UpdateChannel != UpdateChannel.Disabled
         && RemoteVersion > CurrentVersion;
-    public string CurrentVersionType => CurrentVersion.Major == 0
-        ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
-        : "Release";
     public UpdateChannel UpdateChannel => _settingsService.Settings.GeneralSettings.UpdateChannel;
 
     public event Action? UpdateAvailable;
