@@ -196,13 +196,15 @@ internal sealed class CurlEasyTransfer : IDisposable
 
     private bool Impersonate(CurlImpersonateHandlerOptions options)
     {
-        if (CurlImpersonateCustomProfile.TryGet(options.BrowserProfile, out var customProfile))
+        var browserProfile = CurlImpersonateBrowserProfileSelector.Resolve(options.BrowserProfile);
+
+        if (CurlImpersonateCustomProfile.TryGet(browserProfile, out var customProfile))
         {
             ApplyCustomFingerprint(customProfile);
             return false;
         }
 
-        using var target = new NativeUtf8String(options.BrowserProfile.ToCurlTarget());
+        using var target = new NativeUtf8String(browserProfile.ToCurlTarget());
         // curl_easy_impersonate applies the TLS/HTTP fingerprint. With default
         // headers enabled, it also seeds browser headers in curl's intended order.
         var result = CurlNativeMethods.EasyImpersonate(handle, target.Pointer, options.UseBrowserHeaders ? 1 : 0);
