@@ -51,12 +51,16 @@ public partial class MarkdownViewer : UserControl
     {
         InitializeComponent();
 
-        // Load the last string queued for render if any
-        if (!string.IsNullOrEmpty(queuedRender))
+        Loaded += (_, _) =>
         {
-            Render(queuedRender);
-            queuedRender = string.Empty;
-        }
+            // Load the last string queued for render if the binding fired before
+            // the embedded browser was ready.
+            if (!string.IsNullOrEmpty(queuedRender))
+            {
+                Render(queuedRender);
+                queuedRender = string.Empty;
+            }
+        };
 
         // This is needed to avoid going blind before the page is loaded
         browser.Navigated += (s, e) => browser.Visibility = Visibility.Visible;
@@ -80,7 +84,7 @@ public partial class MarkdownViewer : UserControl
             .WithStyle("color", "white")
             .WithStyle("font-family", "Verdana, sans-serif")
             .WithStyle("font-size", $"{(int)FontSize}px")
-            .WithStyle("overflow", "hidden")
+            .WithStyle("overflow", "auto")
             .ToString();
 
         browser.NavigateToString(final);
