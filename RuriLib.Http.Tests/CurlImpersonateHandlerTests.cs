@@ -77,6 +77,31 @@ public class CurlImpersonateHandlerTests
     }
 
     [Fact]
+    public async Task SendAsync_WithRequestHeadersCallback_ReportsActualHeaderOrder()
+    {
+        await using var server = new CaptureHttpServer("ok");
+        var capturedRequests = new List<string>();
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            UseBrowserHeaders = false,
+            AllowAutoRedirect = false,
+            RequestHeadersCallback = capturedRequests.Add
+        });
+        using var client = new HttpClient(handler);
+        using var request = new HttpRequestMessage(HttpMethod.Get, server.Uri);
+        request.Headers.TryAddWithoutValidation("X-First", "one");
+        request.Headers.TryAddWithoutValidation("X-Second", "two");
+
+        using var response = await client.SendAsync(request, TestCancellationToken);
+
+        var capturedRequest = Assert.Single(capturedRequests);
+        Assert.Contains("GET / HTTP/1.1", capturedRequest);
+        Assert.True(
+            capturedRequest.IndexOf("X-First: one", StringComparison.Ordinal)
+            < capturedRequest.IndexOf("X-Second: two", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task SendAsync_DifferentProfiles_ProduceDifferentJa3Fingerprints()
     {
         var chromeJa3 = await CaptureJa3Async(CurlImpersonateBrowserProfile.Chrome142);

@@ -167,19 +167,21 @@ internal abstract class HttpRequestHandler
         return [.. parsed];
     }
 
-    protected static HttpOptions GetClientOptions(BotData data, Options.HttpRequestOptions options) => new()
-    {
-        ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-        ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-        AutoRedirect = options.AutoRedirect,
-        MaxNumberOfRedirects = options.MaxNumberOfRedirects,
-        SecurityProtocol = options.SecurityProtocol,
-        IgnoreCertificateValidation = options.IgnoreCertificateValidation,
-        UseCustomCipherSuites = options.UseCustomCipherSuites,
-        CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
-        CertRevocationMode = data.Providers.Security.X509RevocationMode,
-        ReadResponseContent = options.ReadResponseContent,
-        CurlImpersonateBrowserProfile = options.CurlImpersonateBrowserProfile,
-        CurlUseBrowserHeaders = options.CurlUseBrowserHeaders
-    };
+    protected static HttpOptions GetClientOptions(BotData data, Options.HttpRequestOptions options,
+        Action<string>? curlRequestHeadersCallback = null) => new()
+        {
+            ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
+            ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
+            AutoRedirect = options.AutoRedirect,
+            MaxNumberOfRedirects = options.MaxNumberOfRedirects,
+            SecurityProtocol = options.SecurityProtocol,
+            IgnoreCertificateValidation = options.IgnoreCertificateValidation,
+            UseCustomCipherSuites = options.UseCustomCipherSuites,
+            CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
+            CertRevocationMode = data.Providers.Security.X509RevocationMode,
+            ReadResponseContent = options.ReadResponseContent,
+            CurlImpersonateBrowserProfile = options.CurlImpersonateBrowserProfile,
+            CurlUseBrowserHeaders = options.CurlUseBrowserHeaders,
+            CurlRequestHeadersCallback = curlRequestHeadersCallback
+        };
 }

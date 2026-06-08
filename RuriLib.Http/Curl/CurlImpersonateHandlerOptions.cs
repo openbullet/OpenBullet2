@@ -80,4 +80,10 @@ public sealed class CurlImpersonateHandlerOptions
     /// Cookie container used to store server cookies and send them on requests.
     /// </summary>
     public CookieContainer CookieContainer { get; set; } = new();
+
+    /// <summary>
+    /// Optional callback invoked with each outgoing request header block exactly
+    /// as reported by libcurl. Redirects produce additional callback invocations.
+    /// </summary>
+    public Action<string>? RequestHeadersCallback { get; set; }
 }

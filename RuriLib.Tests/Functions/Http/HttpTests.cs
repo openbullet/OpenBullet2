@@ -71,9 +71,11 @@ public class HttpTests
 
         if (library == HttpLibrary.CurlImpersonate)
         {
-            Assert.Contains(data.Logger.Entries,
+            Assert.DoesNotContain(data.Logger.Entries,
                 entry => entry.Message.Contains("may not match the exact headers or order sent by curl-impersonate",
                     StringComparison.Ordinal));
+            Assert.Contains(data.Logger.Entries,
+                entry => entry.Message.Contains("User-Agent:", StringComparison.Ordinal));
         }
 
         var response = DeserializeHttpBinResponse(data.SOURCE);

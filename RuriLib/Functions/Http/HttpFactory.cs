@@ -116,7 +116,8 @@ public class HttpFactory
                 ? new NetworkCredential(proxy.Username, proxy.Password)
                 : null,
             CookieContainer = cookieContainer,
-            UseCookies = true
+            UseCookies = true,
+            RequestHeadersCallback = options.CurlRequestHeadersCallback
         });
 
         return new HttpClient(handler)
