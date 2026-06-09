@@ -192,7 +192,7 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         var curlVersion = request.Version.Major switch
         {
-            2 => CurlHttpVersion.Version2Tls,
+            2 => CurlHttpVersion.Version20,
             3 => CurlHttpVersion.Version30,
             _ => CurlHttpVersion.None
         };
