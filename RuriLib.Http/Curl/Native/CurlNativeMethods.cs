@@ -9,6 +9,11 @@ internal static partial class CurlNativeMethods
     // Logical library name. CurlNativeLibraryResolver maps this to the actual
     // platform file name and RID-specific publish folder.
     public const string CurlLibrary = "curl-impersonate";
+    public const string CurlShimLibrary = "curl-impersonate-shim";
+    // Apple arm64 uses a different ABI for C varargs. Fixed P/Invoke signatures
+    // corrupt curl_easy_setopt/getinfo varargs there, so route them through C.
+    private static readonly bool UseVarArgsShim =
+        OperatingSystem.IsMacOS() && RuntimeInformation.OSArchitecture == Architecture.Arm64;
 
     static CurlNativeMethods()
     {
@@ -64,20 +69,47 @@ internal static partial class CurlNativeMethods
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     public static partial nint MultiInfoRead(nint multiHandle, out int messagesInQueue);
 
-    // curl_easy_getinfo is variadic in C. This overload covers long outputs.
-    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_getinfo")]
-    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static partial CurlCode EasyGetInfo(nint handle, CurlInfo info, out long value);
+    // curl_easy_getinfo is variadic in C. This wrapper covers long outputs.
+    public static CurlCode EasyGetInfo(nint handle, CurlInfo info, out long value)
+        => UseVarArgsShim
+            ? ShimEasyGetInfoLong(handle, info, out value)
+            : DirectEasyGetInfoLong(handle, info, out value);
 
     // curl_easy_setopt is variadic in C. These overloads cover the argument
     // shapes used by this handler; selecting the right CurlOption value matters.
-    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_setopt")]
+    public static CurlCode EasySetOpt(nint handle, CurlOption option, long value)
+        => UseVarArgsShim
+            ? ShimEasySetOptLong(handle, option, value)
+            : DirectEasySetOptLong(handle, option, value);
+
+    public static CurlCode EasySetOpt(nint handle, CurlOption option, nint value)
+        => UseVarArgsShim
+            ? ShimEasySetOptPointer(handle, option, value)
+            : DirectEasySetOptPointer(handle, option, value);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_getinfo")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static partial CurlCode EasySetOpt(nint handle, CurlOption option, long value);
+    private static partial CurlCode DirectEasyGetInfoLong(nint handle, CurlInfo info, out long value);
+
+    [LibraryImport(CurlShimLibrary, EntryPoint = "ob2_curl_easy_getinfo_long")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static partial CurlCode ShimEasyGetInfoLong(nint handle, CurlInfo info, out long value);
 
     [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_setopt")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    public static partial CurlCode EasySetOpt(nint handle, CurlOption option, nint value);
+    private static partial CurlCode DirectEasySetOptLong(nint handle, CurlOption option, long value);
+
+    [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_setopt")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static partial CurlCode DirectEasySetOptPointer(nint handle, CurlOption option, nint value);
+
+    [LibraryImport(CurlShimLibrary, EntryPoint = "ob2_curl_easy_setopt_long")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static partial CurlCode ShimEasySetOptLong(nint handle, CurlOption option, long value);
+
+    [LibraryImport(CurlShimLibrary, EntryPoint = "ob2_curl_easy_setopt_ptr")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static partial CurlCode ShimEasySetOptPointer(nint handle, CurlOption option, nint value);
 
     [LibraryImport(CurlLibrary, EntryPoint = "curl_easy_impersonate")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]

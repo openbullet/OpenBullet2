@@ -34,12 +34,13 @@ internal static class CurlNativeLibraryResolver
 
     private static nint ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
-        if (!libraryName.Equals(CurlNativeMethods.CurlLibrary, StringComparison.Ordinal))
+        if (!libraryName.Equals(CurlNativeMethods.CurlLibrary, StringComparison.Ordinal)
+            && !libraryName.Equals(CurlNativeMethods.CurlShimLibrary, StringComparison.Ordinal))
         {
             return 0;
         }
 
-        var platformName = GetPlatformLibraryName();
+        var platformName = GetPlatformLibraryName(libraryName);
 
         foreach (var candidate in GetCandidatePaths(platformName))
         {
@@ -65,19 +66,22 @@ internal static class CurlNativeLibraryResolver
             "or provide the native library in the application directory or system library path.");
     }
 
-    private static string GetPlatformLibraryName()
+    private static string GetPlatformLibraryName(string libraryName)
     {
+        var isShim = libraryName.Equals(CurlNativeMethods.CurlShimLibrary, StringComparison.Ordinal);
+        var baseName = isShim ? "libcurl-impersonate-shim" : "libcurl-impersonate";
+
         if (OperatingSystem.IsWindows())
         {
-            return "libcurl-impersonate.dll";
+            return $"{baseName}.dll";
         }
 
         if (OperatingSystem.IsMacOS())
         {
-            return "libcurl-impersonate.dylib";
+            return $"{baseName}.dylib";
         }
 
-        return "libcurl-impersonate.so";
+        return $"{baseName}.so";
     }
 
     private static string GetRid()
