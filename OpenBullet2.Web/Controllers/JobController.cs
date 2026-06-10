@@ -769,7 +769,6 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
 
         return job.CurrentBotDatas
             .Take(job.Bots)
-            .Where(d => d is not null)
             .Select(d => new BotDetailsDto
             {
                 Id = d.BOTNUM,

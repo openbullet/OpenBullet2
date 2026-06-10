@@ -156,12 +156,13 @@ public class MultiRunJobTests
     }
 
     [Fact]
-    public async Task Start_WithEmptyData_InitializesCurrentBotDatas()
+    public async Task Start_WithEmptyData_PreservesBotLimitSizedCurrentBotDatas()
     {
         var settings = CreateSettingsService();
         var job = new MultiRunJob(settings, CreatePluginRepository())
         {
             Bots = 3,
+            BotLimit = 5,
             Providers = new global::RuriLib.Models.Bots.Providers(settings),
             StartCondition = new ImmediateStartCondition(),
             Config = new Config
@@ -175,7 +176,7 @@ public class MultiRunJobTests
 
         await job.Start(TestCancellationToken);
 
-        Assert.Equal(3, job.CurrentBotDatas.Length);
+        Assert.Equal(5, job.CurrentBotDatas.Length);
     }
 
     [Fact]
