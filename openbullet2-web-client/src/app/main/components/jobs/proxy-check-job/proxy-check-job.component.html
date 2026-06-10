@@ -19,6 +19,7 @@
     <h2 class="job-name">
         <span>{{job.name}}</span>
         <span class="text-small ml-2 color-inactive">PROXY CHECK JOB</span>
+        <app-docs-button path="proxies/check-proxies" class="d-inline-block ml-2" buttonClass="color-inactive" />
     </h2>
     <button class="button button-secondary edit-button"
         [disabled]="!canEdit()"

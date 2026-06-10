@@ -29,12 +29,14 @@
                 <fa-icon [icon]="faGear" [fixedWidth]="true"></fa-icon>
                 Toggle Usings
             </button>
+            <app-docs-button path="lolicode/usings" class="ml-1" buttonClass="color-inactive" />
             <button class="button button-secondary ml-2"
                 pTooltip="Show/Hide the startup LoliCode editor" tooltipPosition="bottom"
                 (click)="toggleStartupLoliCodeEditor()">
                 <fa-icon [icon]="faCode" [fixedWidth]="true"></fa-icon>
                 Toggle Startup Code
             </button>
+            <app-docs-button path="lolicode/startup-script" class="ml-1" buttonClass="color-inactive" />
         </div>
     </div>
     <div class="row mb-3" *ngIf="showUsings">

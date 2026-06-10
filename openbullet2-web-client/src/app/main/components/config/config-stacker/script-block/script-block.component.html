@@ -25,12 +25,15 @@
         <div class="mb-1 w-100">
             <span class="text-small">Interpreter</span>
         </div>
-        <app-input-dropdown key="interpreter"
-            itemClass="input-small" optionClass="input-small"
-            ngDefaultControl
-            (ngModelChange)="interpreterChanged($event)"
-            [options]="interpreters"
-            [ngModel]="block.interpreter" />
+        <div class="d-flex align-items-center">
+            <app-input-dropdown key="interpreter"
+                itemClass="input-small" optionClass="input-small"
+                ngDefaultControl
+                (ngModelChange)="interpreterChanged($event)"
+                [options]="interpreters"
+                [ngModel]="block.interpreter" />
+            <app-docs-button path="lolicode/interop" class="ml-1" buttonClass="color-inactive" />
+        </div>
     </div>
 </div>
 <div class="row mt-2">

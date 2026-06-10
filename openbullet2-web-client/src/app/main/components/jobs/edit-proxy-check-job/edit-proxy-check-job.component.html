@@ -6,6 +6,7 @@
     <h6 class="color-inactive">
         A <b>Proxy Check Job</b> will let you test your proxies against
         a given target site to check their latency, country etc.
+        <app-docs-button path="proxies/check-proxies" buttonClass="color-inactive" />
     </h6>
     <app-spinner [fullWidth]="true" />
 </div>
@@ -24,6 +25,7 @@
             </h6>
         </div>
         <div class="col-4 pr-0 text-right">
+            <app-docs-button path="proxies/check-proxies" class="mt-2 mr-1" buttonClass="color-inactive" />
             <button class="button button-accent mt-2"
                 [disabled]="!canAccept()"
                 (click)="accept()">
