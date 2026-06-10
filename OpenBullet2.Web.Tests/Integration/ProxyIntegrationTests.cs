@@ -309,7 +309,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("uri-pass", localhost.Password);
 
         var localIp = proxies.First(p => p.Host == "127.0.0.1");
-        Assert.Equal(ProxyType.Http, localIp.Type);
+        Assert.Equal(ProxyType.Https, localIp.Type);
         Assert.Equal("default-user", localIp.Username);
         Assert.Equal("default-pass", localIp.Password);
     }
