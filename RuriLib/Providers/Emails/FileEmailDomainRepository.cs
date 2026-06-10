@@ -12,47 +12,47 @@ namespace RuriLib.Providers.Emails;
 /// </summary>
 public class FileEmailDomainRepository : IEmailDomainRepository
 {
-    private const string imapFile = "UserData/imapdomains.dat";
-    private const string pop3File = "UserData/pop3domains.dat";
-    private const string smtpFile = "UserData/smtpdomains.dat";
+    private const string _imapFile = "UserData/imapdomains.dat";
+    private const string _pop3File = "UserData/pop3domains.dat";
+    private const string _smtpFile = "UserData/smtpdomains.dat";
 
-    private readonly ConcurrentDictionary<string, List<HostEntry>> imapHosts = new(StringComparer.OrdinalIgnoreCase);
-    private readonly ConcurrentDictionary<string, List<HostEntry>> pop3Hosts = new(StringComparer.OrdinalIgnoreCase);
-    private readonly ConcurrentDictionary<string, List<HostEntry>> smtpHosts = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, List<HostEntry>> _imapHosts = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, List<HostEntry>> _pop3Hosts = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, List<HostEntry>> _smtpHosts = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Creates a file-backed repository and loads the known server lists.
     /// </summary>
     public FileEmailDomainRepository()
     {
-        FillDictionary(imapFile, imapHosts);
-        FillDictionary(pop3File, pop3Hosts);
-        FillDictionary(smtpFile, smtpHosts);
+        FillDictionary(_imapFile, _imapHosts);
+        FillDictionary(_pop3File, _pop3Hosts);
+        FillDictionary(_smtpFile, _smtpHosts);
     }
 
     /// <inheritdoc />
     public Task TryAddImapServer(string domain, HostEntry server)
-        => TryAddServer(imapFile, imapHosts, domain, server);
+        => TryAddServer(_imapFile, _imapHosts, domain, server);
 
     /// <inheritdoc />
     public Task TryAddPop3Server(string domain, HostEntry server)
-        => TryAddServer(pop3File, pop3Hosts, domain, server);
+        => TryAddServer(_pop3File, _pop3Hosts, domain, server);
 
     /// <inheritdoc />
     public Task TryAddSmtpServer(string domain, HostEntry server)
-        => TryAddServer(smtpFile, smtpHosts, domain, server);
+        => TryAddServer(_smtpFile, _smtpHosts, domain, server);
 
     /// <inheritdoc />
     public Task<IEnumerable<HostEntry>> GetImapServers(string domain)
-        => Task.FromResult(imapHosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
+        => Task.FromResult(_imapHosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
 
     /// <inheritdoc />
     public Task<IEnumerable<HostEntry>> GetPop3Servers(string domain)
-        => Task.FromResult(pop3Hosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
+        => Task.FromResult(_pop3Hosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
 
     /// <inheritdoc />
     public Task<IEnumerable<HostEntry>> GetSmtpServers(string domain)
-        => Task.FromResult(smtpHosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
+        => Task.FromResult(_smtpHosts.TryGetValue(domain, out var hosts) ? hosts as IEnumerable<HostEntry> : []);
 
     private static void FillDictionary(string file, ConcurrentDictionary<string, List<HostEntry>> hosts)
     {
