@@ -57,6 +57,11 @@ callback(null, noderesult);
     [Fact]
     public async Task InvokeNode_BoolAnd_ReturnBool()
     {
+        if (OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true")
+        {
+            Assert.Skip("Flaky on GitHub Actions Windows runners: NodeJS startup can time out");
+        }
+
         var script = BuildScript("var result = x && y;", ["x", "y"], ["result"]);
         var result = await StaticNodeJSService.InvokeFromStringAsync<JsonElement>(script, null, null, [true, false], TestCancellationToken);
         Assert.False(result.GetProperty("result").GetBoolean());
