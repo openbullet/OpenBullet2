@@ -220,7 +220,7 @@
                                                   Margin="10 0 0 0"
                                                   ItemsSource="{Binding NumComparisons}"
                                                   SelectedItem="{Binding Comparison}" />
-                                        <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                        <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan, Mode=TwoWay}" />
                                     </StackPanel>
                                     <Button Grid.Column="1"
                                             Tag="{Binding}"
@@ -279,7 +279,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="Wait" />
-                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan, Mode=TwoWay}" />
                                         </StackPanel>
                                         <Button Grid.Column="1"
                                                 Tag="{Binding}"
@@ -302,7 +302,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Prefix}" />
-                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan}" />
+                                            <uc:TimeSpanPicker Margin="10 0 0 0" TimeSpan="{Binding TimeSpan, Mode=TwoWay}" />
                                             <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="on job" />
                                             <ComboBox Width="250"
                                                       Margin="10 0 0 0"
