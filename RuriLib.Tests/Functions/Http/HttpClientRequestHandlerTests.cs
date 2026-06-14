@@ -6,6 +6,8 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Environment;
 using RuriLib.Tests.Utils.Mockup;
+using System;
+using System.Net.Http;
 using Xunit;
 
 namespace RuriLib.Tests.Functions.Http;
@@ -29,6 +31,17 @@ public class HttpClientRequestHandlerTests
         };
 
         Assert.Equal(expected, HttpClientRequestHandler.ShouldCaptureCurlRequestHeaders(data, options));
+    }
+
+    [Theory]
+    [InlineData("1.1", HttpVersionPolicy.RequestVersionOrLower)]
+    [InlineData("2.0", HttpVersionPolicy.RequestVersionOrLower)]
+    [InlineData("3.0", HttpVersionPolicy.RequestVersionExact)]
+    public void GetVersionPolicy_ForHttp3_ForcesExactVersion(
+        string version,
+        HttpVersionPolicy expected)
+    {
+        Assert.Equal(expected, HttpClientRequestHandler.GetVersionPolicy(Version.Parse(version)));
     }
 
     [Fact]

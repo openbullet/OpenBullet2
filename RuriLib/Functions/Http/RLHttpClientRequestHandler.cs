@@ -262,7 +262,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
 
         // Log the method, uri and http version
         var uri = request.Uri ?? throw new InvalidOperationException("Request URI cannot be null.");
-        await writer.WriteLineAsync($"{request.Method.Method} {uri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
+        await writer.WriteLineAsync($"{request.Method.Method} {uri.PathAndQuery} {FormatHttpVersion(request.Version)}");
 
         // Log the headers
         if (!request.HeaderExists("Host", out _))
@@ -357,8 +357,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
         // Response code
         data.RESPONSECODE = (int)response.StatusCode;
         data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
-        data.Logger.Log($"Response HTTP version: HTTP/{response.Version.Major}.{response.Version.Minor}",
-            LogColors.Citrine);
+        LogNegotiatedHttpVersion(data, request.Version, response.Version);
 
         // Headers
         data.HEADERS = response.Headers;

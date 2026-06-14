@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
+using RuriLib.Logging;
 
 namespace RuriLib.Functions.Http;
 
@@ -184,4 +185,23 @@ internal abstract class HttpRequestHandler
             CurlUseBrowserHeaders = options.CurlUseBrowserHeaders,
             CurlRequestHeadersCallback = curlRequestHeadersCallback
         };
+
+    protected static void LogNegotiatedHttpVersion(BotData data, Version requestedVersion, Version responseVersion)
+    {
+        var requested = FormatHttpVersion(requestedVersion);
+        var negotiated = FormatHttpVersion(responseVersion);
+
+        data.Logger.Log($"Negotiated protocol: {negotiated}", LogColors.Citrine);
+
+        if (requestedVersion != responseVersion)
+        {
+            data.Logger.Log(
+                $"[NOTE] Requested protocol {requested}, but the connection used {negotiated}. " +
+                "The selected HTTP stack may fall back when the target, proxy, OS, or runtime cannot use the requested version.",
+                LogColors.DarkOrange);
+        }
+    }
+
+    protected static string FormatHttpVersion(Version version)
+        => $"HTTP/{version.Major}.{version.Minor}";
 }
