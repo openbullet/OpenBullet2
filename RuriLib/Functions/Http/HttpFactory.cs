@@ -99,7 +99,18 @@ public class HttpFactory
     /// </summary>
     public static HttpClient GetCurlImpersonateHttpClient(Proxy? proxy, HttpOptions options, CookieContainer cookieContainer)
     {
-        var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        var handler = new CurlImpersonateHandler(
+            GetCurlImpersonateHandlerOptions(proxy, options, cookieContainer));
+
+        return new HttpClient(handler)
+        {
+            // The request handler owns the timeout; this only prevents HttpClient from racing it.
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+    }
+
+    internal static CurlImpersonateHandlerOptions GetCurlImpersonateHandlerOptions(
+        Proxy? proxy, HttpOptions options, CookieContainer cookieContainer) => new()
         {
             BrowserProfile = options.CurlImpersonateBrowserProfile,
             UseBrowserHeaders = options.CurlUseBrowserHeaders,
@@ -107,7 +118,7 @@ public class HttpFactory
             MaxNumberOfRedirects = options.MaxNumberOfRedirects,
             ReadResponseContent = options.ReadResponseContent,
             IgnoreCertificateValidation = options.IgnoreCertificateValidation,
-            ConnectTimeout = options.ConnectTimeout,
+            ConnectTimeout = proxy is null ? Timeout.InfiniteTimeSpan : options.ConnectTimeout,
             // The request handler owns the whole-transfer timeout via CancellationTokenSource.
             // Keep curl's total timeout disabled so it does not race the block timeout.
             Timeout = Timeout.InfiniteTimeSpan,
@@ -118,14 +129,7 @@ public class HttpFactory
             CookieContainer = cookieContainer,
             UseCookies = true,
             RequestHeadersCallback = options.CurlRequestHeadersCallback
-        });
-
-        return new HttpClient(handler)
-        {
-            // The request handler owns the timeout; this only prevents HttpClient from racing it.
-            Timeout = Timeout.InfiniteTimeSpan
         };
-    }
 
     private static ProxyClient GetProxyClient(Proxy? proxy, HttpOptions options)
     {
