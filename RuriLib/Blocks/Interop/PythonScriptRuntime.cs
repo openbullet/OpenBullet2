@@ -245,7 +245,7 @@ internal sealed class PythonScriptRuntime : IDisposable
                 $"The virtual environment at '{venvPath}' does not declare a base Python home");
         }
 
-        var baseHome = homeLine.Split('=', 2)[1].Trim();
+        var baseHome = NormalizeVirtualEnvironmentBaseHome(homeLine.Split('=', 2)[1].Trim());
 
         if (string.IsNullOrWhiteSpace(baseHome) || !Directory.Exists(baseHome))
         {
@@ -254,6 +254,24 @@ internal sealed class PythonScriptRuntime : IDisposable
         }
 
         return baseHome;
+    }
+
+    private static string NormalizeVirtualEnvironmentBaseHome(string baseHome)
+    {
+        if (string.IsNullOrWhiteSpace(baseHome))
+        {
+            return baseHome;
+        }
+
+        var normalized = Path.GetFullPath(baseHome);
+
+        if (string.Equals(Path.GetFileName(normalized), "bin", StringComparison.OrdinalIgnoreCase)
+            && Directory.GetParent(normalized) is { } parent)
+        {
+            return parent.FullName;
+        }
+
+        return normalized;
     }
 
     private static string GetVirtualEnvironmentVersion(string venvPath)
