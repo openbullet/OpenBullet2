@@ -91,4 +91,6 @@ public class HttpOptions
     /// Gets or sets whether curl-impersonate should send its browser-default headers.
     /// </summary>
     public bool CurlUseBrowserHeaders { get; set; } = true;
+
+    internal Action<string>? CurlRequestHeadersCallback { get; set; }
 }

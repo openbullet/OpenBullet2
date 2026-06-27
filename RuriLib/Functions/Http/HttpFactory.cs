@@ -99,7 +99,18 @@ public class HttpFactory
     /// </summary>
     public static HttpClient GetCurlImpersonateHttpClient(Proxy? proxy, HttpOptions options, CookieContainer cookieContainer)
     {
-        var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        var handler = new CurlImpersonateHandler(
+            GetCurlImpersonateHandlerOptions(proxy, options, cookieContainer));
+
+        return new HttpClient(handler)
+        {
+            // The request handler owns the timeout; this only prevents HttpClient from racing it.
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+    }
+
+    internal static CurlImpersonateHandlerOptions GetCurlImpersonateHandlerOptions(
+        Proxy? proxy, HttpOptions options, CookieContainer cookieContainer) => new()
         {
             BrowserProfile = options.CurlImpersonateBrowserProfile,
             UseBrowserHeaders = options.CurlUseBrowserHeaders,
@@ -107,7 +118,7 @@ public class HttpFactory
             MaxNumberOfRedirects = options.MaxNumberOfRedirects,
             ReadResponseContent = options.ReadResponseContent,
             IgnoreCertificateValidation = options.IgnoreCertificateValidation,
-            ConnectTimeout = options.ConnectTimeout,
+            ConnectTimeout = proxy is null ? Timeout.InfiniteTimeSpan : options.ConnectTimeout,
             // The request handler owns the whole-transfer timeout via CancellationTokenSource.
             // Keep curl's total timeout disabled so it does not race the block timeout.
             Timeout = Timeout.InfiniteTimeSpan,
@@ -116,15 +127,9 @@ public class HttpFactory
                 ? new NetworkCredential(proxy.Username, proxy.Password)
                 : null,
             CookieContainer = cookieContainer,
-            UseCookies = true
-        });
-
-        return new HttpClient(handler)
-        {
-            // The request handler owns the timeout; this only prevents HttpClient from racing it.
-            Timeout = Timeout.InfiniteTimeSpan
+            UseCookies = true,
+            RequestHeadersCallback = options.CurlRequestHeadersCallback
         };
-    }
 
     private static ProxyClient GetProxyClient(Proxy? proxy, HttpOptions options)
     {
@@ -144,6 +149,9 @@ public class HttpFactory
                 ReadWriteTimeOut = options.ReadWriteTimeout
             };
 
+            settings.ProxyCertificateValidationCallback = GetCertificateValidationCallback(options);
+            settings.ProxyCertRevocationMode = options.CertRevocationMode;
+
             if (proxy.NeedsAuthentication)
             {
                 settings.Credentials = new NetworkCredential(proxy.Username, proxy.Password);
@@ -152,6 +160,7 @@ public class HttpFactory
             client = proxy.Type switch
             {
                 ProxyType.Http => new HttpProxyClient(settings),
+                ProxyType.Https => new HttpsProxyClient(settings),
                 ProxyType.Socks4 => new Socks4ProxyClient(settings),
                 ProxyType.Socks4a => new Socks4aProxyClient(settings),
                 ProxyType.Socks5 => new Socks5ProxyClient(settings),
@@ -178,6 +187,10 @@ public class HttpFactory
                 {
                     Proxy = GetWebProxy(proxy)
                 },
+                ProxyType.Https => new SocketsHttpHandler
+                {
+                    Proxy = GetWebProxy(proxy)
+                },
                 ProxyType.Socks4 or ProxyType.Socks4a or ProxyType.Socks5 => new SocketsHttpHandler
                 {
                     Proxy = GetWebProxy(proxy)
@@ -198,6 +211,7 @@ public class HttpFactory
         var address = proxy.Type switch
         {
             ProxyType.Http => $"http://{proxy.Host}:{proxy.Port}",
+            ProxyType.Https => $"https://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks4 => $"socks4://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks4a => $"socks4a://{proxy.Host}:{proxy.Port}",
             ProxyType.Socks5 => $"socks5://{proxy.Host}:{proxy.Port}",
@@ -212,6 +226,7 @@ public class HttpFactory
         var scheme = proxy.Type switch
         {
             ProxyType.Http => "http",
+            ProxyType.Https => "https",
             ProxyType.Socks4 => "socks4",
             ProxyType.Socks4a => "socks4a",
             ProxyType.Socks5 => "socks5",

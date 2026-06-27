@@ -3,7 +3,10 @@ using RuriLib.Functions.Http.Options;
 using RuriLib.Functions.Networking;
 using RuriLib.Http.Curl;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+using RuriLib.Models.Proxies;
+using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,6 +94,36 @@ public class HttpModelTests
     }
 
     [Fact]
+    public void GetCurlImpersonateHandlerOptions_DisablesConnectTimeoutWithoutProxy()
+    {
+        var options = new HttpOptions
+        {
+            ConnectTimeout = TimeSpan.FromMilliseconds(1234)
+        };
+
+        var handlerOptions = HttpFactory.GetCurlImpersonateHandlerOptions(null, options, new CookieContainer());
+
+        Assert.Equal(Timeout.InfiniteTimeSpan, handlerOptions.ConnectTimeout);
+        Assert.Equal(Timeout.InfiniteTimeSpan, handlerOptions.Timeout);
+        Assert.Null(handlerOptions.ProxyUri);
+    }
+
+    [Fact]
+    public void GetCurlImpersonateHandlerOptions_KeepsConnectTimeoutWithProxy()
+    {
+        var proxy = new Proxy("127.0.0.1", 8080, ProxyType.Http);
+        var options = new HttpOptions
+        {
+            ConnectTimeout = TimeSpan.FromMilliseconds(1234)
+        };
+
+        var handlerOptions = HttpFactory.GetCurlImpersonateHandlerOptions(proxy, options, new CookieContainer());
+
+        Assert.Equal(TimeSpan.FromMilliseconds(1234), handlerOptions.ConnectTimeout);
+        Assert.Equal(new Uri("http://127.0.0.1:8080"), handlerOptions.ProxyUri);
+    }
+
+    [Fact]
     public async Task CreateMultipartContent_StringWithoutContentType_OmitsHeader()
     {
         using var content = HttpRequestHandler.CreateMultipartContent(
@@ -118,4 +151,5 @@ public class HttpModelTests
 
         Assert.Null(content.Headers.ContentType);
     }
+
 }

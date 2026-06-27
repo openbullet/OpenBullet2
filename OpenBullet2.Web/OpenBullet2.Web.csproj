@@ -70,6 +70,10 @@
         <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="..\CHANGELOG.md" LogicalName="OpenBullet2.Changelog.md" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
         <CurlImpersonateNativeAsset Include="..\RuriLib.Http\runtimes\$(RuntimeIdentifier)\native\**\*" />
         <Content Include="@(CurlImpersonateNativeAsset)"

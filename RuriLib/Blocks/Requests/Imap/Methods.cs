@@ -653,6 +653,7 @@ public static class Methods
             return proxy.Type switch
             {
                 ProxyType.Http => new HttpProxyClient(proxy.Host, proxy.Port),
+                ProxyType.Https => throw new BlockExecutionException("HTTPS proxies are not supported for IMAP requests"),
                 ProxyType.Socks4 => new Socks4Client(proxy.Host, proxy.Port),
                 ProxyType.Socks4a => new Socks4aClient(proxy.Host, proxy.Port),
                 ProxyType.Socks5 => new Socks5Client(proxy.Host, proxy.Port),
@@ -665,6 +666,7 @@ public static class Methods
         return proxy.Type switch
         {
             ProxyType.Http => new HttpProxyClient(proxy.Host, proxy.Port, credentials),
+            ProxyType.Https => throw new BlockExecutionException("HTTPS proxies are not supported for IMAP requests"),
             ProxyType.Socks4 => new Socks4Client(proxy.Host, proxy.Port, credentials),
             ProxyType.Socks4a => new Socks4aClient(proxy.Host, proxy.Port, credentials),
             ProxyType.Socks5 => new Socks5Client(proxy.Host, proxy.Port, credentials),

@@ -339,6 +339,25 @@ public static class Methods
     }
 
     /// <summary>
+    /// Decodes the payload of a JSON Web Token.
+    /// </summary>
+    [Block("Decodes the payload of a JSON Web Token without validating its signature",
+        name = "JWT Decode", extraInfo = "This block only decodes the payload and does not validate the JWT signature.")]
+    public static string JwtDecode(
+        BotData data,
+        [BlockParam("Token", "The JSON Web Token to decode.")]
+        string token)
+    {
+        data.Logger.LogHeader();
+
+        var decoded = RuriLib.Functions.Crypto.Crypto.JwtDecode(token);
+
+        data.Logger.Log($"Decoded: {decoded}", LogColors.YellowGreen);
+
+        return decoded;
+    }
+
+    /// <summary>
     /// Generates a BCrypt hash from an input and a salt.
     /// </summary>
     [Block("Generates a BCrypt hash from an input and a salt", name = "BCrypt Hash",

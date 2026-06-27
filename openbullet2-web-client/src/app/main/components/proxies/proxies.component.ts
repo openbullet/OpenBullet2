@@ -97,6 +97,7 @@ export class ProxiesComponent implements OnInit {
   proxyTypes: ('anyType' | ProxyType)[] = [
     'anyType',
     ProxyType.Http,
+    ProxyType.Https,
     ProxyType.Socks4,
     ProxyType.Socks4a,
     ProxyType.Socks5,

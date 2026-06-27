@@ -3,6 +3,7 @@ using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http.Options;
 using RuriLib.Helpers;
+using RuriLib.Http.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -49,14 +49,20 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             cookieContainer.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
         }
 
-        var clientOptions = GetClientOptions(data, options);
+        var capturedRequestHeaders = CreateCurlRequestHeadersCapture(data, options);
+        var clientOptions = GetClientOptions(
+            data,
+            options,
+            capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
         using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
+        var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
         {
             Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
             RequestUri = new Uri(options.Url),
-            Version = Version.Parse(options.HttpVersion)
+            Version = requestVersion,
+            VersionPolicy = GetVersionPolicy(requestVersion)
         };
 
         foreach (var header in options.CustomHeaders)
@@ -82,15 +88,19 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         data.Logger.LogHeader();
-        LogHttpRequestData(data, request, content);
-        LogCurlImpersonateRequestLogNotice(data, options);
+        LogReconstructedRequestIfNeeded(data, options, capturedRequestHeaders, request, content);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-        using var response = await client.SendAsync(request, options.ReadResponseContent
-            ? HttpCompletionOption.ResponseContentRead
-            : HttpCompletionOption.ResponseHeadersRead,
+        using var response = await SendAsync(
+            data,
+            client,
+            request,
+            options,
+            capturedRequestHeaders,
+            content,
+            null,
             linkedCts.Token).ConfigureAwait(false);
 
         await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
@@ -110,14 +120,20 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             cookieContainer.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
         }
 
-        var clientOptions = GetClientOptions(data, options);
+        var capturedRequestHeaders = CreateCurlRequestHeadersCapture(data, options);
+        var clientOptions = GetClientOptions(
+            data,
+            options,
+            capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
         using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
+        var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
         {
             Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
             RequestUri = new Uri(options.Url),
-            Version = Version.Parse(options.HttpVersion),
+            Version = requestVersion,
+            VersionPolicy = GetVersionPolicy(requestVersion),
             Content = new ByteArrayContent(options.Content)
         };
 
@@ -129,15 +145,20 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(options.ContentType);
 
         data.Logger.LogHeader();
-        LogHttpRequestData(data, request, Base64Converter.ToBase64String(options.Content));
-        LogCurlImpersonateRequestLogNotice(data, options);
+        var content = Base64Converter.ToBase64String(options.Content);
+        LogReconstructedRequestIfNeeded(data, options, capturedRequestHeaders, request, content);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-        using var response = await client.SendAsync(request, options.ReadResponseContent
-            ? HttpCompletionOption.ResponseContentRead
-            : HttpCompletionOption.ResponseHeadersRead,
+        using var response = await SendAsync(
+            data,
+            client,
+            request,
+            options,
+            capturedRequestHeaders,
+            content,
+            null,
             linkedCts.Token).ConfigureAwait(false);
 
         await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
@@ -157,14 +178,20 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             cookieContainer.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
         }
 
-        var clientOptions = GetClientOptions(data, options);
+        var capturedRequestHeaders = CreateCurlRequestHeadersCapture(data, options);
+        var clientOptions = GetClientOptions(
+            data,
+            options,
+            capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
         using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
+        var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
         {
             Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
             RequestUri = new Uri(options.Url),
-            Version = Version.Parse(options.HttpVersion)
+            Version = requestVersion,
+            VersionPolicy = GetVersionPolicy(requestVersion)
         };
 
         foreach (var header in options.CustomHeaders)
@@ -177,15 +204,19 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}")));
 
         data.Logger.LogHeader();
-        LogHttpRequestData(data, request);
-        LogCurlImpersonateRequestLogNotice(data, options);
+        LogReconstructedRequestIfNeeded(data, options, capturedRequestHeaders, request);
 
         Activity.Current = null;
         using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-        using var response = await client.SendAsync(request, options.ReadResponseContent
-            ? HttpCompletionOption.ResponseContentRead
-            : HttpCompletionOption.ResponseHeadersRead,
+        using var response = await SendAsync(
+            data,
+            client,
+            request,
+            options,
+            capturedRequestHeaders,
+            null,
+            null,
             linkedCts.Token).ConfigureAwait(false);
 
         await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
@@ -205,7 +236,11 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             cookieContainer.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
         }
 
-        var clientOptions = GetClientOptions(data, options);
+        var capturedRequestHeaders = CreateCurlRequestHeadersCapture(data, options);
+        var clientOptions = GetClientOptions(
+            data,
+            options,
+            capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
         using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
 
         if (string.IsNullOrWhiteSpace(options.Boundary))
@@ -254,11 +289,13 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             }
         }
 
+        var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
         {
             Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
             RequestUri = new Uri(options.Url),
-            Version = Version.Parse(options.HttpVersion),
+            Version = requestVersion,
+            VersionPolicy = GetVersionPolicy(requestVersion),
             Content = multipartContent
         };
 
@@ -268,17 +305,28 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
 
         data.Logger.LogHeader();
-        LogHttpRequestData(data, request, SerializeMultipart(options.Boundary, options.Contents), options.Boundary);
-        LogCurlImpersonateRequestLogNotice(data, options);
+        var content = SerializeMultipart(options.Boundary, options.Contents);
+        LogReconstructedRequestIfNeeded(
+            data,
+            options,
+            capturedRequestHeaders,
+            request,
+            content,
+            options.Boundary);
 
         try
         {
             Activity.Current = null;
             using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-            using var response = await client.SendAsync(request, options.ReadResponseContent
-                ? HttpCompletionOption.ResponseContentRead
-                : HttpCompletionOption.ResponseHeadersRead,
+            using var response = await SendAsync(
+                data,
+                client,
+                request,
+                options,
+                capturedRequestHeaders,
+                content,
+                options.Boundary,
                 linkedCts.Token).ConfigureAwait(false);
 
             await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
@@ -292,6 +340,107 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         }
     }
 
+    private static List<string>? CreateCurlRequestHeadersCapture(BotData data, Options.HttpRequestOptions options)
+        => ShouldCaptureCurlRequestHeaders(data, options) ? [] : null;
+
+    internal static bool ShouldCaptureCurlRequestHeaders(BotData data, Options.HttpRequestOptions options)
+        => data.BOTNUM == 0 && options.HttpLibrary == HttpLibrary.CurlImpersonate;
+
+    internal static HttpVersionPolicy GetVersionPolicy(Version requestedVersion)
+        => requestedVersion.Major >= 3
+            ? HttpVersionPolicy.RequestVersionExact
+            : HttpVersionPolicy.RequestVersionOrLower;
+
+    private static void LogReconstructedRequestIfNeeded(
+        BotData data,
+        Options.HttpRequestOptions options,
+        List<string>? capturedRequestHeaders,
+        HttpRequestMessage request,
+        string? content = null,
+        string? boundary = null)
+    {
+        if (capturedRequestHeaders is not null)
+        {
+            return;
+        }
+
+        LogHttpRequestData(data, request, content, boundary);
+        LogCurlImpersonateRequestLogNotice(data, options);
+    }
+
+    private static async Task<HttpResponseMessage> SendAsync(
+        BotData data,
+        HttpClient client,
+        HttpRequestMessage request,
+        Options.HttpRequestOptions options,
+        List<string>? capturedRequestHeaders,
+        string? content,
+        string? boundary,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await client.SendAsync(
+                request,
+                options.ReadResponseContent
+                    ? HttpCompletionOption.ResponseContentRead
+                    : HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            if (capturedRequestHeaders is not null)
+            {
+                LogCapturedCurlRequest(data, capturedRequestHeaders);
+                LogHttpRequestPayload(data, request, content, boundary);
+            }
+        }
+    }
+
+    private static void LogCapturedCurlRequest(BotData data, List<string> capturedRequestHeaders)
+    {
+        if (capturedRequestHeaders.Count == 0)
+        {
+            data.Logger.Log(
+                "[WARNING] curl-impersonate did not provide the outgoing request headers.",
+                LogColors.DarkOrange);
+            return;
+        }
+
+        for (var i = 0; i < capturedRequestHeaders.Count; i++)
+        {
+            if (i > 0)
+            {
+                data.Logger.Log($"Redirect {i}", LogColors.Beige);
+            }
+
+            data.Logger.Log(capturedRequestHeaders[i], LogColors.NonPhotoBlue);
+        }
+    }
+
+    private static void LogHttpRequestPayload(
+        BotData data,
+        HttpRequestMessage request,
+        string? content,
+        string? boundary)
+    {
+        if (request.Content is null || content is null)
+        {
+            return;
+        }
+
+        using var writer = new StringWriter();
+        writer.WriteLine("Sent Payload:");
+
+        if (request.Content is MultipartFormDataContent)
+        {
+            writer.WriteLine($"Boundary: {boundary}");
+        }
+
+        writer.WriteLine(content);
+        data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
+    }
+
     private static void LogHttpRequestData(BotData data, HttpRequestMessage request,
         string? content = null, string? boundary = null)
     {
@@ -299,7 +448,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         // Log the method, uri and http version
         var requestUri = request.RequestUri ?? throw new InvalidOperationException("Request URI cannot be null.");
-        writer.WriteLine($"{request.Method.Method} {requestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
+        writer.WriteLine($"{request.Method.Method} {requestUri.PathAndQuery} {FormatHttpVersion(request.Version)}");
 
         // Log the headers
         writer.WriteLine($"Host: {requestUri.Host}");
@@ -384,8 +533,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         // Response code
         data.RESPONSECODE = (int)response.StatusCode;
         data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
-        data.Logger.Log($"Response HTTP version: HTTP/{response.Version.Major}.{response.Version.Minor}",
-            LogColors.Citrine);
+        LogNegotiatedHttpVersion(data, Version.Parse(requestOptions.HttpVersion), response.Version);
 
         data.HEADERS = response.Headers.ToDictionary(h => h.Key, GetHeaderValue);
 
@@ -434,24 +582,26 @@ internal class HttpClientRequestHandler : HttpRequestHandler
         data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
         data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
-        // Decode brotli if still compressed
-        if (data.HEADERS.TryGetValue("Content-Encoding", out var value) && value.Contains("br"))
+        // Decode the response if still compressed
+        if (data.RAWSOURCE.Length > 0 && data.HEADERS.TryGetValue("Content-Encoding", out var value)
+            && !string.IsNullOrWhiteSpace(value))
         {
             try
             {
                 using var inputStream = new MemoryStream(data.RAWSOURCE);
                 using var outputStream = new MemoryStream();
-                await using var brotli = new BrotliStream(inputStream, CompressionMode.Decompress, false);
-                await brotli.CopyToAsync(outputStream);
+                using var decodedStream = ContentEncodingHelper.GetDecodedStream(inputStream, [value]);
+                decodedStream.CopyTo(outputStream);
                 data.RAWSOURCE = outputStream.ToArray();
             }
-            catch
+            catch (Exception ex)
             {
-                data.Logger.Log("[WARNING] Tried to decompress brotli but failed", LogColors.DarkOrange);
+                data.Logger.Log($"[WARNING] Tried to decompress {value} but failed: {ex.Message}",
+                    LogColors.DarkOrange);
             }
         }
 
-        // Unzip the GZipped content if still gzipped (after Content-Length calculation)
+        // Fallback for gzip bodies that still reach us compressed without a Content-Encoding header
         if (data.RAWSOURCE.Length > 1 && data.RAWSOURCE[0] == 0x1F && data.RAWSOURCE[1] == 0x8B)
         {
             try
@@ -488,37 +638,37 @@ internal class HttpClientRequestHandler : HttpRequestHandler
 
         return;
 
-        static bool TryParseCookie(string cookieHeader, out string? cookieName, out string? cookieValue)
-        {
-            cookieName = null;
-            cookieValue = null;
-
-            if (cookieHeader.Length == 0)
-            {
-                return false;
-            }
-
-            var endCookiePos = cookieHeader.IndexOf(';');
-            var separatorPos = cookieHeader.IndexOf('=');
-
-            if (separatorPos == -1)
-            {
-                // Invalid cookie, simply don't add it
-                return false;
-            }
-
-            cookieName = cookieHeader[..separatorPos];
-            cookieValue = endCookiePos == -1
-                ? cookieHeader[(separatorPos + 1)..]
-                : cookieHeader.Substring(separatorPos + 1, endCookiePos - separatorPos - 1);
-
-            return true;
-        }
-
         static string GetHeaderValue(KeyValuePair<string, IEnumerable<string>> header)
         {
             var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
             return string.Join(separator, header.Value);
         }
+    }
+
+    internal static bool TryParseCookie(string cookieHeader, out string? cookieName, out string? cookieValue)
+    {
+        cookieName = null;
+        cookieValue = null;
+
+        if (cookieHeader.Length == 0)
+        {
+            return false;
+        }
+
+        var endCookiePos = cookieHeader.IndexOf(';');
+        var separatorPos = cookieHeader.IndexOf('=');
+
+        if (separatorPos == -1 || endCookiePos != -1 && separatorPos > endCookiePos)
+        {
+            // Invalid cookie, simply don't add it
+            return false;
+        }
+
+        cookieName = cookieHeader[..separatorPos];
+        cookieValue = endCookiePos == -1
+            ? cookieHeader[(separatorPos + 1)..]
+            : cookieHeader.Substring(separatorPos + 1, endCookiePos - separatorPos - 1);
+
+        return true;
     }
 }

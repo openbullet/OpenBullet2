@@ -90,7 +90,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0 -5"
                     Visibility="{Binding HasCustomInputs, Converter={StaticResource ResourceKey=BoolToVis}}">
                     <Label FontWeight="Bold">Custom Inputs:</Label>
-                    <Label Content="{Binding CustomInputsInfo}" Margin="5 0 0 0" />
+                    <TextBlock Text="{Binding CustomInputsInfo}" Margin="10 0 0 0" VerticalAlignment="Center" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">

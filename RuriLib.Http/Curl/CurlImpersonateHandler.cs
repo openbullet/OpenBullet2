@@ -50,7 +50,10 @@ public sealed class CurlImpersonateHandler : HttpMessageHandler
             throw new RLHttpException("Maximum number of redirects exceeded");
         }
 
-        using var context = new CurlRequestContext(cancellationToken, options.ReadResponseContent);
+        using var context = new CurlRequestContext(
+            cancellationToken,
+            options.ReadResponseContent,
+            options.RequestHeadersCallback);
         using var transfer = new CurlEasyTransfer(context);
         await transfer.ConfigureAsync(request, options, cancellationToken).ConfigureAwait(false);
 

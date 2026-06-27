@@ -100,8 +100,13 @@ public class PluginRepository
     {
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read, false);
 
+        // Resolve the destination paths and make sure the entries cannot go back with ..
+        var entries = archive.Entries
+            .Select(entry => (Entry: entry, DestinationPath: GetSafeExtractionPath(entry.FullName)))
+            .ToList();
+
         // Make sure there's at least one .dll in the root of the archive
-        var dlls = archive.Entries.Where(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".dll"));
+        var dlls = entries.Select(e => e.Entry).Where(IsRootDll).ToList();
 
         if (!dlls.Any())
         {
@@ -114,18 +119,23 @@ public class PluginRepository
             throw new Exception("Please restart the application and try again");
         }
 
-        foreach (var entry in archive.Entries)
+        foreach (var (entry, destinationPath) in entries)
         {
-            try
+            // If the entry is a directory, create it and skip extraction
+            if (IsDirectory(entry))
             {
-                var folder = Path.Combine(BaseFolder, Path.GetDirectoryName(entry.FullName) ?? string.Empty);
+                Directory.CreateDirectory(destinationPath);
+                continue;
+            }
+
+            var folder = Path.GetDirectoryName(destinationPath);
+
+            if (!string.IsNullOrEmpty(folder))
+            {
                 Directory.CreateDirectory(folder);
-                entry.ExtractToFile(Path.Combine(BaseFolder, entry.FullName), true);
             }
-            catch
-            {
-                // ignored
-            }
+
+            entry.ExtractToFile(destinationPath, true);
         }
 
         // Load new assemblies into the domain (the ones that are already loaded will be skipped)
@@ -159,6 +169,61 @@ public class PluginRepository
     // Retrieves the path of folders that contain the dependencies of existing plugins.
     private IEnumerable<string> GetDependencyFolders()
         => GetPluginNames().Select(p => Path.Combine(BaseFolder, p));
+
+    private string GetSafeExtractionPath(string relativePath)
+    {
+        var normalizedPath = relativePath
+            .Replace('\\', Path.DirectorySeparatorChar)
+            .Replace('/', Path.DirectorySeparatorChar);
+
+        // Make sure the archive entry is not empty
+        if (string.IsNullOrWhiteSpace(normalizedPath))
+        {
+            throw new InvalidDataException("Plugin archive contains an empty path");
+        }
+
+        // Do not allow absolute paths or entries that go back with ..
+        if (Path.IsPathRooted(normalizedPath) || HasParentDirectorySegment(normalizedPath))
+        {
+            throw new InvalidDataException($"Unsafe plugin archive path: {relativePath}");
+        }
+
+        var baseFolder = Path.GetFullPath(BaseFolder);
+        var destinationPath = Path.GetFullPath(Path.Combine(baseFolder, normalizedPath));
+
+        // Make sure the entry stays inside the plugins folder
+        if (!IsPathInsideDirectory(destinationPath, baseFolder))
+        {
+            throw new InvalidDataException($"Unsafe plugin archive path: {relativePath}");
+        }
+
+        return destinationPath;
+    }
+
+    private static bool IsRootDll(ZipArchiveEntry entry)
+        => !IsDirectory(entry)
+            && !entry.FullName.Contains('/')
+            && !entry.FullName.Contains('\\')
+            && entry.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsDirectory(ZipArchiveEntry entry)
+        => entry.FullName.EndsWith('/') || entry.FullName.EndsWith('\\');
+
+    private static bool HasParentDirectorySegment(string path)
+        => path.Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries).Any(segment => segment == "..");
+
+    private static bool IsPathInsideDirectory(string path, string directory)
+    {
+        var comparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+
+        var normalizedDirectory = Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory))
+            + Path.DirectorySeparatorChar;
+        var normalizedPath = Path.GetFullPath(path);
+
+        return normalizedPath.StartsWith(normalizedDirectory, comparison);
+    }
 
     // Builds a list of assemblies and their references recursively
     private IEnumerable<Assembly> GetReferences(IEnumerable<Assembly> assemblies)
@@ -238,6 +303,11 @@ public class PluginRepository
         // Find the corresponding assembly file
         foreach (var dir in folders)
         {
+            if (!Directory.Exists(dir))
+            {
+                continue;
+            }
+
             assy = new[] { "*.dll", "*.exe" }.SelectMany(g => Directory.EnumerateFiles(dir, g)).FirstOrDefault(f =>
             {
                 try { return string.Equals(n.Name, AssemblyName.GetAssemblyName(f).Name, StringComparison.OrdinalIgnoreCase); }

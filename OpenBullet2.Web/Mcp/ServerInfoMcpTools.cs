@@ -26,7 +26,7 @@ public sealed class ServerInfoMcpTools
 
         return $$"""
                  OpenBullet 2 server info
-                 Version: {{updateService.CurrentVersion}} ({{updateService.CurrentVersionType}})
+                 Version: {{updateService.CurrentVersion}}
                  StartedAtUtc: {{Globals.StartTime:O}}
                  Uptime: {{uptime:c}}
                  RequireAdminLogin: {{settingsService.Settings.SecuritySettings.RequireAdminLogin}}

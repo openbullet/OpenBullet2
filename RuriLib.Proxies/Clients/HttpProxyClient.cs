@@ -34,6 +34,14 @@ public partial class HttpProxyClient : ProxyClient
     protected override async Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
         CancellationToken cancellationToken = default)
     {
+        await CreateConnectionStreamAsync(client, client.GetStream(), destinationHost, destinationPort, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<Stream> CreateConnectionStreamAsync(TcpClient client, Stream stream, string destinationHost,
+        int destinationPort, CancellationToken cancellationToken = default)
+    {
         ArgumentException.ThrowIfNullOrEmpty(destinationHost);
 
         if (!PortHelper.ValidateTcpPort(destinationPort))
@@ -47,13 +55,12 @@ public partial class HttpProxyClient : ProxyClient
         }
 
         HttpStatusCode statusCode;
+        byte[] trailingBytes;
 
         try
         {
-            var nStream = client.GetStream();
-
-            await RequestConnectionAsync(nStream, destinationHost, destinationPort, cancellationToken).ConfigureAwait(false);
-            statusCode = await ReceiveResponseAsync(nStream, cancellationToken).ConfigureAwait(false);
+            await RequestConnectionAsync(stream, destinationHost, destinationPort, cancellationToken).ConfigureAwait(false);
+            (statusCode, trailingBytes) = await ReceiveResponseAsync(stream, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -72,20 +79,30 @@ public partial class HttpProxyClient : ProxyClient
             client.Close();
             throw new BadProxyException("The proxy didn't reply with 200 OK");
         }
+
+        // A proxy can send the CONNECT response and the first tunneled bytes in the same TCP/TLS record.
+        // Preserve those bytes so callers read the exact destination stream instead of losing early data.
+        return trailingBytes.Length == 0
+            ? stream
+            : new PrefixedStream(stream, trailingBytes);
     }
 
-    private async Task RequestConnectionAsync(Stream nStream, string destinationHost, int destinationPort,
+    /// <summary>
+    /// Requests a CONNECT tunnel from the proxy.
+    /// </summary>
+    protected async Task RequestConnectionAsync(Stream nStream, string destinationHost, int destinationPort,
         CancellationToken cancellationToken = default)
     {
-        var commandBuilder = new StringBuilder();
-
-        commandBuilder.AppendFormat(
-            "CONNECT {0}:{1} HTTP/{2}\r\n{3}\r\n",
-            destinationHost, destinationPort, ProtocolVersion, GenerateAuthorizationHeader());
+        var commandBuilder = new StringBuilder()
+            .AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n", destinationHost, destinationPort, ProtocolVersion)
+            .AppendFormat("Host: {0}:{1}\r\n", destinationHost, destinationPort)
+            .Append(GenerateAuthorizationHeader())
+            .Append("Proxy-Connection: Keep-Alive\r\n")
+            .Append("\r\n");
 
         var buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
-
         await nStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
+        await nStream.FlushAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private string GenerateAuthorizationHeader()
@@ -121,35 +138,41 @@ public partial class HttpProxyClient : ProxyClient
         return true;
     }
 
-    private static async Task<HttpStatusCode> ReceiveResponseAsync(NetworkStream nStream, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Receives the proxy response to a CONNECT request.
+    /// </summary>
+    protected static async Task<(HttpStatusCode StatusCode, byte[] TrailingBytes)> ReceiveResponseAsync(
+        Stream stream, CancellationToken cancellationToken = default)
     {
-        var buffer = new byte[50];
-        var responseBuilder = new StringBuilder();
+        var buffer = new byte[512];
+        using var memory = new MemoryStream();
+        var headerEnd = -1;
 
-        using var waitCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(nStream.ReadTimeout));
-
-        while (!nStream.DataAvailable)
+        while (headerEnd < 0)
         {
-            // Throw default exception if the operation was cancelled by the user
-            cancellationToken.ThrowIfCancellationRequested();
+            var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
 
-            // Throw a custom exception if we timed out
-            if (waitCts.Token.IsCancellationRequested)
+            if (bytesRead == 0)
             {
-                throw new BadProxyException("Timed out while waiting for data from proxy");
+                break;
             }
 
-            await Task.Delay(100, cancellationToken).ConfigureAwait(false);
+            memory.Write(buffer, 0, bytesRead);
+            headerEnd = FindHeaderEnd(memory.GetBuffer().AsSpan(0, (int)memory.Length));
+
+            if (memory.Length > 64 * 1024)
+            {
+                throw new BadProxyException("The proxy response headers are too large");
+            }
         }
 
-        do
+        if (headerEnd < 0)
         {
-            var bytesRead = await nStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
-            responseBuilder.Append(Encoding.ASCII.GetString(buffer, 0, bytesRead));
+            throw new BadProxyException("Received incomplete HTTP response from proxy");
         }
-        while (nStream.DataAvailable);
 
-        var response = responseBuilder.ToString();
+        var responseBytes = memory.GetBuffer().AsSpan(0, headerEnd);
+        var response = Encoding.ASCII.GetString(responseBytes);
 
         if (response.Length == 0)
         {
@@ -169,7 +192,24 @@ public partial class HttpProxyClient : ProxyClient
             throw new BadProxyException("Invalid HTTP status code");
         }
 
-        return statusCode;
+        var trailingBytes = memory.GetBuffer().AsSpan(headerEnd, (int)memory.Length - headerEnd).ToArray();
+        return (statusCode, trailingBytes);
+    }
+
+    private static int FindHeaderEnd(ReadOnlySpan<byte> buffer)
+    {
+        for (var i = 0; i <= buffer.Length - 4; i++)
+        {
+            if (buffer[i] == '\r'
+                && buffer[i + 1] == '\n'
+                && buffer[i + 2] == '\r'
+                && buffer[i + 3] == '\n')
+            {
+                return i + 4;
+            }
+        }
+
+        return -1;
     }
 
     [GeneratedRegex("HTTP/[0-9\\.]* ([0-9]{3})")]

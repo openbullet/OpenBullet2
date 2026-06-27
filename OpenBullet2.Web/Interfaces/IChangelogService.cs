@@ -1,12 +1,12 @@
 namespace OpenBullet2.Web.Interfaces;
 
 /// <summary>
-/// Service that reads changelog markdown for a specific version.
+/// Service that reads the bundled changelog markdown.
 /// </summary>
 public interface IChangelogService
 {
     /// <summary>
-    /// Fetches the changelog markdown for the provided version.
+    /// Fetches the complete changelog markdown.
     /// </summary>
-    Task<string> FetchChangelogAsync(string version, CancellationToken cancellationToken);
+    Task<string> FetchChangelogAsync(CancellationToken cancellationToken);
 }

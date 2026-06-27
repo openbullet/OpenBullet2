@@ -33,6 +33,7 @@ public class ProxySettings
     public ProxyType[] AllowedProxyTypes { get; set; } =
     [
         ProxyType.Http,
+        ProxyType.Https,
         ProxyType.Socks4,
         ProxyType.Socks4a,
         ProxyType.Socks5

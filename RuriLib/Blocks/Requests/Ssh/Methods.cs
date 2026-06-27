@@ -185,8 +185,9 @@ public static class Methods
         => type switch
         {
             ProxyType.Http => ProxyTypes.Http,
+            ProxyType.Https => throw new BlockExecutionException("HTTPS proxies are not supported for SSH requests"),
             ProxyType.Socks4 => ProxyTypes.Socks4,
             ProxyType.Socks5 => ProxyTypes.Socks5,
-            _ => throw new NotImplementedException()
+            _ => throw new BlockExecutionException($"Unsupported proxy type: {type}")
         };
 }

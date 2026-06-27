@@ -99,7 +99,7 @@ public partial class MainWindow : MetroWindow
             menuOptionWordlists
         ];
 
-        Title = $"OpenBullet 2 - {updateService.CurrentVersion} [{updateService.CurrentVersionType}]";
+        Title = $"OpenBullet 2 - {updateService.CurrentVersion}";
 
         // Set the theme
         var customization = obSettingsService.Settings.CustomizationSettings;

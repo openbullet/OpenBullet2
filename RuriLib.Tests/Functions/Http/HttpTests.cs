@@ -67,13 +67,15 @@ public class HttpTests
         await Methods.HttpRequestStandard(data, options);
 
         Assert.Contains(data.Logger.Entries,
-            entry => entry.Message.StartsWith("Response HTTP version: HTTP/", StringComparison.Ordinal));
+            entry => entry.Message.StartsWith("Negotiated protocol: HTTP/", StringComparison.Ordinal));
 
         if (library == HttpLibrary.CurlImpersonate)
         {
-            Assert.Contains(data.Logger.Entries,
+            Assert.DoesNotContain(data.Logger.Entries,
                 entry => entry.Message.Contains("may not match the exact headers or order sent by curl-impersonate",
                     StringComparison.Ordinal));
+            Assert.Contains(data.Logger.Entries,
+                entry => entry.Message.Contains("User-Agent:", StringComparison.Ordinal));
         }
 
         var response = DeserializeHttpBinResponse(data.SOURCE);
@@ -238,6 +240,33 @@ public class HttpTests
         }
 
         Assert.Equal(302, passingData.RESPONSECODE);
+    }
+
+    [Fact]
+    public async Task HttpRequestStandard_SystemNet_LogsRequestedProtocolWhenVersionFallsBack()
+    {
+        await using var server = LocalHttpResponseServer.CreateDelayed(
+            TimeSpan.Zero,
+            """{"ok":true}"""u8.ToArray(),
+            "Content-Type: application/json");
+        var data = NewBotData();
+
+        var options = new StandardHttpRequestOptions
+        {
+            Url = server.Uri.ToString(),
+            Method = HttpMethod.GET,
+            HttpLibrary = HttpLibrary.SystemNet,
+            HttpVersion = "2.0"
+        };
+
+        await Methods.HttpRequestStandard(data, options);
+
+        Assert.Contains(data.Logger.Entries,
+            entry => entry.Message == "Negotiated protocol: HTTP/1.1");
+        Assert.Contains(data.Logger.Entries,
+            entry => entry.Message.Contains(
+                "Requested protocol HTTP/2.0, but the connection used HTTP/1.1",
+                StringComparison.Ordinal));
     }
 
     [Theory]

@@ -1,5 +1,7 @@
 using System;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RuriLib.Proxies;
 
@@ -35,4 +37,15 @@ public class ProxySettings
     /// will wait for read or wait data from the proxy server.
     /// </summary>
     public TimeSpan ReadWriteTimeOut { get; set; } = TimeSpan.FromSeconds(10);
+
+    /// <summary>
+    /// Gets or sets the proxy TLS certificate validation callback. Only used by
+    /// proxy types whose transport to the proxy is TLS-protected.
+    /// </summary>
+    public RemoteCertificateValidationCallback? ProxyCertificateValidationCallback { get; set; }
+
+    /// <summary>
+    /// Gets or sets the certificate revocation mode for TLS-protected proxy transports.
+    /// </summary>
+    public X509RevocationMode ProxyCertRevocationMode { get; set; } = X509RevocationMode.NoCheck;
 }

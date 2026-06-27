@@ -57,13 +57,13 @@ public class ProxyTests
     }
 
     [Fact]
-    public void Parse_HttpsUriSyntax_MapsToHttpProxyType()
+    public void Parse_HttpsUriSyntax_MapsToHttpsProxyType()
     {
         var proxy = Proxy.Parse("https://127.0.0.1:8443");
 
         Assert.Equal("127.0.0.1", proxy.Host);
         Assert.Equal(8443, proxy.Port);
-        Assert.Equal(ProxyType.Http, proxy.Type);
+        Assert.Equal(ProxyType.Https, proxy.Type);
     }
 
     [Theory]
@@ -117,5 +117,13 @@ public class ProxyTests
         var proxy = new Proxy("127.0.0.1", 8000, ProxyType.Socks5);
 
         Assert.Equal("socks5", proxy.Protocol);
+    }
+
+    [Fact]
+    public void Protocol_Https_UsesLowercaseTypeName()
+    {
+        var proxy = new Proxy("127.0.0.1", 8000, ProxyType.Https);
+
+        Assert.Equal("https", proxy.Protocol);
     }
 }

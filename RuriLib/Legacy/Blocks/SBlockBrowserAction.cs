@@ -453,6 +453,10 @@ public class SBlockBrowserAction : BlockBase
                         firefoxProfile.SetPreference("network.proxy.ssl", data.Proxy.Host);
                         firefoxProfile.SetPreference("network.proxy.ssl_port", data.Proxy.Port);
                     }
+                    else if (data.Proxy.Type == ProxyType.Https)
+                    {
+                        throw new InvalidOperationException("HTTPS proxies are not supported by Selenium Firefox");
+                    }
                     else
                     {
                         firefoxProfile.SetPreference("network.proxy.socks", data.Proxy.Host);

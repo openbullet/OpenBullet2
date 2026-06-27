@@ -9,12 +9,13 @@ using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
+using RuriLib.Logging;
 
 namespace RuriLib.Functions.Http;
 
 internal abstract class HttpRequestHandler
 {
-    protected static readonly string[] commaHeaders = ["Accept", "Accept-Encoding"];
+    protected static readonly string[] commaHeaders = ["Accept", "Accept-Encoding", "Content-Encoding"];
 
     public virtual Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
         => throw new NotImplementedException();
@@ -167,19 +168,40 @@ internal abstract class HttpRequestHandler
         return [.. parsed];
     }
 
-    protected static HttpOptions GetClientOptions(BotData data, Options.HttpRequestOptions options) => new()
+    protected static HttpOptions GetClientOptions(BotData data, Options.HttpRequestOptions options,
+        Action<string>? curlRequestHeadersCallback = null) => new()
+        {
+            ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
+            ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
+            AutoRedirect = options.AutoRedirect,
+            MaxNumberOfRedirects = options.MaxNumberOfRedirects,
+            SecurityProtocol = options.SecurityProtocol,
+            IgnoreCertificateValidation = options.IgnoreCertificateValidation,
+            UseCustomCipherSuites = options.UseCustomCipherSuites,
+            CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
+            CertRevocationMode = data.Providers.Security.X509RevocationMode,
+            ReadResponseContent = options.ReadResponseContent,
+            CurlImpersonateBrowserProfile = options.CurlImpersonateBrowserProfile,
+            CurlUseBrowserHeaders = options.CurlUseBrowserHeaders,
+            CurlRequestHeadersCallback = curlRequestHeadersCallback
+        };
+
+    protected static void LogNegotiatedHttpVersion(BotData data, Version requestedVersion, Version responseVersion)
     {
-        ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-        ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-        AutoRedirect = options.AutoRedirect,
-        MaxNumberOfRedirects = options.MaxNumberOfRedirects,
-        SecurityProtocol = options.SecurityProtocol,
-        IgnoreCertificateValidation = options.IgnoreCertificateValidation,
-        UseCustomCipherSuites = options.UseCustomCipherSuites,
-        CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
-        CertRevocationMode = data.Providers.Security.X509RevocationMode,
-        ReadResponseContent = options.ReadResponseContent,
-        CurlImpersonateBrowserProfile = options.CurlImpersonateBrowserProfile,
-        CurlUseBrowserHeaders = options.CurlUseBrowserHeaders
-    };
+        var requested = FormatHttpVersion(requestedVersion);
+        var negotiated = FormatHttpVersion(responseVersion);
+
+        data.Logger.Log($"Negotiated protocol: {negotiated}", LogColors.Citrine);
+
+        if (requestedVersion != responseVersion)
+        {
+            data.Logger.Log(
+                $"[NOTE] Requested protocol {requested}, but the connection used {negotiated}. " +
+                "The selected HTTP stack may fall back when the target, proxy, OS, or runtime cannot use the requested version.",
+                LogColors.DarkOrange);
+        }
+    }
+
+    protected static string FormatHttpVersion(Version version)
+        => $"HTTP/{version.Major}.{version.Minor}";
 }

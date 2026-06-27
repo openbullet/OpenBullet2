@@ -77,6 +77,53 @@ public class CurlImpersonateHandlerTests
     }
 
     [Fact]
+    public async Task SendAsync_WithoutBrowserHeaders_KeepsCommaSeparatedCustomHeaderOnSingleLine()
+    {
+        await using var server = new CaptureHttpServer("ok");
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            UseBrowserHeaders = false,
+            AllowAutoRedirect = false
+        });
+        using var client = new HttpClient(handler);
+        using var request = new HttpRequestMessage(HttpMethod.Get, server.Uri);
+        const string secChUa = "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"";
+        request.Headers.TryAddWithoutValidation("sec-ch-ua", secChUa);
+
+        using var response = await client.SendAsync(request, TestCancellationToken);
+        var rawRequest = await server.RawRequest;
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains($"sec-ch-ua: {secChUa}\r\n", rawRequest);
+        Assert.Equal(1, CountOccurrences(rawRequest, "\r\nsec-ch-ua: "));
+    }
+
+    [Fact]
+    public async Task SendAsync_WithRequestHeadersCallback_ReportsActualHeaderOrder()
+    {
+        await using var server = new CaptureHttpServer("ok");
+        var capturedRequests = new List<string>();
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            UseBrowserHeaders = false,
+            AllowAutoRedirect = false,
+            RequestHeadersCallback = capturedRequests.Add
+        });
+        using var client = new HttpClient(handler);
+        using var request = new HttpRequestMessage(HttpMethod.Get, server.Uri);
+        request.Headers.TryAddWithoutValidation("X-First", "one");
+        request.Headers.TryAddWithoutValidation("X-Second", "two");
+
+        using var response = await client.SendAsync(request, TestCancellationToken);
+
+        var capturedRequest = Assert.Single(capturedRequests);
+        Assert.Contains("GET / HTTP/1.1", capturedRequest);
+        Assert.True(
+            capturedRequest.IndexOf("X-First: one", StringComparison.Ordinal)
+            < capturedRequest.IndexOf("X-Second: two", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task SendAsync_DifferentProfiles_ProduceDifferentJa3Fingerprints()
     {
         var chromeJa3 = await CaptureJa3Async(CurlImpersonateBrowserProfile.Chrome142);
@@ -174,6 +221,20 @@ public class CurlImpersonateHandlerTests
         }
 
         return await clientHelloTask.WaitAsync(TimeSpan.FromSeconds(5), TestCancellationToken);
+    }
+
+    private static int CountOccurrences(string value, string pattern)
+    {
+        var count = 0;
+        var index = 0;
+
+        while ((index = value.IndexOf(pattern, index, StringComparison.Ordinal)) >= 0)
+        {
+            count++;
+            index += pattern.Length;
+        }
+
+        return count;
     }
 
     private sealed class CaptureHttpServer : IAsyncDisposable

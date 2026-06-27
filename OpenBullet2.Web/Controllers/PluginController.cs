@@ -65,6 +65,8 @@ public class PluginController : ApiController
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
+    [RequestSizeLimit(long.MaxValue)]
+    [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     public ActionResult Add(IFormFile file)
     {
         _pluginRepository.AddPlugin(file.OpenReadStream());

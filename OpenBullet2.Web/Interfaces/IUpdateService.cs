@@ -20,34 +20,4 @@ public interface IUpdateService : IHostedService
     /// </summary>
     bool IsUpdateAvailable { get; }
 
-    /// <summary>
-    /// The type of the current version.
-    /// </summary>
-    VersionType CurrentVersionType { get; }
-
-    /// <summary>
-    /// The type of the remote version.
-    /// </summary>
-    VersionType RemoteVersionType { get; }
-}
-
-/// <summary>
-/// A version type.
-/// </summary>
-public enum VersionType
-{
-    /// <summary>
-    /// Alpha version (0.0.x).
-    /// </summary>
-    Alpha,
-
-    /// <summary>
-    /// Beta version (0.x.y).
-    /// </summary>
-    Beta,
-
-    /// <summary>
-    /// Release version (x.y.z).
-    /// </summary>
-    Release
 }

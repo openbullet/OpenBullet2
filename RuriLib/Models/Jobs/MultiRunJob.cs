@@ -806,7 +806,7 @@ public class MultiRunJob : Job
 
             linkedCts.Token.ThrowIfCancellationRequested();
 
-            CurrentBotDatas = new BotData[Bots];
+            CurrentBotDatas = new BotData[BotLimit];
             long index = 0;
             var workItems = dataPool.DataList.Select(line =>
             {

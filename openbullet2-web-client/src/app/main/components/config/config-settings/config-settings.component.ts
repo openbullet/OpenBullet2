@@ -64,7 +64,7 @@ export class ConfigSettingsComponent implements OnInit {
   editImageModalVisible = false;
 
   botStatuses: string[] = [];
-  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
   browserAutomationEngines: BrowserAutomationEngine[] = [BrowserAutomationEngine.Puppeteer, BrowserAutomationEngine.Playwright];
   browserMouseAutomationModes: BrowserMouseAutomationMode[] = [BrowserMouseAutomationMode.Native, BrowserMouseAutomationMode.GhostCursor];
   wordlistTypes: string[] = [];

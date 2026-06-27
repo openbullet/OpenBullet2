@@ -9,6 +9,8 @@ namespace OpenBullet2.Native.Controls;
 /// </summary>
 public partial class TimeSpanPicker : UserControl
 {
+    private bool updatingControls;
+
     public TimeSpan TimeSpan
     {
         get => (TimeSpan)GetValue(TimeSpanProperty);
@@ -20,7 +22,10 @@ public partial class TimeSpanPicker : UserControl
         nameof(TimeSpan),
         typeof(TimeSpan),
         typeof(TimeSpanPicker),
-        new PropertyMetadata(default(TimeSpan), OnTimeSpanPropertyChanged));
+        new FrameworkPropertyMetadata(
+            default(TimeSpan),
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnTimeSpanPropertyChanged));
 
     private static void OnTimeSpanPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -30,9 +35,17 @@ public partial class TimeSpanPicker : UserControl
             return;
         }
 
-        source.hours.Value = newValue.Hours;
-        source.minutes.Value = newValue.Minutes;
-        source.seconds.Value = newValue.Seconds;
+        source.updatingControls = true;
+        try
+        {
+            source.hours.Value = (int)newValue.TotalHours;
+            source.minutes.Value = newValue.Minutes;
+            source.seconds.Value = newValue.Seconds;
+        }
+        finally
+        {
+            source.updatingControls = false;
+        }
     }
 
     public TimeSpanPicker()
@@ -42,11 +55,17 @@ public partial class TimeSpanPicker : UserControl
 
     private void NumberChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
     {
+        if (updatingControls)
+        {
+            return;
+        }
+
         if (hours?.Value is double hoursValue
             && minutes?.Value is double minutesValue
             && seconds?.Value is double secondsValue)
         {
-            TimeSpan = new TimeSpan((int)hoursValue, (int)minutesValue, (int)secondsValue);
+            SetCurrentValue(TimeSpanProperty, new TimeSpan((int)hoursValue, (int)minutesValue, (int)secondsValue));
+            GetBindingExpression(TimeSpanProperty)?.UpdateSource();
         }
     }
 }

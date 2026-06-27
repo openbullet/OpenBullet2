@@ -28,7 +28,7 @@ foreach (var rid in rids)
 
     Console.WriteLine($"Fetching curl-impersonate {Version} for {rid}");
     var archive = await DownloadAndVerifyAsync(http, asset);
-    ExtractNativeFiles(asset, archive, outputRoot);
+    ExtractNativeFiles(repoRoot, asset, archive, outputRoot);
 }
 
 return;
@@ -120,7 +120,7 @@ static bool HashMatches(string path, string expectedSha256)
     return hash.Equals(expectedSha256, StringComparison.OrdinalIgnoreCase);
 }
 
-static void ExtractNativeFiles(NativeAsset asset, string archivePath, string outputRoot)
+static void ExtractNativeFiles(string repoRoot, NativeAsset asset, string archivePath, string outputRoot)
 {
     var ridNativeDir = Path.Combine(outputRoot, asset.Rid, "native");
 
@@ -207,6 +207,33 @@ static void ExtractNativeFiles(NativeAsset asset, string archivePath, string out
     {
         throw new InvalidOperationException($"No native files found in {asset.FileName}");
     }
+
+    InstallNativeShim(repoRoot, asset, ridNativeDir, copied);
+}
+
+static void InstallNativeShim(string repoRoot, NativeAsset asset, string ridNativeDir, ISet<string> copied)
+{
+    if (asset.Shim is null)
+    {
+        return;
+    }
+
+    var sourcePath = Path.Combine(repoRoot, "Tools", "CurlImpersonate.NativeAssets", "Shims",
+        asset.Rid, asset.Shim.FileName);
+
+    if (!File.Exists(sourcePath))
+    {
+        throw new FileNotFoundException($"Native shim '{sourcePath}' was not found.", sourcePath);
+    }
+
+    if (!HashMatches(sourcePath, asset.Shim.Sha256))
+    {
+        throw new InvalidOperationException($"SHA-256 mismatch for native shim {asset.Shim.FileName}");
+    }
+
+    File.Copy(sourcePath, Path.Combine(ridNativeDir, asset.Shim.FileName), overwrite: true);
+    copied.Add(asset.Shim.FileName);
+    Console.WriteLine($"  {asset.Rid}/native/{asset.Shim.FileName}");
 }
 
 static bool ShouldCopy(string rid, string path)
@@ -227,7 +254,9 @@ static bool ShouldCopy(string rid, string path)
         || fileName.StartsWith("libcurl-impersonate.so.", StringComparison.OrdinalIgnoreCase);
 }
 
-internal sealed record NativeAsset(string Rid, string FileName, string Sha256);
+internal sealed record NativeAsset(string Rid, string FileName, string Sha256, NativeShim? Shim = null);
+
+internal sealed record NativeShim(string FileName, string Sha256);
 
 internal static class AssetCatalog
 {
@@ -236,7 +265,8 @@ internal static class AssetCatalog
         new("win-x64", "libcurl-impersonate-v1.5.6.x86_64-win32.tar.gz", "fe8ce2488d5467fda6061b8b130b5834bc30cdfff40712692e8c5685dbbda6c7"),
         new("win-arm64", "libcurl-impersonate-v1.5.6.arm64-win32.tar.gz", "bf8e04e5162b1cf13ec5bac94b97f11fad3eca1125ecb73bdfe142cbe65d2590"),
         new("osx-x64", "libcurl-impersonate-v1.5.6.x86_64-macos.tar.gz", "05589344cac1ef5aaee89397c2070e45f12eeeba4f0cfba79780a28c46d8a751"),
-        new("osx-arm64", "libcurl-impersonate-v1.5.6.arm64-macos.tar.gz", "00f89f687d9940d13642af90fd192d976897ffd35828e3d859d3fd02cf7fb31f"),
+        new("osx-arm64", "libcurl-impersonate-v1.5.6.arm64-macos.tar.gz", "00f89f687d9940d13642af90fd192d976897ffd35828e3d859d3fd02cf7fb31f",
+            new NativeShim("libcurl-impersonate-shim.dylib", "089473ae31bb10ea5848ac5fb2a6bf7dac53b461d8b9aa3d21a005bc37bf422d")),
         new("linux-x64", "libcurl-impersonate-v1.5.6.x86_64-linux-gnu.tar.gz", "f07e25084020c54d6fd5654c8d458e09b3a44c312f88e480c255399f00487b25"),
         new("linux-arm64", "libcurl-impersonate-v1.5.6.aarch64-linux-gnu.tar.gz", "b4e4f713655616efd2be83153d9057b5961c15e34563dde09a8b6798a8b331e9")
     ];

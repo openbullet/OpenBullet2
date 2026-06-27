@@ -98,7 +98,13 @@ public enum CurlImpersonateBrowserProfile
     /// <summary>OkHttp 4 on Android 12.</summary>
     Okhttp4Android12,
     /// <summary>OkHttp 4 on Android 13.</summary>
-    Okhttp4Android13
+    Okhttp4Android13,
+    /// <summary>A random desktop or mobile browser profile, weighted by worldwide traffic.</summary>
+    Random,
+    /// <summary>A random desktop browser profile, weighted by worldwide traffic.</summary>
+    RandomBrowser,
+    /// <summary>A random mobile browser profile, weighted by worldwide traffic.</summary>
+    RandomMobile
 }
 
 /// <summary>

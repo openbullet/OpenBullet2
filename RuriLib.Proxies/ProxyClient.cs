@@ -2,6 +2,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
+using System.IO;
 using RuriLib.Proxies.Exceptions;
 using RuriLib.Proxies.Clients;
 using RuriLib.Proxies.Helpers;
@@ -80,6 +81,63 @@ public abstract class ProxyClient
     }
 
     /// <summary>
+    /// Create a proxied connection to the destination host and return the stream
+    /// that should be used to exchange bytes with the destination.
+    /// </summary>
+    /// <param name="destinationHost">The host you want to connect to.</param>
+    /// <param name="destinationPort">The port on which the host is listening.</param>
+    /// <param name="tcpClient">A <see cref="TcpClient"/> instance (if null, a new one will be created).</param>
+    /// <param name="cancellationToken">A token to cancel the connection attempt.</param>
+    /// <returns>The established proxied connection.</returns>
+    public async Task<ProxyConnection> ConnectStreamAsync(string destinationHost, int destinationPort, TcpClient? tcpClient = null,
+        CancellationToken cancellationToken = default)
+    {
+        var host = Settings.Host;
+        var port = Settings.Port;
+
+        if (this is NoProxyClient)
+        {
+            host = destinationHost;
+            port = destinationPort;
+        }
+
+        var client = CreateTcpClient(tcpClient);
+        Stream? stream = null;
+
+        try
+        {
+            using var timeoutCts = new CancellationTokenSource(Settings.ConnectTimeout);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
+
+            await ConnectToEndpointAsync(client, host, port, linkedCts.Token).ConfigureAwait(false);
+            stream = client.GetStream();
+            stream = await CreateProxyTransportStreamAsync(client, stream, linkedCts.Token).ConfigureAwait(false);
+            stream = await CreateConnectionStreamAsync(client, stream, destinationHost, destinationPort, linkedCts.Token)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (stream is not null)
+            {
+                await stream.DisposeAsync().ConfigureAwait(false);
+            }
+
+            client.Close();
+
+            if (ex is SocketException or SecurityException)
+            {
+                throw this is NoProxyClient
+                    ? new ProxyException("Failed to connect to server", ex)
+                    : new BadProxyException("Failed to connect to proxy-server", ex);
+            }
+
+            throw;
+        }
+
+        return new ProxyConnection(client, stream);
+    }
+
+    /// <summary>
     /// Create a TCP connection to the configured proxy server without performing any
     /// protocol-specific handshake such as HTTP CONNECT or SOCKS negotiation.
     /// </summary>
@@ -110,6 +168,45 @@ public abstract class ProxyClient
     }
 
     /// <summary>
+    /// Create a connection to the configured proxy server and return the stream
+    /// that should be used to exchange bytes with the proxy.
+    /// </summary>
+    /// <param name="tcpClient">A <see cref="TcpClient"/> instance (if null, a new one will be created).</param>
+    /// <param name="cancellationToken">A token to cancel the connection attempt.</param>
+    /// <exception cref="InvalidOperationException">The current proxy client does not represent a real proxy server.</exception>
+    /// <exception cref="ProxyException">Error while connecting to the proxy-server.</exception>
+    public async Task<ProxyConnection> ConnectToProxyStreamAsync(TcpClient? tcpClient = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (this is NoProxyClient)
+        {
+            throw new InvalidOperationException("No proxy server is configured");
+        }
+
+        var client = CreateTcpClient(tcpClient);
+        Stream? stream = null;
+
+        try
+        {
+            await ConnectToEndpointAsync(client, Settings.Host, Settings.Port, cancellationToken).ConfigureAwait(false);
+            stream = client.GetStream();
+            stream = await CreateProxyTransportStreamAsync(client, stream, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            if (stream is not null)
+            {
+                await stream.DisposeAsync().ConfigureAwait(false);
+            }
+
+            client.Close();
+            throw;
+        }
+
+        return new ProxyConnection(client, stream);
+    }
+
+    /// <summary>
     /// Proxy protocol specific connection.
     /// </summary>
     /// <param name="tcpClient">The <see cref="TcpClient"/> that can be used to connect to the proxy over TCP</param>
@@ -118,6 +215,24 @@ public abstract class ProxyClient
     /// <param name="cancellationToken">A token to cancel operations</param>
     protected virtual Task CreateConnectionAsync(TcpClient tcpClient, string destinationHost, int destinationPort,
         CancellationToken cancellationToken = default) => throw new NotImplementedException();
+
+    /// <summary>
+    /// Creates the transport stream to the proxy server before a protocol-specific
+    /// handshake is performed.
+    /// </summary>
+    protected virtual Task<Stream> CreateProxyTransportStreamAsync(TcpClient tcpClient, Stream stream,
+        CancellationToken cancellationToken = default)
+        => Task.FromResult(stream);
+
+    /// <summary>
+    /// Proxy protocol specific connection that works over the provided stream.
+    /// </summary>
+    protected virtual async Task<Stream> CreateConnectionStreamAsync(TcpClient tcpClient, Stream stream,
+        string destinationHost, int destinationPort, CancellationToken cancellationToken = default)
+    {
+        await CreateConnectionAsync(tcpClient, destinationHost, destinationPort, cancellationToken).ConfigureAwait(false);
+        return stream;
+    }
 
     private TcpClient CreateTcpClient(TcpClient? tcpClient)
         => tcpClient ?? new TcpClient

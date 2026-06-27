@@ -13,7 +13,7 @@ public class ProxyCoreModelsTests
     {
         var options = new ProxyPoolOptions();
 
-        Assert.Equal([ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5], options.AllowedTypes);
+        Assert.Equal([ProxyType.Http, ProxyType.Https, ProxyType.Socks4, ProxyType.Socks5], options.AllowedTypes);
     }
 
     [Fact]

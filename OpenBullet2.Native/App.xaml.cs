@@ -29,10 +29,6 @@ using System.Windows;
 using System.Windows.Threading;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
-using Serilog.Exceptions;
-using Serilog.Formatting.Compact;
-using Serilog.Settings.Configuration;
-using Serilog.Sinks.File;
 
 namespace OpenBullet2.Native;
 
@@ -79,14 +75,7 @@ public partial class App : Application
 
         ThreadPool.SetMinThreads(workerThreads, ioThreads);
 
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(
-                config,
-                new ConfigurationReaderOptions(
-                    typeof(FileLoggerConfigurationExtensions).Assembly,
-                    typeof(LoggerEnrichmentConfigurationExtensions).Assembly,
-                    typeof(CompactJsonFormatter).Assembly))
-            .CreateLogger();
+        Log.Logger = NativeLoggerFactory.Create(config, userDataDirectory.GetPath("Logs", "log-.txt"));
 
         Log.Debug("Initializing Native host");
 

@@ -1,6 +1,6 @@
-using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
-using System.Net.Http;
+using System;
+using System.IO;
 using System.Windows.Controls;
 
 namespace OpenBullet2.Native.Views.Dialogs;
@@ -12,10 +12,10 @@ public partial class ShowChangelogDialog : Page
 {
     private readonly ChangelogViewModel vm;
 
-    public ShowChangelogDialog(UpdateService updateService)
+    public ShowChangelogDialog()
     {
         InitializeComponent();
-        vm = new ChangelogViewModel(updateService);
+        vm = new ChangelogViewModel();
         DataContext = vm;
     }
 
@@ -32,20 +32,15 @@ public partial class ShowChangelogDialog : Page
             }
         }
 
-        public ChangelogViewModel(UpdateService updateService)
+        public ChangelogViewModel()
         {
-            FetchChangelog(updateService);
-        }
-
-        private async void FetchChangelog(UpdateService updateService)
-        {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-
             try
             {
-                var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{updateService.CurrentVersion}.md");
-                Text = await response.Content.ReadAsStringAsync();
+                using var stream = typeof(ShowChangelogDialog).Assembly
+                    .GetManifestResourceStream("OpenBullet2.Changelog.md")
+                    ?? throw new InvalidOperationException("The bundled changelog could not be found");
+                using var reader = new StreamReader(stream);
+                Text = reader.ReadToEnd();
             }
             catch
             {

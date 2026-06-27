@@ -713,6 +713,34 @@ public static class Crypto
             ecdsa?.Dispose();
         }
     }
+
+    /// <summary>
+    /// Decodes the payload of a JWT without validating its signature.
+    /// </summary>
+    /// <param name="token">The JWT to decode.</param>
+    /// <returns>The decoded JWT payload.</returns>
+    public static string JwtDecode(string token)
+    {
+        var tokenParts = token.Split('.');
+
+        if (tokenParts.Length < 2 || string.IsNullOrEmpty(tokenParts[1]))
+        {
+            throw new FormatException("The JWT must contain a payload segment");
+        }
+
+        var payload = tokenParts[1]
+            .Replace('-', '+')
+            .Replace('_', '/');
+
+        var paddingLength = payload.Length % 4;
+
+        if (paddingLength > 0)
+        {
+            payload = payload.PadRight(payload.Length + 4 - paddingLength, '=');
+        }
+
+        return Encoding.UTF8.GetString(Convert.FromBase64String(payload));
+    }
     #endregion
 
     #region Scrypt

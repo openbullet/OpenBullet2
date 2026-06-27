@@ -66,7 +66,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
 
         if (data.Proxy != null && data.UseProxy)
         {
-            if (data.Proxy.Type == ProxyType.Http || !data.Proxy.NeedsAuthentication)
+            if (data.Proxy.Type is ProxyType.Http or ProxyType.Https || !data.Proxy.NeedsAuthentication)
             {
                 args.Add($"--proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}");
             }
@@ -99,7 +99,7 @@ public class PuppeteerBrowserAutomationEngine : IBrowserAutomationEngine
         SetPageAndFrame(data, page);
         await SetPageLoadingOptions(data, page);
 
-        if (data is { UseProxy: true, Proxy: { NeedsAuthentication: true, Type: ProxyType.Http } proxy })
+        if (data is { UseProxy: true, Proxy: { NeedsAuthentication: true, Type: ProxyType.Http or ProxyType.Https } proxy })
         {
             await page.AuthenticateAsync(new Credentials { Username = proxy.Username, Password = proxy.Password });
         }

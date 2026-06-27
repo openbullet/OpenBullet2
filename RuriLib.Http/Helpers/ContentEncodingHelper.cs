@@ -5,7 +5,7 @@ using System.IO.Compression;
 
 namespace RuriLib.Http.Helpers;
 
-internal static class ContentEncodingHelper
+public static class ContentEncodingHelper
 {
     private static readonly HashSet<string> IgnoredEncodings = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -17,7 +17,7 @@ internal static class ContentEncodingHelper
         "false"
     };
 
-    internal static Stream GetDecodedStream(Stream stream, IEnumerable<string> headerValues)
+    public static Stream GetDecodedStream(Stream stream, IEnumerable<string> headerValues)
     {
         ArgumentNullException.ThrowIfNull(stream);
         ArgumentNullException.ThrowIfNull(headerValues);

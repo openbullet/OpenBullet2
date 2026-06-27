@@ -1,29 +1,19 @@
-using System.Net;
-using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.Services;
 
 /// <summary>
-/// Service that reads changelog files from the OpenBullet2 repository on GitHub.
+/// Service that reads the changelog bundled with the application.
 /// </summary>
-public class ChangelogService(HttpClient httpClient) : IChangelogService
+public class ChangelogService : IChangelogService
 {
-    private readonly HttpClient _httpClient = httpClient;
-
     /// <inheritdoc />
-    public async Task<string> FetchChangelogAsync(string version, CancellationToken cancellationToken)
+    public async Task<string> FetchChangelogAsync(CancellationToken cancellationToken)
     {
-        var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{version}.md";
-        using var response = await _httpClient.GetAsync(url, cancellationToken);
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new ResourceNotFoundException(
-                ErrorCode.RemoteResourceNotFound,
-                $"Changelog for version {version}", url);
-        }
-
-        return await response.Content.ReadAsStringAsync(cancellationToken);
+        await using var stream = typeof(ChangelogService).Assembly
+            .GetManifestResourceStream("OpenBullet2.Changelog.md")
+            ?? throw new InvalidOperationException("The bundled changelog could not be found");
+        using var reader = new StreamReader(stream);
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 }

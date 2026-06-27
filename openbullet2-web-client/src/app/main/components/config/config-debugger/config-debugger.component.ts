@@ -38,7 +38,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   settings: ConfigDebuggerSettings | null = null;
   wordlistTypes: string[] = ['Default'];
-  proxyTypes: string[] = ['http', 'socks4', 'socks4a', 'socks5'];
+  proxyTypes: string[] = ['http', 'https', 'socks4', 'socks4a', 'socks5'];
 
   faPlay = faPlay;
   faBug = faBug;

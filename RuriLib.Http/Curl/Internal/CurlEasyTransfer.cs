@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -70,6 +71,7 @@ internal sealed class CurlEasyTransfer : IDisposable
     private readonly CurlWriteCallback writeCallback;
     private readonly CurlWriteCallback headerCallback;
     private readonly CurlProgressCallback progressCallback;
+    private readonly CurlDebugCallback debugCallback;
     private readonly byte[] errorBuffer = new byte[256];
     private readonly GCHandle errorBufferHandle;
     // String options and curl_slist entries are borrowed by libcurl until cleanup.
@@ -96,6 +98,7 @@ internal sealed class CurlEasyTransfer : IDisposable
         writeCallback = OnWrite;
         headerCallback = OnHeader;
         progressCallback = OnProgress;
+        debugCallback = OnDebug;
     }
 
     public async Task ConfigureAsync(HttpRequestMessage request, CurlImpersonateHandlerOptions options,
@@ -114,6 +117,13 @@ internal sealed class CurlEasyTransfer : IDisposable
         SetPointerOption(CurlOption.HeaderData, GCHandle.ToIntPtr(contextHandle));
         SetPointerOption(CurlOption.XferInfoFunction, Marshal.GetFunctionPointerForDelegate(progressCallback));
         SetPointerOption(CurlOption.XferInfoData, GCHandle.ToIntPtr(contextHandle));
+
+        if (context.RequestHeadersCallback is not null)
+        {
+            SetLongOption(CurlOption.Verbose, 1);
+            SetPointerOption(CurlOption.DebugFunction, Marshal.GetFunctionPointerForDelegate(debugCallback));
+            SetPointerOption(CurlOption.DebugData, GCHandle.ToIntPtr(contextHandle));
+        }
 
         SetHttpVersionIfNeeded(request);
         var browserHeadersSeeded = Impersonate(options);
@@ -183,7 +193,7 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         var curlVersion = request.Version.Major switch
         {
-            2 => CurlHttpVersion.Version2Tls,
+            2 => CurlHttpVersion.Version20,
             3 => CurlHttpVersion.Version30,
             _ => CurlHttpVersion.None
         };
@@ -196,13 +206,15 @@ internal sealed class CurlEasyTransfer : IDisposable
 
     private bool Impersonate(CurlImpersonateHandlerOptions options)
     {
-        if (CurlImpersonateCustomProfile.TryGet(options.BrowserProfile, out var customProfile))
+        var browserProfile = CurlImpersonateBrowserProfileSelector.Resolve(options.BrowserProfile);
+
+        if (CurlImpersonateCustomProfile.TryGet(browserProfile, out var customProfile))
         {
             ApplyCustomFingerprint(customProfile);
             return false;
         }
 
-        using var target = new NativeUtf8String(options.BrowserProfile.ToCurlTarget());
+        using var target = new NativeUtf8String(browserProfile.ToCurlTarget());
         // curl_easy_impersonate applies the TLS/HTTP fingerprint. With default
         // headers enabled, it also seeds browser headers in curl's intended order.
         var result = CurlNativeMethods.EasyImpersonate(handle, target.Pointer, options.UseBrowserHeaders ? 1 : 0);
@@ -478,18 +490,7 @@ internal sealed class CurlEasyTransfer : IDisposable
     private void ConfigureHeaders(HttpRequestMessage request, CurlImpersonateHandlerOptions options,
         bool browserHeadersSeeded)
     {
-        foreach (var header in request.Headers)
-        {
-            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
-            {
-                continue;
-            }
-
-            foreach (var value in header.Value)
-            {
-                AppendHeader($"{header.Key}: {value}");
-            }
-        }
+        AppendHeaders(request.Headers, browserHeadersSeeded);
 
         if (options.UseCookies
             && request.RequestUri is not null
@@ -504,18 +505,7 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         if (request.Content is not null)
         {
-            foreach (var header in request.Content.Headers)
-            {
-                if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
-                {
-                    continue;
-                }
-
-                foreach (var value in header.Value)
-                {
-                    AppendHeader($"{header.Key}: {value}");
-                }
-            }
+            AppendHeaders(request.Content.Headers, browserHeadersSeeded);
         }
 
         if (headerList != 0)
@@ -523,6 +513,22 @@ internal sealed class CurlEasyTransfer : IDisposable
             // libcurl reads this linked list during perform; ownership remains
             // with us and is released through curl_slist_free_all in Dispose.
             SetPointerOption(CurlOption.HttpHeader, headerList);
+        }
+    }
+
+    private void AppendHeaders(HttpHeaders headers, bool browserHeadersSeeded)
+    {
+        foreach (var header in headers.NonValidated)
+        {
+            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
+            {
+                continue;
+            }
+
+            foreach (var value in header.Value)
+            {
+                AppendHeader($"{header.Key}: {value}");
+            }
         }
     }
 
@@ -647,6 +653,20 @@ internal sealed class CurlEasyTransfer : IDisposable
     private static int OnProgress(nint clientp, long downloadTotal, long downloadNow, long uploadTotal, long uploadNow)
         => GetContext(clientp).CancellationToken.IsCancellationRequested ? 1 : 0;
 
+    private static int OnDebug(nint handle, CurlDebugInfoType type, nint data, nuint size, nint userData)
+    {
+        if (type != CurlDebugInfoType.HeaderOut || size == 0)
+        {
+            return 0;
+        }
+
+        var context = GetContext(userData);
+        var bytes = new byte[checked((int)size)];
+        Marshal.Copy(data, bytes, 0, bytes.Length);
+        context.ReportRequestHeaders(Encoding.UTF8.GetString(bytes));
+        return 0;
+    }
+
     private static CurlRequestContext GetContext(nint userData)
     {
         var handle = GCHandle.FromIntPtr(userData);
@@ -721,13 +741,18 @@ internal sealed class CurlEasyTransfer : IDisposable
     }
 }
 
-internal sealed class CurlRequestContext(CancellationToken cancellationToken, bool readResponseContent) : IDisposable
+internal sealed class CurlRequestContext(
+    CancellationToken cancellationToken,
+    bool readResponseContent,
+    Action<string>? requestHeadersCallback) : IDisposable
 {
     private readonly List<string> headers = [];
 
     public CancellationToken CancellationToken { get; } = cancellationToken;
 
     public bool ReadResponseContent { get; } = readResponseContent;
+
+    public Action<string>? RequestHeadersCallback { get; } = requestHeadersCallback;
 
     public MemoryStream Body { get; } = new();
 
@@ -752,6 +777,18 @@ internal sealed class CurlRequestContext(CancellationToken cancellationToken, bo
 
     public CurlResponseData BuildResponse(Version? httpVersion)
         => new(StatusCode, Body.ToArray(), [.. headers], httpVersion);
+
+    public void ReportRequestHeaders(string requestHeaders)
+    {
+        try
+        {
+            RequestHeadersCallback?.Invoke(requestHeaders);
+        }
+        catch
+        {
+            // Exceptions must not cross the unmanaged callback boundary.
+        }
+    }
 
     public void Dispose()
         => Body.Dispose();

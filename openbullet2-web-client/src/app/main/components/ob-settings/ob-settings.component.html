@@ -416,6 +416,7 @@
     <div *ngIf="themes !== null" class="row my-3">
         <div class="col-12">
             <span class="mr-2">UI Theme</span>
+            <app-docs-button path="customization/themes" buttonClass="color-inactive" />
             <app-input-dropdown key="theme"
                 (ngModelChange)="onThemeChange($event)"
                 itemClass="input-small" optionClass="input-small"
@@ -432,17 +433,20 @@
     </div>
     <div class="row my-3">
         <div class="col-12">
-            <p-checkbox
-                (onChange)="touched = true" ngDefaultControl 
-                [(ngModel)]="settings.customizationSettings.playSoundOnHit"
-                [binary]="true" inputId="playSoundOnHit"
-                label="Play a sound when a hit is found" />
-            <!-- Icon to test the sound -->
-            <button class="button button-small button-transparent ml-2"
-                (click)="playHitSound()">
-                <fa-icon [icon]="faVolumeUp" [fixedWidth]="true"></fa-icon>
-                Test
-            </button>
+            <div class="d-flex align-items-center flex-wrap">
+                <p-checkbox
+                    (onChange)="touched = true" ngDefaultControl 
+                    [(ngModel)]="settings.customizationSettings.playSoundOnHit"
+                    [binary]="true" inputId="playSoundOnHit"
+                    label="Play a sound when a hit is found" />
+                <app-docs-button path="customization/sounds" class="ml-1" buttonClass="color-inactive" />
+                <!-- Icon to test the sound -->
+                <button class="button button-small button-transparent ml-2"
+                    (click)="playHitSound()">
+                    <fa-icon [icon]="faVolumeUp" [fixedWidth]="true"></fa-icon>
+                    Test
+                </button>
+            </div>
         </div>
     </div>
     <div class="row my-3">
