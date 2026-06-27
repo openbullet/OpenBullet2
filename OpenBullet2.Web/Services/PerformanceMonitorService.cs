@@ -17,7 +17,8 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
     private readonly IHubContext<SystemPerformanceHub> _hub;
     private readonly ILogger<PerformanceMonitorService> _logger;
     private readonly SemaphoreSlim _semaphore = new(1);
-    private CancellationTokenSource _cts = new();
+    private readonly object _ctsLock = new();
+    private CancellationTokenSource? _cts;
     private bool _disposed;
     private long? _previousSampleTimestamp;
     private TimeSpan? _previousCpuTime;
@@ -35,11 +36,17 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
     /// <inheritdoc />
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        // Dispose the old cancellation token source and create a new one
-        _cts.Dispose();
-        _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        CancellationTokenSource cts;
 
-        ReadMetricsLoopAsync(_cts.Token).Forget(e =>
+        lock (_ctsLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            _cts?.Dispose();
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cts = _cts;
+        }
+
+        ReadMetricsLoopAsync(cts.Token).Forget(e =>
         {
             // Don't log OperationCanceledException
             if (e is OperationCanceledException)
@@ -56,7 +63,21 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
     /// <inheritdoc />
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _cts.Cancel();
+        CancellationTokenSource? cts;
+
+        lock (_ctsLock)
+        {
+            cts = _cts;
+        }
+
+        try
+        {
+            cts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // StopAsync can be called during test-host teardown after DI disposal has started.
+        }
 
         return Task.CompletedTask;
     }
@@ -70,15 +91,25 @@ public sealed class PerformanceMonitorService : IHostedService, IDisposable
 
     private void Dispose(bool disposing)
     {
-        if (_disposed || !disposing)
+        if (!disposing)
         {
             return;
         }
 
-        _cts.Dispose();
+        lock (_ctsLock)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _cts?.Dispose();
+            _cts = null;
+            _disposed = true;
+        }
+
         _semaphore.Dispose();
         _currentProcess.Dispose();
-        _disposed = true;
     }
 
     /// <summary>
