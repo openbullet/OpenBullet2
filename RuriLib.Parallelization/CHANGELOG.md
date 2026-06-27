@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1 - 2026-06-27
+
+- Bumped package version for the OpenBullet 2.0.1 release train.
+
 ## 2.0.0 - 2026-06-06
 
 Changes since `1.0.6`, released on 2022-03-09:

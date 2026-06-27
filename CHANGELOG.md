@@ -1,3 +1,38 @@
+## 2.0.1 (2026-06-27)
+This patch release focuses on stability, security and compatibility fixes after `2.0.0`.
+
+##### Security and Reliability
+- Prevented ZIP Slip attacks during plugin installation (by GekySan)
+- Fixed plugin installation when plugin directories do not exist yet
+- Removed the plugin package size limit
+- Fixed an idempotency issue in the web performance monitor service
+- Added a fallback for native logging when Serilog configuration is missing from `appsettings.json`
+
+##### Blocks and Automation
+- Added a `JwtDecode` block
+- Normalized Unix virtual environment paths before initializing Python through `CSnakes`
+- Improved constant block logging so only generated values are printed
+
+##### Requests, Proxies and Data
+- Added HTTPS proxy support across proxy parsing, block settings and request stacks
+- Added random profile options for `curl-impersonate`
+- Improved `curl-impersonate` debug logs by showing the actual sent headers
+- Fixed header values being split on commas in `curl-impersonate`
+- Fixed `curl-impersonate` native loading on macOS arm64 (by meinname)
+- Fixed zstd response decoding in the `System.Net` handler (by GekySan)
+- Ignored malformed `Set-Cookie` headers instead of failing request processing
+- Fixed proxiless requests incorrectly using the proxy connect timeout
+- Requested exact HTTP/3 when `3.0` is selected in the `System.Net` HTTP stack
+
+##### OpenBullet (Web)
+- Updated changelog/update handling in the web API and client
+- Fixed detailed multi-run job view not showing all bots
+
+##### OpenBullet (Native)
+- Fixed changelog window timing issues
+- Fixed `TimeSpanPicker` binding
+- Displayed underscores correctly in multi-run job custom inputs
+
 ## 2.0.0 (2026-06-06)
 **This is a huge release with lots of improvements. Please discard your old updater and get the latest one, otherwise the update process will break.**
 
