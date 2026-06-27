@@ -94,6 +94,11 @@ internal sealed class LocalHttpsRedirectServer : IAsyncDisposable
         catch (AuthenticationException)
         {
         }
+        catch (InvalidOperationException ex) when (ex.Message.Contains(
+                   "client closed the TCP stream before sending HTTP headers",
+                   StringComparison.OrdinalIgnoreCase))
+        {
+        }
         finally
         {
             certificate.Dispose();
