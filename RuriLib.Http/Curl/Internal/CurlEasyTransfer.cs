@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -489,18 +490,7 @@ internal sealed class CurlEasyTransfer : IDisposable
     private void ConfigureHeaders(HttpRequestMessage request, CurlImpersonateHandlerOptions options,
         bool browserHeadersSeeded)
     {
-        foreach (var header in request.Headers)
-        {
-            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
-            {
-                continue;
-            }
-
-            foreach (var value in header.Value)
-            {
-                AppendHeader($"{header.Key}: {value}");
-            }
-        }
+        AppendHeaders(request.Headers, browserHeadersSeeded);
 
         if (options.UseCookies
             && request.RequestUri is not null
@@ -515,18 +505,7 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         if (request.Content is not null)
         {
-            foreach (var header in request.Content.Headers)
-            {
-                if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
-                {
-                    continue;
-                }
-
-                foreach (var value in header.Value)
-                {
-                    AppendHeader($"{header.Key}: {value}");
-                }
-            }
+            AppendHeaders(request.Content.Headers, browserHeadersSeeded);
         }
 
         if (headerList != 0)
@@ -534,6 +513,22 @@ internal sealed class CurlEasyTransfer : IDisposable
             // libcurl reads this linked list during perform; ownership remains
             // with us and is released through curl_slist_free_all in Dispose.
             SetPointerOption(CurlOption.HttpHeader, headerList);
+        }
+    }
+
+    private void AppendHeaders(HttpHeaders headers, bool browserHeadersSeeded)
+    {
+        foreach (var header in headers.NonValidated)
+        {
+            if (CurlHeaderFilters.ShouldSkipRequestHeader(header.Key, browserHeadersSeeded))
+            {
+                continue;
+            }
+
+            foreach (var value in header.Value)
+            {
+                AppendHeader($"{header.Key}: {value}");
+            }
         }
     }
 
