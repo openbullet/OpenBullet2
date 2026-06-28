@@ -291,6 +291,6 @@ public class BlockViewModel(BlockInstance block) : ViewModelBase
         }
     }
 
-    public string BackgroundColor => Disabled ? "#444" : Block.Descriptor.Category.BackgroundColor;
-    public string ForegroundColor => Disabled ? "#FFF" : Block.Descriptor.Category.ForegroundColor;
+    public string BackgroundColor => Disabled ? "#1A1A1A" : Block.Descriptor.Category.BackgroundColor;
+    public string ForegroundColor => Disabled ? "#777777" : Block.Descriptor.Category.ForegroundColor;
 }
