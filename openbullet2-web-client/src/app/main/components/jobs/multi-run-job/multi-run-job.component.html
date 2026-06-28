@@ -507,7 +507,7 @@
                 <div class="named-card-key">
                     Hits
                 </div>
-                <div class="named-card-value hits">
+                <div class="named-card-value hits" #hitsContainer>
                     <ul class="hits-list">
                         <li *ngFor="let hit of filteredHits" class="hit"
                             [class.selected]="isHitSelected(hit)"

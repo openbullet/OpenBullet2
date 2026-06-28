@@ -123,6 +123,8 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
   @ViewChild('hitSoundPlayer') hitSoundPlayer!: ElementRef;
 
+  @ViewChild('hitsContainer') hitsContainer!: ElementRef;
+
   hits: MRJHitDto[] = [];
   filteredHits: MRJHitDto[] = [];
   selectedHits: MRJHitDto[] = [];
@@ -425,6 +427,13 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       // Note: if multiple hits are received at the same time, the sound will only play once
       // to avoid spamming the sound
       this.hitSoundPlayer.nativeElement.play();
+    }
+
+    // Auto-scroll to bottom when new hits arrive
+    if (this.hitsContainer) {
+      setTimeout(() => {
+        this.hitsContainer.nativeElement.scrollTop = this.hitsContainer.nativeElement.scrollHeight;
+      });
     }
   }
 
