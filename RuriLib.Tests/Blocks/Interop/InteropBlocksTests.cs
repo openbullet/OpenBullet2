@@ -2,6 +2,7 @@ using IronPython.Hosting;
 using Jint;
 using Microsoft.Scripting.Hosting;
 using RuriLib.Exceptions;
+using RuriLib.Blocks.Interop;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
@@ -10,7 +11,9 @@ using RuriLib.Models.Environment;
 using RuriLib.Tests.Utils.Mockup;
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using BotProviders = RuriLib.Models.Bots.Providers;
@@ -86,6 +89,55 @@ public class InteropBlocksTests
 #pragma warning restore CS0618
 
         Assert.IsType<ScriptScope>(scope);
+    }
+
+    [Fact]
+    public async Task NodeJsInvocationGate_QueuesCallsBeyondConcurrencyLimit()
+    {
+        var activeCount = 0;
+        var maxActiveCount = 0;
+        var tasks = Enumerable.Range(0, NodeJsInvocationGate.MaxConcurrentInvocations + 2)
+            .Select(index => NodeJsInvocationGate.RunAsync(async () =>
+            {
+                var currentActiveCount = Interlocked.Increment(ref activeCount);
+                TrackMaxActiveCount(ref maxActiveCount, currentActiveCount);
+
+                try
+                {
+                    await Task.Delay(50, TestContext.Current.CancellationToken);
+                    return index;
+                }
+                finally
+                {
+                    Interlocked.Decrement(ref activeCount);
+                }
+            }, TestContext.Current.CancellationToken))
+            .ToArray();
+
+        var results = await Task.WhenAll(tasks);
+
+        Assert.Equal(
+            Enumerable.Range(0, NodeJsInvocationGate.MaxConcurrentInvocations + 2),
+            results);
+        Assert.True(maxActiveCount <= NodeJsInvocationGate.MaxConcurrentInvocations);
+    }
+
+    private static void TrackMaxActiveCount(ref int maxActiveCount, int currentActiveCount)
+    {
+        int previousMaxActiveCount;
+
+        do
+        {
+            previousMaxActiveCount = maxActiveCount;
+
+            if (currentActiveCount <= previousMaxActiveCount)
+            {
+                return;
+            }
+        } while (Interlocked.CompareExchange(
+            ref maxActiveCount,
+            currentActiveCount,
+            previousMaxActiveCount) != previousMaxActiveCount);
     }
 
     private static BotData NewBotData()

@@ -84,6 +84,7 @@ Important facts:
 - NodeJS must be installed on the target system
 - third-party packages must be installed in OB2's `Scripts` directory
 - Node dependencies are resolved from `Scripts/node_modules`
+- NodeJS Script block invocations are serialized per OB2 process; if several bots reach one at the same time, one runs and the others wait
 - if the target installation is unknown, do not assume NodeJS or npm packages are available
 
 Example with an external package:

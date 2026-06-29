@@ -135,39 +135,43 @@ public static class Methods
     {
         if (string.IsNullOrEmpty(scriptHash))
         {
-            return await StaticNodeJSService.InvokeFromStringAsync<T>(
+            return await NodeJsInvocationGate.RunAsync(
+                () => StaticNodeJSService.InvokeFromStringAsync<T>(
+                    script,
+                    scriptHash,
+                    null,
+                    parameters,
+                    data.CancellationToken),
+                data.CancellationToken).ConfigureAwait(false);
+        }
+
+        var (isCached, cachedResult) = await NodeJsInvocationGate.RunAsync(
+            () => StaticNodeJSService.TryInvokeFromCacheAsync<T>(
+                scriptHash,
+                null,
+                parameters,
+                data.CancellationToken),
+            data.CancellationToken).ConfigureAwait(false);
+
+        return isCached ? cachedResult : await NodeJsInvocationGate.RunAsync(
+            () => StaticNodeJSService.InvokeFromStringAsync<T>(
                 script,
                 scriptHash,
                 null,
                 parameters,
-                data.CancellationToken
-            ).ConfigureAwait(false);
-        }
-
-        var (isCached, cachedResult) = await StaticNodeJSService.TryInvokeFromCacheAsync<T>(
-            scriptHash,
-            null,
-            parameters,
-            data.CancellationToken
-        ).ConfigureAwait(false);
-
-        return isCached ? cachedResult : await StaticNodeJSService.InvokeFromStringAsync<T>(
-            script,
-            scriptHash,
-            null,
-            parameters,
-            data.CancellationToken
-        ).ConfigureAwait(false);
+                data.CancellationToken),
+            data.CancellationToken).ConfigureAwait(false);
     }
 
     private static async Task<T?> InvokeFromFile<T>(BotData data, string filePath, object[] parameters)
     {
-        return await StaticNodeJSService.InvokeFromFileAsync<T>(
-            filePath,
-            null,
-            parameters,
-            data.CancellationToken
-        ).ConfigureAwait(false);
+        return await NodeJsInvocationGate.RunAsync(
+            () => StaticNodeJSService.InvokeFromFileAsync<T>(
+                filePath,
+                null,
+                parameters,
+                data.CancellationToken),
+            data.CancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
