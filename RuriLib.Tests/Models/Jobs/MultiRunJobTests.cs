@@ -366,9 +366,9 @@ public class MultiRunJobTests
     [Theory]
     [InlineData(0, 2, 5, 2)]
     [InlineData(2, 1, 5, 3)]
-    [InlineData(2, 3, 5, 0)]
-    [InlineData(0, 5, 5, 0)]
-    public void GetNextSkip_NormalizesCompletedRuns(int currentSkip, int processed, int total, int expected)
+    [InlineData(2, 3, 5, 5)]
+    [InlineData(0, 5, 5, 5)]
+    public void GetNextSkip_PreservesCompletedRunCheckpoint(int currentSkip, int processed, int total, int expected)
     {
         var nextSkip = MultiRunJobCheckpoint.GetNextSkip(currentSkip, processed, total);
 
@@ -395,14 +395,14 @@ public class MultiRunJobTests
 
         await job.Start(TestCancellationToken);
         await WaitUntilIdleAsync(job);
-        Assert.Equal(0, job.Skip);
+        Assert.Equal(1, job.Skip);
         Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
 
         var exception = await Record.ExceptionAsync(() => job.Start(TestCancellationToken));
         await WaitUntilIdleAsync(job);
 
         Assert.Null(exception);
-        Assert.Equal(0, job.Skip);
+        Assert.Equal(1, job.Skip);
         Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
     }
 

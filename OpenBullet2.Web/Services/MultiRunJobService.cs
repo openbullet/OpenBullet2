@@ -371,7 +371,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             CaptchaCredit = job.CaptchaCredit,
             Elapsed = job.Elapsed,
             Remaining = job.Remaining,
-            Progress = job.Progress
+            Progress = MultiRunJobProgress.GetEffectiveProgress(job)
         };
 
         await NotifyClientsAsync(sender, message, JobMethods.TimerTick);

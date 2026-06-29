@@ -437,7 +437,22 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   onStatusChanged(status: JobStatus) {
+    const wasIdle = this.status === JobStatus.IDLE;
     this.status = status;
+
+    const isStartingNewRun = status === JobStatus.STARTING || status === JobStatus.WAITING || status === JobStatus.RUNNING;
+
+    if (wasIdle && isStartingNewRun && this.job) {
+      this.dataStats.tested = 0;
+
+      if (this.job.lastRunOutcome === JobLastRunOutcome.COMPLETED) {
+        this.job.skip = 0;
+      }
+
+      this.progress = this.dataStats.total > 0
+        ? this.Math.min(this.job.skip, this.dataStats.total) / this.dataStats.total
+        : 0;
+    }
 
     if (status === JobStatus.WAITING) {
       this.startTime = moment();

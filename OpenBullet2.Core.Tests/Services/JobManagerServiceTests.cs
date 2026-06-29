@@ -21,7 +21,7 @@ namespace OpenBullet2.Core.Tests.Services;
 public sealed class JobManagerServiceTests
 {
     [Fact]
-    public async Task SaveMultiRunJobOptionsAsync_WhenJobCompleted_ResetsPersistedSkip()
+    public async Task SaveMultiRunJobOptionsAsync_WhenJobCompleted_PreservesCompletedCheckpoint()
     {
         using var database = new TestDatabase();
         var manager = new JobManagerService(
@@ -59,7 +59,7 @@ public sealed class JobManagerServiceTests
             saved.JobOptions!, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         var options = Assert.IsType<MultiRunJobOptions>(wrapper!.Options);
 
-        Assert.Equal(0, options.Skip);
+        Assert.Equal(3, options.Skip);
     }
 
     [Fact]

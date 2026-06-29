@@ -127,14 +127,9 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
                 DataCustom = job.DataCustom,
                 DataToCheck = job.DataToCheck,
                 DataTotal = job.DataPool.Size,
-                DataTested = job.Status switch
-                {
-                    JobStatus.Idle when job.LastRunOutcome == JobLastRunOutcome.Completed => job.DataPool.Size,
-                    JobStatus.Idle => job.Skip,
-                    _ => Math.Min((long)job.DataTested + job.Skip, job.DataPool.Size)
-                },
+                DataTested = MultiRunJobProgress.GetEffectiveDataTested(job),
                 CPM = job.CPM,
-                Progress = job.Progress < 0 ? 0 : job.Progress
+                Progress = MultiRunJobProgress.GetEffectiveProgress(job)
             };
 
             dtos.Add(dto);
@@ -1052,7 +1047,7 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
             CaptchaCredit = job.CaptchaCredit,
             Elapsed = job.Elapsed,
             Remaining = job.Remaining,
-            Progress = job.Progress < 0 ? 0 : job.Progress,
+            Progress = MultiRunJobProgress.GetEffectiveProgress(job),
             Hits = hits.Select(h => new MrjHitDto
             {
                 Id = h.Id,

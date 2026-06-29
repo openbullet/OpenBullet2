@@ -619,6 +619,7 @@ public class MultiRunJob : Job
 
         try
         {
+            var resetSkipOnStart = LastRunOutcome == JobLastRunOutcome.Completed;
             LastRunOutcome = JobLastRunOutcome.None;
             pendingLastRunOutcome = JobLastRunOutcome.None;
             ResetForNewRun();
@@ -634,6 +635,11 @@ public class MultiRunJob : Job
             var config = Config ?? throw new InvalidOperationException("The Config cannot be null");
             var dataPool = DataPool ?? throw new InvalidOperationException("The DataPool cannot be null");
             var providers = Providers ?? throw new InvalidOperationException("The Providers cannot be null");
+
+            if (resetSkipOnStart)
+            {
+                Skip = 0;
+            }
 
             if (Skip >= dataPool.Size)
                 throw new ArgumentException(

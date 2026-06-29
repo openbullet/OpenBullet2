@@ -186,7 +186,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         mrJob2.OwnerId = 1;
         mrJob2.DataPool = new RangeDataPool(1, 10);
         mrJob2.Skip = 6;
-        SetDataTested(mrJob2, 6);
+        SetDataTested(mrJob2, 2);
         SetLastRunOutcome(mrJob2, JobLastRunOutcome.Stopped);
         var pcJob = CreateProxyCheckJob();
         pcJob.Name = "Test PCJ";
@@ -209,6 +209,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(1, j.OwnerId);
                 Assert.Equal(JobType.MultiRun, j.Type);
                 Assert.Equal(6, j.DataTested);
+                Assert.Equal(0.6, j.Progress);
             },
             j =>
             {
@@ -221,6 +222,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob.Bots, j.Bots);
                 Assert.Equal(mrJob.ShouldUseProxies(), j.UseProxies);
                 Assert.Equal(10, j.DataTested);
+                Assert.Equal(1, j.Progress);
             });
     }
 
@@ -412,6 +414,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(mrJob.ProxyMode, result.Value.ProxyMode);
         Assert.Equal(JobLastRunOutcome.Completed, result.Value.LastRunOutcome);
         Assert.NotNull(result.Value.DataStats);
+        Assert.Equal(1, result.Value.Progress);
         Assert.NotNull(result.Value.ProxyStats);
     }
 
