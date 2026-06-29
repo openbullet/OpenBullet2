@@ -26,7 +26,9 @@ internal static class BlockSettingMapper
 
         setting.InputMode = dto.InputMode;
         setting.InputVariableName = dto.InputVariableName ?? string.Empty;
-        var value = (JsonElement)dto.Value!;
+        var value = dto.Value is JsonElement element
+            ? element
+            : JsonSerializer.SerializeToElement(dto.Value, Globals.JsonOptions);
 
         switch (dto.Type)
         {
@@ -48,7 +50,9 @@ internal static class BlockSettingMapper
                 break;
 
             case BlockSettingType.ByteArray:
-                ((ByteArraySetting)setting.FixedSetting!).Value = value.GetBytesFromBase64();
+                ((ByteArraySetting)setting.FixedSetting!).Value = value.ValueKind is JsonValueKind.Null
+                    ? []
+                    : value.GetBytesFromBase64();
                 break;
 
             case BlockSettingType.ListOfStrings:

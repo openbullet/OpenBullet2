@@ -1,0 +1,16 @@
+.encoding-button {
+    min-width: 42px;
+    height: 27px;
+    border: 1px solid var(--fg-inactive);
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--fg-primary);
+    font-size: 11px;
+    line-height: 10px;
+}
+
+.encoding-button.active {
+    border-color: var(--fg-accent);
+    background-color: var(--fg-accent);
+    color: var(--fg-light);
+}

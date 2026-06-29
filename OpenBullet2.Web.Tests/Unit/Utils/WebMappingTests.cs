@@ -424,6 +424,12 @@ public class WebMappingTests
         Assert.Equal(BlockSettingType.String, stringDto.Type);
         Assert.Equal("hello", stringDto.Value);
 
+        var byteArraySetting = BlockSettingFactory.CreateByteArraySetting("bytes", [1, 2, 3]);
+        var byteArrayDto = BlockSettingMapper.ToDto(byteArraySetting);
+
+        Assert.Equal(BlockSettingType.ByteArray, byteArrayDto.Type);
+        Assert.Equal([1, 2, 3], Assert.IsType<byte[]>(byteArrayDto.Value));
+
         var listSetting = BlockSettingFactory.CreateListOfStringsSetting(
             "items", ["one", "two"], SettingInputMode.Interpolated);
         var listDto = BlockSettingMapper.ToDto(listSetting);
@@ -444,6 +450,27 @@ public class WebMappingTests
 
         var value = Assert.IsType<DictionaryOfStringsSetting>(target.FixedSetting).Value;
         Assert.Equal("1", value["a"]);
+
+        var bytesTarget = BlockSettingFactory.CreateByteArraySetting("bytes");
+        BlockSettingMapper.Apply(new BlockSettingDto
+        {
+            Name = "bytes",
+            Type = BlockSettingType.ByteArray,
+            InputMode = SettingInputMode.Fixed,
+            Value = JsonSerializer.SerializeToElement("AQID", Globals.JsonOptions)
+        }, bytesTarget);
+
+        Assert.Equal([1, 2, 3], Assert.IsType<ByteArraySetting>(bytesTarget.FixedSetting).Value);
+
+        BlockSettingMapper.Apply(new BlockSettingDto
+        {
+            Name = "bytes",
+            Type = BlockSettingType.ByteArray,
+            InputMode = SettingInputMode.Fixed,
+            Value = JsonSerializer.SerializeToElement<string?>(null, Globals.JsonOptions)
+        }, bytesTarget);
+
+        Assert.Empty(Assert.IsType<ByteArraySetting>(bytesTarget.FixedSetting).Value!);
     }
 
     [Fact]
