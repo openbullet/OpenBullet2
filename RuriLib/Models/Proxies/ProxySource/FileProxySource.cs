@@ -50,10 +50,11 @@ public class FileProxySource : ProxySource
             // The file is a script.
             // We will run the execute and read it's stdout for proxies.
             // just like raw proxy files, one proxy per line
-            await locker.Acquire("ProxySourceReloadScriptFile", CancellationToken.None).ConfigureAwait(false);
+            await locker.Acquire("ProxySourceReloadScriptFile", cancellationToken).ConfigureAwait(false);
             try
             {
-                var stdout = await RunScript.RunScriptAndGetStdOut(FileName).ConfigureAwait(false);
+                var stdout = await RunScript.RunScriptAndGetStdOut(FileName, cancellationToken)
+                    .ConfigureAwait(false);
                 if (stdout is null)
                 {
                     throw new Exception($"Failed to get stdout of {FileName}");

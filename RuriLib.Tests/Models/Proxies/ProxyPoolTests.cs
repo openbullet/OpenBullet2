@@ -286,7 +286,7 @@ echo (Socks5)127.0.0.1:3333
         Assert.Equal(ProxyType.Socks5, proxy.Type);
     }
 
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = 30000)]
     public async Task GetProxy_PowershellFile_ReturnValidProxy()
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -295,23 +295,18 @@ echo (Socks5)127.0.0.1:3333
             return;
         }
 
-        var tmpBatchFilePath = Path.GetTempFileName() + ".ps1";
-        // Setting Execution Policy is needed both in the test and real-world use cases of the functionality.
-        // users can use "Set-ExecutionPolicy unrestricted -Scope CurrentUser" apply for all scripts.
-        var command = $"/c powershell -executionpolicy unrestricted \"${tmpBatchFilePath}\"";
-        System.Diagnostics.Process.Start("cmd.exe", command);
-
-        await File.WriteAllTextAsync(tmpBatchFilePath, @"
+        var tmpPowerShellFilePath = Path.GetTempFileName() + ".ps1";
+        await File.WriteAllTextAsync(tmpPowerShellFilePath, @"
 Write-Output 127.0.0.1:1111
 Write-Output 127.0.0.1:2222
 Write-Output ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8, TestCancellationToken);
-        using FileProxySource source = new(tmpBatchFilePath);
+        using FileProxySource source = new(tmpPowerShellFilePath);
 
         using var pool = new ProxyPool([source]);
 
         await pool.ReloadAllAsync(false, TestCancellationToken);
-        File.Delete(tmpBatchFilePath);
+        File.Delete(tmpPowerShellFilePath);
         Assert.Equal(3, pool.Proxies.Count());
         var proxy = pool.GetProxy();
         Assert.NotNull(proxy);

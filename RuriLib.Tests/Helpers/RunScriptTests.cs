@@ -21,7 +21,7 @@ public class RunScriptTests
 
         try
         {
-            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath);
+            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath, TestCancellationToken);
 
             Assert.Null(stdout);
         }
@@ -44,7 +44,7 @@ public class RunScriptTests
 
         try
         {
-            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath);
+            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath, TestCancellationToken);
 
             Assert.Equal($"first{Environment.NewLine}second{Environment.NewLine}", stdout);
         }
@@ -67,7 +67,7 @@ public class RunScriptTests
 
         try
         {
-            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath);
+            var stdout = await RunScript.RunScriptAndGetStdOut(scriptPath, TestCancellationToken);
 
             Assert.Equal($"first{Environment.NewLine}second{Environment.NewLine}", stdout);
         }

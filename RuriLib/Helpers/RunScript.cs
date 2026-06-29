@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Helpers;
@@ -14,8 +15,9 @@ public static class RunScript
     /// Runs a supported script file and returns its standard output.
     /// </summary>
     /// <param name="scriptPath">The script path.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The standard output, or <c>null</c> if unsupported or failed.</returns>
-    public static async Task<string?> RunScriptAndGetStdOut(string scriptPath)
+    public static async Task<string?> RunScriptAndGetStdOut(string scriptPath, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(scriptPath);
 
@@ -31,14 +33,35 @@ public static class RunScript
             using var process = new Process { StartInfo = startInfo };
 
             process.Start();
+            using var cancellationRegistration = cancellationToken.Register(static state =>
+            {
+                var process = (Process)state!;
+
+                try
+                {
+                    if (!process.HasExited)
+                    {
+                        process.Kill(entireProcessTree: true);
+                    }
+                }
+                catch
+                {
+                    // The process may already have exited.
+                }
+            }, process);
+
             var stdOutTask = process.StandardOutput.ReadToEndAsync();
             var stdErrTask = process.StandardError.ReadToEndAsync();
 
-            await process.WaitForExitAsync().ConfigureAwait(false);
+            await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
             var stdOut = await stdOutTask.ConfigureAwait(false);
             await stdErrTask.ConfigureAwait(false);
 
             return stdOut.Length > 0 ? stdOut : null;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
