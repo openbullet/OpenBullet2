@@ -5,14 +5,47 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-      xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       KeyDown="PageKeyDown"
       Title="ConfigStacker">
 
     <Page.Resources>
-        <converters:BoolToThicknessConverter x:Key="BoolToThick" />
+        <DrawingBrush x:Key="DisabledBlockBackgroundBrush"
+                      TileMode="Tile"
+                      Viewport="0,0,40,40"
+                      ViewportUnits="Absolute"
+                      Viewbox="0,0,40,40"
+                      ViewboxUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#444">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry Rect="0,0,40,40" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#666">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M 20,0 L 40,0 L 0,40 L 0,20 Z" />
+                                <PathGeometry Figures="M 40,20 L 40,40 L 20,40 Z" />
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <Style x:Key="BlockButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource MahApps.Styles.Button}">
+            <Setter Property="Background" Value="{Binding BackgroundColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Disabled}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource DisabledBlockBackgroundBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
     
     <Grid>
@@ -106,10 +139,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button 
-                            Style="{StaticResource MahApps.Styles.Button}"
-                            BorderBrush="White"
-                            BorderThickness="{Binding Selected, Converter={StaticResource ResourceKey=BoolToThick}}"
-                            Background="{Binding BackgroundColor}"
+                            Style="{StaticResource BlockButtonStyle}"
+                            BorderBrush="{Binding BorderBrush}"
+                            BorderThickness="{Binding BorderThickness}"
                             Width="180"
                             Height="40"
                             Margin="0 1"

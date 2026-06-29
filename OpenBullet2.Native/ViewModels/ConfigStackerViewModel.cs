@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace OpenBullet2.Native.ViewModels;
 
@@ -266,6 +267,8 @@ public class BlockViewModel(BlockInstance block) : ViewModelBase
         {
             selected = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(BorderBrush));
+            OnPropertyChanged(nameof(BorderThickness));
         }
     }
 
@@ -288,9 +291,13 @@ public class BlockViewModel(BlockInstance block) : ViewModelBase
             OnPropertyChanged();
             OnPropertyChanged(nameof(BackgroundColor));
             OnPropertyChanged(nameof(ForegroundColor));
+            OnPropertyChanged(nameof(BorderBrush));
+            OnPropertyChanged(nameof(BorderThickness));
         }
     }
 
     public string BackgroundColor => Disabled ? "#444" : Block.Descriptor.Category.BackgroundColor;
-    public string ForegroundColor => Disabled ? "#FFF" : Block.Descriptor.Category.ForegroundColor;
+    public string ForegroundColor => Disabled ? "#bbb" : Block.Descriptor.Category.ForegroundColor;
+    public string BorderBrush => Selected ? "#fff" : Disabled ? "#444" : BackgroundColor;
+    public Thickness BorderThickness => Selected || Disabled ? new Thickness(1) : new Thickness(0);
 }
