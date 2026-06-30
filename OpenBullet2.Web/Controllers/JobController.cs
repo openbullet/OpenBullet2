@@ -761,16 +761,26 @@ public class JobController(IJobRepository jobRepo, ILogger<JobController> logger
     public ActionResult<IEnumerable<BotDetailsDto>> GetBotDetails(int jobId)
     {
         var job = GetJob<MultiRunJob>(jobId);
+        var currentBotDatas = job.CurrentBotDatas;
+        var botCount = Math.Min(job.Bots, currentBotDatas.Length);
 
-        return job.CurrentBotDatas
-            .Take(job.Bots)
-            .Select(d => new BotDetailsDto
-            {
-                Id = d.BOTNUM,
-                Data = d.Line.Data,
-                Proxy = d.Proxy?.ToString(),
-                Info = d.ExecutionInfo
-            }).ToList();
+        return currentBotDatas
+            .Take(botCount)
+            .Select((d, index) => d is null
+                ? new BotDetailsDto
+                {
+                    Id = index + 1,
+                    Data = string.Empty,
+                    Proxy = null,
+                    Info = "IDLE"
+                }
+                : new BotDetailsDto
+                {
+                    Id = d.BOTNUM,
+                    Data = d.Line?.Data ?? string.Empty,
+                    Proxy = d.Proxy?.ToString(),
+                    Info = d.ExecutionInfo ?? string.Empty
+                }).ToList();
     }
 
     /// <summary>
