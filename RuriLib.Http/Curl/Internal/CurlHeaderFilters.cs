@@ -14,7 +14,6 @@ internal static class CurlHeaderFilters
         "Host",
         "Origin",
         "Priority",
-        "Referer",
         "Sec-Ch-Ua",
         "Sec-Ch-Ua-Arch",
         "Sec-Ch-Ua-Bitness",
