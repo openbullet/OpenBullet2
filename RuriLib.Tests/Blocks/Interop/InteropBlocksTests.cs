@@ -108,11 +108,11 @@ public class InteropBlocksTests
     }
 
     [Fact]
-    public async Task NodeJsRuntime_SemaphoreSlimDisposal_Retries()
+    public async Task NodeJsRuntime_TransientDisposal_Retries()
     {
         var attempts = 0;
 
-        var result = await NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync(async () =>
+        var result = await NodeJsRuntime.InvokeWithTransientDisposalRetryAsync(async () =>
         {
             await Task.Yield();
             attempts++;
@@ -130,12 +130,34 @@ public class InteropBlocksTests
     }
 
     [Fact]
-    public async Task NodeJsRuntime_NonSemaphoreSlimObjectDisposed_DoesNotRetry()
+    public async Task NodeJsRuntime_DefaultMeterFactoryDisposal_Retries()
+    {
+        var attempts = 0;
+
+        var result = await NodeJsRuntime.InvokeWithTransientDisposalRetryAsync(async () =>
+        {
+            await Task.Yield();
+            attempts++;
+
+            if (attempts < 2)
+            {
+                throw new ObjectDisposedException("DefaultMeterFactory");
+            }
+
+            return "ok";
+        }, TestContext.Current.CancellationToken);
+
+        Assert.Equal("ok", result);
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
+    public async Task NodeJsRuntime_NonTransientObjectDisposed_DoesNotRetry()
     {
         var attempts = 0;
 
         await Assert.ThrowsAsync<ObjectDisposedException>(() =>
-            NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync<string>(async () =>
+            NodeJsRuntime.InvokeWithTransientDisposalRetryAsync<string>(async () =>
             {
                 await Task.Yield();
                 attempts++;
