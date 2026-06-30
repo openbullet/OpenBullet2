@@ -317,6 +317,105 @@ public class MultiRunJobTests
     }
 
     [Fact]
+    public async Task WorkFunction_WhenRetryStatus_KeepsSameProxy()
+    {
+        var settings = CreateSettingsService();
+        var firstProxy = new Proxy("127.0.0.1", 8000);
+        var secondProxy = new Proxy("127.0.0.2", 8000);
+        var job = new MultiRunJob(settings, CreatePluginRepository());
+        var pool = new ProxyPool([new ListProxySource([firstProxy, secondProxy])]);
+        await pool.ReloadAllAsync(false, TestCancellationToken);
+
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+        configSettings.ProxySettings.MaxUsesPerProxy = 1;
+
+        try
+        {
+            var input = new MultiRunInput
+            {
+                Job = job,
+                ProxyPool = pool,
+                BotData = new global::RuriLib.Models.Bots.BotData(
+                    new global::RuriLib.Models.Bots.Providers(settings),
+                    configSettings,
+                    new BotLogger(),
+                    new DataLine("data", settings.Environment.WordlistTypes[0]),
+                    null,
+                    useProxy: true),
+                Globals = new System.Dynamic.ExpandoObject(),
+                IsDLL = true,
+                DLLMethod = typeof(MultiRunJobTests).GetMethod(nameof(RetryOnceThenSuccessAsync),
+                    BindingFlags.Static | BindingFlags.NonPublic)
+            };
+
+            var result = await GetWorkFunction(job)(input, TestCancellationToken);
+
+            Assert.Equal("SUCCESS", result.BotData.STATUS);
+            Assert.Same(firstProxy, result.OutputVariables["proxy0"]);
+            Assert.Same(firstProxy, result.OutputVariables["proxy1"]);
+            Assert.Equal(1, job.DataRetried);
+            Assert.Equal(ProxyStatus.Available, firstProxy.ProxyStatus);
+            Assert.Equal(0, firstProxy.BeingUsedBy);
+            Assert.Equal(1, firstProxy.TotalUses);
+            Assert.Equal(0, secondProxy.TotalUses);
+        }
+        finally
+        {
+            pool.Dispose();
+        }
+    }
+
+    [Fact]
+    public async Task WorkFunction_WhenBanStatus_BansProxyAndRetriesWithDifferentProxy()
+    {
+        var settings = CreateSettingsService();
+        var firstProxy = new Proxy("127.0.0.1", 8000);
+        var secondProxy = new Proxy("127.0.0.2", 8000);
+        var job = new MultiRunJob(settings, CreatePluginRepository());
+        var pool = new ProxyPool([new ListProxySource([firstProxy, secondProxy])]);
+        await pool.ReloadAllAsync(false, TestCancellationToken);
+
+        var configSettings = new ConfigSettings();
+        configSettings.ProxySettings.UseProxies = true;
+
+        try
+        {
+            var input = new MultiRunInput
+            {
+                Job = job,
+                ProxyPool = pool,
+                BotData = new global::RuriLib.Models.Bots.BotData(
+                    new global::RuriLib.Models.Bots.Providers(settings),
+                    configSettings,
+                    new BotLogger(),
+                    new DataLine("data", settings.Environment.WordlistTypes[0]),
+                    null,
+                    useProxy: true),
+                Globals = new System.Dynamic.ExpandoObject(),
+                IsDLL = true,
+                DLLMethod = typeof(MultiRunJobTests).GetMethod(nameof(BanOnceThenSuccessAsync),
+                    BindingFlags.Static | BindingFlags.NonPublic)
+            };
+
+            var result = await GetWorkFunction(job)(input, TestCancellationToken);
+
+            Assert.Equal("SUCCESS", result.BotData.STATUS);
+            Assert.Same(firstProxy, result.OutputVariables["proxy0"]);
+            Assert.Same(secondProxy, result.OutputVariables["proxy1"]);
+            Assert.Equal(1, job.DataBanned);
+            Assert.Equal(ProxyStatus.Banned, firstProxy.ProxyStatus);
+            Assert.Equal(0, firstProxy.BeingUsedBy);
+            Assert.Equal(ProxyStatus.Available, secondProxy.ProxyStatus);
+            Assert.Equal(0, secondProxy.BeingUsedBy);
+        }
+        finally
+        {
+            pool.Dispose();
+        }
+    }
+
+    [Fact]
     public async Task WorkFunction_PreservesCustomObjectsAcrossBanRetries()
     {
         var settings = CreateSettingsService();
@@ -547,6 +646,11 @@ public class MultiRunJobTests
     private static global::RuriLib.Services.PluginRepository CreatePluginRepository()
         => new(Path.Combine(Path.GetTempPath(), $"ob2-multirun-plugins-{Guid.NewGuid():N}"));
 
+    private static Func<MultiRunInput, CancellationToken, Task<CheckResult>> GetWorkFunction(MultiRunJob job)
+        => (Func<MultiRunInput, CancellationToken, Task<CheckResult>>)typeof(MultiRunJob)
+            .GetField("workFunction", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetValue(job)!;
+
     private static async Task ThrowBadProxyAndCancelAsync(global::RuriLib.Models.Bots.BotData data,
         dynamic input, dynamic globals, Dictionary<string, object> outputVariables, CancellationToken cancellationToken)
     {
@@ -556,6 +660,28 @@ public class MultiRunJobTests
         }
 
         throw new BadProxyException("bad proxy");
+    }
+
+    private static Task RetryOnceThenSuccessAsync(global::RuriLib.Models.Bots.BotData data,
+        dynamic input, dynamic globals, Dictionary<string, object> outputVariables, CancellationToken cancellationToken)
+        => SetRetryStatusOnceThenFinalStatusAsync(data, outputVariables, "RETRY", "SUCCESS");
+
+    private static Task BanOnceThenSuccessAsync(global::RuriLib.Models.Bots.BotData data,
+        dynamic input, dynamic globals, Dictionary<string, object> outputVariables, CancellationToken cancellationToken)
+        => SetRetryStatusOnceThenFinalStatusAsync(data, outputVariables, "BAN", "SUCCESS");
+
+    private static Task SetRetryStatusOnceThenFinalStatusAsync(global::RuriLib.Models.Bots.BotData data,
+        Dictionary<string, object> outputVariables, string retryStatus, string finalStatus)
+    {
+        var attempt = outputVariables.TryGetValue("attempt", out var attemptValue)
+            ? (int)attemptValue
+            : 0;
+
+        outputVariables[$"proxy{attempt}"] = data.Proxy!;
+        outputVariables["attempt"] = attempt + 1;
+        data.STATUS = attempt == 0 ? retryStatus : finalStatus;
+
+        return Task.CompletedTask;
     }
 
     private static Task BanUntilCounterExceedsTenAsync(global::RuriLib.Models.Bots.BotData data,

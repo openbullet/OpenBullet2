@@ -339,18 +339,37 @@ public class MultiRunJob : Job
             botData.BOTNUM = botIndex + 1;
 
             START:
-            token.ThrowIfCancellationRequested();
+
+            try
+            {
+                token.ThrowIfCancellationRequested();
+            }
+            catch
+            {
+                if (botData.Proxy is { ProxyStatus: ProxyStatus.Busy } retainedProxy)
+                {
+                    input.ProxyPool?.ReleaseProxy(retainedProxy, false);
+                }
+
+                throw;
+            }
+
             botData.ResetState(preserveObjects: true);
             var badProxyFailure = false;
 
             try
             {
-                // This is important! Otherwise we reuse the same proxy
-                botData.Proxy = null;
                 botData.UseProxy = ShouldUseProxies(input.Job.ProxyMode, botData.ConfigSettings.ProxySettings);
 
+                // Keep the current proxy only for RETRY loops; final statuses and BAN/ERROR
+                // release it before coming back here, so a new proxy can be selected.
+                if (!botData.UseProxy || botData.Proxy?.ProxyStatus != ProxyStatus.Busy)
+                {
+                    botData.Proxy = null;
+                }
+
                 // Get a hold of a proxy
-                if (botData.UseProxy)
+                if (botData.UseProxy && botData.Proxy is null)
                 {
                     var inputProxyPool = input.ProxyPool
                         ?? throw new InvalidOperationException("The proxy pool was not initialized");
@@ -478,7 +497,7 @@ public class MultiRunJob : Job
                 input.Job.CaptchaCredit = botData.CaptchaCredit;
             }
 
-            if (botData.Proxy != null)
+            if (botData.Proxy != null && botData.STATUS != "RETRY")
             {
                 if (badProxyFailure && !input.Job.NeverMarkProxiesAsBad)
                 {
@@ -535,7 +554,21 @@ public class MultiRunJob : Job
 
                 input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
                 Interlocked.Increment(ref input.Job.dataRetried);
-                await CleanupBeforeRetryAsync(botData).ConfigureAwait(false);
+
+                try
+                {
+                    await CleanupBeforeRetryAsync(botData).ConfigureAwait(false);
+                }
+                catch
+                {
+                    if (botData.Proxy is { ProxyStatus: ProxyStatus.Busy } retainedProxy)
+                    {
+                        input.ProxyPool?.ReleaseProxy(retainedProxy, false);
+                    }
+
+                    throw;
+                }
+
                 goto START;
             }
             else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
