@@ -115,6 +115,7 @@ public static class Methods
     public static async Task<T?> InvokeNode<T>(BotData data, string scriptOrFile, object[] parameters, bool isScript = false, string? scriptHash = null)
     {
         data.Logger.LogHeader();
+        NodeJsRuntime.EnsureConfigured();
 
         T? result;
 
@@ -135,7 +136,7 @@ public static class Methods
     {
         if (string.IsNullOrEmpty(scriptHash))
         {
-            return await NodeJsInvocationGate.RunAsync(
+            return await NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync(
                 () => StaticNodeJSService.InvokeFromStringAsync<T>(
                     script,
                     scriptHash,
@@ -145,17 +146,9 @@ public static class Methods
                 data.CancellationToken).ConfigureAwait(false);
         }
 
-        var (isCached, cachedResult) = await NodeJsInvocationGate.RunAsync(
-            () => StaticNodeJSService.TryInvokeFromCacheAsync<T>(
-                scriptHash,
-                null,
-                parameters,
-                data.CancellationToken),
-            data.CancellationToken).ConfigureAwait(false);
-
-        return isCached ? cachedResult : await NodeJsInvocationGate.RunAsync(
+        return await NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync(
             () => StaticNodeJSService.InvokeFromStringAsync<T>(
-                script,
+                () => script,
                 scriptHash,
                 null,
                 parameters,
@@ -165,7 +158,7 @@ public static class Methods
 
     private static async Task<T?> InvokeFromFile<T>(BotData data, string filePath, object[] parameters)
     {
-        return await NodeJsInvocationGate.RunAsync(
+        return await NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync(
             () => StaticNodeJSService.InvokeFromFileAsync<T>(
                 filePath,
                 null,

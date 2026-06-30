@@ -11,8 +11,8 @@ using RuriLib.Models.Environment;
 using RuriLib.Tests.Utils.Mockup;
 using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -92,52 +92,57 @@ public class InteropBlocksTests
     }
 
     [Fact]
-    public async Task NodeJsInvocationGate_QueuesCallsBeyondConcurrencyLimit()
+    public async Task InvokeNode_InlineScript_ReturnsOutput()
     {
-        var activeCount = 0;
-        var maxActiveCount = 0;
-        var tasks = Enumerable.Range(0, NodeJsInvocationGate.MaxConcurrentInvocations + 2)
-            .Select(index => NodeJsInvocationGate.RunAsync(async () =>
-            {
-                var currentActiveCount = Interlocked.Increment(ref activeCount);
-                TrackMaxActiveCount(ref maxActiveCount, currentActiveCount);
+        var data = NewBotData();
+        const string script = "module.exports = async (x, y) => ({ result: x + y });";
 
-                try
-                {
-                    await Task.Delay(50, TestContext.Current.CancellationToken);
-                    return index;
-                }
-                finally
-                {
-                    Interlocked.Decrement(ref activeCount);
-                }
-            }, TestContext.Current.CancellationToken))
-            .ToArray();
+        var result = await InteropMethods.InvokeNode<JsonElement>(
+            data,
+            script,
+            [3, 5],
+            isScript: true,
+            scriptHash: "interop-blocks-tests-node-sum");
 
-        var results = await Task.WhenAll(tasks);
-
-        Assert.Equal(
-            Enumerable.Range(0, NodeJsInvocationGate.MaxConcurrentInvocations + 2),
-            results);
-        Assert.True(maxActiveCount <= NodeJsInvocationGate.MaxConcurrentInvocations);
+        Assert.Equal(8, result.GetProperty("result").GetInt32());
     }
 
-    private static void TrackMaxActiveCount(ref int maxActiveCount, int currentActiveCount)
+    [Fact]
+    public async Task NodeJsRuntime_SemaphoreSlimDisposal_Retries()
     {
-        int previousMaxActiveCount;
+        var attempts = 0;
 
-        do
+        var result = await NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync(async () =>
         {
-            previousMaxActiveCount = maxActiveCount;
+            await Task.Yield();
+            attempts++;
 
-            if (currentActiveCount <= previousMaxActiveCount)
+            if (attempts < 3)
             {
-                return;
+                throw new ObjectDisposedException("System.Threading.SemaphoreSlim");
             }
-        } while (Interlocked.CompareExchange(
-            ref maxActiveCount,
-            currentActiveCount,
-            previousMaxActiveCount) != previousMaxActiveCount);
+
+            return "ok";
+        }, TestContext.Current.CancellationToken);
+
+        Assert.Equal("ok", result);
+        Assert.Equal(3, attempts);
+    }
+
+    [Fact]
+    public async Task NodeJsRuntime_NonSemaphoreSlimObjectDisposed_DoesNotRetry()
+    {
+        var attempts = 0;
+
+        await Assert.ThrowsAsync<ObjectDisposedException>(() =>
+            NodeJsRuntime.InvokeWithSemaphoreSlimRetryAsync<string>(async () =>
+            {
+                await Task.Yield();
+                attempts++;
+                throw new ObjectDisposedException("OtherObject");
+            }, TestContext.Current.CancellationToken));
+
+        Assert.Equal(1, attempts);
     }
 
     private static BotData NewBotData()
