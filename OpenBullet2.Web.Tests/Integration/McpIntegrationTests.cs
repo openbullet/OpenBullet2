@@ -23,7 +23,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
     : IntegrationTests(testOutputHelper)
 {
     [Fact]
-    public async Task McpEndpoint_ExposesSampleTool()
+    public async Task McpEndpoint_Supports20260728ProtocolAndExposesTools()
     {
         using var httpClient = Factory.CreateClient();
         var transport = new HttpClientTransport(
@@ -34,10 +34,18 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
             },
             httpClient);
 
-        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+        await using var client = await McpClient.CreateAsync(
+            transport,
+            new McpClientOptions
+            {
+                ProtocolVersion = "2026-07-28"
+            },
+            cancellationToken: TestCancellationToken);
 
         var tools = await client.ListToolsAsync(cancellationToken: TestCancellationToken);
 
+        Assert.Equal("2026-07-28", client.NegotiatedProtocolVersion);
+        Assert.Null(client.SessionId);
         Assert.Contains(tools, tool => tool.Name == "get_server_info");
         Assert.Contains(tools, tool => tool.Name == "get_environment");
         Assert.Contains(tools, tool => tool.Name == "create_config");
@@ -61,7 +69,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
-    public async Task McpEndpoint_CallsSampleTool()
+    public async Task McpEndpoint_RemainsCompatibleWith20251125ProtocolAndCallsTool()
     {
         using var httpClient = Factory.CreateClient();
         var transport = new HttpClientTransport(
@@ -72,7 +80,13 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
             },
             httpClient);
 
-        await using var client = await McpClient.CreateAsync(transport, cancellationToken: TestCancellationToken);
+        await using var client = await McpClient.CreateAsync(
+            transport,
+            new McpClientOptions
+            {
+                ProtocolVersion = "2025-11-25"
+            },
+            cancellationToken: TestCancellationToken);
 
         var result = await client.CallToolAsync(
             "get_server_info",
@@ -81,6 +95,7 @@ public class McpIntegrationTests(ITestOutputHelper testOutputHelper)
         var version = GetRequiredService<IUpdateService>().CurrentVersion;
         var text = Assert.IsType<TextContentBlock>(Assert.Single(result.Content)).Text;
 
+        Assert.Equal("2025-11-25", client.NegotiatedProtocolVersion);
         Assert.False(result.IsError ?? false);
         Assert.Contains("OpenBullet 2 server info", text);
         Assert.Contains(version.ToString(), text);
