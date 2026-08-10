@@ -41,7 +41,8 @@ public class HttpOptions
     public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
 
     /// <summary>
-    /// Gets or sets whether TLS certificate validity checks should be bypassed.
+    /// Gets or sets whether TLS certificate validity checks for the destination
+    /// server should be bypassed. HTTPS proxy certificates are always accepted.
     /// </summary>
     public bool IgnoreCertificateValidation { get; set; } = true;
 

@@ -32,6 +32,8 @@ internal enum CurlOption
     SslOptions = 216,
     SslEnableAlpn = 226,
     StreamWeight = 239,
+    ProxySslVerifyPeer = 248,
+    ProxySslVerifyHost = 249,
     SslEcCurves = 10298,
     WriteFunction = 20011,
     HeaderFunction = 20079,

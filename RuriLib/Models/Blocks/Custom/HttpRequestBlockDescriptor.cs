@@ -63,7 +63,7 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
             },
             ["ignoreCertificateValidation"] = new BoolParameter("ignoreCertificateValidation", true)
             {
-                Description = "Bypass TLS certificate validity checks."
+                Description = "Bypass destination TLS certificate validity checks. HTTPS proxy certificates are always accepted."
             },
             ["useCustomCipherSuites"] = new BoolParameter("useCustomCipherSuites", false)
             {

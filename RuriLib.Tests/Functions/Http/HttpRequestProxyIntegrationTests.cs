@@ -157,8 +157,11 @@ public class HttpRequestProxyIntegrationTests
         Assert.StartsWith("GET http://example.com/test HTTP/", await proxyServer.WaitForFirstRequestLineAsync());
     }
 
-    [Fact]
-    public async Task HttpRequestStandard_Get_ThroughHttpsProxy_UsesTlsTransport_ForRuriLibHttp()
+    [Theory]
+    [InlineData(HttpLibrary.RuriLibHttp)]
+    [InlineData(HttpLibrary.SystemNet)]
+    public async Task HttpRequestStandard_Get_ThroughHttpsProxy_IgnoresProxyCertificateValidation(
+        HttpLibrary library)
     {
         await using var proxyServer = await FakeHttpsProxyServer.StartAsync();
         var data = NewBotData(new Proxy("127.0.0.1", proxyServer.Port, ProxyType.Https));
@@ -166,9 +169,12 @@ public class HttpRequestProxyIntegrationTests
         {
             Url = "http://example.com/test",
             Method = global::RuriLib.Functions.Http.HttpMethod.GET,
-            HttpLibrary = HttpLibrary.RuriLibHttp,
+            HttpLibrary = library,
             TimeoutMilliseconds = 5000,
-            ReadResponseContent = true
+            ReadResponseContent = true,
+            // This setting only controls the destination server. The proxy in
+            // this test uses an untrusted certificate and must still work.
+            IgnoreCertificateValidation = false
         };
 
         await Methods.HttpRequestStandard(data, options);

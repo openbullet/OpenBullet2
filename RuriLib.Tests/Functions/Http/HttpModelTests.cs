@@ -123,6 +123,18 @@ public class HttpModelTests
         Assert.Equal(new Uri("http://127.0.0.1:8080"), handlerOptions.ProxyUri);
     }
 
+    [Theory]
+    [InlineData("münchen-proxy.de", "xn--mnchen-proxy-dlb.de")]
+    [InlineData("PROXY.Example.COM", "proxy.example.com")]
+    [InlineData("[::1]", "::1")]
+    [InlineData("127.0.0.1", "127.0.0.1")]
+    public void GetProxyUri_NormalizesHostForTlsTargetName(string host, string expectedHost)
+    {
+        var proxy = new Proxy(host, 443, ProxyType.Https);
+
+        Assert.Equal(expectedHost, HttpFactory.GetProxyUri(proxy).IdnHost);
+    }
+
     [Fact]
     public async Task CreateMultipartContent_StringWithoutContentType_OmitsHeader()
     {

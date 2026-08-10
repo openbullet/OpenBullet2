@@ -243,6 +243,30 @@ public class HttpTests
     }
 
     [Fact]
+    public async Task HttpRequestStandard_RuriLibHttpSelfSignedCertificate_RejectsWhenValidationIsEnabled()
+    {
+        await using var httpServer = LocalHttpResponseServer.CreateDelayed(
+            TimeSpan.Zero,
+            Encoding.UTF8.GetBytes("""{"redirected":true}"""),
+            "Content-Type: application/json");
+
+        await using var httpsServer = new LocalHttpsRedirectServer(
+            LocalHttpsRedirectServer.CreateSelfSignedCertificate("localhost"),
+            new Uri($"{httpServer.Uri}final"));
+        var data = NewBotData();
+        var options = new StandardHttpRequestOptions
+        {
+            Url = $"{httpsServer.Uri}start",
+            Method = HttpMethod.GET,
+            HttpLibrary = HttpLibrary.RuriLibHttp,
+            IgnoreCertificateValidation = false
+        };
+
+        await Assert.ThrowsAsync<RuriLib.Proxies.Exceptions.ProxyException>(
+            () => Methods.HttpRequestStandard(data, options));
+    }
+
+    [Fact]
     public async Task HttpRequestStandard_SystemNet_LogsRequestedProtocolWhenVersionFallsBack()
     {
         await using var server = LocalHttpResponseServer.CreateDelayed(
