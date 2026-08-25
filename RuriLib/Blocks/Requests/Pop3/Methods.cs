@@ -3,10 +3,8 @@ using MailKit.Net.Pop3;
 using MailKit.Net.Proxy;
 using RuriLib.Attributes;
 using RuriLib.Exceptions;
-using RuriLib.Functions.Http;
 using RuriLib.Functions.Networking;
 using RuriLib.Functions.Pop3;
-using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
@@ -80,13 +78,13 @@ public static class Methods
         var thunderbirdUrl = $"https://autoconfig.thunderbird.net/v1.1/{domain}";
         try
         {
-            var xml = await GetString(data, thunderbirdUrl).ConfigureAwait(false);
+            var xml = await MailAutoconfigHttp.GetStringAsync(data, thunderbirdUrl).ConfigureAwait(false);
             candidates = Pop3Autoconfig.Parse(xml);
             data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.Mantis);
         }
-        catch
+        catch (Exception ex)
         {
-            data.Logger.Log($"Failed to query {thunderbirdUrl}", LogColors.Mantis);
+            data.Logger.Log($"Failed to query {thunderbirdUrl}: {ex.GetType().Name}: {ex.Message}", LogColors.Mantis);
         }
 
         foreach (var c in candidates)
@@ -109,19 +107,22 @@ public static class Methods
 
             try
             {
-                xml = await GetString(data, autoconfigUrl).ConfigureAwait(false);
+                xml = await MailAutoconfigHttp.GetStringAsync(data, autoconfigUrl).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
-                xml = await GetString(data, autoconfigUrlUnsecure).ConfigureAwait(false);
+                data.Logger.Log($"Failed to query {autoconfigUrl}: {ex.GetType().Name}: {ex.Message}. Trying HTTP...",
+                    LogColors.Mantis);
+                xml = await MailAutoconfigHttp.GetStringAsync(data, autoconfigUrlUnsecure).ConfigureAwait(false);
             }
 
             candidates = Pop3Autoconfig.Parse(xml);
             data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.Mantis);
         }
-        catch
+        catch (Exception ex)
         {
-            data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http)", LogColors.Mantis);
+            data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http): {ex.GetType().Name}: {ex.Message}",
+                LogColors.Mantis);
         }
 
         foreach (var c in candidates)
@@ -144,19 +145,22 @@ public static class Methods
 
             try
             {
-                xml = await GetString(data, wellKnownUrl).ConfigureAwait(false);
+                xml = await MailAutoconfigHttp.GetStringAsync(data, wellKnownUrl).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
-                xml = await GetString(data, wellKnownUrlUnsecure).ConfigureAwait(false);
+                data.Logger.Log($"Failed to query {wellKnownUrl}: {ex.GetType().Name}: {ex.Message}. Trying HTTP...",
+                    LogColors.Mantis);
+                xml = await MailAutoconfigHttp.GetStringAsync(data, wellKnownUrlUnsecure).ConfigureAwait(false);
             }
 
             candidates = Pop3Autoconfig.Parse(xml);
             data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.Mantis);
         }
-        catch
+        catch (Exception ex)
         {
-            data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.Mantis);
+            data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http): {ex.GetType().Name}: {ex.Message}",
+                LogColors.Mantis);
         }
 
         foreach (var c in candidates)
@@ -194,7 +198,8 @@ public static class Methods
         candidates.Clear();
         try
         {
-            var mxRecords = await DnsLookup.FromGoogleAsync(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
+            var mxRecords = await DnsLookup.FromGoogleAsync(domain, "MX", data.UseProxy ? data.Proxy : null, 30000,
+                data.CancellationToken).ConfigureAwait(false);
             mxRecords.ForEach(r =>
             {
                 candidates.Add(new HostEntry(r, 995));
@@ -203,9 +208,9 @@ public static class Methods
 
             data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.Mantis);
         }
-        catch
+        catch (Exception ex)
         {
-            data.Logger.Log($"Failed to query the MX records", LogColors.Mantis);
+            data.Logger.Log($"Failed to query the MX records: {ex.GetType().Name}: {ex.Message}", LogColors.Mantis);
         }
 
         foreach (var c in candidates)
@@ -239,30 +244,12 @@ public static class Methods
             await data.Providers.EmailDomains.TryAddPop3Server(domain, entry).ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
-            data.Logger.Log($"Failed!", LogColors.Mantis);
+            data.Logger.Log($"Failed! {ex.GetType().Name}: {ex.Message}", LogColors.Mantis);
         }
 
         return false;
-    }
-
-    private static async Task<string> GetString(BotData data, string url)
-    {
-        using var httpClient = HttpFactory.GetRLHttpClient(data.Proxy, new()
-        {
-            ConnectTimeout = TimeSpan.FromMilliseconds(30000),
-            ReadWriteTimeout = TimeSpan.FromMilliseconds(30000)
-        });
-
-        using var request = new HttpRequest();
-        request.Uri = new Uri(url);
-
-        using var response = await httpClient.SendAsync(request, data.CancellationToken).ConfigureAwait(false);
-        var content = response.Content
-                      ?? throw new BlockExecutionException("The autoconfig response content is not available");
-
-        return await content.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

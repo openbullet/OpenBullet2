@@ -27,6 +27,14 @@ internal sealed class LocalHttpResponseServer : IAsyncDisposable
     private int Port => ((IPEndPoint)listener.LocalEndpoint).Port;
 
     public static LocalHttpResponseServer CreateDelayed(TimeSpan delay, byte[] payload, params string[] headers)
+        => Create(delay, HttpStatusCode.OK, payload, headers);
+
+    public static LocalHttpResponseServer CreateResponse(HttpStatusCode statusCode, byte[] payload,
+        params string[] headers)
+        => Create(TimeSpan.Zero, statusCode, payload, headers);
+
+    private static LocalHttpResponseServer Create(TimeSpan delay, HttpStatusCode statusCode, byte[] payload,
+        params string[] headers)
     {
         ArgumentNullException.ThrowIfNull(payload);
         ArgumentNullException.ThrowIfNull(headers);
@@ -38,7 +46,7 @@ internal sealed class LocalHttpResponseServer : IAsyncDisposable
             await Task.Delay(delay, cancellationToken);
 
             var responseHeaders = new StringBuilder()
-                .Append("HTTP/1.1 200 OK\r\n")
+                .Append($"HTTP/1.1 {(int)statusCode} {statusCode}\r\n")
                 .Append($"Content-Length: {payload.Length}\r\n")
                 .Append("Connection: close\r\n");
 
