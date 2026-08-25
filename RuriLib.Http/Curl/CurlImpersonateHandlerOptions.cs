@@ -45,7 +45,8 @@ public sealed class CurlImpersonateHandlerOptions
     public bool AutomaticDecompression { get; set; } = true;
 
     /// <summary>
-    /// Whether TLS certificate checks should be bypassed.
+    /// Whether TLS certificate checks for the destination server should be bypassed.
+    /// HTTPS proxy certificates are always accepted.
     /// </summary>
     public bool IgnoreCertificateValidation { get; set; } = true;
 

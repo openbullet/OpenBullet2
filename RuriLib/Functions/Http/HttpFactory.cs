@@ -149,7 +149,10 @@ public class HttpFactory
                 ReadWriteTimeOut = options.ReadWriteTimeout
             };
 
-            settings.ProxyCertificateValidationCallback = GetCertificateValidationCallback(options);
+            // HTTPS proxies are often supplied by IP address while their
+            // certificate is issued to a hostname. Proxy TLS validation is
+            // therefore bypassed independently from the request block setting.
+            settings.ProxyCertificateValidationCallback = static (_, _, _, _) => true;
             settings.ProxyCertRevocationMode = options.CertRevocationMode;
 
             if (proxy.NeedsAuthentication)
@@ -199,7 +202,7 @@ public class HttpFactory
             };
         }
 
-        return ConfigureHttpMessageHandler(handler, options, cookieContainer);
+        return ConfigureHttpMessageHandler(handler, options, cookieContainer, proxy);
     }
 
     private static WebProxy GetWebProxy(Proxy proxy)
@@ -221,7 +224,7 @@ public class HttpFactory
         return new WebProxy(address, true, null, proxyCredentials);
     }
 
-    private static Uri GetProxyUri(Proxy proxy)
+    internal static Uri GetProxyUri(Proxy proxy)
     {
         var scheme = proxy.Type switch
         {
@@ -236,18 +239,21 @@ public class HttpFactory
         return new Uri($"{scheme}://{proxy.Host}:{proxy.Port}");
     }
 
-    private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer)
+    private static HttpMessageHandler ConfigureHttpMessageHandler(
+        HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer, Proxy? proxy)
     {
         if (options.UseCustomCipherSuites && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             throw new NotSupportedException("Custom cipher suites are not supported on Windows");
         }
 
+        // Match the normalized TLS target name used by SocketsHttpHandler.
+        var proxyHost = proxy?.Type == ProxyType.Https ? GetProxyUri(proxy).IdnHost : null;
         var sslOptions = new SslClientAuthenticationOptions
         {
             CertificateRevocationCheckMode = options.CertRevocationMode,
             EnabledSslProtocols = ToSslProtocols(options.SecurityProtocol),
-            RemoteCertificateValidationCallback = GetCertificateValidationCallback(options),
+            RemoteCertificateValidationCallback = GetCertificateValidationCallback(options, proxyHost),
             CipherSuitesPolicy = options.UseCustomCipherSuites
                 ? new CipherSuitesPolicy(options.CustomCipherSuites)
                 : null
@@ -285,10 +291,26 @@ public class HttpFactory
         return handler;
     }
 
-    private static RemoteCertificateValidationCallback? GetCertificateValidationCallback(HttpOptions options)
-        => options.IgnoreCertificateValidation
-            ? static (_, _, _, _) => true
-            : null;
+    private static RemoteCertificateValidationCallback GetCertificateValidationCallback(
+        HttpOptions options, string? httpsProxyHost = null)
+    {
+        return (sender, _, _, sslPolicyErrors) =>
+        {
+            // SocketsHttpHandler invokes this callback for both TLS layers. The
+            // SslStream target host identifies the HTTPS proxy handshake, whose
+            // certificate is accepted independently from the destination setting.
+            if (httpsProxyHost is not null
+                && sender is SslStream sslStream
+                && string.Equals(sslStream.TargetHostName, httpsProxyHost,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return options.IgnoreCertificateValidation
+                || sslPolicyErrors == SslPolicyErrors.None;
+        };
+    }
 
     /// <summary>
     /// Converts the <paramref name="protocol"/> to an SslProtocols enum. Multiple protocols are not supported and SystemDefault is None.

@@ -428,6 +428,15 @@ internal sealed class CurlEasyTransfer : IDisposable
 
         SetStringOption(CurlOption.Proxy, options.ProxyUri.ToString());
 
+        if (options.ProxyUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+        {
+            // HTTPS proxies are typically configured by IP address, which often
+            // does not match the hostname on the proxy certificate. Keep this
+            // independent from destination certificate validation.
+            SetLongOption(CurlOption.ProxySslVerifyPeer, 0);
+            SetLongOption(CurlOption.ProxySslVerifyHost, 0);
+        }
+
         if (options.ProxyCredentials is not null)
         {
             SetStringOption(CurlOption.ProxyUserPwd,
