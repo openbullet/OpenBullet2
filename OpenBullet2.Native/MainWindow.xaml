@@ -17,7 +17,7 @@
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         TitleCharacterCasing="Normal"
-        Icon="pack://application:,,,/Images/logohq_square_padded.png">
+        Icon="pack://application:,,,/OpenBullet2.Native;component/Images/logohq_square_padded.png">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />

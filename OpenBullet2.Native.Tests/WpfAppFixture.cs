@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OpenBullet2.Core;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using System.IO;
@@ -39,6 +42,11 @@ public sealed class WpfAppFixture : IDisposable
             {
                 var app = new App();
                 app.InitializeComponent();
+
+                using var scope = App.Host.Services.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+
                 createdDispatcher = Dispatcher.CurrentDispatcher;
             }
             catch (Exception ex)

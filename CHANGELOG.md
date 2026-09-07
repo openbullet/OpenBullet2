@@ -23,6 +23,7 @@ This patch release focuses on request compatibility, job reliability and client 
 - Updated the MCP server to the 2026-07-28 specification (by meinname)
 
 ##### OpenBullet (Native)
+- Fixed a first-run UI deadlock while creating the OpenBullet settings file
 - Updated disabled block styling in the config stacker to match the web client
 
 ## 2.0.1 (2026-06-27)

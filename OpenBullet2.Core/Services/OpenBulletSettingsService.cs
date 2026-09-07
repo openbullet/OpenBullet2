@@ -43,7 +43,7 @@ public class OpenBulletSettingsService
         else
         {
             Recreate();
-            SaveAsync().Wait();
+            File.WriteAllText(FileName, JsonConvert.SerializeObject(Settings, jsonSettings));
         }
     }
 

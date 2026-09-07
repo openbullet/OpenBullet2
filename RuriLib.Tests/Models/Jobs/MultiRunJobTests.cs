@@ -492,13 +492,11 @@ public class MultiRunJobTests
             DataPool = new TestDataPool(["data"], settings.Environment.WordlistTypes[0].Name)
         };
 
-        await job.Start(TestCancellationToken);
-        await WaitUntilIdleAsync(job);
+        await StartAndWaitUntilCompletedAsync(job);
         Assert.Equal(1, job.Skip);
         Assert.Equal(JobLastRunOutcome.Completed, job.LastRunOutcome);
 
-        var exception = await Record.ExceptionAsync(() => job.Start(TestCancellationToken));
-        await WaitUntilIdleAsync(job);
+        var exception = await Record.ExceptionAsync(() => StartAndWaitUntilCompletedAsync(job));
 
         Assert.Null(exception);
         Assert.Equal(1, job.Skip);
@@ -744,6 +742,27 @@ public class MultiRunJobTests
         }
 
         Assert.Equal(JobStatus.Idle, job.Status);
+    }
+
+    private static async Task StartAndWaitUntilCompletedAsync(MultiRunJob job)
+    {
+        var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        void OnCompleted(object? _, EventArgs __) => tcs.TrySetResult();
+
+        job.OnCompleted += OnCompleted;
+
+        using var registration = TestCancellationToken.Register(() => tcs.TrySetCanceled(TestCancellationToken));
+
+        try
+        {
+            await job.Start(TestCancellationToken);
+            await tcs.Task;
+        }
+        finally
+        {
+            job.OnCompleted -= OnCompleted;
+        }
     }
 
     private static global::RuriLib.Models.Hits.Hit CreateHit(int index)
