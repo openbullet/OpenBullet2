@@ -1,3 +1,30 @@
+## 2.0.2 (Unreleased)
+This patch release focuses on request compatibility, job reliability and client fixes.
+
+##### Blocks and Automation
+- Improved Node.js script block reliability during concurrent runs by using multiple processes and retrying transient runtime disposal errors
+- Made script-backed proxy source reloads cancel promptly and terminate their child processes
+
+##### Jobs, Proxies and Mail
+- Fixed multi-run job skip resets and progress calculations when starting another run
+- Fixed null reference errors while viewing detailed running bot information
+- Kept the same proxy assigned across `RETRY` attempts and released it safely on cancellation or failure
+- Fixed HTTPS proxy certificate handling so it remains independent from destination certificate validation (by meinname)
+- Fixed IMAP, POP3 and SMTP autoconfiguration proxy handling, HTTP error detection and diagnostic logging
+
+##### Requests
+- Updated `curl-impersonate` to v2.2.2 and added Chrome 150 and Safari 26.0.1 profiles
+- Fixed Linux `curl-impersonate` packaging so the unversioned native library is included
+- Allowed custom `Referer` headers when using `curl-impersonate` browser-managed headers
+- Corrected `Sec-Fetch-Mode` to `cors` for `curl-impersonate` POST requests
+
+##### OpenBullet (Web)
+- Fixed Base64 and hexadecimal byte array setting editing
+- Updated the MCP server to the 2026-07-28 specification (by meinname)
+
+##### OpenBullet (Native)
+- Updated disabled block styling in the config stacker to match the web client
+
 ## 2.0.1 (2026-06-27)
 This patch release focuses on stability, security and compatibility fixes after `2.0.0`.
 

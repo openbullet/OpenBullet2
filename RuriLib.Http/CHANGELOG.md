@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.2 - Unreleased
+
+- Updated curl-impersonate to v2.2.2 and added Chrome 150 and Safari 26.0.1 profiles.
+- Fixed Linux curl-impersonate packaging so the unversioned native library is included.
+- Allowed custom `Referer` headers when using curl-impersonate browser-managed headers.
+- Corrected `Sec-Fetch-Mode` to `cors` for curl-impersonate POST requests.
+- Accepted HTTPS proxy certificates independently from destination certificate validation (by meinname).
+
 ## 2.0.1 - 2026-06-27
 
 - Added random profile selection support for curl-impersonate.

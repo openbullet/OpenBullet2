@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-const string Version = "v1.5.6";
+const string Version = "v2.2.2";
 const string Repository = "lexiforest/curl-impersonate";
 
 var requestedRid = GetOption(args, "--rid") ?? "current";
@@ -184,23 +184,36 @@ static void ExtractNativeFiles(string repoRoot, NativeAsset asset, string archiv
         }
     }
 
-    foreach (var (linkName, targetName) in links)
+    while (links.Count > 0)
     {
-        if (copied.Contains(linkName) || string.IsNullOrWhiteSpace(targetName))
+        var resolvedAny = false;
+
+        for (var i = links.Count - 1; i >= 0; i--)
         {
-            continue;
+            var (linkName, targetName) = links[i];
+            if (copied.Contains(linkName) || string.IsNullOrWhiteSpace(targetName))
+            {
+                links.RemoveAt(i);
+                continue;
+            }
+
+            var targetPath = Path.Combine(ridNativeDir, targetName);
+            if (!File.Exists(targetPath))
+            {
+                continue;
+            }
+
+            File.Copy(targetPath, Path.Combine(ridNativeDir, linkName), overwrite: true);
+            copied.Add(linkName);
+            links.RemoveAt(i);
+            resolvedAny = true;
+            Console.WriteLine($"  {asset.Rid}/native/{linkName}");
         }
 
-        var targetPath = Path.Combine(ridNativeDir, targetName);
-
-        if (!File.Exists(targetPath))
+        if (!resolvedAny)
         {
-            continue;
+            break;
         }
-
-        File.Copy(targetPath, Path.Combine(ridNativeDir, linkName), overwrite: true);
-        copied.Add(linkName);
-        Console.WriteLine($"  {asset.Rid}/native/{linkName}");
     }
 
     if (copied.Count == 0)
@@ -262,12 +275,12 @@ internal static class AssetCatalog
 {
     public static readonly NativeAsset[] All =
     [
-        new("win-x64", "libcurl-impersonate-v1.5.6.x86_64-win32.tar.gz", "fe8ce2488d5467fda6061b8b130b5834bc30cdfff40712692e8c5685dbbda6c7"),
-        new("win-arm64", "libcurl-impersonate-v1.5.6.arm64-win32.tar.gz", "bf8e04e5162b1cf13ec5bac94b97f11fad3eca1125ecb73bdfe142cbe65d2590"),
-        new("osx-x64", "libcurl-impersonate-v1.5.6.x86_64-macos.tar.gz", "05589344cac1ef5aaee89397c2070e45f12eeeba4f0cfba79780a28c46d8a751"),
-        new("osx-arm64", "libcurl-impersonate-v1.5.6.arm64-macos.tar.gz", "00f89f687d9940d13642af90fd192d976897ffd35828e3d859d3fd02cf7fb31f",
+        new("win-x64", "libcurl-impersonate-v2.2.2.x86_64-win32.tar.gz", "0613fd5da8320990af5df970bd4158fede265d1487095880f8b1cb6a55c33848"),
+        new("win-arm64", "libcurl-impersonate-v2.2.2.arm64-win32.tar.gz", "347989fc155f21355493b39d3cca1e9341970baf53780f1a4bb64dbef88f6e66"),
+        new("osx-x64", "libcurl-impersonate-v2.2.2.x86_64-macos.tar.gz", "ab2f6c30505f320c6e2f5fad3588d3f729fb65c727d3a2d9393a5a9e33e1d510"),
+        new("osx-arm64", "libcurl-impersonate-v2.2.2.arm64-macos.tar.gz", "6b5b7c7d7ffca9d9f5a17d45d4484eae1b520f870e71f0552914749813310536",
             new NativeShim("libcurl-impersonate-shim.dylib", "089473ae31bb10ea5848ac5fb2a6bf7dac53b461d8b9aa3d21a005bc37bf422d")),
-        new("linux-x64", "libcurl-impersonate-v1.5.6.x86_64-linux-gnu.tar.gz", "f07e25084020c54d6fd5654c8d458e09b3a44c312f88e480c255399f00487b25"),
-        new("linux-arm64", "libcurl-impersonate-v1.5.6.aarch64-linux-gnu.tar.gz", "b4e4f713655616efd2be83153d9057b5961c15e34563dde09a8b6798a8b331e9")
+        new("linux-x64", "libcurl-impersonate-v2.2.2.x86_64-linux-gnu.tar.gz", "da09231c2809977266ddd00a0b60e638f8e67fc5dc97811065a185fa951a3275"),
+        new("linux-arm64", "libcurl-impersonate-v2.2.2.aarch64-linux-gnu.tar.gz", "b3c1c4464100e050fab66314e84f3a776d5973172e6c63e2ad1d3dea6d4870ad")
     ];
 }

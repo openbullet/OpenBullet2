@@ -104,7 +104,11 @@ public enum CurlImpersonateBrowserProfile
     /// <summary>A random desktop browser profile, weighted by worldwide traffic.</summary>
     RandomBrowser,
     /// <summary>A random mobile browser profile, weighted by worldwide traffic.</summary>
-    RandomMobile
+    RandomMobile,
+    /// <summary>Chrome 150.</summary>
+    Chrome150,
+    /// <summary>Safari 26.0.1.</summary>
+    Safari2601
 }
 
 /// <summary>
@@ -134,6 +138,7 @@ public static class CurlImpersonateBrowserProfileExtensions
         CurlImpersonateBrowserProfile.Chrome142 => "chrome142",
         CurlImpersonateBrowserProfile.Chrome145 => "chrome145",
         CurlImpersonateBrowserProfile.Chrome146 => "chrome146",
+        CurlImpersonateBrowserProfile.Chrome150 => "chrome150",
         CurlImpersonateBrowserProfile.Chrome99Android => "chrome99_android",
         CurlImpersonateBrowserProfile.Chrome131Android => "chrome131_android",
         CurlImpersonateBrowserProfile.Edge99 => "edge99",
@@ -148,6 +153,7 @@ public static class CurlImpersonateBrowserProfileExtensions
         CurlImpersonateBrowserProfile.Safari184Ios => "safari184_ios",
         CurlImpersonateBrowserProfile.Safari260 => "safari260",
         CurlImpersonateBrowserProfile.Safari260Ios => "safari260_ios",
+        CurlImpersonateBrowserProfile.Safari2601 => "safari2601",
         CurlImpersonateBrowserProfile.Firefox133 => "firefox133",
         CurlImpersonateBrowserProfile.Firefox135 => "firefox135",
         CurlImpersonateBrowserProfile.Firefox144 => "firefox144",

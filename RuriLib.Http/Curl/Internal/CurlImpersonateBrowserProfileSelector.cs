@@ -20,9 +20,9 @@ internal static class CurlImpersonateBrowserProfileSelector
     // StatCounter worldwide market share for May 2026.
     private static readonly WeightedProfile[] DesktopProfiles =
     [
-        new(CurlImpersonateBrowserProfile.Chrome146, 74.93),
+        new(CurlImpersonateBrowserProfile.Chrome150, 74.93),
         new(CurlImpersonateBrowserProfile.Edge101, 9.94),
-        new(CurlImpersonateBrowserProfile.Safari260, 5.32),
+        new(CurlImpersonateBrowserProfile.Safari2601, 5.32),
         new(CurlImpersonateBrowserProfile.Firefox147, 3.81)
     ];
 
@@ -38,9 +38,9 @@ internal static class CurlImpersonateBrowserProfileSelector
     // represented separately using the available Android and iPad fingerprints.
     private static readonly WeightedProfile[] AllProfiles =
     [
-        new(CurlImpersonateBrowserProfile.Chrome146, 3614.6232),
+        new(CurlImpersonateBrowserProfile.Chrome150, 3614.6232),
         new(CurlImpersonateBrowserProfile.Edge101, 481.0004),
-        new(CurlImpersonateBrowserProfile.Safari260, 256.6368),
+        new(CurlImpersonateBrowserProfile.Safari2601, 256.6368),
         new(CurlImpersonateBrowserProfile.Firefox147, 183.7944),
         new(CurlImpersonateBrowserProfile.Chrome131Android, 3111.1737),
         new(CurlImpersonateBrowserProfile.Safari260Ios, 1577.5973),

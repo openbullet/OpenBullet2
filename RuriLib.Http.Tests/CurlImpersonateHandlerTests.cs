@@ -157,6 +157,16 @@ public class CurlImpersonateHandlerTests
     }
 
     [Theory]
+    [InlineData(CurlImpersonateBrowserProfile.Chrome150)]
+    [InlineData(CurlImpersonateBrowserProfile.Safari2601)]
+    public async Task SendAsync_NewNativeProfiles_ProduceClientHello(CurlImpersonateBrowserProfile profile)
+    {
+        var clientHello = await CaptureClientHelloAsync(profile);
+
+        Assert.NotEmpty(clientHello);
+    }
+
+    [Theory]
     [InlineData(CurlImpersonateBrowserProfile.Okhttp4Android10,
         "771,4865-4866-4867-49195-49196-52393-49199-49200-52392-49171-49172-156-157-47-53,23-65281-10-11-35-16-5-13-51-45-43,29-23-24,0")]
     [InlineData(CurlImpersonateBrowserProfile.SafariIos170,

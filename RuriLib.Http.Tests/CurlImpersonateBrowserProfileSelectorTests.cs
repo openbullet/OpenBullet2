@@ -8,11 +8,11 @@ public class CurlImpersonateBrowserProfileSelectorTests
 {
     [Theory]
     [InlineData(CurlImpersonateBrowserProfile.RandomBrowser, 0,
-        CurlImpersonateBrowserProfile.Chrome146)]
+        CurlImpersonateBrowserProfile.Chrome150)]
     [InlineData(CurlImpersonateBrowserProfile.RandomBrowser, 0.8,
         CurlImpersonateBrowserProfile.Edge101)]
     [InlineData(CurlImpersonateBrowserProfile.RandomBrowser, 0.92,
-        CurlImpersonateBrowserProfile.Safari260)]
+        CurlImpersonateBrowserProfile.Safari2601)]
     [InlineData(CurlImpersonateBrowserProfile.RandomBrowser, 0.99,
         CurlImpersonateBrowserProfile.Firefox147)]
     [InlineData(CurlImpersonateBrowserProfile.RandomMobile, 0,
@@ -20,7 +20,7 @@ public class CurlImpersonateBrowserProfileSelectorTests
     [InlineData(CurlImpersonateBrowserProfile.RandomMobile, 0.9,
         CurlImpersonateBrowserProfile.Safari260Ios)]
     [InlineData(CurlImpersonateBrowserProfile.Random, 0,
-        CurlImpersonateBrowserProfile.Chrome146)]
+        CurlImpersonateBrowserProfile.Chrome150)]
     [InlineData(CurlImpersonateBrowserProfile.Random, 0.999,
         CurlImpersonateBrowserProfile.SafariIpad156)]
     public void Resolve_RandomProfile_SelectsExpectedWeightedEntry(
