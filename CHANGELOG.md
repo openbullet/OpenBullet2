@@ -15,6 +15,7 @@ This patch release focuses on request compatibility, job reliability and client 
 ##### Requests
 - Updated `curl-impersonate` to v2.2.2 and added Chrome 150 and Safari 26.0.1 profiles
 - Fixed Linux `curl-impersonate` packaging so the unversioned native library is included
+- Updated the bundled Intoli `user-agents` dataset to v2.1.176 and recognized its Android ARM platform identifier
 - Allowed custom `Referer` headers when using `curl-impersonate` browser-managed headers
 - Corrected `Sec-Fetch-Mode` to `cors` for `curl-impersonate` POST requests
 

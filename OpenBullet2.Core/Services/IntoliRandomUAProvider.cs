@@ -91,7 +91,9 @@ public class IntoliRandomUAProvider : IRandomUAProvider
         "iPhone" => UAPlatform.iPhone,
         "Linux aarch64" => UAPlatform.Android,
         "Linux armv71" => UAPlatform.Android,
+        // Keep the historical armv81 typo for compatibility; armv8l ends with a lowercase L.
         "Linux armv81" => UAPlatform.Android,
+        "Linux armv8l" => UAPlatform.Android,
         "Linux x86_64" => UAPlatform.Linux,
         "MacIntel" => UAPlatform.Mac,
         "Win32" => UAPlatform.Windows,
