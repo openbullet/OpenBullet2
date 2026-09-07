@@ -77,6 +77,28 @@ public class CurlImpersonateHandlerTests
     }
 
     [Fact]
+    public async Task SendAsync_PostWithBrowserHeaders_UsesCorsFetchMode()
+    {
+        await using var server = new CaptureHttpServer("ok");
+        using var handler = new CurlImpersonateHandler(new CurlImpersonateHandlerOptions
+        {
+            BrowserProfile = CurlImpersonateBrowserProfile.Chrome142,
+            UseBrowserHeaders = true,
+            AllowAutoRedirect = false
+        });
+        using var client = new HttpClient(handler);
+        using var content = new StringContent("hello");
+
+        using var response = await client.PostAsync(server.Uri, content, TestCancellationToken);
+        var rawRequest = await server.RawRequest;
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("sec-fetch-mode: cors", rawRequest, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("sec-fetch-mode: navigate", rawRequest, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(1, CountOccurrences(rawRequest.ToLowerInvariant(), "\r\nsec-fetch-mode: "));
+    }
+
+    [Fact]
     public async Task SendAsync_WithoutBrowserHeaders_KeepsCommaSeparatedCustomHeaderOnSingleLine()
     {
         await using var server = new CaptureHttpServer("ok");

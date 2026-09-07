@@ -517,6 +517,8 @@ internal sealed class CurlEasyTransfer : IDisposable
             AppendHeaders(request.Content.Headers, browserHeadersSeeded);
         }
 
+        AppendBrowserHeaderCorrections(request, browserHeadersSeeded);
+
         if (headerList != 0)
         {
             // libcurl reads this linked list during perform; ownership remains
@@ -539,6 +541,16 @@ internal sealed class CurlEasyTransfer : IDisposable
                 AppendHeader($"{header.Key}: {value}");
             }
         }
+    }
+
+    private void AppendBrowserHeaderCorrections(HttpRequestMessage request, bool browserHeadersSeeded)
+    {
+        if (!browserHeadersSeeded || request.Method != HttpMethod.Post)
+        {
+            return;
+        }
+
+        AppendHeader("Sec-Fetch-Mode: cors");
     }
 
     private static string BuildCookieHeader(CurlImpersonateHandlerOptions options, Uri uri)
