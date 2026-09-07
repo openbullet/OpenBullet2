@@ -2,7 +2,6 @@ using IronPython.Hosting;
 using Jint;
 using Microsoft.Scripting.Hosting;
 using RuriLib.Exceptions;
-using RuriLib.Blocks.Interop;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
@@ -12,8 +11,6 @@ using RuriLib.Tests.Utils.Mockup;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using BotProviders = RuriLib.Models.Bots.Providers;
@@ -89,82 +86,6 @@ public class InteropBlocksTests
 #pragma warning restore CS0618
 
         Assert.IsType<ScriptScope>(scope);
-    }
-
-    [Fact]
-    public async Task InvokeNode_InlineScript_ReturnsOutput()
-    {
-        var data = NewBotData();
-        const string script = "module.exports = async (x, y) => ({ result: x + y });";
-
-        var result = await InteropMethods.InvokeNode<JsonElement>(
-            data,
-            script,
-            [3, 5],
-            isScript: true,
-            scriptHash: "interop-blocks-tests-node-sum");
-
-        Assert.Equal(8, result.GetProperty("result").GetInt32());
-    }
-
-    [Fact]
-    public async Task NodeJsRuntime_TransientDisposal_Retries()
-    {
-        var attempts = 0;
-
-        var result = await NodeJsRuntime.InvokeWithTransientDisposalRetryAsync(async () =>
-        {
-            await Task.Yield();
-            attempts++;
-
-            if (attempts < 3)
-            {
-                throw new ObjectDisposedException("System.Threading.SemaphoreSlim");
-            }
-
-            return "ok";
-        }, TestContext.Current.CancellationToken);
-
-        Assert.Equal("ok", result);
-        Assert.Equal(3, attempts);
-    }
-
-    [Fact]
-    public async Task NodeJsRuntime_DefaultMeterFactoryDisposal_Retries()
-    {
-        var attempts = 0;
-
-        var result = await NodeJsRuntime.InvokeWithTransientDisposalRetryAsync(async () =>
-        {
-            await Task.Yield();
-            attempts++;
-
-            if (attempts < 2)
-            {
-                throw new ObjectDisposedException("DefaultMeterFactory");
-            }
-
-            return "ok";
-        }, TestContext.Current.CancellationToken);
-
-        Assert.Equal("ok", result);
-        Assert.Equal(2, attempts);
-    }
-
-    [Fact]
-    public async Task NodeJsRuntime_NonTransientObjectDisposed_DoesNotRetry()
-    {
-        var attempts = 0;
-
-        await Assert.ThrowsAsync<ObjectDisposedException>(() =>
-            NodeJsRuntime.InvokeWithTransientDisposalRetryAsync<string>(async () =>
-            {
-                await Task.Yield();
-                attempts++;
-                throw new ObjectDisposedException("OtherObject");
-            }, TestContext.Current.CancellationToken));
-
-        Assert.Equal(1, attempts);
     }
 
     private static BotData NewBotData()

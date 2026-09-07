@@ -1,3 +1,4 @@
+using Jering.Javascript.NodeJS;
 using Jint;
 using Microsoft.Scripting.Hosting;
 using RuriLib.Attributes;
@@ -134,29 +135,39 @@ public static class Methods
     {
         if (string.IsNullOrEmpty(scriptHash))
         {
-            return await NodeJsRuntime.InvokeFromStringAsync<T>(
+            return await StaticNodeJSService.InvokeFromStringAsync<T>(
                 script,
                 scriptHash,
                 null,
                 parameters,
-                data.CancellationToken).ConfigureAwait(false);
+                data.CancellationToken
+            ).ConfigureAwait(false);
         }
 
-        return await NodeJsRuntime.InvokeFromStringAsync<T>(
-            () => script,
+        var (isCached, cachedResult) = await StaticNodeJSService.TryInvokeFromCacheAsync<T>(
             scriptHash,
             null,
             parameters,
-            data.CancellationToken).ConfigureAwait(false);
+            data.CancellationToken
+        ).ConfigureAwait(false);
+
+        return isCached ? cachedResult : await StaticNodeJSService.InvokeFromStringAsync<T>(
+            script,
+            scriptHash,
+            null,
+            parameters,
+            data.CancellationToken
+        ).ConfigureAwait(false);
     }
 
     private static async Task<T?> InvokeFromFile<T>(BotData data, string filePath, object[] parameters)
     {
-        return await NodeJsRuntime.InvokeFromFileAsync<T>(
+        return await StaticNodeJSService.InvokeFromFileAsync<T>(
             filePath,
             null,
             parameters,
-            data.CancellationToken).ConfigureAwait(false);
+            data.CancellationToken
+        ).ConfigureAwait(false);
     }
 
     /// <summary>

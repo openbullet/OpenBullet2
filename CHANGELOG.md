@@ -2,7 +2,6 @@
 This patch release focuses on request compatibility, job reliability and client fixes.
 
 ##### Blocks and Automation
-- Improved Node.js script block reliability during concurrent runs by using multiple processes and retrying transient runtime disposal errors
 - Made script-backed proxy source reloads cancel promptly and terminate their child processes
 
 ##### Jobs, Proxies and Mail
