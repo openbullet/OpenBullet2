@@ -120,6 +120,10 @@ public class HttpRequestBlockDescriptor : BlockDescriptor
             ["httpVersion"] = new StringParameter("httpVersion", "1.1")
             {
                 Description = "HTTP version string such as 1.1, 2.0, or 3.0, depending on the selected HTTP library and platform support."
+            },
+            ["useProxy"] = new BoolParameter("useProxy", true)
+            {
+                Description = "If true, the request goes through the proxy assigned to the bot (when the job has proxies enabled). If false, this request is always sent directly, bypassing the proxy."
             }
         };
     }

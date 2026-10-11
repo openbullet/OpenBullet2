@@ -26,7 +26,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
     public override async Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
     {
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
+        using var client = HttpFactory.GetRLHttpClient(ResolveProxy(data, options), clientOptions);
 
         foreach (var cookie in options.CustomCookies)
         {
@@ -80,7 +80,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
     public override async Task HttpRequestRaw(BotData data, RawHttpRequestOptions options)
     {
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
+        using var client = HttpFactory.GetRLHttpClient(ResolveProxy(data, options), clientOptions);
 
         foreach (var cookie in options.CustomCookies)
         {
@@ -122,7 +122,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
     public override async Task HttpRequestBasicAuth(BotData data, BasicAuthHttpRequestOptions options)
     {
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
+        using var client = HttpFactory.GetRLHttpClient(ResolveProxy(data, options), clientOptions);
 
         foreach (var cookie in options.CustomCookies)
         {
@@ -165,7 +165,7 @@ internal class RLHttpClientRequestHandler : HttpRequestHandler
     public override async Task HttpRequestMultipart(BotData data, MultipartHttpRequestOptions options)
     {
         var clientOptions = GetClientOptions(data, options);
-        using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
+        using var client = HttpFactory.GetRLHttpClient(ResolveProxy(data, options), clientOptions);
 
         foreach (var cookie in options.CustomCookies)
         {

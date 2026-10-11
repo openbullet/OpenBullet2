@@ -1,6 +1,7 @@
 using RuriLib.Functions.Http.Options;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -185,6 +186,26 @@ internal abstract class HttpRequestHandler
             CurlUseBrowserHeaders = options.CurlUseBrowserHeaders,
             CurlRequestHeadersCallback = curlRequestHeadersCallback
         };
+
+    /// <summary>
+    /// Resolves the proxy to use for a single request.
+    /// The bot's proxy is only used when the job has proxies enabled
+    /// (<see cref="BotData.UseProxy"/>) and the block didn't opt out through
+    /// <see cref="Options.HttpRequestOptions.UseProxy"/>.
+    /// </summary>
+    /// <param name="data">The bot data holding the proxy assigned to this bot.</param>
+    /// <param name="options">The options of the block performing the request.</param>
+    /// <returns>The proxy to route through, or null to send the request directly.</returns>
+    protected static Proxy? ResolveProxy(BotData data, Options.HttpRequestOptions options)
+    {
+        if (data.Proxy is not null && !options.UseProxy)
+        {
+            data.Logger.Log("[NO PROXY] This block is configured to bypass the bot proxy", LogColors.DarkOrange);
+            return null;
+        }
+
+        return data.UseProxy ? data.Proxy : null;
+    }
 
     protected static void LogNegotiatedHttpVersion(BotData data, Version requestedVersion, Version responseVersion)
     {

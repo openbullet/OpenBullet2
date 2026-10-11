@@ -84,7 +84,9 @@ public partial class HttpRequestBlockSettingsViewer : UserControl
         maxNumberOfRedirectsSetting.Setting = vm.HttpRequestBlock.Settings["maxNumberOfRedirects"];
         absoluteUriInFirstLineSetting.Setting = vm.HttpRequestBlock.Settings["absoluteUriInFirstLine"];
         readResponseContentSetting.Setting = vm.HttpRequestBlock.Settings["readResponseContent"];
+        decodeHtmlSetting.Setting = vm.HttpRequestBlock.Settings["decodeHtml"];
         codePagesEncodingSetting.Setting = vm.HttpRequestBlock.Settings["codePagesEncoding"];
+        useProxySetting.Setting = vm.HttpRequestBlock.Settings["useProxy"];
         httpLibrarySetting.Setting = vm.HttpRequestBlock.Settings["httpLibrary"];
         curlImpersonateBrowserProfileSetting.Setting = vm.HttpRequestBlock.Settings["curlImpersonateBrowserProfile"];
         curlUseBrowserHeadersSetting.Setting = vm.HttpRequestBlock.Settings["curlUseBrowserHeaders"];

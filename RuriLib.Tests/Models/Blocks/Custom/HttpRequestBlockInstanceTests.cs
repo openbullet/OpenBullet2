@@ -196,6 +196,43 @@ public class HttpRequestBlockInstanceTests
         Assert.IsType<ByteArraySetting>(rawContent.Data.FixedSetting);
     }
 
+    [Fact]
+    public void ToSyntax_UseProxy_IsEmittedAndDefaultsToTrue()
+    {
+        var block = CreateStandardRequestBlock();
+
+        Assert.True(Assert.IsType<BoolSetting>(block.Settings["useProxy"].FixedSetting).Value);
+        Assert.Contains("UseProxy = true", RenderSyntax(block));
+
+        (block.Settings["useProxy"].FixedSetting as BoolSetting)!.Value = false;
+
+        Assert.Contains("UseProxy = false", RenderSyntax(block));
+    }
+
+    [Fact]
+    public void ToLC_UseProxy_IsOmittedWhenDefaultAndWrittenWhenChanged()
+    {
+        var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
+
+        Assert.DoesNotContain("useProxy =", block.ToLC());
+
+        (block.Settings["useProxy"].FixedSetting as BoolSetting)!.Value = false;
+
+        Assert.Contains($"  useProxy = False{_nl}", block.ToLC());
+    }
+
+    [Fact]
+    public void FromLC_UseProxy_RoundTrips()
+    {
+        var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
+        var script = $"  useProxy = false{_nl}";
+        var lineNumber = 0;
+
+        block.FromLC(ref script, ref lineNumber);
+
+        Assert.False(Assert.IsType<BoolSetting>(block.Settings["useProxy"].FixedSetting).Value);
+    }
+
     private static HttpRequestBlockInstance CreateStandardRequestBlock(bool safe = false)
     {
         var block = CreateBaseBlock(safe);

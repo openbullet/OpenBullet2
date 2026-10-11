@@ -54,7 +54,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             data,
             options,
             capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
-        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(ResolveProxy(data, options), clientOptions, cookieContainer);
 
         var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
@@ -125,7 +125,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             data,
             options,
             capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
-        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(ResolveProxy(data, options), clientOptions, cookieContainer);
 
         var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
@@ -183,7 +183,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             data,
             options,
             capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
-        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(ResolveProxy(data, options), clientOptions, cookieContainer);
 
         var requestVersion = Version.Parse(options.HttpVersion);
         using var request = new HttpRequestMessage
@@ -241,7 +241,7 @@ internal class HttpClientRequestHandler : HttpRequestHandler
             data,
             options,
             capturedRequestHeaders is null ? null : capturedRequestHeaders.Add);
-        using var client = clientFactory(data.UseProxy ? data.Proxy : null, clientOptions, cookieContainer);
+        using var client = clientFactory(ResolveProxy(data, options), clientOptions, cookieContainer);
 
         if (string.IsNullOrWhiteSpace(options.Boundary))
         {
