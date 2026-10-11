@@ -196,15 +196,21 @@ internal abstract class HttpRequestHandler
     /// <param name="data">The bot data holding the proxy assigned to this bot.</param>
     /// <param name="options">The options of the block performing the request.</param>
     /// <returns>The proxy to route through, or null to send the request directly.</returns>
-    protected static Proxy? ResolveProxy(BotData data, Options.HttpRequestOptions options)
+    internal static Proxy? ResolveProxy(BotData data, Options.HttpRequestOptions options)
     {
-        if (data.Proxy is not null && !options.UseProxy)
+        // The job is only proxied when it both wants to be and has something assigned
+        if (!data.UseProxy || data.Proxy is null)
         {
-            data.Logger.Log("[NO PROXY] This block is configured to bypass the bot proxy", LogColors.DarkOrange);
             return null;
         }
 
-        return data.UseProxy ? data.Proxy : null;
+        if (options.UseProxy)
+        {
+            return data.Proxy;
+        }
+
+        data.Logger.Log("[NO PROXY] This block is configured to bypass the bot proxy", LogColors.DarkOrange);
+        return null;
     }
 
     protected static void LogNegotiatedHttpVersion(BotData data, Version requestedVersion, Version responseVersion)
