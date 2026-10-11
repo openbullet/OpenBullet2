@@ -191,6 +191,7 @@
         <local:BoolSettingViewer x:Name="readResponseContentSetting" />
         <local:BoolSettingViewer x:Name="decodeHtmlSetting" />
         <local:StringSettingViewer x:Name="codePagesEncodingSetting" />
+        <local:BoolSettingViewer x:Name="useProxySetting" />
 
         <Label 
             Content="Advanced settings:"

@@ -44,5 +44,42 @@ public class ScriptGlobals
                     ? Uri.EscapeDataString(variable.AsString())
                     : variable.AsString());
         }
+
+        var inputFields = (IDictionary<string, object?>)input;
+
+        // Expose the proxy assigned to this bot as input.proxy.* so that configs can
+        // read its fields without having to fall back to data.Proxy. A wordlist slice
+        // named "proxy" takes precedence so existing configs keep working.
+        if (!inputFields.ContainsKey("proxy"))
+        {
+            inputFields.Add("proxy", CreateProxyVariables(data));
+        }
+    }
+
+    /// <summary>
+    /// Builds the <c>input.proxy</c> object. Every field is always present, defaulting
+    /// to an empty value when the bot has no proxy assigned, so that configs never have
+    /// to null-check before interpolating them.
+    /// </summary>
+    /// <param name="data">The bot data holding the proxy assigned to this bot.</param>
+    /// <returns>An expando object with the fields of the proxy.</returns>
+    private static ExpandoObject CreateProxyVariables(BotData data)
+    {
+        var proxy = data.Proxy;
+
+        var variables = new ExpandoObject();
+        var fields = (IDictionary<string, object?>)variables;
+
+        fields["ip"] = proxy?.Host ?? string.Empty;
+        fields["host"] = proxy?.Host ?? string.Empty;
+        fields["port"] = proxy?.Port ?? 0;
+        fields["username"] = proxy?.Username ?? string.Empty;
+        fields["password"] = proxy?.Password ?? string.Empty;
+        fields["type"] = proxy?.Type.ToString().ToLowerInvariant() ?? string.Empty;
+        fields["country"] = proxy?.Country ?? string.Empty;
+        fields["ping"] = proxy?.Ping ?? 0;
+        fields["inUse"] = data.UseProxy && proxy is not null;
+
+        return variables;
     }
 }

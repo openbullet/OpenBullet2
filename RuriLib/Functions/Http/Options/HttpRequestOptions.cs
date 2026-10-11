@@ -110,6 +110,12 @@ public class HttpRequestOptions
     /// headers when <see cref="HttpLibrary"/> is <see cref="HttpLibrary.CurlImpersonate"/>.
     /// </summary>
     public bool CurlUseBrowserHeaders { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the proxy assigned to the bot is used for this request.
+    /// When false, the request is always sent directly, even if the job has proxies enabled.
+    /// </summary>
+    public bool UseProxy { get; set; } = true;
 }
 
 /// <summary>

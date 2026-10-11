@@ -439,7 +439,8 @@ public class HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor) : B
             Prop("AlwaysSendContent", CSharpWriter.FromSettingSyntax(Settings["alwaysSendContent"])),
             Prop("DecodeHtml", CSharpWriter.FromSettingSyntax(Settings["decodeHtml"])),
             Prop("UseCustomCipherSuites", CSharpWriter.FromSettingSyntax(Settings["useCustomCipherSuites"])),
-            Prop("CustomCipherSuites", CSharpWriter.FromSettingSyntax(Settings["customCipherSuites"]))
+            Prop("CustomCipherSuites", CSharpWriter.FromSettingSyntax(Settings["customCipherSuites"])),
+            Prop("UseProxy", CSharpWriter.FromSettingSyntax(Settings["useProxy"]))
         ]);
 
         var optionsObject = New(optionsTypeName).InitObject(requestAssignments.ToArray());

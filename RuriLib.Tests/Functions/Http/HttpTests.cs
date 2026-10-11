@@ -36,6 +36,39 @@ public class HttpTests
         false);
 
     [Theory]
+    [InlineData(HttpLibrary.RuriLibHttp, true)]
+    [InlineData(HttpLibrary.RuriLibHttp, false)]
+    [InlineData(HttpLibrary.SystemNet, true)]
+    [InlineData(HttpLibrary.SystemNet, false)]
+    [InlineData(HttpLibrary.CurlImpersonate, true)]
+    [InlineData(HttpLibrary.CurlImpersonate, false)]
+    public async Task HttpRequestStandard_Get_WithoutAnyProxy_Succeeds(HttpLibrary library, bool blockUseProxy)
+    {
+        var httpBin = await TestHttpBin.BuildUrl("anything");
+
+        // A config that does not use proxies at all: no proxy assigned, bot-level UseProxy off
+        var data = NewBotData();
+
+        var options = new StandardHttpRequestOptions
+        {
+            Url = httpBin,
+            Method = HttpMethod.GET,
+            HttpLibrary = library,
+            UseProxy = blockUseProxy
+        };
+
+        await Methods.HttpRequestStandard(data, options);
+
+        var response = DeserializeHttpBinResponse(data.SOURCE);
+        Assert.Equal("GET", response.Method);
+        Assert.Equal(200, (int)data.RESPONSECODE);
+
+        // With no proxy assigned there is nothing to bypass, so the notice must stay silent
+        Assert.DoesNotContain(data.Logger.Entries,
+            entry => entry.Message.Contains("[NO PROXY]", StringComparison.Ordinal));
+    }
+
+    [Theory]
     [InlineData(HttpLibrary.RuriLibHttp)]
     [InlineData(HttpLibrary.SystemNet)]
     [InlineData(HttpLibrary.CurlImpersonate)]

@@ -35,6 +35,9 @@ public static class Suggestions
         }
 
         var suggestions = new List<string> {
+        "input.proxy.ip", "input.proxy.host", "input.proxy.port",
+        "input.proxy.username", "input.proxy.password", "input.proxy.type",
+        "input.proxy.country", "input.proxy.ping", "input.proxy.inUse",
         "data.SOURCE", "data.ERROR", "data.ADDRESS",
         "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
         "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE", "data.Line.Data" };
